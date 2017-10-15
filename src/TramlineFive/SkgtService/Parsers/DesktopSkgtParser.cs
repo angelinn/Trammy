@@ -18,6 +18,7 @@ namespace SkgtService.Parsers
         {
             client.DefaultRequestHeaders.Add("User-Agent", OPERA_USER_AGENT);
         }
+        
 
         public void ChooseLine(Line target)
         {
@@ -48,13 +49,14 @@ namespace SkgtService.Parsers
             HtmlDocument linesDocument = new HtmlDocument();
             linesDocument.LoadHtml(lines);
 
+            List<Line> currentLines = new List<Line>();
             var allLines = linesDocument.DocumentNode.SelectNodes("//select//option");
             foreach (HtmlNode aLine in allLines)
             {
-
+                currentLines.Add(new Line(aLine.InnerText, aLine.Attributes["value"].Value));
             }
 
-            return null;
+            return currentLines;
         }
 
         public string[] GetTimings(string captcha)

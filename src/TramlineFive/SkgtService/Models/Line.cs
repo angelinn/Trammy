@@ -6,6 +6,13 @@ namespace SkgtService.Models
 {
     public class Line
     {
-        public string number;
+        public string DisplayName { get; set; }
+        public string SkgtValue { get; set; }
+
+        public Line(string name, string value)
+        {
+            DisplayName = name;
+            SkgtValue = value;
+        }
     }
 }

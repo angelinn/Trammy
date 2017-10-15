@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TramlineFive.Pages"
+             x:Class="TramlineFive.Pages.MainPage">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}" />
+            <Button Margin="0,10,0,0" Text="Проверяване" Clicked="OnCheckClicked" />
+        </StackLayout>
+        <StackLayout Grid.Row="1">
+            <Label Text="Избор на линия:" />
+            <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}" />
+
+        </StackLayout>
+    </Grid>
+
+</ContentPage>

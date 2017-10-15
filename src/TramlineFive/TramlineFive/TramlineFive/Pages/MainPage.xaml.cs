@@ -4,22 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TramlineFive.ViewModels;
 using Xamarin.Forms;
 
-namespace TramlineFive
+namespace TramlineFive.Pages
 {
     public partial class MainPage : ContentPage
     {
+        public MainViewModel MainViewModel { get; private set; } = new MainViewModel();
         public MainPage()
         {
             InitializeComponent();
-
+            BindingContext = MainViewModel;
         }
 
-        protected override async void OnAppearing()
+        private async void OnCheckClicked(object sender, EventArgs e)
         {
-            base.OnAppearing();
-            await new DesktopSkgtParser().GetLinesForStopAsync("0882");
+            await MainViewModel.LoadLinesAsync();
         }
     }
 }

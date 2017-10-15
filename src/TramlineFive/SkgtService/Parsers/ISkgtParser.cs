@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SkgtService.Parsers
 {
-    internal interface ISkgtParser
+    public interface ISkgtParser
     {
         Task<List<Line>> GetLinesForStopAsync(string stopCode);
         void ChooseLine(Line target);
