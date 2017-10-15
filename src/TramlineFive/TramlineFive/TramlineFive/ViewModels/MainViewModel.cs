@@ -22,6 +22,8 @@ namespace TramlineFive.ViewModels
         {
             Lines = new ObservableCollection<Line>(await parser.GetLinesForStopAsync(stopCode));
             OnPropertyChanged("Lines");
+
+            SelectedLine = Lines[0];
         }
 
         private string stopCode;
@@ -38,8 +40,8 @@ namespace TramlineFive.ViewModels
             }
         }
 
-        private string selectedLine;
-        public string SelectedLine
+        private Line selectedLine;
+        public Line SelectedLine
         {
             get
             {
