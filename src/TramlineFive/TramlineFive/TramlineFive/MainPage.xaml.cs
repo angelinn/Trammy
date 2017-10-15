@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkgtService.Parsers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,13 @@ namespace TramlineFive
         public MainPage()
         {
             InitializeComponent();
+
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await new DesktopSkgtParser().GetLinesForStopAsync("0882");
         }
     }
 }

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="2.3.4.247" />
+    <PackageReference Include="Xamarin.Forms" Version="2.3.4.270" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,6 +15,10 @@
 
     <Compile Update="**\*.xaml.cs" DependentUpon="%(Filename)" />
     <EmbeddedResource Include="**\*.xaml" SubType="Designer" Generator="MSBuild:UpdateDesignTimeXaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SkgtService\SkgtService.csproj" />
   </ItemGroup>
 
 </Project>
