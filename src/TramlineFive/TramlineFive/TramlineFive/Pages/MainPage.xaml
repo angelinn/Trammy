@@ -2,32 +2,40 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TramlineFive.Pages"
-             x:Class="TramlineFive.Pages.MainPage">
+             x:Class="TramlineFive.Pages.MainPage"
+             Title="Трамвай №5 Alpha v0.1">
 
     <Grid Padding="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="4*" />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
-        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+        <StackLayout HorizontalOptions="Center">
             <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}" />
             <Button Margin="0,10,0,0" Text="Проверяване" Clicked="OnCheckClicked" />
+            <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
         </StackLayout>
         <StackLayout Grid.Row="1">
             <Label Text="Избор на линия:" />
-            <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}" SelectedIndexChanged="OnSelectedIndexChanged" />
+            <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}" SelectedIndexChanged="OnSelectedIndexChanged" IsEnabled="{Binding HasLines}" />
         </StackLayout>
+        
 
-        <StackLayout Grid.Row="2">
-            <Image Source="{Binding CaptchaImageSource}" />
-            <Entry Placeholder="Въведи captcha..." Text="{Binding Captcha.StringContent}" />
-            <Button Text="Проверка" Clicked="OnCaptchaClicked" />
-        </StackLayout>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Image Source="{Binding CaptchaImageSource}" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
+            <Entry Grid.Row="1" Placeholder="Въведи captcha..." Text="{Binding Captcha.StringContent}" IsEnabled="{Binding HasCaptcha}" />
+            <Button Grid.Row="2" Text="Проверка" Clicked="OnCaptchaClicked" IsEnabled="{Binding HasCaptcha}" />
+        </Grid>
 
         <ListView Grid.Row="3" ItemsSource="{Binding Timings}">
-            
+
         </ListView>
     </Grid>
 

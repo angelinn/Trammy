@@ -20,13 +20,18 @@ namespace TramlineFive.ViewModels
         {
             parser = new DesktopSkgtParser();
         }
-
+        
         public async Task LoadLinesAsync()
         {
+            IsLoading = true;
+
             Lines = new ObservableCollection<Line>(await parser.GetLinesForStopAsync(stopCode));
             OnPropertyChanged("Lines");
-
+            OnPropertyChanged("HasLines");
+            
             SelectedLine = Lines[0];
+
+            IsLoading = false;
         }
 
         public async Task ChooseLineAsync()
@@ -34,14 +39,19 @@ namespace TramlineFive.ViewModels
             if (String.IsNullOrEmpty(selectedLine.SkgtValue))
                 return;
 
+            IsLoading = true;
             Captcha = await parser.ChooseLineAsync(selectedLine);
             CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
+            OnPropertyChanged("HasCaptcha");
+            IsLoading = false;
         }
 
         public async Task GetTimingsAsync()
         {
+            IsLoading = true;
             Timings = new ObservableCollection<string>(await parser.GetTimings(selectedLine, captcha.StringContent));
             OnPropertyChanged("Timings");
+            IsLoading = false;
         }
 
         private ImageSource captchaImageSource;
@@ -55,6 +65,36 @@ namespace TramlineFive.ViewModels
             {
                 captchaImageSource = value;
                 OnPropertyChanged();
+            }
+        }
+
+        private bool isLoading;
+        public bool IsLoading
+        {
+            get
+            {
+                return isLoading;
+            }
+            set
+            {
+                isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public bool HasLines         
+        {
+            get
+            {
+                return Lines == null ? false : Lines.Count > 0;
+            }
+        }
+        
+        public bool HasCaptcha
+        {
+            get
+            {
+                return captchaImageSource != null;
             }
         }
 
