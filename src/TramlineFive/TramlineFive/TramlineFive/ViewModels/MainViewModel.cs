@@ -28,7 +28,7 @@ namespace TramlineFive.ViewModels
 
             SelectedLine = Lines[0];
         }
-        
+
         public async Task ChooseLineAsync()
         {
             if (String.IsNullOrEmpty(selectedLine.SkgtValue))
@@ -37,12 +37,13 @@ namespace TramlineFive.ViewModels
             Captcha = await parser.ChooseLineAsync(selectedLine);
             CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
         }
-        
+
         public async Task GetTimingsAsync()
         {
-            await parser.GetTimings(selectedLine, captcha.StringContent);
+            Timings = new ObservableCollection<string>(await parser.GetTimings(selectedLine, captcha.StringContent));
+            OnPropertyChanged("Timings");
         }
-        
+
         private ImageSource captchaImageSource;
         public ImageSource CaptchaImageSource
         {
@@ -56,7 +57,7 @@ namespace TramlineFive.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
         private string stopCode;
         public string StopCode
         {
@@ -70,7 +71,7 @@ namespace TramlineFive.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
         private Line selectedLine;
         public Line SelectedLine
         {
@@ -84,7 +85,7 @@ namespace TramlineFive.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
         private Captcha captcha;
         public Captcha Captcha
         {
