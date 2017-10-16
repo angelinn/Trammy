@@ -21,8 +21,9 @@
         </StackLayout>
 
         <StackLayout Grid.Row="2">
-            <Image Source="{Binding CaptchaUrl}" />
-            <Entry Placeholder="Въведи captcha..." Text="{Binding Captcha}" />
+            <Image Source="{Binding CaptchaImageSource}" />
+            <Entry Placeholder="Въведи captcha..." Text="{Binding Captcha.StringContent}" />
+            <Button Text="Проверка" Clicked="OnCaptchaClicked" />
         </StackLayout>
 
         <ListView Grid.Row="3" ItemsSource="{Binding Timings}">

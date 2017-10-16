@@ -3,8 +3,10 @@ using SkgtService.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace TramlineFive.ViewModels
 {
@@ -26,17 +28,35 @@ namespace TramlineFive.ViewModels
 
             SelectedLine = Lines[0];
         }
-
+        
         public async Task ChooseLineAsync()
         {
-            await parser.ChooseLineAsync(selectedLine);
-        }
+            if (String.IsNullOrEmpty(selectedLine.SkgtValue))
+                return;
 
-        private async Task GetTimingsAsync()
+            Captcha = await parser.ChooseLineAsync(selectedLine);
+            CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
+        }
+        
+        public async Task GetTimingsAsync()
         {
-            //await parser.GetTimings();
+            await parser.GetTimings(selectedLine, captcha.StringContent);
         }
-
+        
+        private ImageSource captchaImageSource;
+        public ImageSource CaptchaImageSource
+        {
+            get
+            {
+                return captchaImageSource;
+            }
+            set
+            {
+                captchaImageSource = value;
+                OnPropertyChanged();
+            }
+        }
+        
         private string stopCode;
         public string StopCode
         {
@@ -50,7 +70,7 @@ namespace TramlineFive.ViewModels
                 OnPropertyChanged();
             }
         }
-
+        
         private Line selectedLine;
         public Line SelectedLine
         {
@@ -64,23 +84,9 @@ namespace TramlineFive.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        private string captchaUrl;
-        public string CaptchaUrl
-        {
-            get
-            {
-                return captchaUrl;
-            }
-            set
-            {
-                captchaUrl = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string captcha;
-        public string Captcha
+        
+        private Captcha captcha;
+        public Captcha Captcha
         {
             get
             {

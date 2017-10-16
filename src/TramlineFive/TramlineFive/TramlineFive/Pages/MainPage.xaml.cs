@@ -22,10 +22,15 @@ namespace TramlineFive.Pages
         {
             await MainViewModel.ChooseLineAsync();
         }
-
+        
         private async void OnCheckClicked(object sender, EventArgs e)
         {
             await MainViewModel.LoadLinesAsync();
         }
+        private async void OnCaptchaClicked(object sender, EventArgs e)
+        {
+            await MainViewModel.GetTimingsAsync();
+        }
+
     }
 }
