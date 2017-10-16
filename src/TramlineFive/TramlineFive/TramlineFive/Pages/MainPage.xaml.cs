@@ -15,7 +15,12 @@ namespace TramlineFive.Pages
         public MainPage()
         {
             InitializeComponent();
-            BindingContext = MainViewModel;
+            BindingContext = MainViewModel;;
+        }
+
+        private async void OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            await MainViewModel.ChooseLineAsync();
         }
 
         private async void OnCheckClicked(object sender, EventArgs e)

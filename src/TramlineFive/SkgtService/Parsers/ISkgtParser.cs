@@ -9,7 +9,7 @@ namespace SkgtService.Parsers
     public interface ISkgtParser
     {
         Task<List<Line>> GetLinesForStopAsync(string stopCode);
-        void ChooseLine(Line target);
+        Task<string> ChooseLineAsync(Line target);
         string[] GetTimings(string captcha);
     }
 }

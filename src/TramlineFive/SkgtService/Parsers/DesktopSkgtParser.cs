@@ -14,17 +14,28 @@ namespace SkgtService.Parsers
         private const string VIRTUAL_TABLES_URL = @"https://skgt-bg.com/VirtualBoard/Web/SelectByStop.aspx";
         private const string OPERA_USER_AGENT = @"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36 OPR/48.0.2685.35";
 
+        private HtmlDocument linesDocument;
+
         public DesktopSkgtParser()
         {
             client.DefaultRequestHeaders.Add("User-Agent", OPERA_USER_AGENT);
         }
         
 
-        public void ChooseLine(Line target)
+        public async Task<string> ChooseLineAsync(Line target)
         {
+            Dictionary<string, string> urlEncoded = new Dictionary<string, string>();
 
-
-            throw new NotImplementedException();
+            var desc = linesDocument.DocumentNode.SelectNodes("//input");
+            foreach (HtmlNode node in desc)
+            {
+                string value = (node.Attributes["value"] == null) ? String.Empty : node.Attributes["value"].Value;
+                urlEncoded.Add(node.Attributes["name"].Value, value);
+            }
+            urlEncoded["ctl00$ContentPlaceHolder1$ddlLine"] = target.SkgtValue;
+            HttpResponseMessage response = await client.PostAsync(VIRTUAL_TABLES_URL, new FormUrlEncodedContent(urlEncoded));
+            string html = await response.Content.ReadAsStringAsync();
+            return null;
         }
 
         public async Task<List<Line>> GetLinesForStopAsync(string stopCode)
@@ -46,7 +57,7 @@ namespace SkgtService.Parsers
             HttpResponseMessage response = await client.PostAsync(VIRTUAL_TABLES_URL, new FormUrlEncodedContent(urlEncoded));
             string lines = await response.Content.ReadAsStringAsync();
 
-            HtmlDocument linesDocument = new HtmlDocument();
+            linesDocument = new HtmlDocument();
             linesDocument.LoadHtml(lines);
 
             List<Line> currentLines = new List<Line>();

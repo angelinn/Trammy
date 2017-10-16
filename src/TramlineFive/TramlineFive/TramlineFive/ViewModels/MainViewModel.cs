@@ -10,8 +10,9 @@ namespace TramlineFive.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        public ObservableCollection<Line> Lines { get; private set; } = new ObservableCollection<Line>();
-            
+        public ObservableCollection<Line> Lines { get; private set; }
+        public ObservableCollection<string> Timings { get; private set; }
+
         private readonly ISkgtParser parser;
         public MainViewModel()
         {
@@ -24,6 +25,16 @@ namespace TramlineFive.ViewModels
             OnPropertyChanged("Lines");
 
             SelectedLine = Lines[0];
+        }
+
+        public async Task ChooseLineAsync()
+        {
+            await parser.ChooseLineAsync(selectedLine);
+        }
+
+        private async Task GetTimingsAsync()
+        {
+            //await parser.GetTimings();
         }
 
         private string stopCode;
@@ -50,6 +61,34 @@ namespace TramlineFive.ViewModels
             set
             {
                 selectedLine = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string captchaUrl;
+        public string CaptchaUrl
+        {
+            get
+            {
+                return captchaUrl;
+            }
+            set
+            {
+                captchaUrl = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string captcha;
+        public string Captcha
+        {
+            get
+            {
+                return captcha;
+            }
+            set
+            {
+                captcha = value;
                 OnPropertyChanged();
             }
         }

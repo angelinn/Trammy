@@ -4,10 +4,11 @@
              xmlns:local="clr-namespace:TramlineFive.Pages"
              x:Class="TramlineFive.Pages.MainPage">
 
-    <Grid>
+    <Grid Padding="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
@@ -16,9 +17,17 @@
         </StackLayout>
         <StackLayout Grid.Row="1">
             <Label Text="Избор на линия:" />
-            <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}" />
-
+            <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}" SelectedIndexChanged="OnSelectedIndexChanged" />
         </StackLayout>
+
+        <StackLayout Grid.Row="2">
+            <Image Source="{Binding CaptchaUrl}" />
+            <Entry Placeholder="Въведи captcha..." Text="{Binding Captcha}" />
+        </StackLayout>
+
+        <ListView Grid.Row="3" ItemsSource="{Binding Timings}">
+            
+        </ListView>
     </Grid>
 
 </ContentPage>
