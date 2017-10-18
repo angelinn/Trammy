@@ -24,7 +24,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Image Source="{Binding CaptchaImageSource}" Aspect="AspectFill"  />
+                <Image Source="{Binding CaptchaImageSource}" Aspect="AspectFit" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
                 <Entry Grid.Row="1" Placeholder="Въведи captcha..." Text="{Binding Captcha.StringContent}" />
                 <Button Grid.Row="2" Text="Проверка" Clicked="OnCaptchaClicked" />
             </Grid>
