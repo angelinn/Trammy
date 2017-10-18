@@ -11,25 +11,23 @@
         </ResourceDictionary>
     </pages:PopupPage.Resources>
 
-    <ScrollView HorizontalOptions="Center" VerticalOptions="Center">
-        <AbsoluteLayout>
-            <Frame BackgroundColor="White" Margin="15" HorizontalOptions="Center" >
-                <StackLayout IsClippedToBounds="True">
-                    <Label Text="Избор на линия:" />
-                    <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}" SelectedIndexChanged="OnSelectedIndexChanged" IsEnabled="{Binding HasLines}" />
-                </StackLayout>
+    <Frame BackgroundColor="White" HorizontalOptions="FillAndExpand" Margin="10" VerticalOptions="Center" >
+        <StackLayout>
+            <StackLayout>
+                <Label Text="Избор на линия:" />
+                <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}" SelectedIndexChanged="OnSelectedIndexChanged" IsEnabled="{Binding HasLines}" />
+            </StackLayout>
 
-                <Grid IsVisible="{Binding CaptchaImageSource, Converter={StaticResource RefToBool}}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="2*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Image Source="{Binding CaptchaImageSource}" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
-                    <Entry Grid.Row="1" Placeholder="Въведи captcha..." Text="{Binding Captcha.StringContent}" IsEnabled="{Binding HasCaptcha}" />
-                    <Button Grid.Row="2" Text="Проверка" IsEnabled="{Binding HasCaptcha}" />
-                </Grid>
-            </Frame>
-        </AbsoluteLayout>
-    </ScrollView>
+            <Grid IsVisible="{Binding CaptchaImageSource, Converter={StaticResource RefToBool}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Image Source="{Binding CaptchaImageSource}" Aspect="AspectFill"  />
+                <Entry Grid.Row="1" Placeholder="Въведи captcha..." Text="{Binding Captcha.StringContent}" IsEnabled="{Binding HasCaptcha}" />
+                <Button Grid.Row="2" Text="Проверка" IsEnabled="{Binding HasCaptcha}" />
+            </Grid>
+        </StackLayout>
+    </Frame>
 </pages:PopupPage>
