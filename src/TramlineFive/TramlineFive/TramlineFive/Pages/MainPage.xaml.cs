@@ -9,28 +9,11 @@ using Xamarin.Forms;
 
 namespace TramlineFive.Pages
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage : TabbedPage
     {
-        public MainViewModel MainViewModel { get; private set; } = new MainViewModel();
         public MainPage()
         {
             InitializeComponent();
-            BindingContext = MainViewModel;;
         }
-
-        private async void OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            await MainViewModel.ChooseLineAsync();
-        }
-        
-        private async void OnCheckClicked(object sender, EventArgs e)
-        {
-            await MainViewModel.LoadLinesAsync();
-        }
-        private async void OnCaptchaClicked(object sender, EventArgs e)
-        {
-            await MainViewModel.GetTimingsAsync();
-        }
-
     }
 }

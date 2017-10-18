@@ -13,7 +13,7 @@ namespace TramlineFive
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new Pages.MainPage());
+            MainPage = new Pages.MainPage();
         }
 
         protected override void OnStart()
