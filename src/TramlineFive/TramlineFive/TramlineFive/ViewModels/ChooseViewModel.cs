@@ -1,7 +1,9 @@
-﻿using SkgtService.Models;
+﻿using SkgtService;
+using SkgtService.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -61,13 +63,12 @@ namespace TramlineFive.ViewModels
 
         public async Task ChooseLineAsync()
         {
-            //if (String.IsNullOrEmpty(selectedLine.SkgtValue))
-            //    return;
+            if (String.IsNullOrEmpty(selectedLine.SkgtValue))
+                return;
 
             //IsLoading = true;
-            //Captcha = await parser.ChooseLineAsync(selectedLine);
-            //CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
-            //OnPropertyChanged("HasCaptcha");
+            Captcha = await SkgtManager.Parser.ChooseLineAsync(selectedLine);
+            CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
             //IsLoading = false;
         }
     }

@@ -22,23 +22,13 @@ namespace TramlineFive.Pages
 			InitializeComponent ();
             BindingContext = MainViewModel;
 		}
-        
-        private async void OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            //await MainViewModel.ChooseLineAsync();
-        }
 
         private async void OnCheckClicked(object sender, EventArgs e)
         {
             try
             {
-                //IEnumerable<Line> lines = await MainViewModel.LoadLinesAsync();
-                IEnumerable<Line> lines = new List<Line>
-                {
-                    new Line("избор на линия", ""),
-                    new Line("reis 107", "107"),
-                    new Line("tramvai 11", "11")
-                };
+                IEnumerable<Line> lines = await MainViewModel.LoadLinesAsync();
+
                 ChooseLinePopup linesPickPopup = new ChooseLinePopup(lines);
                 await PopupNavigation.PushAsync(linesPickPopup);
             }

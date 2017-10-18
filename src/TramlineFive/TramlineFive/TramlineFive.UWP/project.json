@@ -2,7 +2,7 @@
   "dependencies": {
     "HockeySDK.UWP": "4.1.6",
     "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.1",
-    "Xamarin.Forms": "2.4.0.282"
+    "Xamarin.Forms": "2.3.4.247"
   },
   "frameworks": {
     "uap10.0.10240": {}
