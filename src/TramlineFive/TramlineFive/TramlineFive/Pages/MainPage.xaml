@@ -5,6 +5,7 @@
              x:Class="TramlineFive.Pages.MainPage">
 
     <local:VirtualTablesPage />
+
     <ContentPage Title="История" />
     <ContentPage Title="Любими" />
 

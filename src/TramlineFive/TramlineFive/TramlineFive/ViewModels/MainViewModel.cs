@@ -1,4 +1,5 @@
-﻿using SkgtService.Models;
+﻿using SkgtService;
+using SkgtService.Models;
 using SkgtService.Parsers;
 using System;
 using System.Collections.Generic;
@@ -12,44 +13,22 @@ namespace TramlineFive.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        public ObservableCollection<Line> Lines { get; private set; }
         public ObservableCollection<string> Timings { get; private set; }
 
-        private readonly ISkgtParser parser;
-        public MainViewModel()
-        {
-            parser = new DesktopSkgtParser();
-        }
-        
-        public async Task LoadLinesAsync()
+        public async Task<IEnumerable<Line>> LoadLinesAsync()
         {
             IsLoading = true;
 
-            Lines = new ObservableCollection<Line>(await parser.GetLinesForStopAsync(stopCode));
-            OnPropertyChanged("Lines");
-            OnPropertyChanged("HasLines");
-            
-            SelectedLine = Lines[0];
+            IEnumerable<Line> lines = await SkgtManager.Parser.GetLinesForStopAsync(stopCode);
 
             IsLoading = false;
-        }
-
-        public async Task ChooseLineAsync()
-        {
-            if (String.IsNullOrEmpty(selectedLine.SkgtValue))
-                return;
-
-            IsLoading = true;
-            Captcha = await parser.ChooseLineAsync(selectedLine);
-            CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
-            OnPropertyChanged("HasCaptcha");
-            IsLoading = false;
+            return lines;
         }
 
         public async Task GetTimingsAsync()
         {
             IsLoading = true;
-            Timings = new ObservableCollection<string>(await parser.GetTimings(selectedLine, captcha.StringContent));
+            Timings = new ObservableCollection<string>(await SkgtManager.Parser.GetTimings(null, captcha.StringContent));
             OnPropertyChanged("Timings");
             IsLoading = false;
         }
@@ -81,15 +60,15 @@ namespace TramlineFive.ViewModels
                 OnPropertyChanged();
             }
         }
-        
-        public bool HasLines         
+
+        public bool HasLines
         {
             get
             {
-                return Lines == null ? false : Lines.Count > 0;
+                return false; // return Lines == null ? false : Lines.Count > 0;
             }
         }
-        
+
         public bool HasCaptcha
         {
             get
@@ -108,20 +87,6 @@ namespace TramlineFive.ViewModels
             set
             {
                 stopCode = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Line selectedLine;
-        public Line SelectedLine
-        {
-            get
-            {
-                return selectedLine;
-            }
-            set
-            {
-                selectedLine = value;
                 OnPropertyChanged();
             }
         }
