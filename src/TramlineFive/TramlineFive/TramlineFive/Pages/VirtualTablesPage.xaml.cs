@@ -39,7 +39,7 @@ namespace TramlineFive.Pages
                     new Line("reis 107", "107"),
                     new Line("tramvai 11", "11")
                 };
-                LinesPickPopup linesPickPopup = new LinesPickPopup(lines);
+                ChooseLinePopup linesPickPopup = new ChooseLinePopup(lines);
                 await PopupNavigation.PushAsync(linesPickPopup);
             }
             catch (Exception ex)

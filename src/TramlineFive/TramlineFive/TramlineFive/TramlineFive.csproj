@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Pages\Popup\ChooseLinePopup.xaml.cs">
+      <DependentUpon>ChooseLinePopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Pages\VirtualTablesPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

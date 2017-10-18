@@ -13,21 +13,28 @@ using Xamarin.Forms.Xaml;
 namespace TramlineFive.Pages.Popup
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class LinesPickPopup : PopupPage
+	public partial class ChooseLinePopup : PopupPage
 	{
         public LinesPickViewModel LinesPickViewModel { get; private set; }
-		public LinesPickPopup (IEnumerable<Line> lines)
+		public ChooseLinePopup(IEnumerable<Line> lines)
 		{
 			InitializeComponent ();
 
             LinesPickViewModel = new LinesPickViewModel(lines);
             BindingContext = LinesPickViewModel;
 		}
-
+        
         private async void OnSelectedIndexChanged(object sender, EventArgs e)
         {
             if (LinesPickViewModel.SelectedLine.SkgtValue != String.Empty)
-                await PopupNavigation.PopAsync();
+            {
+                await LinesPickViewModel.ChooseLineAsync();
+            }
+        }
+        
+        private async void OnCaptchaClicked(object sender, EventArgs e)
+        {
+            await PopupNavigation.PopAsync();
         }
     }
 }

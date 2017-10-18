@@ -11,24 +11,13 @@
             <RowDefinition Height="4*" />
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
+        
         <StackLayout HorizontalOptions="Center">
             <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}" />
             <Button Margin="0,10,0,0" Text="Проверяване" Clicked="OnCheckClicked" />
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
         </StackLayout>
-
-
-        <Grid Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Image Source="{Binding CaptchaImageSource}" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
-            <Entry Grid.Row="1" Placeholder="Въведи captcha..." Text="{Binding Captcha.StringContent}" IsEnabled="{Binding HasCaptcha}" />
-            <Button Grid.Row="2" Text="Проверка" Clicked="OnCaptchaClicked" IsEnabled="{Binding HasCaptcha}" />
-        </Grid>
-
+        
         <ListView Grid.Row="3" ItemsSource="{Binding Timings}">
 
         </ListView>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace TramlineFive.ViewModels
 {
@@ -26,6 +27,34 @@ namespace TramlineFive.ViewModels
             set
             {
                 selectedLine = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Captcha captcha;
+        public Captcha Captcha
+        {
+            get
+            {
+                return captcha;
+            }
+            set
+            {
+                captcha = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ImageSource captchaImageSource;
+        public ImageSource CaptchaImageSource
+        {
+            get
+            {
+                return captchaImageSource;
+            }
+            set
+            {
+                captchaImageSource = value;
                 OnPropertyChanged();
             }
         }

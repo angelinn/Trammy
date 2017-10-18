@@ -28,23 +28,9 @@ namespace TramlineFive.ViewModels
         public async Task GetTimingsAsync()
         {
             IsLoading = true;
-            Timings = new ObservableCollection<string>(await SkgtManager.Parser.GetTimings(null, captcha.StringContent));
+            Timings = new ObservableCollection<string>(await SkgtManager.Parser.GetTimings(null, null));
             OnPropertyChanged("Timings");
             IsLoading = false;
-        }
-
-        private ImageSource captchaImageSource;
-        public ImageSource CaptchaImageSource
-        {
-            get
-            {
-                return captchaImageSource;
-            }
-            set
-            {
-                captchaImageSource = value;
-                OnPropertyChanged();
-            }
         }
 
         private bool isLoading;
@@ -61,22 +47,6 @@ namespace TramlineFive.ViewModels
             }
         }
 
-        public bool HasLines
-        {
-            get
-            {
-                return false; // return Lines == null ? false : Lines.Count > 0;
-            }
-        }
-
-        public bool HasCaptcha
-        {
-            get
-            {
-                return captchaImageSource != null;
-            }
-        }
-
         private string stopCode;
         public string StopCode
         {
@@ -87,20 +57,6 @@ namespace TramlineFive.ViewModels
             set
             {
                 stopCode = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Captcha captcha;
-        public Captcha Captcha
-        {
-            get
-            {
-                return captcha;
-            }
-            set
-            {
-                captcha = value;
                 OnPropertyChanged();
             }
         }
