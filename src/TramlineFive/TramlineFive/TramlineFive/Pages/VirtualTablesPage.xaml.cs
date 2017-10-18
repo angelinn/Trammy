@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Pages.Popup;
+using TramlineFive.Services;
 using TramlineFive.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -22,6 +23,12 @@ namespace TramlineFive.Pages
 			InitializeComponent ();
             BindingContext = MainViewModel;
 		}
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            // await VersionService.CheckForUpdates();
+        }
 
         private async void OnCheckClicked(object sender, EventArgs e)
         {
