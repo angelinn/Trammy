@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using HockeyApp.Android;
 
 namespace TramlineFive.Droid
 {
@@ -24,6 +25,12 @@ namespace TramlineFive.Droid
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            CrashManager.Register(this, "b4327f88594740d8a58720734a080901");
         }
 
         private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.HockeyApp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace TramlineFive.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            Microsoft.HockeyApp.HockeyClient.Current.Configure("b4327f88594740d8a58720734a080901");
         }
 
         /// <summary>
