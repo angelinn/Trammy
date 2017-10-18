@@ -92,7 +92,7 @@ namespace SkgtService.Parsers
 
             currentHtml.LoadHtml(await response.Content.ReadAsStringAsync());
             var nodes = currentHtml.DocumentNode.SelectNodes("//div[contains(@id,'ContentPlaceHolder1_gvTimes_dvItem_')]");
-            return nodes.Select(n => n.InnerText);
+            return nodes?.Select(n => n.InnerText);
         }
     }
 }

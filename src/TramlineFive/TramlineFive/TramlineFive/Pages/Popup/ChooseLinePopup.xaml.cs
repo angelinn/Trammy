@@ -15,12 +15,12 @@ namespace TramlineFive.Pages.Popup
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ChooseLinePopup : PopupPage
 	{
-        public LinesPickViewModel LinesPickViewModel { get; private set; }
+        public ChooseLineViewModel LinesPickViewModel { get; private set; }
 		public ChooseLinePopup(IEnumerable<Line> lines)
 		{
 			InitializeComponent ();
 
-            LinesPickViewModel = new LinesPickViewModel(lines);
+            LinesPickViewModel = new ChooseLineViewModel(lines);
             BindingContext = LinesPickViewModel;
 		}
         
@@ -34,6 +34,7 @@ namespace TramlineFive.Pages.Popup
         
         private async void OnCaptchaClicked(object sender, EventArgs e)
         {
+            IEnumerable<string> timings = await LinesPickViewModel.GetTimingsAsync();
             await PopupNavigation.PopAsync();
         }
     }

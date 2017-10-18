@@ -37,10 +37,5 @@ namespace TramlineFive.Pages
                 await DisplayAlert("Exception", ex.Message, "OK");
             }
         }
-
-        private async void OnCaptchaClicked(object sender, EventArgs e)
-        {
-            await MainViewModel.GetTimingsAsync();
-        }
     }
 }

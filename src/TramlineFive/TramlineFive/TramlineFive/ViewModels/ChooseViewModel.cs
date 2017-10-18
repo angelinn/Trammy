@@ -10,15 +10,15 @@ using Xamarin.Forms;
 
 namespace TramlineFive.ViewModels
 {
-    public class LinesPickViewModel : BaseViewModel
+    public class ChooseLineViewModel : BaseViewModel
     {
         public ObservableCollection<Line> Lines { get; private set; }
-        public LinesPickViewModel(IEnumerable<Line> lines)
+        public ChooseLineViewModel(IEnumerable<Line> lines)
         {
             Lines = new ObservableCollection<Line>(lines);
             SelectedLine = Lines[0];
         }
-        
+
         private Line selectedLine;
         public Line SelectedLine
         {
@@ -70,6 +70,15 @@ namespace TramlineFive.ViewModels
             Captcha = await SkgtManager.Parser.ChooseLineAsync(selectedLine);
             CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
             //IsLoading = false;
+        }
+
+        public async Task<IEnumerable<string>> GetTimingsAsync()
+        {
+            //IsLoading = true;
+            IEnumerable<string> timings = await SkgtManager.Parser.GetTimings(selectedLine, captcha.StringContent);
+            SkgtManager.SendTimings(this, timings);
+            //IsLoading = false;       
+            return timings;
         }
     }
 }

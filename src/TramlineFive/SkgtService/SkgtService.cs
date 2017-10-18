@@ -10,5 +10,10 @@ namespace SkgtService
     {
         public static ISkgtParser Parser { get; } = new DesktopSkgtParser();
         public static Line SelectedLine { get; set; }
+        public static event EventHandler<IEnumerable<string>> OnTimingsReceived;
+        public static void SendTimings(object sender, IEnumerable<string> timings)
+        {
+            OnTimingsReceived?.Invoke(sender, timings);
+        }
     }
 }

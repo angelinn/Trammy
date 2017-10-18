@@ -14,6 +14,26 @@ namespace TramlineFive.ViewModels
     public class MainViewModel : BaseViewModel
     {
         public ObservableCollection<string> Timings { get; private set; }
+        public MainViewModel()
+        {
+            SkgtManager.OnTimingsReceived += OnTimingsReceived;
+        }
+
+        private void OnTimingsReceived(object sender, IEnumerable<string> e)
+        {
+            if (e != null)
+            {
+                Timings = new ObservableCollection<string>(e);
+                OnPropertyChanged("Timings");
+            }
+            else
+            {
+                Timings = null;
+                Message = "Няма часове на пристигане.";
+
+                OnPropertyChanged("NoTimings");
+            }
+        }
 
         public async Task<IEnumerable<Line>> LoadLinesAsync()
         {
@@ -25,12 +45,26 @@ namespace TramlineFive.ViewModels
             return lines;
         }
 
-        public async Task GetTimingsAsync()
+        public bool NoTimings
         {
-            IsLoading = true;
-            Timings = new ObservableCollection<string>(await SkgtManager.Parser.GetTimings(null, null));
-            OnPropertyChanged("Timings");
-            IsLoading = false;
+            get
+            {
+                return Timings == null;
+            }
+        }
+
+        private string message;
+        public string Message
+        {
+            get
+            {
+                return message;
+            }
+            set
+            {
+                message = value;
+                OnPropertyChanged();
+            }
         }
 
         private bool isLoading;
