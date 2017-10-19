@@ -12,10 +12,10 @@ using Xamarin.Forms;
 
 namespace TramlineFive.ViewModels
 {
-    public class MainViewModel : BaseViewModel
+    public class VirtualTablesViewModel : BaseViewModel
     {
         public ObservableCollection<string> Timings { get; private set; }
-        public MainViewModel()
+        public VirtualTablesViewModel()
         {
             SkgtManager.OnTimingsReceived += OnTimingsReceived;
         }

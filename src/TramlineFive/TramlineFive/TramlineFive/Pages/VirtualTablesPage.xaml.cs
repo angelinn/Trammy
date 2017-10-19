@@ -17,12 +17,12 @@ namespace TramlineFive.Pages
 	public partial class VirtualTablesPage : ContentPage
 	{
         private bool appeared;
-        public MainViewModel MainViewModel { get; private set; } = new MainViewModel();
+        public VirtualTablesViewModel VirtualTablesViewModel { get; private set; } = new VirtualTablesViewModel();
 
         public VirtualTablesPage ()
 		{
 			InitializeComponent ();
-            BindingContext = MainViewModel;
+            BindingContext = VirtualTablesViewModel;
 		}
 
         protected override async void OnAppearing()
@@ -31,20 +31,20 @@ namespace TramlineFive.Pages
             if (!appeared)
             {
                 appeared = true;
-                await MainViewModel.CheckForUpdatesAsync();
+                await VirtualTablesViewModel.CheckForUpdatesAsync();
             }
         }
 
         private void OnVersionTapped(object sender, EventArgs e)
         {
-            Device.OpenUri(new Uri(MainViewModel.Version.ReleaseUrl));
+            Device.OpenUri(new Uri(VirtualTablesViewModel.Version.ReleaseUrl));
         }
 
         private async void OnCheckClicked(object sender, EventArgs e)
         {
             try
             {
-                IEnumerable<Line> lines = await MainViewModel.LoadLinesAsync();
+                IEnumerable<Line> lines = await VirtualTablesViewModel.LoadLinesAsync();
 
                 ChooseLinePopup linesPickPopup = new ChooseLinePopup(lines);
                 await PopupNavigation.PushAsync(linesPickPopup);

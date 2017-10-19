@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using TramlineFive.DataAccess;
+using TramlineFive.Services;
 using Xamarin.Forms;
 
 namespace TramlineFive
@@ -14,6 +15,12 @@ namespace TramlineFive
             InitializeComponent();
 
             MainPage = new Pages.MainPage();
+            
+            IDatabasePathService dbPathService = DependencyService.Get<IDatabasePathService>();
+            using (TramlineFiveContext context = new TramlineFiveContext(dbPathService.Path))
+            {
+                // context.Database.EnsureCreated();
+            }
         }
 
         protected override void OnStart()
