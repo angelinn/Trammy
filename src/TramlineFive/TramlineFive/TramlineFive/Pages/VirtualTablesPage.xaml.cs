@@ -31,15 +31,15 @@ namespace TramlineFive.Pages
             if (!appeared)
             {
                 appeared = true;
-                NewVersion version = await VersionService.CheckForUpdates();
-                if (version != null)
-                {
-                    DownloadVersionPopup versionPopup = new DownloadVersionPopup(version);
-                    await PopupNavigation.PushAsync(versionPopup);
-                }
+                await MainViewModel.CheckForUpdatesAsync();
             }
         }
-        
+
+        private void OnVersionTapped(object sender, EventArgs e)
+        {
+            Device.OpenUri(new Uri(MainViewModel.Version.ReleaseUrl));
+        }
+
         private async void OnCheckClicked(object sender, EventArgs e)
         {
             try

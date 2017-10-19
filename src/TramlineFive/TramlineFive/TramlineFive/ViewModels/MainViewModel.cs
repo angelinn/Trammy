@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using TramlineFive.Services;
 using Xamarin.Forms;
 
 namespace TramlineFive.ViewModels
@@ -43,6 +44,25 @@ namespace TramlineFive.ViewModels
 
             IsLoading = false;
             return lines;
+        }
+
+        public async Task CheckForUpdatesAsync()
+        {
+            Version = await VersionService.CheckForUpdates();
+        }
+
+        private NewVersion version;
+        public NewVersion Version
+        {
+            get
+            {
+                return version;
+            }
+            set
+            {
+                version = value;
+                OnPropertyChanged();
+            }
         }
 
         public bool NoTimings

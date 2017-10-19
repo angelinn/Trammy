@@ -8,6 +8,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="3*" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         
         <StackLayout HorizontalOptions="Center">
@@ -20,5 +21,12 @@
         <ListView Grid.Row="1" ItemsSource="{Binding Timings}">
 
         </ListView>
+        <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="2"
+               TextColor="DodgerBlue" HorizontalOptions="Center">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnVersionTapped" />
+            </Label.GestureRecognizers>
+        </Label>
     </Grid>
 </ContentPage>
+    
