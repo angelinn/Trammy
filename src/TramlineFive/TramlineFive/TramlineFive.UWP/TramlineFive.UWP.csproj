@@ -18,7 +18,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>TramlineFive.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>ED5931996D6331C4B7D3F4F14ED741DA80131298</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>EF5988CD5B3CD2526273DB2E4C80E01E83559144</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxPackageDir>C:\Users\angelin.nedelchev\Desktop\</AppxPackageDir>
     <AppxBundle>Always</AppxBundle>
