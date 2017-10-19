@@ -7,21 +7,22 @@
     <Grid Padding="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="3*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        
+
         <StackLayout HorizontalOptions="Center">
             <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}" />
             <Button Margin="0,10,0,0" Text="Проверяване" Clicked="OnCheckClicked" />
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
             <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" />
         </StackLayout>
-        
-        <ListView Grid.Row="1" ItemsSource="{Binding Timings}">
+        <Label Text="{Binding SelectedLine}" HorizontalOptions="Center" Grid.Row="1" />
 
-        </ListView>
-        <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="2"
+        <ListView Grid.Row="2" ItemsSource="{Binding Timings}" HorizontalOptions="Center" />
+        
+        <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="3"
                TextColor="DodgerBlue" HorizontalOptions="Center">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnVersionTapped" />

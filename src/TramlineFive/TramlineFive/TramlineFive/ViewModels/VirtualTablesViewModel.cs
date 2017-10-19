@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Services;
@@ -26,13 +27,26 @@ namespace TramlineFive.ViewModels
             {
                 Timings = new ObservableCollection<string>(e);
                 OnPropertyChanged("Timings");
+                OnPropertyChanged("SelectedLine");
             }
             else
             {
                 Timings = null;
                 Message = "Няма часове на пристигане.";
+            }
 
-                OnPropertyChanged("NoTimings");
+            OnPropertyChanged("NoTimings");
+        }
+
+        public string SelectedLine
+        {
+            get
+            {
+                if (SkgtManager.SelectedLine == null)
+                    return null;
+
+                return SkgtManager.SelectedLine.DisplayName.First().ToString().ToUpper()
+                            + SkgtManager.SelectedLine.DisplayName.Substring(1);
             }
         }
 

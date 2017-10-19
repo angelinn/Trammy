@@ -29,6 +29,7 @@ namespace TramlineFive.ViewModels
             set
             {
                 selectedLine = value;
+                SkgtManager.SelectedLine = value;
                 OnPropertyChanged();
             }
         }
