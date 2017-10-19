@@ -16,6 +16,7 @@ namespace TramlineFive.Pages
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class VirtualTablesPage : ContentPage
 	{
+        private bool appeared;
         public MainViewModel MainViewModel { get; private set; } = new MainViewModel();
 
         public VirtualTablesPage ()
@@ -27,7 +28,12 @@ namespace TramlineFive.Pages
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            // await VersionService.CheckForUpdates();
+            if (!appeared)
+            {
+                appeared = true;
+                if (await VersionService.CheckForUpdates() == null)
+                    await DisplayAlert("Update", "Има налична нова версия. Кликнете тук за сваляне", "OK");
+            }
         }
 
         private async void OnCheckClicked(object sender, EventArgs e)

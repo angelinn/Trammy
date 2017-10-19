@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Octokit" Version="0.27.0" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.0.4" />
+    <PackageReference Include="Xam.Plugin.Version" Version="1.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="2.3.4.247" />
   </ItemGroup>
 
