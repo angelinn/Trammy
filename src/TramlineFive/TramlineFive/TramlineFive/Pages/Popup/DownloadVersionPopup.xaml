@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             x:Class="TramlineFive.Pages.Popup.DownloadVersionPopup">
+
+    <Frame BackgroundColor="White" HorizontalOptions="Center" VerticalOptions="Center">
+        <StackLayout>
+            <Label Text="{Binding VersionNumber, StringFormat='Налична е версия {0}'}" />
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Натиснете " />
+                <Label Text="тук" TextColor="DodgerBlue">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnDownloadVersionTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Text=" за сваляне." />
+            </StackLayout>
+            <Button Text="После" Clicked="OnLaterClicked" />
+        </StackLayout>
+    </Frame>
+
+</pages:PopupPage>
+    

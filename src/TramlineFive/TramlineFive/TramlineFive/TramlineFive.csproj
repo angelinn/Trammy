@@ -30,6 +30,9 @@
     <Compile Update="Pages\Popup\ChooseLinePopup.xaml.cs">
       <DependentUpon>ChooseLinePopup.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Pages\Popup\DownloadVersionPopup.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Pages\VirtualTablesPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -31,11 +31,15 @@ namespace TramlineFive.Pages
             if (!appeared)
             {
                 appeared = true;
-                if (await VersionService.CheckForUpdates() == null)
-                    await DisplayAlert("Update", "Има налична нова версия. Кликнете тук за сваляне", "OK");
+                NewVersion version = await VersionService.CheckForUpdates();
+                if (version != null)
+                {
+                    DownloadVersionPopup versionPopup = new DownloadVersionPopup(version);
+                    await PopupNavigation.PushAsync(versionPopup);
+                }
             }
         }
-
+        
         private async void OnCheckClicked(object sender, EventArgs e)
         {
             try
