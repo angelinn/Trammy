@@ -6,10 +6,8 @@
     
     <Grid Padding="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="4*" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
         
         <StackLayout HorizontalOptions="Center">
@@ -19,7 +17,7 @@
             <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" />
         </StackLayout>
         
-        <ListView Grid.Row="3" ItemsSource="{Binding Timings}">
+        <ListView Grid.Row="1" ItemsSource="{Binding Timings}">
 
         </ListView>
     </Grid>

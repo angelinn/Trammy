@@ -13,15 +13,22 @@ namespace TramlineFive.Services
     {
         public static async Task<NewVersion> CheckForUpdates()
         {
-            GitHubClient client = new GitHubClient(new ProductHeaderValue("TramlineFive.Xamarin"));
-            IReadOnlyList<Release> res = await client.Repository.Release.GetAll("betrakiss", "TramlineFive.Xamarin");
-            Release lastRelease = res.First();
+            try
+            {
+                GitHubClient client = new GitHubClient(new ProductHeaderValue("TramlineFive.Xamarin"));
+                IReadOnlyList<Release> res = await client.Repository.Release.GetAll("betrakiss", "TramlineFive.Xamarin");
+                Release lastRelease = res.First();
 
-            string version = Version.Plugin.CrossVersion.Current.Version.Substring(0, 5);
-            if (String.Compare(lastRelease.TagName, version) > 0)
-                return new NewVersion { VersionNumber = lastRelease.TagName, ReleaseUrl = lastRelease.HtmlUrl };
+                string version = Version.Plugin.CrossVersion.Current.Version.Substring(0, 5);
+                if (String.Compare(lastRelease.TagName, version) > 0)
+                    return new NewVersion { VersionNumber = lastRelease.TagName, ReleaseUrl = lastRelease.HtmlUrl };
 
-            return null;
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
