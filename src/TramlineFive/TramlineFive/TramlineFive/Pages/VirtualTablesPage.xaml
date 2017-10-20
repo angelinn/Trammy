@@ -14,18 +14,21 @@
     <Grid Padding="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="30" />
+            <RowDefinition Height="100" />
             <RowDefinition Height="3*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
 
         <StackLayout HorizontalOptions="Center">
             <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}" Completed="OnStopCodeCompleted" />
-            <Button Margin="0,10,0,0" Text="Проверяване" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" Clicked="OnCheckClicked" />
+            <Button Text="Проверяване" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" Clicked="OnCheckClicked" />
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
             <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" />
         </StackLayout>
-        <Label Text="{Binding SelectedLine}" HorizontalOptions="Center" Grid.Row="1"  />
+
+        <Grid BackgroundColor="DodgerBlue" Grid.Row="1" Margin="0,15,0,0">
+            <Label Text="{Binding SelectedLine}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" />
+        </Grid>
 
         <ListView Grid.Row="2" ItemsSource="{Binding Timings}" HorizontalOptions="Center" />
 
