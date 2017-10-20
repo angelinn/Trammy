@@ -34,6 +34,16 @@ namespace TramlineFive.Pages.Popup
         
         private async void OnCaptchaClicked(object sender, EventArgs e)
         {
+            await GetTimingsAsync();
+        }
+
+        private async void OnCaptchaCompleted(object sender, EventArgs e)
+        {
+            await GetTimingsAsync();
+        }
+
+        private async Task GetTimingsAsync()
+        {
             IEnumerable<string> timings = await LinesPickViewModel.GetTimingsAsync();
             await PopupNavigation.PopAsync();
         }

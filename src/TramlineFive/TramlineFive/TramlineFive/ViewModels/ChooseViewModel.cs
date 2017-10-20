@@ -62,23 +62,37 @@ namespace TramlineFive.ViewModels
             }
         }
 
+        private bool isLoading;
+        public bool IsLoading
+        {
+            get
+            {
+                return isLoading;
+            }
+            set
+            {
+                isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
         public async Task ChooseLineAsync()
         {
             if (String.IsNullOrEmpty(selectedLine.SkgtValue))
                 return;
 
-            //IsLoading = true;
+            IsLoading = true;
             Captcha = await SkgtManager.Parser.ChooseLineAsync(selectedLine);
             CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
-            //IsLoading = false;
+            IsLoading = false;
         }
 
         public async Task<IEnumerable<string>> GetTimingsAsync()
         {
-            //IsLoading = true;
+            IsLoading = true;
             IEnumerable<string> timings = await SkgtManager.Parser.GetTimings(selectedLine, captcha.StringContent);
             SkgtManager.SendTimings(this, timings);
-            //IsLoading = false;       
+            IsLoading = false;       
             return timings;
         }
     }

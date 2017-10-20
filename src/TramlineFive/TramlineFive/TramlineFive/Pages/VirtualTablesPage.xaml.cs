@@ -25,6 +25,7 @@ namespace TramlineFive.Pages
             BindingContext = VirtualTablesViewModel;
 		}
 
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -39,8 +40,18 @@ namespace TramlineFive.Pages
         {
             Device.OpenUri(new Uri(VirtualTablesViewModel.Version.ReleaseUrl));
         }
-
+        
         private async void OnCheckClicked(object sender, EventArgs e)
+        {
+            await CheckStopAsync();
+        }
+
+        private async void OnStopCodeCompleted(object sender, EventArgs e)
+        {
+            await CheckStopAsync();
+        }
+        
+        private async Task CheckStopAsync()
         {
             try
             {

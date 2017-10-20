@@ -8,6 +8,7 @@
     <pages:PopupPage.Resources>
         <ResourceDictionary>
             <cv:ReferenceToBoolConverter x:Key="RefToBool" />
+            <cv:InverseBoolConverter x:Key="InverseBool" />
         </ResourceDictionary>
     </pages:PopupPage.Resources>
 
@@ -15,7 +16,8 @@
         <StackLayout>
             <StackLayout>
                 <Label Text="Избор на линия:" />
-                <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}" SelectedIndexChanged="OnSelectedIndexChanged" />
+                <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}"
+                        SelectedIndexChanged="OnSelectedIndexChanged" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
             </StackLayout>
 
             <Grid IsVisible="{Binding CaptchaImageSource, Converter={StaticResource RefToBool}}">
@@ -25,9 +27,10 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Image Source="{Binding CaptchaImageSource}" Aspect="AspectFit" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
-                <Entry Grid.Row="1" Placeholder="Въведи captcha..." Text="{Binding Captcha.StringContent}" />
-                <Button Grid.Row="2" Text="Проверка" Clicked="OnCaptchaClicked" />
+                <Entry Grid.Row="1" Placeholder="Въведи captcha..." Text="{Binding Captcha.StringContent}" Completed="OnCaptchaCompleted" />
+                <Button Grid.Row="2" Text="Проверка" Clicked="OnCaptchaClicked" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
             </Grid>
+            <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" />
         </StackLayout>
     </Frame>
 </pages:PopupPage>
