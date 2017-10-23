@@ -54,15 +54,29 @@ namespace TramlineFive.ViewModels
         {
             IsLoading = true;
 
-            IEnumerable<Line> lines = await SkgtManager.Parser.GetLinesForStopAsync(stopCode);
+            CurrentStop = await SkgtManager.Parser.GetLinesForStopAsync(stopCode);
 
             IsLoading = false;
-            return lines;
+            return currentStop.Lines;
         }
 
         public async Task CheckForUpdatesAsync()
         {
             Version = await VersionService.CheckForUpdates();
+        }
+        
+        private Stop currentStop;
+        public Stop CurrentStop
+        {
+            get
+            {
+                return currentStop;
+            }
+            set
+            {
+                currentStop = value;
+                OnPropertyChanged();
+            }
         }
 
         private NewVersion version;

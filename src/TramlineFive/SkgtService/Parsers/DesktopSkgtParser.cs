@@ -42,7 +42,7 @@ namespace SkgtService.Parsers
             return new Captcha { BinaryContent = bytes };
         }
 
-        public async Task<List<Line>> GetLinesForStopAsync(string stopCode)
+        public async Task<Stop> GetLinesForStopAsync(string stopCode)
         {
             HtmlDocument doc = new HtmlWeb().Load(VIRTUAL_TABLES_URL);
             HtmlNode.ElementsFlags.Remove("option");
@@ -64,14 +64,20 @@ namespace SkgtService.Parsers
             currentHtml = new HtmlDocument();
             currentHtml.LoadHtml(lines);
 
-            List<Line> currentLines = new List<Line>();
+            Stop stop = new Stop();
+            
             var allLines = currentHtml.DocumentNode.SelectNodes("//select//option");
             foreach (HtmlNode aLine in allLines)
             {
-                currentLines.Add(new Line(aLine.InnerText, aLine.Attributes["value"].Value));
+                stop.Lines.Add(new Line(aLine.InnerText, aLine.Attributes["value"].Value));
             }
 
-            return currentLines;
+            stop.Name = currentHtml.DocumentNode.SelectSingleNode("//*[@id=\"ContentPlaceHolder1_lblStopName\"]").InnerText;
+            stop.Direction = currentHtml.DocumentNode.SelectSingleNode("//*[@id=\"ContentPlaceHolder1_lblDescription\"]").InnerText;
+            if (!String.IsNullOrEmpty(stop.Direction))
+                stop.Direction = stop.Direction.Substring(1, stop.Direction.LastIndexOf("\"") - 1);
+
+            return stop;
         }
 
         public async Task<IEnumerable<string>> GetTimings(Line line, string captcha)
