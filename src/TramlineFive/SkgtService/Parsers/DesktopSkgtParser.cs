@@ -44,7 +44,10 @@ namespace SkgtService.Parsers
 
         public async Task<Stop> GetLinesForStopAsync(string stopCode)
         {
-            HtmlDocument doc = new HtmlWeb().Load(VIRTUAL_TABLES_URL);
+            string initialHtml = await client.GetStringAsync(VIRTUAL_TABLES_URL);
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(initialHtml);
+
             HtmlNode.ElementsFlags.Remove("option");
 
             Dictionary<string, string> urlEncoded = new Dictionary<string, string>();
