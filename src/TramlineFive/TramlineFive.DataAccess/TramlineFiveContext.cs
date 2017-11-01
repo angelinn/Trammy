@@ -8,17 +8,12 @@ namespace TramlineFive.DataAccess
 {
     public class TramlineFiveContext : DbContext
     {
+        public static string ConnectionString { get; set; }
         public DbSet<History> History { get; set; }
-        private string dbPath;
-
-        public TramlineFiveContext(string databasePath)
-        {
-            dbPath = databasePath;
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Filename={dbPath}");
+            optionsBuilder.UseSqlite($"Filename={ConnectionString}");
         }
     }
 }

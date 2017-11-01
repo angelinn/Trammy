@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TramlineFive.DataAccess.Domain;
 using TramlineFive.Services;
 using Xamarin.Forms;
 
@@ -26,6 +27,8 @@ namespace TramlineFive.ViewModels
             if (e != null)
             {
                 Timings = new ObservableCollection<string>(e);
+                HistoryDomain.Add(SelectedLine, stopCode);
+
                 OnPropertyChanged("Timings");
                 OnPropertyChanged("SelectedLine");
             }

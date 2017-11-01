@@ -17,9 +17,10 @@ namespace TramlineFive
             MainPage = new Pages.MainPage();
             
             IDatabasePathService dbPathService = DependencyService.Get<IDatabasePathService>();
-            using (TramlineFiveContext context = new TramlineFiveContext(dbPathService.Path))
+            TramlineFiveContext.ConnectionString = dbPathService.Path;
+            using (TramlineFiveContext context = new TramlineFiveContext())
             {
-                // context.Database.EnsureCreated();
+                context.Database.EnsureCreated();
             }
         }
 

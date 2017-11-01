@@ -16,7 +16,6 @@ namespace TramlineFive.Pages
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class VirtualTablesPage : ContentPage
 	{
-        private bool appeared;
         public VirtualTablesViewModel VirtualTablesViewModel { get; private set; } = new VirtualTablesViewModel();
 
         public VirtualTablesPage ()
@@ -24,17 +23,6 @@ namespace TramlineFive.Pages
 			InitializeComponent ();
             BindingContext = VirtualTablesViewModel;
 		}
-
-
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-            if (!appeared)
-            {
-                appeared = true;
-                await VirtualTablesViewModel.CheckForUpdatesAsync();
-            }
-        }
 
         private void OnVersionTapped(object sender, EventArgs e)
         {

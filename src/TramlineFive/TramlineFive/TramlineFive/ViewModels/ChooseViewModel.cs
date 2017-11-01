@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using TramlineFive.DataAccess.Domain;
 using Xamarin.Forms;
 
 namespace TramlineFive.ViewModels
@@ -90,9 +91,11 @@ namespace TramlineFive.ViewModels
         public async Task<IEnumerable<string>> GetTimingsAsync()
         {
             IsLoading = true;
+
             IEnumerable<string> timings = await SkgtManager.Parser.GetTimings(selectedLine, captcha.StringContent);
             SkgtManager.SendTimings(this, timings);
-            IsLoading = false;       
+            IsLoading = false;
+
             return timings;
         }
     }
