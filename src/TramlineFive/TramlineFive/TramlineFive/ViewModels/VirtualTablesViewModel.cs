@@ -22,12 +22,11 @@ namespace TramlineFive.ViewModels
             SkgtManager.OnTimingsReceived += OnTimingsReceived;
         }
 
-        private void OnTimingsReceived(object sender, IEnumerable<string> e)
+        private async void OnTimingsReceived(object sender, IEnumerable<string> e)
         {
             if (e != null)
             {
                 Timings = new ObservableCollection<string>(e);
-                HistoryDomain.Add(SelectedLine, stopCode);
 
                 OnPropertyChanged("Timings");
                 OnPropertyChanged("SelectedLine");
@@ -37,6 +36,7 @@ namespace TramlineFive.ViewModels
                 Timings = null;
                 Message = "Няма часове на пристигане.";
             }
+            await HistoryDomain.AddAsync(SelectedLine, stopCode);
 
             OnPropertyChanged("NoTimings");
         }

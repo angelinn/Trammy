@@ -14,19 +14,14 @@ namespace TramlineFive
         {
             InitializeComponent();
 
-            MainPage = new Pages.MainPage();
-            
-            IDatabasePathService dbPathService = DependencyService.Get<IDatabasePathService>();
-            TramlineFiveContext.ConnectionString = dbPathService.Path;
-            using (TramlineFiveContext context = new TramlineFiveContext())
-            {
-                context.Database.EnsureCreated();
-            }
+            MainPage = new Pages.MasterDetail();
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
-            // Handle when your app starts
+            IDatabasePathService dbPathService = DependencyService.Get<IDatabasePathService>();
+            TramlineFiveContext.DatabasePath = dbPathService.Path;
+            await TramlineFiveContext.EnsureCreatedAsync();
         }
 
         protected override void OnSleep()

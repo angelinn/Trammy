@@ -20,42 +20,28 @@ namespace TramlineFive.DataAccess.Domain
             TimeStamp = entity.TimeStamp;
         }
 
-        public static void Add(string line, string stopCode)
+        public static async Task AddAsync(string line, string stopCode)
         {
-            using (TramlineFiveContext context = new TramlineFiveContext())
+            await TramlineFiveContext.AddHistoryAsync(new History
             {
-                context.History.Add(new History
-                {
-                    Line = line,
-                    StopCode = stopCode,
-                    TimeStamp = DateTime.Now
-                });
-
-                context.SaveChanges();
-            }
+                Line = line,
+                StopCode = stopCode,
+                TimeStamp = DateTime.Now
+            });
         }
 
-        public static void Remove(History history)
-        {
-            using (TramlineFiveContext context = new TramlineFiveContext())
-            {
-                context.History.Remove(history);
-                context.SaveChanges();
-            }
-        }
+        //public static void Remove(History history)
+        //{
+        //    using (TramlineFiveContext context = new TramlineFiveContext())
+        //    {
+        //        context.History.Remove(history);
+        //        context.SaveChanges();
+        //    }
+        //}
 
         public static async Task<IEnumerable<HistoryDomain>> TakeAsync(int count = 10)
         {
-            IEnumerable<HistoryDomain> recent = null;
-            await Task.Run(() =>
-            {
-                using (TramlineFiveContext context = new TramlineFiveContext())
-                {
-                    recent = context.History.Take(count).ToList().Select(h => new HistoryDomain(h));
-                }
-            });
-
-            return recent;
+            return (await TramlineFiveContext.Take(count)).Select(h => new HistoryDomain(h));
         }
     }
 }

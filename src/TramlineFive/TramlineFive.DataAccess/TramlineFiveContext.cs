@@ -1,19 +1,35 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using SQLite;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using TramlineFive.DataAccess.Entities;
 
 namespace TramlineFive.DataAccess
 {
-    public class TramlineFiveContext : DbContext
+    public class TramlineFiveContext
     {
-        public static string ConnectionString { get; set; }
-        public DbSet<History> History { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public static string DatabasePath { get; set; }
+        public static async Task EnsureCreatedAsync()
         {
-            optionsBuilder.UseSqlite($"Filename={ConnectionString}");
+            if (!File.Exists(DatabasePath))
+            {
+                SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+                await db.CreateTableAsync<History>();
+            }
+        }
+
+        public static async Task AddHistoryAsync(History history)
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+            await db.InsertAsync(history);
+        }
+
+        public static async Task<IEnumerable<History>> Take(int count = 10)
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+            return await db.Table<History>().Take(10).ToListAsync();
         }
     }
 }
