@@ -6,8 +6,23 @@
              MasterBehavior="Popover">
 
     <MasterDetailPage.Master>
-        <ContentPage Title="wut" Padding="0,40,0,0">
-            <Label Text="lol wut" />
+        <ContentPage Title="Tramline Five" Padding="0,40,0,0" BackgroundColor="DodgerBlue">
+            <StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    
+                    <Label Text="Разписания"  />
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal">
+                    
+                    <Label Text="Настройки"/>
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal">
+                   
+                    <Label Text="Информация" />
+                </StackLayout>
+            </StackLayout>
         </ContentPage>
     </MasterDetailPage.Master>
 

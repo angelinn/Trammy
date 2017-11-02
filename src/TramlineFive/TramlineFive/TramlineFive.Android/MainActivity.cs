@@ -21,6 +21,7 @@ namespace TramlineFive.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+
             LoadApplication(new App());
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;

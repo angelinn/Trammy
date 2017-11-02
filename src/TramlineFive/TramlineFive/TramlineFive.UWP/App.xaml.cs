@@ -8,6 +8,8 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -79,6 +81,17 @@ namespace TramlineFive.UWP
                 // parameter
                 rootFrame.Navigate(typeof(MainPage), e.Arguments);
             }
+
+            if (Windows.Foundation.Metadata.ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            {
+                var view = SystemNavigationManager.GetForCurrentView();
+
+                view.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+                var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+                statusBar.BackgroundColor = Color.FromArgb(0, 25, 118, 210);
+                statusBar.BackgroundOpacity = 1;
+            }
+
             // Ensure the current window is active
             Window.Current.Activate();
         }
