@@ -5,4 +5,8 @@
     xmlns:local="using:TramlineFive.UWP"
     RequestedTheme="Light">
 
+    <Application.Resources>
+        
+    </Application.Resources>
+
 </Application>
