@@ -14,9 +14,9 @@
 
     <Grid Padding="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="110" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="3*" />
+            <RowDefinition Height="5*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
 
@@ -25,19 +25,21 @@
             <Button Text="Проверяване" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" Clicked="OnCheckClicked" />
         </StackLayout>
 
-        <Grid Grid.Row="1" Margin="-10,15,-10,0">
-            <StackLayout Margin="0,10,0,0" HorizontalOptions="Center">
+        <Grid Grid.Row="1" Margin="0,10,0,0">
+            <StackLayout>
                 <ActivityIndicator IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
-                <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" />
+                <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" HorizontalOptions="Center" />
             </StackLayout>
-            <StackLayout BackgroundColor="DodgerBlue" Grid.Row="1" Padding="5" IsVisible="{Binding SelectedLine, Converter={StaticResource ReferenceToBool}}">
-                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                    <Label Text="{Binding StopCode, StringFormat='({0})'}" TextColor="White" FontSize="14" />
-                    <Label Text="{Binding CurrentStop.Name}" TextColor="White" FontSize="14" />
+            <Grid BackgroundColor="DodgerBlue" Padding="5" Margin="5,0,5,0" IsVisible="{Binding SelectedLine, Converter={StaticResource ReferenceToBool}}">
+                <StackLayout VerticalOptions="Center">
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                        <Label Text="{Binding StopCode, StringFormat='({0})'}" TextColor="White" FontSize="14" />
+                        <Label Text="{Binding CurrentStop.Name}" TextColor="White" FontSize="14" />
+                    </StackLayout>
+                    <Label Text="{Binding CurrentStop.Direction}" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="White" FontSize="14" />
+                    <Label Text="{Binding SelectedLine}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontSize="14" />
                 </StackLayout>
-                <Label Text="{Binding CurrentStop.Direction}" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="White" FontSize="14" />
-                <Label Text="{Binding SelectedLine}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontSize="14" />
-            </StackLayout>
+            </Grid>
         </Grid>
 
         <ListView Grid.Row="2" ItemsSource="{Binding Timings}" HorizontalOptions="Center" />
