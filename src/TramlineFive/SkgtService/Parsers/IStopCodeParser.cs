@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SkgtService.Parsers
 {
-    public interface ISkgtParser
+    public interface IStopCodeParser
     {
         Task<Stop> GetLinesForStopAsync(string stopCode);
         Task<Captcha> ChooseLineAsync(Line target);

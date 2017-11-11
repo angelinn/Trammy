@@ -8,7 +8,8 @@ namespace SkgtService
 {
     public static class SkgtManager
     {
-        public static ISkgtParser Parser { get; } = new DesktopSkgtParser();
+        public static IStopCodeParser StopCodeParser { get; } = new StopCodeParser();
+        public static ILineParser LineParser { get; } = new LineParser();
         public static Line SelectedLine { get; set; }
         public static event EventHandler<IEnumerable<string>> OnTimingsReceived;
         public static void SendTimings(object sender, IEnumerable<string> timings)

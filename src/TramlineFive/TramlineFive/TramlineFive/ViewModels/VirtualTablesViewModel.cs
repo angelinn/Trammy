@@ -1,4 +1,5 @@
 ﻿using SkgtService;
+using SkgtService.Exceptions;
 using SkgtService.Models;
 using SkgtService.Parsers;
 using System;
@@ -55,19 +56,32 @@ namespace TramlineFive.ViewModels
 
         public async Task<IEnumerable<Line>> LoadLinesAsync()
         {
-            IsLoading = true;
 
-            CurrentStop = await SkgtManager.Parser.GetLinesForStopAsync(stopCode);
+            try
+            {
+                IsLoading = true;
 
-            IsLoading = false;
-            return currentStop.Lines;
+                CurrentStop = await SkgtManager.StopCodeParser.GetLinesForStopAsync(stopCode);
+
+                return currentStop.Lines;
+            }
+            catch (TramlineFiveException ex)
+            {
+                Message = ex.Message;
+                return null;
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+
         }
 
         public async Task CheckForUpdatesAsync()
         {
             Version = await VersionService.CheckForUpdates();
         }
-        
+
         private Stop currentStop;
         public Stop CurrentStop
         {

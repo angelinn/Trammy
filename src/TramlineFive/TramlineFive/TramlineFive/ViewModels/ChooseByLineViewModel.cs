@@ -6,15 +6,15 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using TramlineFive.DataAccess.Domain;
 using Xamarin.Forms;
 
 namespace TramlineFive.ViewModels
 {
-    public class ChooseLineViewModel : BaseViewModel
+    public class ChooseByLineViewModel : BaseViewModel
     {
         public ObservableCollection<Line> Lines { get; private set; }
-        public ChooseLineViewModel(IEnumerable<Line> lines)
+        public ObservableCollection<Direction> Directions { get; private set; }
+        public ChooseByLineViewModel(IEnumerable<Line> lines)
         {
             Lines = new ObservableCollection<Line>(lines);
             SelectedLine = Lines[0];
@@ -48,6 +48,7 @@ namespace TramlineFive.ViewModels
                 OnPropertyChanged();
             }
         }
+
 
         private ImageSource captchaImageSource;
         public ImageSource CaptchaImageSource
@@ -85,6 +86,16 @@ namespace TramlineFive.ViewModels
             IsLoading = true;
             Captcha = await SkgtManager.StopCodeParser.ChooseLineAsync(selectedLine);
             CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
+            IsLoading = false;
+        }
+
+        public async Task GetDirectionsAsync()
+        {
+            if (String.IsNullOrEmpty(selectedLine.SkgtValue))
+                return;
+
+            IsLoading = true;
+            Directions = new ObservableCollection<Direction>(await SkgtManager.LineParser.GetDirectionsAsync(selectedLine));
             IsLoading = false;
         }
 

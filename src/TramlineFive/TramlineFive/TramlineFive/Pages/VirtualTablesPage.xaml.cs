@@ -45,8 +45,11 @@ namespace TramlineFive.Pages
             {
                 IEnumerable<Line> lines = await VirtualTablesViewModel.LoadLinesAsync();
 
-                ChooseLinePopup linesPickPopup = new ChooseLinePopup(lines);
-                await PopupNavigation.PushAsync(linesPickPopup);
+                if (lines != null)
+                {
+                    ChooseLinePopup linesPickPopup = new ChooseLinePopup(lines);
+                    await PopupNavigation.PushAsync(linesPickPopup);
+                }
             }
             catch (Exception ex)
             {

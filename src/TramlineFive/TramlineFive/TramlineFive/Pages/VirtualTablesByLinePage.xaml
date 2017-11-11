@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TramlineFive.Pages.VirtualTablesByLinePage"
+             Title="Линия">
+
+    <Grid Padding="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="5*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <StackLayout>
+            <Label Text="Избор на линия" />
+            <Picker ItemsSource="{Binding TransportTypes}" SelectedItem="{Binding SelectedType}" HorizontalOptions="Center"
+                VerticalOptions="Center" ItemDisplayBinding="{Binding DisplayName}" />
+            <Button Text="Търсене" Clicked="OnSearchClicked" />
+        </StackLayout>
+    </Grid>
+
+</ContentPage>

@@ -11,6 +11,7 @@ namespace TramlineFive.Pages
 {
     public partial class MainPage : TabbedPage
     {
+        public VirtualTablesByLinePage VirtualTablesByLinePage { get; private set; } = new VirtualTablesByLinePage();
         public VirtualTablesPage VirtualTablesPage { get; private set; } = new VirtualTablesPage();
         public HistoryPage HistoryPage { get; private set; } = new HistoryPage();
 
@@ -20,6 +21,7 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
+            Children.Add(VirtualTablesByLinePage);
             Children.Add(VirtualTablesPage);
             Children.Add(HistoryPage);
         }
