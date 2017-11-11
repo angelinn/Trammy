@@ -141,7 +141,7 @@ namespace TramlineFive.ViewModels
                 return;
 
             IsLoading = true;
-            Captcha = await SkgtManager.StopCodeParser.ChooseLineAsync(selectedLine);
+            Captcha = await SkgtManager.LineParser.ChooseStopAsync(selectedStop);
             CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
             IsLoading = false;
         }
@@ -150,7 +150,7 @@ namespace TramlineFive.ViewModels
         {
             IsLoading = true;
 
-            IEnumerable<string> timings = await SkgtManager.StopCodeParser.GetTimings(selectedLine, captcha.StringContent);
+            IEnumerable<string> timings = await SkgtManager.LineParser.GetTimings(selectedStop, selectedDirection, captcha.StringContent);
             SkgtManager.SendTimings(this, timings);
             IsLoading = false;
 

@@ -11,6 +11,8 @@ namespace SkgtService.Parsers
         Task<IEnumerable<SkgtObject>> GetLinesAsync(TransportType type);
         Task<IEnumerable<SkgtObject>> GetDirectionsAsync(SkgtObject line);
         Task<IEnumerable<SkgtObject>> GetStopsAsync(SkgtObject direction);
+        Task<Captcha> ChooseStopAsync(SkgtObject stop);
+        Task<IEnumerable<string>> GetTimings(SkgtObject stop, SkgtObject direction, string captcha);
     }
 }
     

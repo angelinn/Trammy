@@ -72,5 +72,33 @@ namespace SkgtService.Parsers
 
             return stops;
         }
+
+        public async Task<Captcha> ChooseStopAsync(SkgtObject stop)
+        {
+            Dictionary<string, string> urlEncoded = GatherInputs(currentHtml.DocumentNode);
+
+            urlEncoded["ctl00$ContentPlaceHolder1$ddlStops"] = stop.SkgtValue;
+            HttpResponseMessage response = await client.PostAsync(LINE_URL, new FormUrlEncodedContent(urlEncoded));
+            string html = await response.Content.ReadAsStringAsync();
+
+            byte[] bytes = await client.GetByteArrayAsync(CAPTCHA_URL);
+            return new Captcha { BinaryContent = bytes };
+        }
+
+        public async Task<IEnumerable<string>> GetTimings(SkgtObject stop, SkgtObject direction, string captcha)
+        {
+            Dictionary<string, string> urlEncoded = GatherInputs(currentHtml.DocumentNode);
+
+            urlEncoded["ctl00$ContentPlaceHolder1$CaptchaInput"] = captcha;
+            urlEncoded["__EVENTTARGET"] = "ctl00$ContentPlaceHolder1$CaptchaInput";
+            urlEncoded["ctl00$ContentPlaceHolder1$ddlStops"] = stop.SkgtValue;
+            urlEncoded["ctl00$ContentPlaceHolder1$rblRoute"] = direction.SkgtValue;
+
+            HttpResponseMessage response = await client.PostAsync(STOP_CODE_URL, new FormUrlEncodedContent(urlEncoded));
+
+            currentHtml.LoadHtml(await response.Content.ReadAsStringAsync());
+            var nodes = currentHtml.DocumentNode.SelectNodes("//div[contains(@id,'ContentPlaceHolder1_gvTimes_dvItem_')]");
+            return nodes?.Select(n => n.InnerText);
+        }
     }
 }
