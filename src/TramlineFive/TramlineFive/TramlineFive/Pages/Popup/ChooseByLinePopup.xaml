@@ -17,7 +17,19 @@
             <StackLayout>
                 <Label Text="Избор на линия:" />
                 <Picker ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" ItemDisplayBinding="{Binding DisplayName}"
-                        SelectedIndexChanged="OnSelectedIndexChanged" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
+                        SelectedIndexChanged="OnSelectedLineChanged" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
+            </StackLayout>
+
+            <StackLayout IsVisible="{Binding Directions, Converter={StaticResource RefToBool}}">
+                <Label Text="Избор на посока:" />
+                <Picker ItemsSource="{Binding Directions}" SelectedItem="{Binding SelectedDirection}" ItemDisplayBinding="{Binding DisplayName}"
+                        SelectedIndexChanged="OnSelectedDirectionChanged" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
+            </StackLayout>
+
+            <StackLayout IsVisible="{Binding Stops, Converter={StaticResource RefToBool}}">
+                <Label Text="Избор на спирка:" />
+                <Picker ItemsSource="{Binding Stops}" SelectedItem="{Binding SelectedStop}" ItemDisplayBinding="{Binding DisplayName}"
+                        SelectedIndexChanged="OnSelectedStopChanged" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
             </StackLayout>
 
             <Grid IsVisible="{Binding CaptchaImageSource, Converter={StaticResource RefToBool}}">

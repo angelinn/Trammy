@@ -16,7 +16,7 @@ namespace TramlineFive.Pages.Popup
 	public partial class ChooseLinePopup : PopupPage
 	{
         public ChooseLineViewModel LinesPickViewModel { get; private set; }
-		public ChooseLinePopup(IEnumerable<Line> lines)
+		public ChooseLinePopup(IEnumerable<SkgtObject> lines)
 		{
 			InitializeComponent ();
 

@@ -54,7 +54,7 @@ namespace TramlineFive.ViewModels
             }
         }
 
-        public async Task<IEnumerable<Line>> LoadLinesAsync()
+        public async Task<IEnumerable<SkgtObject>> LoadLinesAsync()
         {
 
             try
@@ -82,8 +82,8 @@ namespace TramlineFive.ViewModels
             Version = await VersionService.CheckForUpdates();
         }
 
-        private Stop currentStop;
-        public Stop CurrentStop
+        private StopInfo currentStop;
+        public StopInfo CurrentStop
         {
             get
             {

@@ -29,6 +29,9 @@ namespace SkgtService.Parsers
             HtmlNodeCollection desc = rootNode.SelectNodes("//input");
             foreach (HtmlNode node in desc)
             {
+                if (node.Attributes["name"].Value == "ctl00$ContentPlaceHolder1$rblRoute")
+                    continue;
+
                 string value = (node.Attributes["value"] == null) ? String.Empty : node.Attributes["value"].Value;
                 urlEncoded.Add(node.Attributes["name"].Value, value);
             }

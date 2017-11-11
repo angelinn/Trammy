@@ -13,15 +13,15 @@ namespace TramlineFive.ViewModels
 {
     public class ChooseLineViewModel : BaseViewModel
     {
-        public ObservableCollection<Line> Lines { get; private set; }
-        public ChooseLineViewModel(IEnumerable<Line> lines)
+        public ObservableCollection<SkgtObject> Lines { get; private set; }
+        public ChooseLineViewModel(IEnumerable<SkgtObject> lines)
         {
-            Lines = new ObservableCollection<Line>(lines);
+            Lines = new ObservableCollection<SkgtObject>(lines);
             SelectedLine = Lines[0];
         }
 
-        private Line selectedLine;
-        public Line SelectedLine
+        private SkgtObject selectedLine;
+        public SkgtObject SelectedLine
         {
             get
             {

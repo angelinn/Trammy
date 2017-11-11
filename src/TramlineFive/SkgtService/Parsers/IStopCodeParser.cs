@@ -8,8 +8,8 @@ namespace SkgtService.Parsers
 {
     public interface IStopCodeParser
     {
-        Task<Stop> GetLinesForStopAsync(string stopCode);
-        Task<Captcha> ChooseLineAsync(Line target);
-        Task<IEnumerable<string>> GetTimings(Line line, string captcha);
+        Task<StopInfo> GetLinesForStopAsync(string stopCode);
+        Task<Captcha> ChooseLineAsync(SkgtObject target);
+        Task<IEnumerable<string>> GetTimings(SkgtObject line, string captcha);
     }
 }

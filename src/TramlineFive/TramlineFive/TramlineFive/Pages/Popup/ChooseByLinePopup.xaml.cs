@@ -16,7 +16,7 @@ namespace TramlineFive.Pages.Popup
 	public partial class ChooseByLinePopup : PopupPage
 	{
         public ChooseByLineViewModel ChooseByLineViewModel { get; private set; }
-        public ChooseByLinePopup (IEnumerable<Line> lines)
+        public ChooseByLinePopup (IEnumerable<SkgtObject> lines)
 		{
 			InitializeComponent ();
             ChooseByLineViewModel = new ChooseByLineViewModel(lines);
@@ -25,11 +25,27 @@ namespace TramlineFive.Pages.Popup
 		}
 
 
-        private async void OnSelectedIndexChanged(object sender, EventArgs e)
+        private async void OnSelectedLineChanged(object sender, EventArgs e)
         {
             if (ChooseByLineViewModel.SelectedLine.SkgtValue != String.Empty)
             {
                 await ChooseByLineViewModel.GetDirectionsAsync();
+            }
+        }
+
+        private async void OnSelectedDirectionChanged(object sender, EventArgs e)
+        {
+            if (ChooseByLineViewModel.SelectedDirection.SkgtValue != String.Empty)
+            {
+                await ChooseByLineViewModel.GetStopsAsync();
+            }
+        }
+
+        private async void OnSelectedStopChanged(object sender, EventArgs e)
+        {
+            if (ChooseByLineViewModel.SelectedStop.SkgtValue != String.Empty)
+            {
+                await ChooseByLineViewModel.ChooseStopAsync();
             }
         }
 

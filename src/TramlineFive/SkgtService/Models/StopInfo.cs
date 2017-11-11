@@ -4,10 +4,10 @@ using System.Text;
 
 namespace SkgtService.Models
 {
-    public class Stop
+    public class StopInfo
     {
         public string Name { get; set; }
         public string Direction { get; set; }
-        public List<Line> Lines { get; set; } = new List<Line>();
+        public List<SkgtObject> Lines { get; set; } = new List<SkgtObject>();
     }
 }

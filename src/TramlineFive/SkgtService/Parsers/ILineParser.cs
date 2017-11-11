@@ -8,9 +8,9 @@ namespace SkgtService.Parsers
 {
     public interface ILineParser
     {
-        Task<IEnumerable<Line>> GetLinesAsync(TransportType type);
-        Task<IEnumerable<Direction>> GetDirectionsAsync(Line line);
-
+        Task<IEnumerable<SkgtObject>> GetLinesAsync(TransportType type);
+        Task<IEnumerable<SkgtObject>> GetDirectionsAsync(SkgtObject line);
+        Task<IEnumerable<SkgtObject>> GetStopsAsync(SkgtObject direction);
     }
 }
     

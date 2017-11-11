@@ -13,7 +13,7 @@ namespace SkgtService.Parsers
 {
     public class StopCodeParser : BaseParser, IStopCodeParser
     {
-        public async Task<Captcha> ChooseLineAsync(Line target)
+        public async Task<Captcha> ChooseLineAsync(SkgtObject target)
         {
             Dictionary<string, string> urlEncoded = GatherInputs(currentHtml.DocumentNode);
 
@@ -25,7 +25,7 @@ namespace SkgtService.Parsers
             return new Captcha { BinaryContent = bytes };
         }
 
-        public async Task<Stop> GetLinesForStopAsync(string stopCode)
+        public async Task<StopInfo> GetLinesForStopAsync(string stopCode)
         {
             string initialHtml = await client.GetStringAsync(STOP_CODE_URL);
             HtmlDocument doc = new HtmlDocument();
@@ -45,12 +45,12 @@ namespace SkgtService.Parsers
             currentHtml = new HtmlDocument();
             currentHtml.LoadHtml(lines);
 
-            Stop stop = new Stop();
+            StopInfo stop = new StopInfo();
             
             var allLines = currentHtml.DocumentNode.SelectNodes("//select//option");
             foreach (HtmlNode aLine in allLines)
             {
-                stop.Lines.Add(new Line(aLine.InnerText, aLine.Attributes["value"].Value));
+                stop.Lines.Add(new SkgtObject(aLine.InnerText, aLine.Attributes["value"].Value));
             }
 
             stop.Name = currentHtml.DocumentNode.SelectSingleNode("//*[@id=\"ContentPlaceHolder1_lblStopName\"]").InnerText;
@@ -61,7 +61,7 @@ namespace SkgtService.Parsers
             return stop;
         }
 
-        public async Task<IEnumerable<string>> GetTimings(Line line, string captcha)
+        public async Task<IEnumerable<string>> GetTimings(SkgtObject line, string captcha)
         {
             Dictionary<string, string> urlEncoded = GatherInputs(currentHtml.DocumentNode);
             

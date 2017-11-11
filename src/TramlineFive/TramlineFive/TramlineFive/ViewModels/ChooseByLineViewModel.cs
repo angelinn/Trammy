@@ -12,16 +12,18 @@ namespace TramlineFive.ViewModels
 {
     public class ChooseByLineViewModel : BaseViewModel
     {
-        public ObservableCollection<Line> Lines { get; private set; }
-        public ObservableCollection<Direction> Directions { get; private set; }
-        public ChooseByLineViewModel(IEnumerable<Line> lines)
+        public ObservableCollection<SkgtObject> Lines { get; private set; }
+        public ObservableCollection<SkgtObject> Directions { get; private set; }
+        public ObservableCollection<SkgtObject> Stops { get; private set; }
+
+        public ChooseByLineViewModel(IEnumerable<SkgtObject> lines)
         {
-            Lines = new ObservableCollection<Line>(lines);
+            Lines = new ObservableCollection<SkgtObject>(lines);
             SelectedLine = Lines[0];
         }
 
-        private Line selectedLine;
-        public Line SelectedLine
+        private SkgtObject selectedLine;
+        public SkgtObject SelectedLine
         {
             get
             {
@@ -31,6 +33,35 @@ namespace TramlineFive.ViewModels
             {
                 selectedLine = value;
                 SkgtManager.SelectedLine = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private SkgtObject selectedDirection;
+        public SkgtObject SelectedDirection
+        {
+            get
+            {
+                return selectedDirection;
+            }
+            set
+            {
+                selectedDirection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private SkgtObject selectedStop;
+        public SkgtObject SelectedStop
+        {
+            get
+            {
+                return selectedStop;
+            }
+            set
+            {
+                selectedStop = value;
                 OnPropertyChanged();
             }
         }
@@ -78,24 +109,40 @@ namespace TramlineFive.ViewModels
             }
         }
 
-        public async Task ChooseLineAsync()
-        {
-            if (String.IsNullOrEmpty(selectedLine.SkgtValue))
-                return;
-
-            IsLoading = true;
-            Captcha = await SkgtManager.StopCodeParser.ChooseLineAsync(selectedLine);
-            CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
-            IsLoading = false;
-        }
-
         public async Task GetDirectionsAsync()
         {
             if (String.IsNullOrEmpty(selectedLine.SkgtValue))
                 return;
 
             IsLoading = true;
-            Directions = new ObservableCollection<Direction>(await SkgtManager.LineParser.GetDirectionsAsync(selectedLine));
+            Directions = new ObservableCollection<SkgtObject>(await SkgtManager.LineParser.GetDirectionsAsync(selectedLine));
+            Directions.Insert(0, new SkgtObject("Избор на посока", null));
+            SelectedDirection = Directions[0];
+            OnPropertyChanged("Directions");
+
+            IsLoading = false;
+        }
+
+        public async Task GetStopsAsync()
+        {
+            if (String.IsNullOrEmpty(selectedDirection.SkgtValue))
+                return;
+
+            IsLoading = true;
+            Stops = new ObservableCollection<SkgtObject>(await SkgtManager.LineParser.GetStopsAsync(selectedDirection));
+            OnPropertyChanged("Stops");
+
+            IsLoading = false;
+        }
+
+        public async Task ChooseStopAsync()
+        {
+            if (String.IsNullOrEmpty(selectedStop.SkgtValue))
+                return;
+
+            IsLoading = true;
+            Captcha = await SkgtManager.StopCodeParser.ChooseLineAsync(selectedLine);
+            CaptchaImageSource = ImageSource.FromStream(() => new MemoryStream(Captcha.BinaryContent));
             IsLoading = false;
         }
 

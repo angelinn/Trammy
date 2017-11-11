@@ -12,7 +12,7 @@ namespace SkgtService.Parsers
 {
     public class LineParser : BaseParser, ILineParser
     {
-        public async Task<IEnumerable<Line>> GetLinesAsync(TransportType type)
+        public async Task<IEnumerable<SkgtObject>> GetLinesAsync(TransportType type)
         {
             string initialHtml = await client.GetStringAsync(LINE_URL);
             currentHtml = new HtmlDocument();
@@ -29,10 +29,10 @@ namespace SkgtService.Parsers
             currentHtml.LoadHtml(linesHtml);
 
             var allLines = currentHtml.DocumentNode.SelectNodes("//*[@id=\"ContentPlaceHolder1_ddlLines\"]//option");
-            return allLines.Select(l => new Line(l.InnerText, l.Attributes["value"].Value));
+            return allLines.Select(l => new SkgtObject(l.InnerText, l.Attributes["value"].Value));
         }
 
-        public async Task<IEnumerable<Direction>> GetDirectionsAsync(Line selected)
+        public async Task<IEnumerable<SkgtObject>> GetDirectionsAsync(SkgtObject selected)
         {
             Dictionary<string, string> urlEncoded = GatherInputs(currentHtml.DocumentNode);
 
@@ -41,16 +41,36 @@ namespace SkgtService.Parsers
             string html = await response.Content.ReadAsStringAsync();
             currentHtml.LoadHtml(html);
 
-            List<Direction> directions = new List<Direction>();
+            List<SkgtObject> directions = new List<SkgtObject>();
 
             var directionNodes = currentHtml.DocumentNode.SelectNodes("//*[@id=\"ContentPlaceHolder1_rblRoute\"]//td");
             foreach (HtmlNode node in directionNodes)
             {
                 HtmlNode input = node.SelectSingleNode("input");
-                directions.Add(new Direction { DisplayName = node.InnerText, SkgtValue = input.Attributes["value"].Value });
+                directions.Add(new SkgtObject(node.InnerText, input.Attributes["value"].Value));
             }
 
             return directions;
+        }
+
+        public async Task<IEnumerable<SkgtObject>> GetStopsAsync(SkgtObject direction)
+        {
+            Dictionary<string, string> urlEncoded = GatherInputs(currentHtml.DocumentNode);
+
+            urlEncoded["ctl00$ContentPlaceHolder1$rblRoute"] = direction.SkgtValue;
+            HttpResponseMessage response = await client.PostAsync(LINE_URL, new FormUrlEncodedContent(urlEncoded));
+            string html = await response.Content.ReadAsStringAsync();
+            currentHtml.LoadHtml(html);
+
+            List<SkgtObject> stops = new List<SkgtObject>();
+            
+            var options = currentHtml.DocumentNode.SelectNodes("//*[@id=\"ContentPlaceHolder1_ddlStops\"]//option");
+            foreach (HtmlNode stop in options)
+            {
+                stops.Add(new SkgtObject(stop.InnerText, stop.Attributes["value"].Value));
+            }
+
+            return stops;
         }
     }
 }

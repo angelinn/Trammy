@@ -43,7 +43,7 @@ namespace TramlineFive.Pages
         {
             try
             {
-                IEnumerable<Line> lines = await VirtualTablesViewModel.LoadLinesAsync();
+                IEnumerable<SkgtObject> lines = await VirtualTablesViewModel.LoadLinesAsync();
 
                 if (lines != null)
                 {
