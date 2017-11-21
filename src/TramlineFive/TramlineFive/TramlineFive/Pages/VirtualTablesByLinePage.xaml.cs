@@ -28,5 +28,10 @@ namespace TramlineFive.Pages
             ChooseByLinePopup linesPickPopup = new ChooseByLinePopup(lines);
             await PopupNavigation.PushAsync(linesPickPopup);
         }
+
+        private void OnVersionTapped(object sender, EventArgs e)
+        {
+            Device.OpenUri(new Uri(VirtualTablesByLineViewModel.Version.ReleaseUrl));
+        }
     }
 }

@@ -94,7 +94,7 @@ namespace SkgtService.Parsers
             urlEncoded["ctl00$ContentPlaceHolder1$ddlStops"] = stop.SkgtValue;
             urlEncoded["ctl00$ContentPlaceHolder1$rblRoute"] = direction.SkgtValue;
 
-            HttpResponseMessage response = await client.PostAsync(STOP_CODE_URL, new FormUrlEncodedContent(urlEncoded));
+            HttpResponseMessage response = await client.PostAsync(LINE_URL, new FormUrlEncodedContent(urlEncoded));
 
             currentHtml.LoadHtml(await response.Content.ReadAsStringAsync());
             var nodes = currentHtml.DocumentNode.SelectNodes("//div[contains(@id,'ContentPlaceHolder1_gvTimes_dvItem_')]");

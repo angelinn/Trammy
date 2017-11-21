@@ -33,7 +33,8 @@ namespace TramlineFive.Pages
             {
                 appeared = true;
 
-                await VirtualTablesPage.VirtualTablesViewModel.CheckForUpdatesAsync();
+                await VirtualTablesByLinePage.VirtualTablesByLineViewModel.CheckForUpdatesAsync();
+                // await VirtualTablesPage.VirtualTablesViewModel.CheckForUpdatesAsync();
                 await HistoryPage.HistoryViewModel.LoadHistoryAsync();
             }
         }
