@@ -15,39 +15,9 @@ namespace TramlineFive.Pages
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class VirtualTablesPage : ContentPage
 	{
-        public VirtualTablesViewModel VirtualTablesViewModel { get; private set; } = new VirtualTablesViewModel();
-
         public VirtualTablesPage ()
 		{
 			InitializeComponent ();
-            BindingContext = VirtualTablesViewModel;
 		}
-
-        private void OnVersionTapped(object sender, EventArgs e)
-        {
-            Device.OpenUri(new Uri(VirtualTablesViewModel.Version.ReleaseUrl));
-        }
-        
-        private async void OnCheckClicked(object sender, EventArgs e)
-        {
-            await CheckStopAsync();
-        }
-
-        private async void OnStopCodeCompleted(object sender, EventArgs e)
-        {
-            await CheckStopAsync();
-        }
-        
-        private async Task CheckStopAsync()
-        {
-            try
-            {
-                await VirtualTablesViewModel.SearchByStopCode();
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Exception", ex.Message, "OK");
-            }
-        }
     }
 }

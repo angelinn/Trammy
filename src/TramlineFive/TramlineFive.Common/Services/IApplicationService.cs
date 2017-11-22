@@ -7,5 +7,6 @@ namespace TramlineFive.Common.Services
     public interface IApplicationService
     {
         string GetVersion();
+        void OpenUri(string uri);
     }
 }

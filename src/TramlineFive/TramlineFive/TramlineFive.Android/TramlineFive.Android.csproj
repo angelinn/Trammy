@@ -67,6 +67,12 @@
     <Reference Include="FormsViewGroup, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.2.3.4.247\lib\MonoAndroid10\FormsViewGroup.dll</HintPath>
     </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.4.0.1, Culture=neutral, PublicKeyToken=d9452de2c18e9148, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MvvmLightLibsStd10.5.4.0.1-alpha\lib\monoandroid1\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MvvmLightLibsStd10.5.4.0.1-alpha\lib\monoandroid1\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
     <Reference Include="HockeySDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\HockeySDK.Xamarin.5.0.0\lib\MonoAndroid403\HockeySDK.dll</HintPath>
     </Reference>

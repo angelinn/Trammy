@@ -20,7 +20,6 @@ namespace TramlineFive.Pages
         public MainPage()
         {
             InitializeComponent();
-            
             Children.Add(VirtualTablesPage);
             Children.Add(HistoryPage);
         }

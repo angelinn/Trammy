@@ -12,12 +12,9 @@ namespace TramlineFive.Pages
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class HistoryPage : ContentPage
 	{
-        public HistoryViewModel HistoryViewModel { get; private set; } = new HistoryViewModel();
-
 		public HistoryPage ()
 		{
 			InitializeComponent ();
-            BindingContext = HistoryViewModel;
 		}
     }
 }

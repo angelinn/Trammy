@@ -2,8 +2,10 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
+             xmlns:d="clr-namespace:TramlineFive.Behaviors;assembly=TramlineFive"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
-             Title="Спирка">
+             Title="Спирка"
+             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -21,8 +23,12 @@
         </Grid.RowDefinitions>
 
         <StackLayout HorizontalOptions="Center" Margin="0,0,0,30">
-            <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}" Completed="OnStopCodeCompleted" />
-            <Button Text="Проверяване" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" Clicked="OnCheckClicked" />
+            <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}">
+                <Entry.Behaviors>
+                    <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchByStopCodeCommand}" />
+                </Entry.Behaviors>
+            </Entry>
+            <Button Text="Проверяване" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" Command="{Binding SearchByStopCodeCommand}" />
         </StackLayout>
 
         <Grid Grid.Row="1">
@@ -62,7 +68,7 @@
         <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="3"
                TextColor="DodgerBlue" HorizontalOptions="Center">
             <Label.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnVersionTapped" />
+                <TapGestureRecognizer Command="{Binding VersionCommand}" />
             </Label.GestureRecognizers>
         </Label>
     </Grid>
