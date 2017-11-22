@@ -15,5 +15,23 @@ namespace SkgtService.Models
         public List<Arrival> Arrivals { get; set; }
 
         public string LastTimings => String.Join(", ", Arrivals.Take(3).Select(t => t.Time));
+        public string TransportType
+        {
+            get
+            {
+                switch (VehicleType)
+                {
+                    case "bus":
+                        return "Автобус";
+                    case "tram":
+                        return "Трамвай";
+                    case "trolley":
+                        return "Тролей";
+
+                    default:
+                        return String.Empty;
+                }
+            }
+        }
     }
 }
