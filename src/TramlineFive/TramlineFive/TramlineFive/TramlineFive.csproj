@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Octokit" Version="0.27.0" />
+    <PackageReference Include="MvvmLightLibsStd10" Version="5.4.0.1-alpha" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.0.4" />
     <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
     <PackageReference Include="Xam.Plugin.Version" Version="1.0.0" />
@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SkgtService\SkgtService.csproj" />
     <ProjectReference Include="..\..\TramlineFive.DataAccess\TramlineFive.DataAccess.csproj" />
+    <ProjectReference Include="..\..\TramlineFive.Common\TramlineFive.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,11 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TramlineFive.Common.Services;
 using TramlineFive.DataAccess.Domain;
-using TramlineFive.Services;
-using Xamarin.Forms;
 
-namespace TramlineFive.ViewModels
+namespace TramlineFive.Common.ViewModels
 {
     public class VirtualTablesViewModel : BaseViewModel
     {
@@ -43,7 +42,7 @@ namespace TramlineFive.ViewModels
             set
             {
                 direction = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -57,7 +56,7 @@ namespace TramlineFive.ViewModels
             set
             {
                 stopInfo = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -71,7 +70,7 @@ namespace TramlineFive.ViewModels
             set
             {
                 version = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -85,7 +84,7 @@ namespace TramlineFive.ViewModels
             set
             {
                 message = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -99,7 +98,7 @@ namespace TramlineFive.ViewModels
             set
             {
                 isLoading = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -113,7 +112,7 @@ namespace TramlineFive.ViewModels
             set
             {
                 stopCode = value;
-                OnPropertyChanged();
+                RaisePropertyChanged();
             }
         }
     }

@@ -1,10 +1,11 @@
-﻿using SkgtService.Parsers;
+﻿using GalaSoft.MvvmLight.Ioc;
+using SkgtService.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TramlineFive.ViewModels;
+using TramlineFive.Common.ViewModels;
 using Xamarin.Forms;
 
 namespace TramlineFive.Pages
@@ -30,10 +31,9 @@ namespace TramlineFive.Pages
             if (!appeared)
             {
                 appeared = true;
-
-                // await VirtualTablesByLinePage.VirtualTablesByLineViewModel.CheckForUpdatesAsync();
-                await VirtualTablesPage.VirtualTablesViewModel.CheckForUpdatesAsync();
-                await HistoryPage.HistoryViewModel.LoadHistoryAsync();
+                
+                await SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync();
+                await SimpleIoc.Default.GetInstance<HistoryViewModel>().LoadHistoryAsync();
             }
         }
     }

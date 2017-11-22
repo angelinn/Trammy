@@ -9,6 +9,9 @@
                 <Setter Property="BarBackgroundColor" Value="DodgerBlue"/>
                 <Setter Property="BarTextColor" Value="White"/>
             </Style>
+
+            <vm:ViewModelLocator x:Key="Locator" xmlns:vm="clr-namespace:TramlineFive.Common.ViewModels.Locator;assembly=TramlineFive.Common" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
+    

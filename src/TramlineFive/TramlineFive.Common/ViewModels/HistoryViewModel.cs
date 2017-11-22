@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.DataAccess.Domain;
 
-namespace TramlineFive.ViewModels
+namespace TramlineFive.Common.ViewModels
 {
     public class HistoryViewModel : BaseViewModel
     {
@@ -14,7 +14,7 @@ namespace TramlineFive.ViewModels
         public async Task LoadHistoryAsync()
         {
             History = new ObservableCollection<HistoryDomain>(await HistoryDomain.TakeAsync());
-            OnPropertyChanged("History");
+            RaisePropertyChanged("History");
         }
     }
 }

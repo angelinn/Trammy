@@ -1,7 +1,9 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Ioc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TramlineFive.Common.Services;
 using TramlineFive.DataAccess;
 using TramlineFive.Services;
 using Xamarin.Forms;
@@ -13,6 +15,9 @@ namespace TramlineFive
         public App()
         {
             InitializeComponent();
+
+            SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
+            SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
 
             MainPage = new Pages.MasterDetail();
         }

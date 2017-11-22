@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿using GalaSoft.MvvmLight.Ioc;
+using Octokit;
 using SkgtService.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace TramlineFive.Services
+namespace TramlineFive.Common.Services
 {
     public class VersionService
     {
@@ -19,7 +20,8 @@ namespace TramlineFive.Services
                 IReadOnlyList<Release> res = await client.Repository.Release.GetAll("betrakiss", "TramlineFive.Xamarin");
                 Release lastRelease = res.First();
 
-                string version = Version.Plugin.CrossVersion.Current.Version.Substring(0, 5);
+                string version = SimpleIoc.Default.GetInstance<IApplicationService>().GetVersion();
+
                 if (String.Compare(lastRelease.TagName, version) > 0)
                     return new NewVersion { VersionNumber = lastRelease.TagName, ReleaseUrl = lastRelease.HtmlUrl };
 
