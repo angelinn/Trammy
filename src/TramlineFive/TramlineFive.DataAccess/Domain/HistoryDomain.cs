@@ -9,23 +9,23 @@ namespace TramlineFive.DataAccess.Domain
 {
     public class HistoryDomain
     {
-        public string Line { get; set; }
         public string StopCode { get; set; }
+        public string Name { get; set; }
         public DateTime TimeStamp { get; set; }
 
         public HistoryDomain(History entity)
         {
-            Line = entity.Line;
+            Name = entity.Name;
             StopCode = entity.StopCode;
             TimeStamp = entity.TimeStamp;
         }
 
-        public static async Task AddAsync(string line, string stopCode)
+        public static async Task AddAsync(string stopCode, string name)
         {
             await TramlineFiveContext.AddHistoryAsync(new History
             {
-                Line = line,
                 StopCode = stopCode,
+                Name = name,
                 TimeStamp = DateTime.Now
             });
         }

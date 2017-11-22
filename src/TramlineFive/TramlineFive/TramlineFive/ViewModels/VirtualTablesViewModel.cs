@@ -28,6 +28,7 @@ namespace TramlineFive.ViewModels
 
             StopInfo = await new ArrivalsService().GetByStopCodeAsync(stopCode);
             Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
+            await HistoryDomain.AddAsync(stopCode, stopInfo.Name);
 
             IsLoading = false;
         }

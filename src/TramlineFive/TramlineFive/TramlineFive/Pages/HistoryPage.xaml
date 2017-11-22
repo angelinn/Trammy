@@ -11,7 +11,7 @@
                     <ViewCell>
                         <ViewCell.View>
                             <StackLayout>
-                                <Label Text="{Binding Line}" />
+                                <Label Text="{Binding Name}" />
                                 <Label Text="{Binding StopCode}" />
                                 <Label Text="{Binding TimeStamp}" />
                             </StackLayout>
