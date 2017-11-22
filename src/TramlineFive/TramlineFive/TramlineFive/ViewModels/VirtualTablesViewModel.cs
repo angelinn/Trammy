@@ -17,6 +17,20 @@ namespace TramlineFive.ViewModels
 {
     public class VirtualTablesViewModel : BaseViewModel
     {
+        public async Task CheckForUpdatesAsync()
+        {
+            Version = await VersionService.CheckForUpdates();
+        }
+
+        public async Task SearchByStopCode()
+        {
+            IsLoading = true;
+
+            StopInfo = await new ArrivalsService().GetByStopCodeAsync(stopCode);
+            Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
+
+            IsLoading = false;
+        }
 
         private string direction;
         public string Direction
@@ -44,21 +58,6 @@ namespace TramlineFive.ViewModels
                 stopInfo = value;
                 OnPropertyChanged();
             }
-        }
-
-        public async Task CheckForUpdatesAsync()
-        {
-            Version = await VersionService.CheckForUpdates();
-        }
-
-        public async Task SearchByStopCode()
-        {
-            IsLoading = true;
-
-            StopInfo = await new ArrivalsService().GetByStopCodeAsync(stopCode);
-            Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
-
-            IsLoading = false;
         }
 
         private NewVersion version;

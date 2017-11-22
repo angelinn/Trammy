@@ -35,9 +35,6 @@
     <Compile Update="Pages\MasterDetail.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Pages\VirtualTablesByLinePage.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Pages\VirtualTablesPage.xaml.cs">

@@ -30,7 +30,7 @@
                 <ActivityIndicator IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
                 <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" HorizontalOptions="Center" />
             </StackLayout>
-            <Grid BackgroundColor="DodgerBlue" Padding="5" Margin="5,0,5,0" IsVisible="{Binding SelectedLine, Converter={StaticResource ReferenceToBool}}">
+            <Grid BackgroundColor="DodgerBlue" Padding="5" Margin="5,0,5,0" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
                 <StackLayout VerticalOptions="Center">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                         <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="White" FontSize="14" />
@@ -47,7 +47,10 @@
                     <ViewCell>
                         <ViewCell.View>
                             <StackLayout>
-                                <Label Text="{Binding Name}" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding TransportType}" />
+                                    <Label Text="{Binding Name}" />
+                                </StackLayout>
                                 <Label Text="{Binding LastTimings}" />
                             </StackLayout>
                         </ViewCell.View>
