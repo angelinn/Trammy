@@ -11,13 +11,14 @@
         <ResourceDictionary>
             <cv:InverseBoolConverter x:Key="InverseBool" />
             <cv:ReferenceToBoolConverter x:Key="ReferenceToBool" />
+            <cv:ImageSourceConverter x:Key="ImageSource" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <Grid Padding="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="3*" />
-            <RowDefinition Height="3*" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="5*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
@@ -37,7 +38,7 @@
                 <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" HorizontalOptions="Center" />
             </StackLayout>
             <Grid BackgroundColor="DodgerBlue" Padding="5" Margin="5,0,5,0" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
-                <StackLayout VerticalOptions="Center">
+                <StackLayout VerticalOptions="CenterAndExpand">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                         <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="White" FontSize="14" />
                         <Label Text="{Binding StopInfo.Name}" TextColor="White" FontSize="14" />
@@ -52,17 +53,24 @@
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.View>
-                            <StackLayout>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding TransportType}" />
-                                    <Label Text="{Binding Name}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="64" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding VehicleType, Converter={StaticResource ImageSource}}" />
+                                <StackLayout Grid.Column="1" VerticalOptions="Center">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding TransportType}" />
+                                        <Label Text="{Binding Name}" />
+                                    </StackLayout>
+                                    <Label Text="{Binding LastTimings}" />
                                 </StackLayout>
-                                <Label Text="{Binding LastTimings}" />
-                            </StackLayout>
+                            </Grid>
                         </ViewCell.View>
                     </ViewCell>
                 </DataTemplate>
-            </ListView.ItemTemplate>                       
+            </ListView.ItemTemplate>
         </ListView>
 
         <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="3"
