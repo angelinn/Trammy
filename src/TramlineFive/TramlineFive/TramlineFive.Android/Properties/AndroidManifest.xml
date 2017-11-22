@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" android:versionName="0.4.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" android:versionName="0.8.0">
 	<uses-sdk android:minSdkVersion="15" />
 	<application android:label="Tramline Five" android:icon="@drawable/icon"></application>
 </manifest>
