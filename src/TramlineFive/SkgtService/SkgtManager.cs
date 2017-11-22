@@ -8,7 +8,6 @@ namespace SkgtService
 {
     public static class SkgtManager
     {
-        public static SkgtObject SelectedLine { get; set; }
         public static event EventHandler<IEnumerable<string>> OnTimingsReceived;
         public static void SendTimings(object sender, IEnumerable<string> timings)
         {

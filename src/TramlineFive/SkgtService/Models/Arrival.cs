@@ -4,8 +4,8 @@ using System.Text;
 
 namespace SkgtService.Models
 {
-    public class VirtualTableRecord
+    public class Arrival
     {
-        public string[] Timings { get; set; }
+        public string Time { get; set; }
     }
 }

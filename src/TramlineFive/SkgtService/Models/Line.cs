@@ -4,10 +4,9 @@ using System.Text;
 
 namespace SkgtService.Models
 {
-    public class StopInfo
+    public class Line
     {
         public string Name { get; set; }
-        public string Code { get; set; }
-        public List<Line> Lines { get; set; }
+        public List<Arrival> Arrivals { get; set; }
     }
 }
