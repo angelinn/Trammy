@@ -113,9 +113,9 @@ namespace TramlineFive.ViewModels
             }
         }
 
-        public async Task<IEnumerable<SkgtObject>> GetLinesAsync()
+        public async Task GetLinesAsync()
         {
-            return await SkgtManager.LineParser.GetLinesAsync(selectedType.TransportType);
+            //return await SkgtManager.LineParser.GetLinesAsync(selectedType.TransportType);
         }
     }
 }

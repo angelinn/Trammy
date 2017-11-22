@@ -35,9 +35,6 @@
     <Compile Update="Pages\MasterDetail.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Pages\Popup\ChooseLinePopup.xaml.cs">
-      <DependentUpon>ChooseLinePopup.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Pages\VirtualTablesByLinePage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

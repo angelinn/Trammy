@@ -17,64 +17,33 @@ namespace TramlineFive.ViewModels
 {
     public class VirtualTablesViewModel : BaseViewModel
     {
-        public ObservableCollection<string> Timings { get; private set; }
-        public VirtualTablesViewModel()
-        {
-            SkgtManager.OnTimingsReceived += OnTimingsReceived;
-        }
 
-        private async void OnTimingsReceived(object sender, IEnumerable<string> e)
-        {
-            if (e != null)
-            {
-                Timings = new ObservableCollection<string>(e);
-
-                OnPropertyChanged("Timings");
-                OnPropertyChanged("SelectedLine");
-            }
-            else
-            {
-                Timings = null;
-                Message = "Няма часове на пристигане.";
-            }
-            await HistoryDomain.AddAsync(SelectedLine, stopCode);
-
-            OnPropertyChanged("NoTimings");
-        }
-
-        public string SelectedLine
+        private string direction;
+        public string Direction
         {
             get
             {
-                if (SkgtManager.SelectedLine == null)
-                    return null;
-
-                return SkgtManager.SelectedLine.DisplayName.First().ToString().ToUpper()
-                            + SkgtManager.SelectedLine.DisplayName.Substring(1);
+                return direction;
+            }
+            set
+            {
+                direction = value;
+                OnPropertyChanged();
             }
         }
 
-        public async Task<IEnumerable<SkgtObject>> LoadLinesAsync()
+        private StopInfo stopInfo;
+        public StopInfo StopInfo
         {
-
-            try
+            get
             {
-                IsLoading = true;
-
-                CurrentStop = await SkgtManager.StopCodeParser.GetLinesForStopAsync(stopCode);
-
-                return currentStop.Lines;
+                return stopInfo;
             }
-            catch (TramlineFiveException ex)
+            set
             {
-                Message = ex.Message;
-                return null;
+                stopInfo = value;
+                OnPropertyChanged();
             }
-            finally
-            {
-                IsLoading = false;
-            }
-
         }
 
         public async Task CheckForUpdatesAsync()
@@ -82,18 +51,14 @@ namespace TramlineFive.ViewModels
             Version = await VersionService.CheckForUpdates();
         }
 
-        private StopInfo currentStop;
-        public StopInfo CurrentStop
+        public async Task SearchByStopCode()
         {
-            get
-            {
-                return currentStop;
-            }
-            set
-            {
-                currentStop = value;
-                OnPropertyChanged();
-            }
+            IsLoading = true;
+
+            StopInfo = await new ArrivalsService().GetByStopCodeAsync(stopCode);
+            Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
+
+            IsLoading = false;
         }
 
         private NewVersion version;
@@ -107,14 +72,6 @@ namespace TramlineFive.ViewModels
             {
                 version = value;
                 OnPropertyChanged();
-            }
-        }
-
-        public bool NoTimings
-        {
-            get
-            {
-                return Timings == null;
             }
         }
 

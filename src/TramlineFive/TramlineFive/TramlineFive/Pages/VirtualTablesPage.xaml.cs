@@ -43,13 +43,7 @@ namespace TramlineFive.Pages
         {
             try
             {
-                IEnumerable<SkgtObject> lines = await VirtualTablesViewModel.LoadLinesAsync();
-
-                if (lines != null)
-                {
-                    ChooseLinePopup linesPickPopup = new ChooseLinePopup(lines);
-                    await PopupNavigation.PushAsync(linesPickPopup);
-                }
+                await VirtualTablesViewModel.SearchByStopCode();
             }
             catch (Exception ex)
             {

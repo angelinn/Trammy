@@ -24,9 +24,9 @@ namespace TramlineFive.Pages
 
         private async void OnSearchClicked(object sender, EventArgs e)
         {
-            IEnumerable<SkgtObject> lines = await VirtualTablesByLineViewModel.GetLinesAsync();
-            ChooseByLinePopup linesPickPopup = new ChooseByLinePopup(lines);
-            await PopupNavigation.PushAsync(linesPickPopup);
+            //IEnumerable<SkgtObject> lines = await VirtualTablesByLineViewModel.GetLinesAsync();
+            //ChooseByLinePopup linesPickPopup = new ChooseByLinePopup(lines);
+            //await PopupNavigation.PushAsync(linesPickPopup);
         }
 
         private void OnVersionTapped(object sender, EventArgs e)

@@ -22,9 +22,7 @@ namespace SkgtService.Parsers
 
         public async Task<StopInfo> GetByStopCodeAsync(string stopCode)
         {
-            HttpResponseMessage message = await client.GetAsync($"{ARRIVALS_API_URL}/{stopCode}/");
-            string json = await message.Content.ReadAsStringAsync();
-
+            string json = await client.GetStringAsync($"{ARRIVALS_API_URL}/{stopCode}/");
             return JsonConvert.DeserializeObject<StopInfo>(json);
         }
     }

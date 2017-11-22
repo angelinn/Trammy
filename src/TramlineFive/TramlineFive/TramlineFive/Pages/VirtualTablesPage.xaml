@@ -33,16 +33,28 @@
             <Grid BackgroundColor="DodgerBlue" Padding="5" Margin="5,0,5,0" IsVisible="{Binding SelectedLine, Converter={StaticResource ReferenceToBool}}">
                 <StackLayout VerticalOptions="Center">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                        <Label Text="{Binding StopCode, StringFormat='({0})'}" TextColor="White" FontSize="14" />
-                        <Label Text="{Binding CurrentStop.Name}" TextColor="White" FontSize="14" />
+                        <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="White" FontSize="14" />
+                        <Label Text="{Binding StopInfo.Name}" TextColor="White" FontSize="14" />
                     </StackLayout>
-                    <Label Text="{Binding CurrentStop.Direction}" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="White" FontSize="14" />
-                    <Label Text="{Binding SelectedLine}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontSize="14" />
+                    <Label Text="{Binding Direction}" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="White" FontSize="14" />
                 </StackLayout>
             </Grid>
         </Grid>
 
-        <ListView Grid.Row="2" ItemsSource="{Binding Timings}" HorizontalOptions="Center" />
+        <ListView Grid.Row="2" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <StackLayout>
+                                <Label Text="{Binding Name}" />
+                                <Label Text="{Binding LastTimings}" />
+                            </StackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>                       
+        </ListView>
 
         <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="3"
                TextColor="DodgerBlue" HorizontalOptions="Center">

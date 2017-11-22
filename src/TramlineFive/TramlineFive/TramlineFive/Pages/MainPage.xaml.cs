@@ -21,7 +21,7 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
-            Children.Add(VirtualTablesByLinePage);
+            //Children.Add(VirtualTablesByLinePage);
             Children.Add(VirtualTablesPage);
             Children.Add(HistoryPage);
         }
@@ -33,8 +33,8 @@ namespace TramlineFive.Pages
             {
                 appeared = true;
 
-                await VirtualTablesByLinePage.VirtualTablesByLineViewModel.CheckForUpdatesAsync();
-                // await VirtualTablesPage.VirtualTablesViewModel.CheckForUpdatesAsync();
+                // await VirtualTablesByLinePage.VirtualTablesByLineViewModel.CheckForUpdatesAsync();
+                await VirtualTablesPage.VirtualTablesViewModel.CheckForUpdatesAsync();
                 await HistoryPage.HistoryViewModel.LoadHistoryAsync();
             }
         }
