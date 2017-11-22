@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:TramlineFive.Pages"
              x:Class="TramlineFive.Pages.MainPage"
              Title="Tramline Five">
-    
-    
+
+    <local:VirtualTablesPage />
+    <local:HistoryPage />
+
 </TabbedPage>

@@ -25,7 +25,6 @@ namespace TramlineFive.Common.ViewModels
         {
             SearchByStopCodeCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
             VersionCommand = new RelayCommand(async () => await CheckForUpdatesAsync());
-
         }
 
         public async Task CheckForUpdatesAsync()

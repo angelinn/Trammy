@@ -9,6 +9,8 @@ namespace TramlineFive.DataAccess.Domain
 {
     public class HistoryDomain
     {
+        public static event EventHandler HistoryAdded;
+        
         public string StopCode { get; set; }
         public string Name { get; set; }
         public DateTime TimeStamp { get; set; }
@@ -22,12 +24,15 @@ namespace TramlineFive.DataAccess.Domain
 
         public static async Task AddAsync(string stopCode, string name)
         {
-            await TramlineFiveContext.AddHistoryAsync(new History
+            History history = new History
             {
                 StopCode = stopCode,
                 Name = name,
                 TimeStamp = DateTime.Now
-            });
+            };
+
+            await TramlineFiveContext.AddHistoryAsync(history);
+            HistoryAdded?.Invoke(new HistoryDomain(history), new EventArgs());
         }
 
         //public static void Remove(History history)

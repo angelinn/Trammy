@@ -6,12 +6,12 @@
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
     <Grid>
-        <ListView ItemsSource="{Binding History}">
+        <ListView ItemsSource="{Binding History}" RowHeight="70">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.View>
-                            <StackLayout>
+                            <StackLayout Spacing="0" Padding="10">
                                 <Label Text="{Binding Name}" />
                                 <Label Text="{Binding StopCode}" />
                                 <Label Text="{Binding TimeStamp}" />

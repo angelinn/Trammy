@@ -15,6 +15,13 @@ namespace TramlineFive.Common.ViewModels
         {
             History = new ObservableCollection<HistoryDomain>(await HistoryDomain.TakeAsync());
             RaisePropertyChanged("History");
+
+            HistoryDomain.HistoryAdded += OnHistoryAdded;
+        }
+
+        private void OnHistoryAdded(object sender, EventArgs e)
+        {
+            History.Insert(0, sender as HistoryDomain);
         }
     }
 }
