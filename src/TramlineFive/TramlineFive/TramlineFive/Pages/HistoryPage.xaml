@@ -6,14 +6,17 @@
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
     <Grid>
-        <ListView ItemsSource="{Binding History}" RowHeight="70">
+        <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected}" RowHeight="50">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.View>
-                            <StackLayout Spacing="0" Padding="10">
-                                <Label Text="{Binding Name}" />
-                                <Label Text="{Binding StopCode}" />
+                            <StackLayout Spacing="0" Padding="10,0,0,0" VerticalOptions="Center">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding StopCode, StringFormat='({0})'}" />
+                                    <Label Text="{Binding Name}" />
+                                </StackLayout>
+
                                 <Label Text="{Binding TimeStamp}" />
                             </StackLayout>
                         </ViewCell.View>
@@ -23,3 +26,4 @@
         </ListView>
     </Grid>
 </ContentPage>
+    
