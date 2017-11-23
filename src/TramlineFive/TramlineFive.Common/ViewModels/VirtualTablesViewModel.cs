@@ -50,6 +50,20 @@ namespace TramlineFive.Common.ViewModels
             IsLoading = false;
         }
 
+        private Line selected;
+        public Line Selected
+        {
+            get
+            {
+                return selected;
+            }
+            set
+            {
+                selected = null;
+                RaisePropertyChanged();
+            }
+        }
+
         private string direction;
         public string Direction
         {

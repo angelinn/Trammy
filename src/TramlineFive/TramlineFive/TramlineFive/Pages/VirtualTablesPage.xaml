@@ -48,7 +48,7 @@
             </Grid>
         </Grid>
 
-        <ListView Grid.Row="2" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="60">
+        <ListView Grid.Row="2" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="60" SelectedItem="{Binding Selected, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
