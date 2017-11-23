@@ -13,5 +13,12 @@ namespace TramlineFive.Services
         {
             await Application.Current.MainPage.DisplayAlert(title, message, cancel);
         }
+
+        public void ChangeTab(int index)
+        {
+            MasterDetailPage main = Application.Current.MainPage as MasterDetailPage;
+            TabbedPage tabbed = (main.Detail as NavigationPage).CurrentPage as TabbedPage;
+            tabbed.CurrentPage = tabbed.Children[index];
+        }
     }
 }

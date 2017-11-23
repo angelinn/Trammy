@@ -8,5 +8,6 @@ namespace TramlineFive.Common.Services
     public interface IInteractionService
     {
         Task DisplayAlertAsync(string title, string message, string cancel);
+        void ChangeTab(int index);
     }
 }
