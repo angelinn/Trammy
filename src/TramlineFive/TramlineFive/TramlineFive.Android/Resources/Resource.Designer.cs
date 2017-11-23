@@ -2379,7 +2379,7 @@ namespace TramlineFive.Droid
 			public const int Tram64 = 2130837667;
 			
 			// aapt resource value: 0x7f0200a4
-			public const int Trolleybus64 = 2130837668;
+			public const int Trolley64 = 2130837668;
 			
 			static Drawable()
 			{

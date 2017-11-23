@@ -155,8 +155,8 @@
     <Content Include="Assets\Store\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Store\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Store\Wide310x150Logo.scale-400.png" />
-    <Content Include="Assets\Tram-64.png" />
-    <Content Include="Assets\Trolleybus-64.png" />
+    <Content Include="Assets\Tram64.png" />
+    <Content Include="Assets\Trolley64.png" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>

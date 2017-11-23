@@ -43,12 +43,12 @@
                         <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="White" FontSize="14" />
                         <Label Text="{Binding StopInfo.Name}" TextColor="White" FontSize="14" />
                     </StackLayout>
-                    <Label Text="{Binding Direction}" HorizontalOptions="Center" HorizontalTextAlignment="Center" TextColor="White" FontSize="14" />
+                    <Label Text="{Binding Direction}" HorizontalOptions="Center" IsVisible="{Binding Direction, Converter={StaticResource ReferenceToBool}}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14" />
                 </StackLayout>
             </Grid>
         </Grid>
 
-        <ListView Grid.Row="2" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center">
+        <ListView Grid.Row="2" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="60">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -58,7 +58,7 @@
                                     <ColumnDefinition Width="64" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="{Binding VehicleType, Converter={StaticResource ImageSource}}" />
+                                <Image Source="{Binding VehicleType, Converter={StaticResource ImageSource}}" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="46" WidthRequest="46" />
                                 <StackLayout Grid.Column="1" VerticalOptions="Center">
                                     <StackLayout Orientation="Horizontal">
                                         <Label Text="{Binding TransportType}" />
