@@ -10,6 +10,8 @@ namespace TramlineFive.Common.ViewModels
 {
     public class HistoryViewModel : BaseViewModel
     {
+        public static event EventHandler<HistoryDomain> OnHistorySelected;
+
         public ObservableCollection<HistoryDomain> History { get; private set; }
 
         private HistoryDomain selected;
@@ -27,6 +29,8 @@ namespace TramlineFive.Common.ViewModels
                 if (value != null)
                 {
                     InteractionService.ChangeTab(0);
+                    OnHistorySelected?.Invoke(this, selected);
+
                     selected = null;
                     RaisePropertyChanged();
                 }

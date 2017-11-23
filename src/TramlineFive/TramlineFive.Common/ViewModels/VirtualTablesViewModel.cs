@@ -25,6 +25,14 @@ namespace TramlineFive.Common.ViewModels
         {
             SearchByStopCodeCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
             VersionCommand = new RelayCommand(async () => await CheckForUpdatesAsync());
+
+            HistoryViewModel.OnHistorySelected += OnHistorySelected;
+        }
+
+        private async void OnHistorySelected(object sender, HistoryDomain e)
+        {
+            StopCode = e.StopCode;
+            await SearchByStopCodeAsync();
         }
 
         public async Task CheckForUpdatesAsync()
@@ -34,6 +42,7 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task SearchByStopCodeAsync()
         {
+            StopInfo = null;
             IsLoading = true;
 
             try
