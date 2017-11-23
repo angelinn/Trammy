@@ -44,7 +44,8 @@
     <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
     <AndroidHttpClientHandlerType>
     </AndroidHttpClientHandlerType>
-    <JavaMaximumHeapSize>2G</JavaMaximumHeapSize>
+    <JavaMaximumHeapSize>
+    </JavaMaximumHeapSize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
