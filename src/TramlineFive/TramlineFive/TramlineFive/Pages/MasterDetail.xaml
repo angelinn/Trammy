@@ -21,6 +21,7 @@
                             </Trigger>
                         </StackLayout.Triggers>
                     </Style>
+
                     <Style TargetType="Label">
                         <Setter Property="TextColor" Value="White" />
                         <Setter Property="Margin" Value="10,0,0,0" />
@@ -34,22 +35,34 @@
                     </Style>
                 </ResourceDictionary>
             </ContentPage.Resources>
-            
-            <StackLayout>
+
+            <StackLayout BindingContext="{Binding HamburgerViewModel, Source={StaticResource Locator}}">
                 <BoxView Color="White" HeightRequest="1" Margin="0,60,0,0" />
                 <StackLayout Style="{StaticResource MenuItem}">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ScheduleCommand}" />
+                    </StackLayout.GestureRecognizers>
+                    
                     <iconize:IconLabel Text="fa-map-o" />
                     <Label Text="Разписания" />
                 </StackLayout>
                 <BoxView Color="White" HeightRequest="1" />
 
                 <StackLayout Orientation="Horizontal" Style="{StaticResource MenuItem}">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SettingsCommand}" />
+                    </StackLayout.GestureRecognizers>
+
                     <iconize:IconLabel Text="fa-cog" />
                     <Label Text="Настройки"/>
                 </StackLayout>
                 <BoxView Color="White" HeightRequest="1" />
 
                 <StackLayout Orientation="Horizontal" Style="{StaticResource MenuItem}">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AboutCommand}" />
+                    </StackLayout.GestureRecognizers>
+
                     <iconize:IconLabel Text="fa-info-circle" />
                     <Label Text="Информация" />
                 </StackLayout>

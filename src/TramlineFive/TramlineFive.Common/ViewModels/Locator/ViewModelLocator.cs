@@ -11,10 +11,12 @@ namespace TramlineFive.Common.ViewModels.Locator
         {
             SimpleIoc.Default.Register<VirtualTablesViewModel>();
             SimpleIoc.Default.Register<HistoryViewModel>();
+            SimpleIoc.Default.Register<HamburgerViewModel>();
         }
 
         public VirtualTablesViewModel VirtualTablesViewModel => SimpleIoc.Default.GetInstance<VirtualTablesViewModel>();
         public HistoryViewModel HistoryViewModel => SimpleIoc.Default.GetInstance<HistoryViewModel>();
+        public HamburgerViewModel HamburgerViewModel => SimpleIoc.Default.GetInstance<HamburgerViewModel>();
 
     }
 }

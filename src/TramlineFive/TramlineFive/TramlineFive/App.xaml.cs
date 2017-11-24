@@ -18,6 +18,7 @@ namespace TramlineFive
 
             SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
             SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
+            SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
 
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
 
