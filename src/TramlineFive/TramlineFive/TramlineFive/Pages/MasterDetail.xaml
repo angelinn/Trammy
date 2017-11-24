@@ -2,26 +2,58 @@
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TramlineFive.Pages;assembly=TramlineFive"
+             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.MasterDetail"
              MasterBehavior="Popover">
 
     <MasterDetailPage.Master>
-        <ContentPage Title="Tramline Five" Padding="0,40,0,0" BackgroundColor="DodgerBlue">
-            <StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    
-                    <Label Text="Разписания"  />
-                </StackLayout>
+        <ContentPage Title="Tramline Five" BackgroundColor="DodgerBlue">
+            <ContentPage.Resources>
+                <ResourceDictionary>
+                    <Style TargetType="StackLayout" x:Key="MenuItem">
+                        <Setter Property="Margin" Value="10,0,0,0" />
+                        <Setter Property="Orientation" Value="Horizontal" />
+                        <Setter Property="HeightRequest" Value="30" />
+                        
+                        <StackLayout.Triggers>
+                            <Trigger TargetType="StackLayout" Property="IsFocused" Value="True">
+                                <Setter Property="BackgroundColor" Value="Blue"/>
+                            </Trigger>
+                        </StackLayout.Triggers>
+                    </Style>
+                    <Style TargetType="Label">
+                        <Setter Property="TextColor" Value="White" />
+                        <Setter Property="Margin" Value="10,0,0,0" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                    </Style>
 
-                <StackLayout Orientation="Horizontal">
-                    
+                    <Style TargetType="iconize:IconLabel">
+                        <Setter Property="TextColor" Value="White" />
+                        <Setter Property="FontSize" Value="16" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                    </Style>
+                </ResourceDictionary>
+            </ContentPage.Resources>
+            
+            <StackLayout>
+                <BoxView Color="White" HeightRequest="1" Margin="0,60,0,0" />
+                <StackLayout Style="{StaticResource MenuItem}">
+                    <iconize:IconLabel Text="fa-map-o" />
+                    <Label Text="Разписания" />
+                </StackLayout>
+                <BoxView Color="White" HeightRequest="1" />
+
+                <StackLayout Orientation="Horizontal" Style="{StaticResource MenuItem}">
+                    <iconize:IconLabel Text="fa-cog" />
                     <Label Text="Настройки"/>
                 </StackLayout>
+                <BoxView Color="White" HeightRequest="1" />
 
-                <StackLayout Orientation="Horizontal">
-                   
+                <StackLayout Orientation="Horizontal" Style="{StaticResource MenuItem}">
+                    <iconize:IconLabel Text="fa-info-circle" />
                     <Label Text="Информация" />
                 </StackLayout>
+                <BoxView Color="White" HeightRequest="1" />
             </StackLayout>
         </ContentPage>
     </MasterDetailPage.Master>
