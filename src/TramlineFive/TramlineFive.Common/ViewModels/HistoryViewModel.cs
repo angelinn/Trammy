@@ -4,15 +4,19 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TramlineFive.Common.Messages;
 using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels
 {
     public class HistoryViewModel : BaseViewModel
     {
-        public static event EventHandler<HistoryDomain> OnHistorySelected;
-
         public ObservableCollection<HistoryDomain> History { get; private set; }
+
+        public HistoryViewModel()
+        {
+            MessengerInstance.Register<HistoryClearedMessage>(this, (h) => History.Clear());
+        }
 
         private HistoryDomain selected;
         public HistoryDomain Selected
@@ -29,7 +33,7 @@ namespace TramlineFive.Common.ViewModels
                 if (value != null)
                 {
                     InteractionService.ChangeTab(0);
-                    OnHistorySelected?.Invoke(this, selected);
+                    MessengerInstance.Send(new HistorySelectedMessage(selected));
 
                     selected = null;
                     RaisePropertyChanged();

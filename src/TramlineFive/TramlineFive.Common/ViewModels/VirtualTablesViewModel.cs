@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
 using TramlineFive.DataAccess.Domain;
 
@@ -26,10 +27,10 @@ namespace TramlineFive.Common.ViewModels
             SearchByStopCodeCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
             VersionCommand = new RelayCommand(async () => await CheckForUpdatesAsync());
 
-            HistoryViewModel.OnHistorySelected += OnHistorySelected;
+            MessengerInstance.Register<HistorySelectedMessage>(this, async (h) => await CheckHistoryAsync(h.Selected));
         }
 
-        private async void OnHistorySelected(object sender, HistoryDomain e)
+        private async Task CheckHistoryAsync(HistoryDomain e)
         {
             StopCode = e.StopCode;
             await SearchByStopCodeAsync();
