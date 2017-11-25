@@ -20,8 +20,26 @@ namespace TramlineFive.Common.ViewModels
 
         private async Task CleanHistoryAsync()
         {
+            IsLoading = true;
+
             await HistoryDomain.CleanHistoryAsync();
+
+            IsLoading = false;
             MessengerInstance.Send(new HistoryClearedMessage());
+        }
+
+        private bool isLoading;
+        public bool IsLoading
+        {
+            get
+            {
+                return isLoading;
+            }
+            set
+            {
+                isLoading = value;
+                RaisePropertyChanged();
+            }
         }
     }
 }
