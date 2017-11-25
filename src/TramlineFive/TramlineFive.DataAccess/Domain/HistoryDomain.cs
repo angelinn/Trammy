@@ -48,5 +48,10 @@ namespace TramlineFive.DataAccess.Domain
         {
             return (await TramlineFiveContext.Take(count)).Select(h => new HistoryDomain(h));
         }
+
+        public static async Task CleanHistoryAsync()
+        {
+            await TramlineFiveContext.CleanHistoryAsync();
+        }
     }
 }

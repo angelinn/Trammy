@@ -31,5 +31,11 @@ namespace TramlineFive.DataAccess
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
             return await db.Table<History>().Take(10).ToListAsync();
         }
+
+        public static async Task CleanHistoryAsync()
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+            await db.ExecuteAsync("DELETE FROM History");
+        }
     }
 }
