@@ -33,11 +33,15 @@
                         <Setter Property="FontSize" Value="16" />
                         <Setter Property="VerticalOptions" Value="Center" />
                     </Style>
+
+                    <Style TargetType="BoxView">
+                        <Setter Property="Color" Value="WhiteSmoke" />
+                        <Setter Property="HeightRequest" Value="1" />
+                    </Style>
                 </ResourceDictionary>
             </ContentPage.Resources>
 
-            <StackLayout BindingContext="{Binding HamburgerViewModel, Source={StaticResource Locator}}">
-                <BoxView Color="White" HeightRequest="1" Margin="0,60,0,0" />
+            <StackLayout BindingContext="{Binding HamburgerViewModel, Source={StaticResource Locator}}" Margin="0,10,0,0">
                 <StackLayout Style="{StaticResource MenuItem}">
                     <StackLayout.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ScheduleCommand}" />
@@ -46,7 +50,7 @@
                     <iconize:IconLabel Text="fa-map-o" />
                     <Label Text="Разписания" />
                 </StackLayout>
-                <BoxView Color="White" HeightRequest="1" />
+                <BoxView />
 
                 <StackLayout Orientation="Horizontal" Style="{StaticResource MenuItem}">
                     <StackLayout.GestureRecognizers>
@@ -56,7 +60,7 @@
                     <iconize:IconLabel Text="fa-cog" />
                     <Label Text="Настройки"/>
                 </StackLayout>
-                <BoxView Color="White" HeightRequest="1" />
+                <BoxView />
 
                 <StackLayout Orientation="Horizontal" Style="{StaticResource MenuItem}">
                     <StackLayout.GestureRecognizers>
@@ -66,7 +70,7 @@
                     <iconize:IconLabel Text="fa-info-circle" />
                     <Label Text="Информация" />
                 </StackLayout>
-                <BoxView Color="White" HeightRequest="1" />
+                <BoxView />
             </StackLayout>
         </ContentPage>
     </MasterDetailPage.Master>

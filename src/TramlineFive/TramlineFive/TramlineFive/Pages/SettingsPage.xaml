@@ -13,6 +13,7 @@
     </ContentPage.Resources>
 
     <StackLayout Padding="10">
+        <Label Text="Изчистване на историята на търсенията" />
         <StackLayout Orientation="Horizontal">
             <Button Text="Изчисти история" Command="{Binding CleanHistoryCommand}" HorizontalOptions="Start" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}">
