@@ -34,5 +34,8 @@
       <DependentUpon>VirtualTablesPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\NewFolder\" />
+  </ItemGroup>
 
 </Project>
