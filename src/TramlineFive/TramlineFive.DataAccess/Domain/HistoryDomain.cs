@@ -31,7 +31,7 @@ namespace TramlineFive.DataAccess.Domain
                 TimeStamp = DateTime.Now
             };
 
-            await TramlineFiveContext.AddHistoryAsync(history);
+            await TramlineFiveContext.AddAsync(history);
             HistoryAdded?.Invoke(new HistoryDomain(history), new EventArgs());
         }
 
@@ -46,7 +46,7 @@ namespace TramlineFive.DataAccess.Domain
 
         public static async Task<IEnumerable<HistoryDomain>> TakeAsync(int count = 10)
         {
-            return (await TramlineFiveContext.Take(count)).Select(h => new HistoryDomain(h));
+            return (await TramlineFiveContext.Take<History>(count)).Select(h => new HistoryDomain(h));
         }
 
         public static async Task CleanHistoryAsync()

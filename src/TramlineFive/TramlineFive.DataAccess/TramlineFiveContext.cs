@@ -17,19 +17,20 @@ namespace TramlineFive.DataAccess
             {
                 SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
                 await db.CreateTableAsync<History>();
+                await db.CreateTableAsync<Favourite>();
             }
         }
 
-        public static async Task AddHistoryAsync(History history)
+        public static async Task AddAsync(object entity)
         {
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
-            await db.InsertAsync(history);
+            await db.InsertAsync(entity);
         }
 
-        public static async Task<IEnumerable<History>> Take(int count = 10)
+        public static async Task<IEnumerable<T>> Take<T>(int count = 10) where T : new()
         {
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
-            return await db.Table<History>().Take(10).ToListAsync();
+            return await db.Table<T>().Take(10).ToListAsync();
         }
 
         public static async Task CleanHistoryAsync()
