@@ -6,6 +6,7 @@
              Title="Tramline Five">
 
     <local:VirtualTablesPage />
+    <local:FavouritesPage />
     <local:HistoryPage />
 
 </TabbedPage>

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              xmlns:d="clr-namespace:TramlineFive.Behaviors;assembly=TramlineFive"
+             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
              Title="Спирка"
              BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
@@ -38,6 +39,10 @@
                 <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" HorizontalOptions="Center" />
             </StackLayout>
             <Grid BackgroundColor="DodgerBlue" Padding="5" Margin="5,0,5,0" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
                 <StackLayout VerticalOptions="CenterAndExpand">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                         <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="White" FontSize="14" />
@@ -45,6 +50,12 @@
                     </StackLayout>
                     <Label Text="{Binding Direction}" HorizontalOptions="Center" IsVisible="{Binding Direction, Converter={StaticResource ReferenceToBool}}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14" />
                 </StackLayout>
+                <Grid Grid.Column="1">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
+                    </Grid.GestureRecognizers>
+                    <iconize:IconLabel Text="fa-star" FontSize="32"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" />
+                </Grid>
             </Grid>
         </Grid>
 

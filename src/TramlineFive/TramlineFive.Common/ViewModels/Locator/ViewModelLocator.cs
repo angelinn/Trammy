@@ -14,6 +14,7 @@ namespace TramlineFive.Common.ViewModels.Locator
             SimpleIoc.Default.Register<HamburgerViewModel>();
             SimpleIoc.Default.Register<AboutViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
+            SimpleIoc.Default.Register<FavouritesViewModel>();
         }
 
         public VirtualTablesViewModel VirtualTablesViewModel => SimpleIoc.Default.GetInstance<VirtualTablesViewModel>();
@@ -21,6 +22,7 @@ namespace TramlineFive.Common.ViewModels.Locator
         public HamburgerViewModel HamburgerViewModel => SimpleIoc.Default.GetInstance<HamburgerViewModel>();
         public AboutViewModel AboutViewModel => SimpleIoc.Default.GetInstance<AboutViewModel>();
         public SettingsViewModel SettingsViewModel => SimpleIoc.Default.GetInstance<SettingsViewModel>();
+        public FavouritesViewModel FavouritesViewModel => SimpleIoc.Default.GetInstance<FavouritesViewModel>();
 
     }
 }

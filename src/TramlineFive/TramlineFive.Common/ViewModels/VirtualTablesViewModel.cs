@@ -21,13 +21,21 @@ namespace TramlineFive.Common.ViewModels
     {
         public ICommand SearchByStopCodeCommand { get; private set; }
         public ICommand VersionCommand { get; private set; }
+        public ICommand FavouriteCommand { get; private set; }
 
         public VirtualTablesViewModel()
         {
             SearchByStopCodeCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
             VersionCommand = new RelayCommand(async () => await CheckForUpdatesAsync());
+            FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
 
             MessengerInstance.Register<HistorySelectedMessage>(this, async (h) => await CheckHistoryAsync(h.Selected));
+        }
+
+        private async Task AddFavouriteAsync()
+        {
+            FavouriteDomain added = await FavouriteDomain.AddAsync(stopInfo.Name, stopInfo.Code);
+            MessengerInstance.Send(new FavouriteAddedMessage(added));
         }
 
         private async Task CheckHistoryAsync(HistoryDomain e)

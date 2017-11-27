@@ -18,16 +18,19 @@ namespace TramlineFive.DataAccess.Domain
             StopCode = entity.StopCode;
         }
 
-        public async Task AddAsync(string name, string stopCode)
+        public static async Task<FavouriteDomain> AddAsync(string name, string stopCode)
         {
-            await TramlineFiveContext.AddAsync(new Favourite
+            Favourite added = new Favourite
             {
                 Name = name,
                 StopCode = stopCode
-            });
+            };
+
+            await TramlineFiveContext.AddAsync(added);
+            return new FavouriteDomain(added);
         }
 
-        public async Task<IEnumerable<FavouriteDomain>> Take(int count = 10)
+        public static async Task<IEnumerable<FavouriteDomain>> TakeAsync(int count = 10)
         {
             return (await TramlineFiveContext.Take<Favourite>(count)).Select(f => new FavouriteDomain(f));
         }
