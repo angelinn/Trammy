@@ -36,6 +36,8 @@ namespace TramlineFive.Common.ViewModels
         {
             FavouriteDomain added = await FavouriteDomain.AddAsync(stopInfo.Name, stopInfo.Code);
             MessengerInstance.Send(new FavouriteAddedMessage(added));
+
+            InteractionService.ChangeTab(1);
         }
 
         private async Task CheckHistoryAsync(HistoryDomain e)
