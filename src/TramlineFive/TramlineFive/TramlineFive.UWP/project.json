@@ -2,6 +2,7 @@
   "dependencies": {
     "HockeySDK.UWP": "4.1.6",
     "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.2",
+    "Microsoft.Toolkit.Uwp.Notifications": "2.1.0",
     "sqlite-net-pcl": "1.4.118",
     "Xamarin.Forms": "2.5.0.91635"
   },
