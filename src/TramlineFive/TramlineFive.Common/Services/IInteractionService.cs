@@ -9,5 +9,6 @@ namespace TramlineFive.Common.Services
     {
         Task DisplayAlertAsync(string title, string message, string cancel);
         void ChangeTab(int index);
+        void DisplayToast(string message);
     }
 }

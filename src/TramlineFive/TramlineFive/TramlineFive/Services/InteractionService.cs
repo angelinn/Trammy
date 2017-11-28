@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plugin.Toasts;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,11 @@ namespace TramlineFive.Services
             MasterDetailPage main = Application.Current.MainPage as MasterDetailPage;
             TabbedPage tabbed = (main.Detail as NavigationPage).CurrentPage as TabbedPage;
             tabbed.CurrentPage = tabbed.Children[index];
+        }
+
+        public void DisplayToast(string message)
+        {
+            DependencyService.Get<IToastService>().ShowToast(message);
         }
     }
 }
