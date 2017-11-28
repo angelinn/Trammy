@@ -32,7 +32,11 @@ namespace TramlineFive.UWP.Services
                 }
             };
 
-            ToastNotification toast = new ToastNotification(content.GetXml());
+            ToastNotification toast = new ToastNotification(content.GetXml())
+            {
+                ExpirationTime = DateTime.Now.AddSeconds(5)
+            };
+
             ToastNotificationManager.CreateToastNotifier().Show(toast);
         }
     }
