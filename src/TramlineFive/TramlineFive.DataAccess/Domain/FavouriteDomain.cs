@@ -20,6 +20,9 @@ namespace TramlineFive.DataAccess.Domain
 
         public static async Task<FavouriteDomain> AddAsync(string name, string stopCode)
         {
+            if ((await TramlineFiveContext.FindFavouriteAsync(stopCode)) != null)
+                return null;
+
             Favourite added = new Favourite
             {
                 Name = name,

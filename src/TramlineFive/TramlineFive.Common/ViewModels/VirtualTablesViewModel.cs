@@ -35,9 +35,15 @@ namespace TramlineFive.Common.ViewModels
         private async Task AddFavouriteAsync()
         {
             FavouriteDomain added = await FavouriteDomain.AddAsync(stopInfo.Name, stopInfo.Code);
-            MessengerInstance.Send(new FavouriteAddedMessage(added));
-
-            InteractionService.DisplayToast($"Спирка {added.Name} е добавена към любими");
+            if (added != null)
+            {
+                MessengerInstance.Send(new FavouriteAddedMessage(added));
+                InteractionService.DisplayToast($"Спирка {added.Name} е добавена към любими");
+            }
+            else
+            {
+                InteractionService.DisplayToast($"Спирката вече съществува в любими");
+            }
         }
 
         private async Task CheckHistoryAsync(HistoryDomain e)

@@ -21,6 +21,12 @@ namespace TramlineFive.DataAccess
             }
         }
 
+        public static async Task<Favourite> FindFavouriteAsync(string stopCode)
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+            return await db.FindAsync<Favourite>(f => f.StopCode == stopCode);
+        }
+
         public static async Task AddAsync(object entity)
         {
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
