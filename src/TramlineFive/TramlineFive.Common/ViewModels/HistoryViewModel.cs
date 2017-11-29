@@ -33,7 +33,7 @@ namespace TramlineFive.Common.ViewModels
                 if (value != null)
                 {
                     InteractionService.ChangeTab(0);
-                    MessengerInstance.Send(new HistorySelectedMessage(selected));
+                    MessengerInstance.Send(new StopSelectedMessage(selected.StopCode));
 
                     selected = null;
                     RaisePropertyChanged();

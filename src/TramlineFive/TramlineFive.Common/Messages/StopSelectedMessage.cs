@@ -5,11 +5,11 @@ using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.Messages
 {
-    public class HistorySelectedMessage
+    public class StopSelectedMessage
     {
-        public HistoryDomain Selected { get; set; }
+        public string Selected { get; set; }
 
-        public HistorySelectedMessage(HistoryDomain selected)
+        public StopSelectedMessage(string selected)
         {
             Selected = selected;
         }

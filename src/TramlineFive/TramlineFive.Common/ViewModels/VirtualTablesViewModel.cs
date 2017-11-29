@@ -29,7 +29,7 @@ namespace TramlineFive.Common.ViewModels
             VersionCommand = new RelayCommand(async () => await CheckForUpdatesAsync());
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
 
-            MessengerInstance.Register<HistorySelectedMessage>(this, async (h) => await CheckHistoryAsync(h.Selected));
+            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await CheckStopAsync(sc.Selected));
         }
 
         private async Task AddFavouriteAsync()
@@ -46,9 +46,9 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-        private async Task CheckHistoryAsync(HistoryDomain e)
+        private async Task CheckStopAsync(string selected)
         {
-            StopCode = e.StopCode;
+            StopCode = selected;
             await SearchByStopCodeAsync();
         }
 
