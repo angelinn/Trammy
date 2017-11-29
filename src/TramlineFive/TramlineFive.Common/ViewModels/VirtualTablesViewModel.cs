@@ -54,7 +54,14 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task CheckForUpdatesAsync()
         {
-            Version = await VersionService.CheckForUpdates();
+            try
+            {
+                Version = await VersionService.CheckForUpdates();
+            }
+            catch (Exception ex)
+            {
+                InteractionService.DisplayToast("Грешка при проверка за обновяване");
+            }
         }
 
         public async Task SearchByStopCodeAsync()

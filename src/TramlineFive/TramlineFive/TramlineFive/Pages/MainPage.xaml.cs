@@ -26,7 +26,7 @@ namespace TramlineFive.Pages
             {
                 appeared = true;
                 
-                // await SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync();
+                await SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync();
                 await SimpleIoc.Default.GetInstance<HistoryViewModel>().LoadHistoryAsync();
                 await SimpleIoc.Default.GetInstance<FavouritesViewModel>().LoadFavouritesAsync();
             }
