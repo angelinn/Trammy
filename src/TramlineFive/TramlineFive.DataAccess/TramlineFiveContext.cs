@@ -27,6 +27,15 @@ namespace TramlineFive.DataAccess
             return await db.FindAsync<Favourite>(f => f.StopCode == stopCode);
         }
 
+        public static async Task RemoveFavouriteAsync(string stopCode)
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+
+            Favourite target = await FindFavouriteAsync(stopCode);
+            if (target != null)
+                await db.DeleteAsync(target);
+        }
+
         public static async Task AddAsync(object entity)
         {
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);

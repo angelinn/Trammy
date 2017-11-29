@@ -21,7 +21,11 @@
                                     <Label Text="{Binding StopCode, StringFormat='({0})'}" />
                                     <Label Text="{Binding Name}" />
                                 </StackLayout>
-                                <iconize:IconLabel Grid.Column="1" Text="fa-star-half-full" TextColor="DodgerBlue" FontSize="32" />
+                                <iconize:IconLabel Grid.Column="1" Text="fa-star-half-full" TextColor="DodgerBlue" FontSize="32">
+                                    <iconize:IconLabel.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
+                                    </iconize:IconLabel.GestureRecognizers>
+                                </iconize:IconLabel>
                             </Grid>
                         </ViewCell.View>
                     </ViewCell>

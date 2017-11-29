@@ -37,5 +37,10 @@ namespace TramlineFive.DataAccess.Domain
         {
             return (await TramlineFiveContext.Take<Favourite>(count)).Select(f => new FavouriteDomain(f));
         }
+
+        public static async Task RemoveAsync(string stopCode)
+        {
+            await TramlineFiveContext.RemoveFavouriteAsync(stopCode);
+        }
     }
 }
