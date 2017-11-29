@@ -6,7 +6,7 @@
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
     <Grid>
-        <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected}" RowHeight="50">
+        <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="50">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
