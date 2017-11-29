@@ -19,8 +19,14 @@ namespace TramlineFive.Common.ViewModels
 
         public FavouritesViewModel()
         {
-            MessengerInstance.Register<FavouriteAddedMessage>(this, (f) => Favourites.Insert(0, f.Added));
+            MessengerInstance.Register<FavouriteAddedMessage>(this, (f) => OnFavouriteAdded(f.Added));
             RemoveCommand = new RelayCommand<FavouriteDomain>(async (f) => await RemoveFavouriteAsync(f));
+        }
+
+        private void OnFavouriteAdded(FavouriteDomain favourite)
+        {
+            Favourites.Insert(0, favourite);
+            RaisePropertyChanged("HasFavourites");
         }
 
         private async Task RemoveFavouriteAsync(FavouriteDomain favourite)
@@ -31,6 +37,7 @@ namespace TramlineFive.Common.ViewModels
                 Favourites.Remove(favourite);
 
                 InteractionService.DisplayToast($"{favourite.Name} е премахната");
+                RaisePropertyChanged("HasFavourites");
             }
         }
 
@@ -38,7 +45,10 @@ namespace TramlineFive.Common.ViewModels
         {
             Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).Reverse());
             RaisePropertyChanged("Favourites");
+            RaisePropertyChanged("HasFavourites");
         }
+
+        public bool HasFavourites => (Favourites == null || Favourites.Count == 0);
 
         private FavouriteDomain selected;
         public FavouriteDomain Selected

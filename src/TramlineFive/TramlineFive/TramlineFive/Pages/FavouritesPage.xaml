@@ -7,6 +7,8 @@
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
     <Grid>
+        <Label Text="Тук е самотно. Добавете спирка към любими." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasFavourites}" Margin="5" />
+
         <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="50">
             <ListView.ItemTemplate>
                 <DataTemplate>

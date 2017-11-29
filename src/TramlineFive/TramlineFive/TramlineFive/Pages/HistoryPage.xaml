@@ -6,6 +6,8 @@
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
     <Grid>
+        <Label Text="Няма история на търсенията. Потърсете спирка." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasHistory}" Margin="5" />
+
         <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="50">
             <ListView.ItemTemplate>
                 <DataTemplate>

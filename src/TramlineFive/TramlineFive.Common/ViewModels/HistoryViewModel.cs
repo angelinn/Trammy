@@ -15,8 +15,11 @@ namespace TramlineFive.Common.ViewModels
 
         public HistoryViewModel()
         {
-            MessengerInstance.Register<HistoryClearedMessage>(this, (h) => History.Clear());
+            MessengerInstance.Register<HistoryClearedMessage>(this, (h) => OnHistoryCleared());
         }
+
+        public bool HasHistory => (History == null || History.Count == 0);
+
 
         private HistoryDomain selected;
         public HistoryDomain Selected
@@ -45,6 +48,7 @@ namespace TramlineFive.Common.ViewModels
         {
             History = new ObservableCollection<HistoryDomain>((await HistoryDomain.TakeAsync()).Reverse());
             RaisePropertyChanged("History");
+            RaisePropertyChanged("HasHistory");
 
             HistoryDomain.HistoryAdded += OnHistoryAdded;
         }
@@ -52,6 +56,13 @@ namespace TramlineFive.Common.ViewModels
         private void OnHistoryAdded(object sender, EventArgs e)
         {
             History.Insert(0, sender as HistoryDomain);
+            RaisePropertyChanged("HasHistory");
+        }
+
+        private void OnHistoryCleared()
+        {
+            History.Clear();
+            RaisePropertyChanged("HasHistory");
         }
     }
 }
