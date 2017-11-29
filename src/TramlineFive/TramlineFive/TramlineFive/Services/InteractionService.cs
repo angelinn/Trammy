@@ -9,9 +9,13 @@ namespace TramlineFive.Services
 {
     public class InteractionService : IInteractionService
     {
-        public async Task DisplayAlertAsync(string title, string message, string cancel)
+        public async Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel)
         {
-            await Application.Current.MainPage.DisplayAlert(title, message, cancel);
+            if (!String.IsNullOrEmpty(cancel))
+                return await Application.Current.MainPage.DisplayAlert(title, message, ok, cancel);
+
+            await Application.Current.MainPage.DisplayAlert(title, message, ok);
+            return true;
         }
 
         public void ChangeTab(int index)

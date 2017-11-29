@@ -36,14 +36,14 @@ namespace TramlineFive.Common.ViewModels
                 selected = value;
                 RaisePropertyChanged();
 
-                //if (value != null)
-                //{
-                //    InteractionService.ChangeTab(0);
-                //    MessengerInstance.Send(new HistorySelectedMessage(selected));
+                if (value != null)
+                {
+                    InteractionService.ChangeTab(0);
+                    MessengerInstance.Send(new StopSelectedMessage(selected.StopCode));
 
-                //    selected = null;
-                //    RaisePropertyChanged();
-                //}
+                    selected = null;
+                    RaisePropertyChanged();
+                }
             }
         }
     }
