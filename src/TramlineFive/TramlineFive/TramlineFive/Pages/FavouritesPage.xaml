@@ -1,22 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.FavouritesPage"
              Title="Любими"
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
     <Grid>
-        <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected}" RowHeight="50">
+        <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="50">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.View>
-                            <StackLayout Spacing="0" Padding="10,0,0,0" VerticalOptions="Center">
-                                <StackLayout Orientation="Horizontal">
+                            <Grid Padding="10,0,0,0" VerticalOptions="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="48" />
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                                     <Label Text="{Binding StopCode, StringFormat='({0})'}" />
                                     <Label Text="{Binding Name}" />
                                 </StackLayout>
-                            </StackLayout>
+                                <iconize:IconLabel Grid.Column="1" Text="fa-star-half-full" TextColor="DodgerBlue" FontSize="32" />
+                            </Grid>
                         </ViewCell.View>
                     </ViewCell>
                 </DataTemplate>
