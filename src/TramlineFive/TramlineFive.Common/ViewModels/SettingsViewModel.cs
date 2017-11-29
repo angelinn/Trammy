@@ -25,7 +25,9 @@ namespace TramlineFive.Common.ViewModels
             await HistoryDomain.CleanHistoryAsync();
 
             IsLoading = false;
+
             MessengerInstance.Send(new HistoryClearedMessage());
+            InteractionService.DisplayToast("Историята е изчистена");
         }
 
         private bool isLoading;
