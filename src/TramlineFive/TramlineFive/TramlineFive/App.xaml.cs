@@ -16,9 +16,12 @@ namespace TramlineFive
         {
             InitializeComponent();
 
-            SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
-            SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
-            SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
+            if (!SimpleIoc.Default.ContainsCreated<IApplicationService>())
+            {
+                SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
+                SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
+                SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
+            }
 
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
 
