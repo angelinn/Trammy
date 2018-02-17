@@ -43,12 +43,16 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task LoadFavouritesAsync()
         {
+            IsLoading = true;
+
             Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).Reverse());
             RaisePropertyChanged("Favourites");
             RaisePropertyChanged("HasFavourites");
+
+            IsLoading = false;
         }
 
-        public bool HasFavourites => (Favourites == null || Favourites.Count == 0);
+        public bool HasFavourites => (Favourites == null || Favourites.Count == 0) && !isLoading;
 
         private FavouriteDomain selected;
         public FavouriteDomain Selected
@@ -70,6 +74,20 @@ namespace TramlineFive.Common.ViewModels
                     selected = null;
                     RaisePropertyChanged();
                 }
+            }
+        }
+
+        private bool isLoading = true;
+        public bool IsLoading
+        {
+            get
+            {
+                return isLoading;
+            }
+            set
+            {
+                isLoading = value;
+                RaisePropertyChanged();
             }
         }
     }
