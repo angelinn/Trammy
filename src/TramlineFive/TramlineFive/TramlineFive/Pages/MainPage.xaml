@@ -5,6 +5,7 @@
              x:Class="TramlineFive.Pages.MainPage"
              Title="Tramline Five">
 
+    <local:MapPage />
     <local:VirtualTablesPage />
     <local:FavouritesPage />
     <local:HistoryPage />

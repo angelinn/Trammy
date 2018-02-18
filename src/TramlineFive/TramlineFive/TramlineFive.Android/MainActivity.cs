@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using HockeyApp.Android;
 using TramlineFive.Droid.Services;
+using Android;
 
 namespace TramlineFive.Droid
 {
@@ -22,9 +23,12 @@ namespace TramlineFive.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            Xamarin.FormsMaps.Init(this, bundle);
+
             Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs); // Could also be Resource.Id.tabs
 
             ToastService.Init(this);
+            PermissionService.Init(this);
 
             LoadApplication(new App());
 
