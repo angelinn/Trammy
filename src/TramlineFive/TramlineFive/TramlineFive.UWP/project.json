@@ -5,7 +5,7 @@
     "Microsoft.Toolkit.Uwp.Notifications": "2.1.0",
     "sqlite-net-pcl": "1.4.118",
     "Xamarin.Forms": "2.5.0.280555",
-    "Xamarin.Forms.Maps": "2.5.0.280555"
+    "Xamarin.Forms.GoogleMaps": "2.3.0"
   },
   "frameworks": {
     "uap10.0.10240": {}
