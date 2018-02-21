@@ -20,12 +20,6 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
-            IPermissionService permissionService = DependencyService.Get<IPermissionService>();
-            if (!permissionService.HasLocationPermissions())
-                permissionService.RequestLocationPermissions();
-            else
-                MyMap.MyLocationEnabled = true;
-
             MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(
                     new Position(42.6977, 23.3219), Distance.FromMiles(0.3)));
 
@@ -44,6 +38,11 @@ namespace TramlineFive.Pages
                 };
                 MyMap.Pins.Add(pin);
             }
+
+            IPermissionService permissionService = DependencyService.Get<IPermissionService>();
+
+            if (permissionService.HasLocationPermissions())
+                MyMap.MyLocationEnabled = true;
 
             MyMap.CameraIdled += MyMap_CameraIdled;
         }

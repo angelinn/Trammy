@@ -28,6 +28,9 @@ namespace TramlineFive.Droid.Services
 
         public bool HasLocationPermissions()
         {
+            if ((int)Build.VERSION.SdkInt < 23)
+                return true;
+
             return context.CheckSelfPermission(Manifest.Permission.AccessCoarseLocation) == Permission.Granted;
         }
 
