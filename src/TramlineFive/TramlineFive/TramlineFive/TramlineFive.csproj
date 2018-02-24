@@ -6,10 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="pin.png" />
     <None Remove="stops.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="pin.png" />
     <EmbeddedResource Include="stops.json" />
   </ItemGroup>
 
