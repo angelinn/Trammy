@@ -15,7 +15,7 @@ using TramlineFive.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
-[assembly: ExportRenderer(typeof(MapsUIView, typeof(MapViewRenderer)))]
+[assembly: ExportRenderer(typeof(MapsUIView), typeof(MapViewRenderer))]
 namespace TramlineFive.Droid.Renderers
 {
     public class MapViewRenderer : ViewRenderer<MapsUIView, MapControl>
@@ -24,7 +24,7 @@ namespace TramlineFive.Droid.Renderers
         private MapsUIView mapViewControl;
 
         public MapViewRenderer(Context context) : base(context)
-        {   }
+        { }
 
         protected override void OnElementChanged(ElementChangedEventArgs<MapsUIView> e)
         {
