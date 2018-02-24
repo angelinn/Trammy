@@ -368,8 +368,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0100f7
 			public const int alphabeticModifiers = 2130772215;
 			
-			// aapt resource value: 0x7f010010
-			public const int ambientEnabled = 2130771984;
+			// aapt resource value: 0x7f010016
+			public const int ambientEnabled = 2130771990;
 			
 			// aapt resource value: 0x7f0100f0
 			public const int arrowHeadLength = 2130772208;
@@ -461,8 +461,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f010060
 			public const int buttonPanelSideLayout = 2130772064;
 			
-			// aapt resource value: 0x7f01001a
-			public const int buttonSize = 2130771994;
+			// aapt resource value: 0x7f010003
+			public const int buttonSize = 2130771971;
 			
 			// aapt resource value: 0x7f0100d8
 			public const int buttonStyle = 2130772184;
@@ -476,26 +476,26 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0100eb
 			public const int buttonTintMode = 2130772203;
 			
-			// aapt resource value: 0x7f010001
-			public const int cameraBearing = 2130771969;
+			// aapt resource value: 0x7f010007
+			public const int cameraBearing = 2130771975;
 			
-			// aapt resource value: 0x7f010012
-			public const int cameraMaxZoomPreference = 2130771986;
+			// aapt resource value: 0x7f010018
+			public const int cameraMaxZoomPreference = 2130771992;
 			
-			// aapt resource value: 0x7f010011
-			public const int cameraMinZoomPreference = 2130771985;
+			// aapt resource value: 0x7f010017
+			public const int cameraMinZoomPreference = 2130771991;
 			
-			// aapt resource value: 0x7f010002
-			public const int cameraTargetLat = 2130771970;
+			// aapt resource value: 0x7f010008
+			public const int cameraTargetLat = 2130771976;
 			
-			// aapt resource value: 0x7f010003
-			public const int cameraTargetLng = 2130771971;
+			// aapt resource value: 0x7f010009
+			public const int cameraTargetLng = 2130771977;
 			
-			// aapt resource value: 0x7f010004
-			public const int cameraTilt = 2130771972;
+			// aapt resource value: 0x7f01000a
+			public const int cameraTilt = 2130771978;
 			
-			// aapt resource value: 0x7f010005
-			public const int cameraZoom = 2130771973;
+			// aapt resource value: 0x7f01000b
+			public const int cameraZoom = 2130771979;
 			
 			// aapt resource value: 0x7f010034
 			public const int cardBackgroundColor = 2130772020;
@@ -521,8 +521,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0100db
 			public const int checkedTextViewStyle = 2130772187;
 			
-			// aapt resource value: 0x7f010019
-			public const int circleCrop = 2130771993;
+			// aapt resource value: 0x7f010002
+			public const int circleCrop = 2130771970;
 			
 			// aapt resource value: 0x7f01010b
 			public const int closeIcon = 2130772235;
@@ -572,8 +572,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0100c6
 			public const int colorPrimaryDark = 2130772166;
 			
-			// aapt resource value: 0x7f01001b
-			public const int colorScheme = 2130771995;
+			// aapt resource value: 0x7f010004
+			public const int colorScheme = 2130771972;
 			
 			// aapt resource value: 0x7f0100cc
 			public const int colorSwitchThumbNormal = 2130772172;
@@ -815,11 +815,11 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f010108
 			public const int iconifiedByDefault = 2130772232;
 			
-			// aapt resource value: 0x7f010018
-			public const int imageAspectRatio = 2130771992;
+			// aapt resource value: 0x7f010001
+			public const int imageAspectRatio = 2130771969;
 			
-			// aapt resource value: 0x7f010017
-			public const int imageAspectRatioAdjust = 2130771991;
+			// aapt resource value: 0x7f010000
+			public const int imageAspectRatioAdjust = 2130771968;
 			
 			// aapt resource value: 0x7f0100b2
 			public const int imageButtonStyle = 2130772146;
@@ -854,17 +854,17 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f01014e
 			public const int keylines = 2130772302;
 			
-			// aapt resource value: 0x7f010015
-			public const int latLngBoundsNorthEastLatitude = 2130771989;
+			// aapt resource value: 0x7f01001b
+			public const int latLngBoundsNorthEastLatitude = 2130771995;
 			
-			// aapt resource value: 0x7f010016
-			public const int latLngBoundsNorthEastLongitude = 2130771990;
+			// aapt resource value: 0x7f01001c
+			public const int latLngBoundsNorthEastLongitude = 2130771996;
 			
-			// aapt resource value: 0x7f010013
-			public const int latLngBoundsSouthWestLatitude = 2130771987;
+			// aapt resource value: 0x7f010019
+			public const int latLngBoundsSouthWestLatitude = 2130771993;
 			
-			// aapt resource value: 0x7f010014
-			public const int latLngBoundsSouthWestLongitude = 2130771988;
+			// aapt resource value: 0x7f01001a
+			public const int latLngBoundsSouthWestLongitude = 2130771994;
 			
 			// aapt resource value: 0x7f010107
 			public const int layout = 2130772231;
@@ -935,8 +935,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0100bb
 			public const int listPreferredItemPaddingRight = 2130772155;
 			
-			// aapt resource value: 0x7f010006
-			public const int liteMode = 2130771974;
+			// aapt resource value: 0x7f01000c
+			public const int liteMode = 2130771980;
 			
 			// aapt resource value: 0x7f010049
 			public const int logo = 2130772041;
@@ -944,8 +944,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f01012d
 			public const int logoDescription = 2130772269;
 			
-			// aapt resource value: 0x7f010000
-			public const int mapType = 2130771968;
+			// aapt resource value: 0x7f010006
+			public const int mapType = 2130771974;
 			
 			// aapt resource value: 0x7f010168
 			public const int maxActionInlineWidth = 2130772328;
@@ -1097,8 +1097,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f010159
 			public const int rippleColor = 2130772313;
 			
-			// aapt resource value: 0x7f01001c
-			public const int scopeUris = 2130771996;
+			// aapt resource value: 0x7f010005
+			public const int scopeUris = 2130771973;
 			
 			// aapt resource value: 0x7f010148
 			public const int scrimAnimationDuration = 2130772296;
@@ -1382,32 +1382,32 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f010118
 			public const int trackTintMode = 2130772248;
 			
-			// aapt resource value: 0x7f010007
-			public const int uiCompass = 2130771975;
+			// aapt resource value: 0x7f01000d
+			public const int uiCompass = 2130771981;
+			
+			// aapt resource value: 0x7f010015
+			public const int uiMapToolbar = 2130771989;
+			
+			// aapt resource value: 0x7f01000e
+			public const int uiRotateGestures = 2130771982;
 			
 			// aapt resource value: 0x7f01000f
-			public const int uiMapToolbar = 2130771983;
+			public const int uiScrollGestures = 2130771983;
 			
-			// aapt resource value: 0x7f010008
-			public const int uiRotateGestures = 2130771976;
+			// aapt resource value: 0x7f010010
+			public const int uiTiltGestures = 2130771984;
 			
-			// aapt resource value: 0x7f010009
-			public const int uiScrollGestures = 2130771977;
+			// aapt resource value: 0x7f010011
+			public const int uiZoomControls = 2130771985;
 			
-			// aapt resource value: 0x7f01000a
-			public const int uiTiltGestures = 2130771978;
-			
-			// aapt resource value: 0x7f01000b
-			public const int uiZoomControls = 2130771979;
-			
-			// aapt resource value: 0x7f01000c
-			public const int uiZoomGestures = 2130771980;
+			// aapt resource value: 0x7f010012
+			public const int uiZoomGestures = 2130771986;
 			
 			// aapt resource value: 0x7f01015d
 			public const int useCompatPadding = 2130772317;
 			
-			// aapt resource value: 0x7f01000d
-			public const int useViewLifecycle = 2130771981;
+			// aapt resource value: 0x7f010013
+			public const int useViewLifecycle = 2130771987;
 			
 			// aapt resource value: 0x7f01010f
 			public const int voiceIcon = 2130772239;
@@ -1442,8 +1442,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f010074
 			public const int windowNoTitle = 2130772084;
 			
-			// aapt resource value: 0x7f01000e
-			public const int zOrderOnTop = 2130771982;
+			// aapt resource value: 0x7f010014
+			public const int zOrderOnTop = 2130771988;
 			
 			static Attribute()
 			{
@@ -3466,11 +3466,11 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b0036
 			public const int add = 2131427382;
 			
-			// aapt resource value: 0x7f0b0021
-			public const int adjust_height = 2131427361;
+			// aapt resource value: 0x7f0b001c
+			public const int adjust_height = 2131427356;
 			
-			// aapt resource value: 0x7f0b0022
-			public const int adjust_width = 2131427362;
+			// aapt resource value: 0x7f0b001d
+			public const int adjust_width = 2131427357;
 			
 			// aapt resource value: 0x7f0b0079
 			public const int alertTitle = 2131427449;
@@ -3484,8 +3484,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b005f
 			public const int async = 2131427423;
 			
-			// aapt resource value: 0x7f0b0026
-			public const int auto = 2131427366;
+			// aapt resource value: 0x7f0b0022
+			public const int auto = 2131427362;
 			
 			// aapt resource value: 0x7f0b0039
 			public const int beginning = 2131427385;
@@ -3559,8 +3559,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b0075
 			public const int customPanel = 2131427445;
 			
-			// aapt resource value: 0x7f0b0027
-			public const int dark = 2131427367;
+			// aapt resource value: 0x7f0b0023
+			public const int dark = 2131427363;
 			
 			// aapt resource value: 0x7f0b0083
 			public const int decor_content_parent = 2131427459;
@@ -3634,8 +3634,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b002c
 			public const int homeAsUp = 2131427372;
 			
-			// aapt resource value: 0x7f0b001c
-			public const int hybrid = 2131427356;
+			// aapt resource value: 0x7f0b0025
+			public const int hybrid = 2131427365;
 			
 			// aapt resource value: 0x7f0b006b
 			public const int icon = 2131427435;
@@ -3643,8 +3643,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b00e9
 			public const int icon_group = 2131427561;
 			
-			// aapt resource value: 0x7f0b0023
-			public const int icon_only = 2131427363;
+			// aapt resource value: 0x7f0b001f
+			public const int icon_only = 2131427359;
 			
 			// aapt resource value: 0x7f0b0044
 			public const int ifRoom = 2131427396;
@@ -3703,8 +3703,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b0052
 			public const int left = 2131427410;
 			
-			// aapt resource value: 0x7f0b0028
-			public const int light = 2131427368;
+			// aapt resource value: 0x7f0b0024
+			public const int light = 2131427364;
 			
 			// aapt resource value: 0x7f0b0017
 			public const int line1 = 2131427351;
@@ -3823,11 +3823,11 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b0045
 			public const int never = 2131427397;
 			
-			// aapt resource value: 0x7f0b001d
-			public const int none = 2131427357;
-			
 			// aapt resource value: 0x7f0b001e
-			public const int normal = 2131427358;
+			public const int none = 2131427358;
+			
+			// aapt resource value: 0x7f0b0026
+			public const int normal = 2131427366;
 			
 			// aapt resource value: 0x7f0b00e7
 			public const int notification_background = 2131427559;
@@ -3868,8 +3868,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b00e2
 			public const int right_side = 2131427554;
 			
-			// aapt resource value: 0x7f0b001f
-			public const int satellite = 2131427359;
+			// aapt resource value: 0x7f0b0027
+			public const int satellite = 2131427367;
 			
 			// aapt resource value: 0x7f0b000c
 			public const int save_image_matrix = 2131427340;
@@ -3973,8 +3973,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b0035
 			public const int src_over = 2131427381;
 			
-			// aapt resource value: 0x7f0b0024
-			public const int standard = 2131427364;
+			// aapt resource value: 0x7f0b0020
+			public const int standard = 2131427360;
 			
 			// aapt resource value: 0x7f0b0054
 			public const int start = 2131427412;
@@ -3991,8 +3991,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b002a
 			public const int tabMode = 2131427370;
 			
-			// aapt resource value: 0x7f0b0020
-			public const int terrain = 2131427360;
+			// aapt resource value: 0x7f0b0028
+			public const int terrain = 2131427368;
 			
 			// aapt resource value: 0x7f0b0019
 			public const int text = 2131427353;
@@ -4081,8 +4081,8 @@ namespace TramlineFive.Droid
 			// aapt resource value: 0x7f0b00b9
 			public const int web_update_details = 2131427513;
 			
-			// aapt resource value: 0x7f0b0025
-			public const int wide = 2131427365;
+			// aapt resource value: 0x7f0b0021
+			public const int wide = 2131427361;
 			
 			// aapt resource value: 0x7f0b0046
 			public const int withText = 2131427398;
@@ -7469,9 +7469,9 @@ namespace TramlineFive.Droid
 			public const int ListPopupWindow_android_dropDownVerticalOffset = 1;
 			
 			public static int[] LoadingImageView = new int[] {
-					2130771991,
-					2130771992,
-					2130771993};
+					2130771968,
+					2130771969,
+					2130771970};
 			
 			// aapt resource value: 2
 			public const int LoadingImageView_circleCrop = 2;
@@ -7483,12 +7483,6 @@ namespace TramlineFive.Droid
 			public const int LoadingImageView_imageAspectRatioAdjust = 0;
 			
 			public static int[] MapAttrs = new int[] {
-					2130771968,
-					2130771969,
-					2130771970,
-					2130771971,
-					2130771972,
-					2130771973,
 					2130771974,
 					2130771975,
 					2130771976,
@@ -7505,7 +7499,13 @@ namespace TramlineFive.Droid
 					2130771987,
 					2130771988,
 					2130771989,
-					2130771990};
+					2130771990,
+					2130771991,
+					2130771992,
+					2130771993,
+					2130771994,
+					2130771995,
+					2130771996};
 			
 			// aapt resource value: 16
 			public const int MapAttrs_ambientEnabled = 16;
@@ -7953,9 +7953,9 @@ namespace TramlineFive.Droid
 			public const int SearchView_voiceIcon = 12;
 			
 			public static int[] SignInButton = new int[] {
-					2130771994,
-					2130771995,
-					2130771996};
+					2130771971,
+					2130771972,
+					2130771973};
 			
 			// aapt resource value: 0
 			public const int SignInButton_buttonSize = 0;
