@@ -1,4 +1,6 @@
-﻿using SkgtService;
+﻿using Mapsui.Projection;
+using Mapsui.Utilities;
+using SkgtService;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +8,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using TramlineFive.Common.Maps;
 using TramlineFive.Services;
+using TramlineFive.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -18,6 +22,15 @@ namespace TramlineFive.Pages
         public MapPage()
         {
             InitializeComponent();
+
+            var mapControl = new MapsUIView();
+            mapControl.NativeMap.Layers.Add(HumanitarianTileServer.CreateTileLayer());
+            var centerOfSofia = new Point(42.6977, 23.3219);
+            var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(centerOfSofia.Y, centerOfSofia.X);
+            mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
+            mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[14]);
+
+            grid.Children.Add(mapControl);
         }
 
         protected override async void OnAppearing()
