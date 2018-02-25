@@ -5,6 +5,8 @@ using Mapsui.Projection;
 using Mapsui.Providers;
 using Mapsui.Styles;
 using Mapsui.Utilities;
+using Plugin.Geolocator;
+using Plugin.Geolocator.Abstractions;
 using SkgtService;
 using SkgtService.Models.Locations;
 using System;
@@ -27,9 +29,19 @@ namespace TramlineFive.Pages
     {
         private SymbolStyle pinStyle;
         private List<Feature> features;
+        private bool initialized;
+
         public MapPage()
         {
             InitializeComponent();
+        }
+
+        protected override async void OnAppearing()
+        {
+            if (initialized)
+                return;
+
+            initialized = true;
 
             var mapControl = new MapsUIView();
             mapControl.NativeMap.Layers.Add(HumanitarianTileServer.CreateTileLayer());
@@ -38,10 +50,19 @@ namespace TramlineFive.Pages
 
             var centerOfSofia = new Mapsui.Geometries.Point(42.6977, 23.3219);
             var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(centerOfSofia.Y, centerOfSofia.X);
-            mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
-            mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[14]);
             mapControl.NativeMap.Layers.Add(LoadStops());
+            
+            IPermissionService permission = DependencyService.Get<IPermissionService>();
+            if (permission.HasLocationPermissions())
+            {
+                Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
+                var c = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
+                mapControl.NativeMap.NavigateTo(c);
+            }
+            else
+                mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
 
+            mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[16]);
             grid.Children.Add(mapControl);
         }
 
