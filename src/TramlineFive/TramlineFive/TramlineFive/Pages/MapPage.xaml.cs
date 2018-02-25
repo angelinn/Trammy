@@ -86,7 +86,7 @@ namespace TramlineFive.Pages
 
         private void NativeMap_Info(object sender, Mapsui.UI.InfoEventArgs e)
         {
-            if (e.Feature != null)
+            if (e.Feature != null && e.Feature.Styles.First().Enabled)
             {
                 StopLocation location = e.Feature["stopObject"] as StopLocation;
                 SimpleIoc.Default.GetInstance<IInteractionService>().ChangeTab(1);
