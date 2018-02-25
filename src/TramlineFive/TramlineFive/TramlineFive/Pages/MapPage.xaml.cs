@@ -1,4 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Messaging;
 using Mapsui.Geometries;
 using Mapsui.Layers;
 using Mapsui.Projection;
@@ -17,6 +19,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Common.Maps;
+using TramlineFive.Common.Messages;
+using TramlineFive.Common.Services;
 using TramlineFive.Services;
 using TramlineFive.Views;
 using Xamarin.Forms;
@@ -50,24 +54,47 @@ namespace TramlineFive.Pages
 
             var centerOfSofia = new Mapsui.Geometries.Point(42.6977, 23.3219);
             var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(centerOfSofia.Y, centerOfSofia.X);
-            mapControl.NativeMap.Layers.Add(LoadStops());
-            
-            IPermissionService permission = DependencyService.Get<IPermissionService>();
-            if (permission.HasLocationPermissions())
-            {
-                Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
-                var c = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
-                mapControl.NativeMap.NavigateTo(c);
-            }
-            else
-                mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
 
-            mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[16]);
+            ILayer stopsLayer = LoadStops();
+            mapControl.NativeMap.Layers.Add(stopsLayer);
+            mapControl.NativeMap.InfoLayers.Add(stopsLayer);
+
+            try
+            {
+                IPermissionService permission = DependencyService.Get<IPermissionService>();
+                if (permission.HasLocationPermissions())
+                {
+                    Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
+                    var c = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
+                    mapControl.NativeMap.NavigateTo(c);
+                    mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[16]);
+                }
+                else
+                {
+                    mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
+                    mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[14]);
+                }
+            }
+            catch (Exception ex)
+            {
+                mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
+                mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[14]);
+            }
+
             grid.Children.Add(mapControl);
         }
 
         private void NativeMap_Info(object sender, Mapsui.UI.InfoEventArgs e)
         {
+            if (e.Feature != null)
+            {
+                StopLocation location = e.Feature["stopObject"] as StopLocation;
+                SimpleIoc.Default.GetInstance<IInteractionService>().ChangeTab(1);
+
+                Messenger.Default.Send(new StopSelectedMessage(location.Code));
+                return;
+            }
+
             foreach (var l in features)
             {
                 StopLocation location = l["stopObject"] as StopLocation;
