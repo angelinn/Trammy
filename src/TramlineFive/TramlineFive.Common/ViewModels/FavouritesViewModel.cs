@@ -68,7 +68,6 @@ namespace TramlineFive.Common.ViewModels
 
                 if (value != null)
                 {
-                    InteractionService.ChangeTab(0);
                     MessengerInstance.Send(new StopSelectedMessage(selected.StopCode));
 
                     selected = null;

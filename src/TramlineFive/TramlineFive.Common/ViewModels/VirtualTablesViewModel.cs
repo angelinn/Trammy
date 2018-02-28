@@ -29,7 +29,13 @@ namespace TramlineFive.Common.ViewModels
             VersionCommand = new RelayCommand(() => ApplicationService.OpenUri(version.ReleaseUrl));
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
 
-            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await CheckStopAsync(sc.Selected));
+            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
+        }
+
+        private async Task OnStopSelected(string stopCode)
+        {
+            InteractionService.ChangeTab(InteractionService.VirtualTablesIndex);
+            await CheckStopAsync(stopCode);
         }
 
         private async Task AddFavouriteAsync()
