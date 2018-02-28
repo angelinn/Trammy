@@ -47,41 +47,68 @@ namespace TramlineFive.Pages
 
             initialized = true;
 
-            var mapControl = new MapsUIView();
             mapControl.NativeMap.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             mapControl.NativeMap.Info += NativeMap_Info;
             LoadPinStyles();
-
-            var centerOfSofia = new Mapsui.Geometries.Point(42.6977, 23.3219);
-            var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(centerOfSofia.Y, centerOfSofia.X);
 
             ILayer stopsLayer = LoadStops();
             mapControl.NativeMap.Layers.Add(stopsLayer);
             mapControl.NativeMap.InfoLayers.Add(stopsLayer);
 
-            try
-            {
-                IPermissionService permission = DependencyService.Get<IPermissionService>();
-                if (permission.HasLocationPermissions())
-                {
-                    Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
-                    var c = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
-                    mapControl.NativeMap.NavigateTo(c);
-                    mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[16]);
-                }
-                else
-                {
-                    mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
-                    mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[14]);
-                }
-            }
-            catch (Exception ex)
-            {
-                mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
-                mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[14]);
-            }
+            await LocalizeAsync();
+            mapControl.IsVisible = true;
+            slLocation.IsVisible = true;
+        }
 
-            grid.Children.Add(mapControl);
+        private async void MapPage_Clicked(object sender, EventArgs e)
+        {
+            Task t = LocalizeAsync();
+
+            slLocation.BackgroundColor = Xamarin.Forms.Color.LightGray;
+            await Task.Delay(100);
+            slLocation.BackgroundColor = Xamarin.Forms.Color.White;
+            await Task.Delay(100);
+        }
+
+        private async Task LocalizeAsync()
+        {
+            await Task.Run(async () =>
+            { 
+                var centerOfSofia = new Mapsui.Geometries.Point(42.6977, 23.3219);
+                var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(centerOfSofia.Y, centerOfSofia.X);
+
+                try
+                {
+                    IPermissionService permission = DependencyService.Get<IPermissionService>();
+                    if (permission.HasLocationPermissions())
+                    {
+                        Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
+                        var c = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
+
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            mapControl.NativeMap.NavigateTo(c);
+                            mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[16]);
+                        });
+                    }
+                    else
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
+                            mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[14]);
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        mapControl.NativeMap.NavigateTo(sphericalMercatorCoordinate);
+                        mapControl.NativeMap.NavigateTo(mapControl.NativeMap.Resolutions[14]);
+                    });
+                }
+            });
         }
 
         private void NativeMap_Info(object sender, Mapsui.UI.InfoEventArgs e)

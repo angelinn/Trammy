@@ -2,9 +2,20 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.MapPage"
+             xmlns:v="clr-namespace:TramlineFive.Views"
              Title="Карта">
     <Grid x:Name="grid">
-        <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" />
+        <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" IsEnabled="True" IsRunning="True" IsVisible="True" />
+        <v:MapsUIView x:Name="mapControl"  IsVisible="False" />
+        <StackLayout x:Name="slLocation" IsVisible="False" HeightRequest="32" Padding="5" Margin="5" WidthRequest="32" Opacity="0.8" BackgroundColor="White" HorizontalOptions="End" VerticalOptions="Start">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="MapPage_Clicked" />
+            </StackLayout.GestureRecognizers>
+
+            <Image Source="Resources/drawable/mylocation.png" />
+        </StackLayout>
+
+
     </Grid>
 </ContentPage>
     

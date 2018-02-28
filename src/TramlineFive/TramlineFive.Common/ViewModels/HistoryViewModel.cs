@@ -64,7 +64,7 @@ namespace TramlineFive.Common.ViewModels
             RaisePropertyChanged("History");
             RaisePropertyChanged("HasHistory");
 
-            //IsLoading = false;
+            IsLoading = false;
 
             HistoryDomain.HistoryAdded += OnHistoryAdded;
         }
