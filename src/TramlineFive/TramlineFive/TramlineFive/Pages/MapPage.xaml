@@ -12,7 +12,18 @@
                 <TapGestureRecognizer Tapped="MapPage_Clicked" />
             </StackLayout.GestureRecognizers>
 
-            <Image Source="Resources/drawable/mylocation.png" />
+            <Image Source="Resources/drawable/mylocation.png">
+                <Image.Source>
+                    <OnPlatform x:TypeArguments="ImageSource">
+                        <OnPlatform.Android>
+                            <FileImageSource File="Resources/drawable/mylocation.png" />
+                        </OnPlatform.Android>
+                        <OnPlatform.WinPhone>
+                            <FileImageSource File="assets/mylocation.png" />
+                        </OnPlatform.WinPhone>
+                    </OnPlatform>
+                </Image.Source>
+            </Image>
         </StackLayout>
 
 
