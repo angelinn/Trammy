@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using Mapsui;
+using Mapsui.Geometries;
 using Mapsui.Layers;
 using Mapsui.Projection;
 using Mapsui.Providers;
@@ -23,30 +24,30 @@ namespace TramlineFive.Common.Services
         private static Map map;
         private static SymbolStyle pinStyle;
         private static List<Feature> features;
+        private static IInteractionService interaction;
+
+        private const int STOP_THRESHOLD = 500;
 
         public static void Initialize(Map map)
         {
             MapService.map = map;
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
-            map.Info += NativeMap_Info;
+            map.Info += OnMapInfo;
             LoadPinStyles();
 
             ILayer stopsLayer = LoadStops();
             map.Layers.Add(stopsLayer);
             map.InfoLayers.Add(stopsLayer);
+
+            interaction = SimpleIoc.Default.GetInstance<IInteractionService>();
         }
 
         private static void LoadPinStyles()
         {
             Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
             Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.pin.png");
-            foreach (string name in assembly.GetManifestResourceNames())
-                System.Diagnostics.Debug.WriteLine(name);
 
             var bitmapId = BitmapRegistry.Instance.Register(stream);
-
-            var centerOfSofia = new Mapsui.Geometries.Point(23.3219, 42.6977);
-            var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(centerOfSofia.X, centerOfSofia.Y);
 
             pinStyle = new SymbolStyle
             {
@@ -66,17 +67,19 @@ namespace TramlineFive.Common.Services
             List<StopLocation> stops = new StopsLoader().LoadStops(stream);
             foreach (var location in stops)
             {
-                var centerOfSofia = new Mapsui.Geometries.Point(location.Lon, location.Lat);
-                var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(centerOfSofia.X, centerOfSofia.Y);
+                Point stopLocation = new Point(location.Lon, location.Lat);
+                Point stopMapLocation = SphericalMercator.FromLonLat(stopLocation.X, stopLocation.Y);
 
                 Feature feature = new Feature
                 {
-                    Geometry = sphericalMercatorCoordinate,
-                    Styles = new List<IStyle> { new SymbolStyle
+                    Geometry = stopMapLocation,
+                    Styles = new List<IStyle>
                     {
-                        Enabled = pinStyle.Enabled,
-                        BitmapId = pinStyle.BitmapId
-                    }
+                        new SymbolStyle
+                        {
+                            Enabled = pinStyle.Enabled,
+                            BitmapId = pinStyle.BitmapId
+                        }
                     }
                 };
 
@@ -92,32 +95,33 @@ namespace TramlineFive.Common.Services
             };
         }
 
-        private static void NativeMap_Info(object sender, Mapsui.UI.InfoEventArgs e)
+        private static void OnMapInfo(object sender, Mapsui.UI.InfoEventArgs e)
         {
             if (e.Feature != null && e.Feature.Styles.First().Enabled)
             {
                 StopLocation location = e.Feature["stopObject"] as StopLocation;
-                SimpleIoc.Default.GetInstance<IInteractionService>().ChangeTab(1);
+                interaction.ChangeTab(interaction.VirtualTablesIndex);
 
                 Messenger.Default.Send(new StopSelectedMessage(location.Code));
                 return;
             }
 
-            foreach (var l in features)
+            foreach (Feature feature in features)
             {
-                StopLocation location = l["stopObject"] as StopLocation;
+                StopLocation location = feature["stopObject"] as StopLocation;
 
-                var point = new Mapsui.Geometries.Point(location.Lon, location.Lat);
-                var local = SphericalMercator.FromLonLat(point.X, point.Y);
-                var difference = e.WorldPosition - local;
+                Point point = new Point(location.Lon, location.Lat);
+                Point local = SphericalMercator.FromLonLat(point.X, point.Y);
+                Point difference = e.WorldPosition - local;
 
-                if (Math.Abs(difference.X) < 500 && Math.Abs(difference.Y) < 500)
+                if (Math.Abs(difference.X) < STOP_THRESHOLD && Math.Abs(difference.Y) < STOP_THRESHOLD)
                 {
-                    SymbolStyle style = l.Styles.First() as SymbolStyle;
+                    SymbolStyle style = feature.Styles.First() as SymbolStyle;
                     style.Enabled = true;
                 }
             }
-            (sender as Mapsui.Map).ViewChanged(true);
+
+            map.ViewChanged(true);
         }
 
     }

@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Mapsui;
+using Mapsui.Geometries;
 using Mapsui.Layers;
 using Mapsui.Projection;
 using Mapsui.Styles;
@@ -96,19 +97,19 @@ namespace TramlineFive.Common.ViewModels
         {
             await Task.Run(async () =>
             {
-                var centerOfSofia = new Mapsui.Geometries.Point(42.6977, 23.3219);
-                var sphericalMercatorCoordinate = SphericalMercator.FromLonLat(centerOfSofia.Y, centerOfSofia.X);
+                Point centerOfSofia = new Point(42.6977, 23.3219);
+                Point centerOfSofiaMap = SphericalMercator.FromLonLat(centerOfSofia.Y, centerOfSofia.X);
 
                 try
                 {
                     if (ApplicationService.HasLocationPermissions())
                     {
                         Position position = await ApplicationService.GetCurrentPositionAsync();
-                        var c = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
+                        Point userLocationMap = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
 
                         ApplicationService.RunOnUIThread(() =>
                         {
-                            map.NavigateTo(c);
+                            map.NavigateTo(userLocationMap);
                             map.NavigateTo(map.Resolutions[16]);
                         });
                     }
@@ -116,7 +117,7 @@ namespace TramlineFive.Common.ViewModels
                     {
                         ApplicationService.RunOnUIThread(() =>
                         {
-                            map.NavigateTo(sphericalMercatorCoordinate);
+                            map.NavigateTo(centerOfSofiaMap);
                             map.NavigateTo(map.Resolutions[14]);
                         });
                     }
@@ -125,7 +126,7 @@ namespace TramlineFive.Common.ViewModels
                 {
                     ApplicationService.RunOnUIThread(() =>
                     {
-                        map.NavigateTo(sphericalMercatorCoordinate);
+                        map.NavigateTo(centerOfSofiaMap);
                         map.NavigateTo(map.Resolutions[14]);
                     });
                 }
