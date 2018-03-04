@@ -16,7 +16,7 @@
     <Grid x:Name="grid">
         <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" IsEnabled="True" IsRunning="True" IsVisible="True" />
         <v:MapsUIView IsVisible="{Binding IsMapVisible}" />
-        <StackLayout IsVisible="{Binding IsMyLocationVisible}" BackgroundColor="{Binding MyLocationBackground, Converter={StaticResource ColorConverter}}" HeightRequest="32" Padding="5" Margin="5" WidthRequest="32" Opacity="0.8" HorizontalOptions="End" VerticalOptions="Start">
+        <StackLayout IsVisible="{Binding IsMyLocationVisible}" BackgroundColor="{Binding MyLocationColor, Converter={StaticResource ColorConverter}}" HeightRequest="32" Padding="5" Margin="5" WidthRequest="32" Opacity="0.8" HorizontalOptions="End" VerticalOptions="Start">
             <StackLayout.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
             </StackLayout.GestureRecognizers>
