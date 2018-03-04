@@ -6,6 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="pin.png" />
+    <None Remove="stops.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="pin.png" />
+    <EmbeddedResource Include="stops.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Mapsui" Version="1.3.2" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.0.1-alpha" />
     <PackageReference Include="Octokit" Version="0.28.0" />

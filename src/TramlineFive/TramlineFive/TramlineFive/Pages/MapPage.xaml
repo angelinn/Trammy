@@ -3,13 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.MapPage"
              xmlns:v="clr-namespace:TramlineFive.Views"
-             Title="Карта">
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             Title="Карта"
+             BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:ColorConverter x:Key="ColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <Grid x:Name="grid">
         <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" IsEnabled="True" IsRunning="True" IsVisible="True" />
-        <v:MapsUIView x:Name="mapControl"  IsVisible="False" />
-        <StackLayout x:Name="slLocation" IsVisible="False" HeightRequest="32" Padding="5" Margin="5" WidthRequest="32" Opacity="0.8" BackgroundColor="White" HorizontalOptions="End" VerticalOptions="Start">
+        <v:MapsUIView IsVisible="{Binding IsMapVisible}" />
+        <StackLayout IsVisible="{Binding IsMyLocationVisible}" BackgroundColor="{Binding MyLocationBackground, Converter={StaticResource ColorConverter}}" HeightRequest="32" Padding="5" Margin="5" WidthRequest="32" Opacity="0.8" HorizontalOptions="End" VerticalOptions="Start">
             <StackLayout.GestureRecognizers>
-                <TapGestureRecognizer Tapped="MapPage_Clicked" />
+                <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
             </StackLayout.GestureRecognizers>
 
             <Image Source="Resources/drawable/mylocation.png">
@@ -25,8 +34,6 @@
                 </Image.Source>
             </Image>
         </StackLayout>
-
-
     </Grid>
 </ContentPage>
     

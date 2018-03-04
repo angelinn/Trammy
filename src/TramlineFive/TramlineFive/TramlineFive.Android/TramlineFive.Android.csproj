@@ -323,6 +323,10 @@
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\TramlineFive.Common\TramlineFive.Common.csproj">
+      <Project>{53AC0DA3-1CA0-47C1-9398-3AD43B9C89B7}</Project>
+      <Name>TramlineFive.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TramlineFive\TramlineFive.csproj">
       <Project>{966d7296-0364-44d6-b6c9-3d2c297fb104}</Project>
       <Name>TramlineFive</Name>
