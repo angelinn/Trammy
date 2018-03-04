@@ -23,6 +23,7 @@ namespace TramlineFive.Common.Services
     {
         private static Map map;
         private static SymbolStyle pinStyle;
+        private static SymbolStyle userStyle;
         private static List<Feature> features;
         private static IInteractionService interaction;
 
@@ -34,12 +35,64 @@ namespace TramlineFive.Common.Services
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             map.Info += OnMapInfo;
             LoadPinStyles();
+            LoadUserLocationPin();
 
             ILayer stopsLayer = LoadStops();
             map.Layers.Add(stopsLayer);
             map.InfoLayers.Add(stopsLayer);
 
             interaction = SimpleIoc.Default.GetInstance<IInteractionService>();
+        }
+
+        public static void MoveTo(Point point)
+        {
+            map.NavigateTo(point);
+            map.NavigateTo(map.Resolutions[14]);
+        }
+
+        public static void MoveToUser(Point point)
+        {
+            map.NavigateTo(point);
+            map.NavigateTo(map.Resolutions[16]);
+
+            if (map.Layers.Last().Name == "User location layer")
+                map.Layers.Remove(map.Layers.Last());
+
+            Feature feature = new Feature
+            {
+                Geometry = point,
+                Styles = new List<IStyle>
+                {
+                    new SymbolStyle
+                    {
+                        Enabled = userStyle.Enabled,
+                        BitmapId = userStyle.BitmapId
+                    }
+                }
+            };
+
+            Layer layer = new Layer
+            {
+                Name = "User location layer",
+                Style = null,
+                DataSource = new MemoryProvider(new List<Feature>() { feature })
+            };
+
+            map.Layers.Add(layer);
+            map.ViewChanged(true);
+        }
+
+        private static void LoadUserLocationPin()
+        {
+            Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
+            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.person.png");
+
+            var bitmapId = BitmapRegistry.Instance.Register(stream);
+
+            userStyle = new SymbolStyle
+            {
+                BitmapId = bitmapId
+            };
         }
 
         private static void LoadPinStyles()
