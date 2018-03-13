@@ -1,5 +1,6 @@
 ﻿using BruTile.Predefined;
 using BruTile.Web;
+using Mapsui.Fetcher;
 using Mapsui.Layers;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace TramlineFive.Common.Maps
 
         public static TileLayer CreateTileLayer()
         {
-            return new TileLayer(CreateTileSource()) { Name = "Carto" };
+            return new TileLayer(CreateTileSource(), fetchStrategy: new FetchStrategy()) { Name = "Humanitarian" };
         }
 
         private static HttpTileSource CreateTileSource()
