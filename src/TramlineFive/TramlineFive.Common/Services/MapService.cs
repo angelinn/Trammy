@@ -113,7 +113,7 @@ namespace TramlineFive.Common.Services
         private static ILayer LoadStops()
         {
             Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
-            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.stops.json");
+            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.stops-bg.json");
 
             features = new List<Feature>();
 

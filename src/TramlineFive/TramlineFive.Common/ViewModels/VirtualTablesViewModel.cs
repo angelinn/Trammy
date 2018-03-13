@@ -66,7 +66,7 @@ namespace TramlineFive.Common.ViewModels
             }
             catch (Exception ex)
             {
-                InteractionService.DisplayToast("Грешка при проверка за обновяване");
+                await InteractionService.DisplayAlertAsync("exception", ex.InnerException.Message, "ok");
             }
         }
 
