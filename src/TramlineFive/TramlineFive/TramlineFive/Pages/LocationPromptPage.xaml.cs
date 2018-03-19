@@ -23,7 +23,7 @@ namespace TramlineFive.Pages
             if (!permissionService.HasLocationPermissions())
                 permissionService.RequestLocationPermissions();
 
-            Application.Current.MainPage = new MasterDetail();
+            Application.Current.MainPage = new MasterPage();
         }
     }
 }
