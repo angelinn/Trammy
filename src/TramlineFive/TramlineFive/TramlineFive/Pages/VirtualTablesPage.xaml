@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              xmlns:d="clr-namespace:TramlineFive.Behaviors;assembly=TramlineFive"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
-             Title="Спирка"
              BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
 
     <ContentPage.Resources>
@@ -91,4 +90,4 @@
             </Label.GestureRecognizers>
         </Label>
     </Grid>
-</ContentPage>
+</Grid>

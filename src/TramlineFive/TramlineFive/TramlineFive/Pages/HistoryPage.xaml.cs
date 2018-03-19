@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace TramlineFive.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class HistoryPage : ContentPage
+	public partial class HistoryPage : Grid
 	{
 		public HistoryPage ()
 		{

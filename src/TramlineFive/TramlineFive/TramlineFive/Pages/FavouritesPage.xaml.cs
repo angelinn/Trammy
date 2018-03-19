@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace TramlineFive.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class FavouritesPage : ContentPage
+	public partial class FavouritesPage : Grid
 	{
 		public FavouritesPage ()
 		{

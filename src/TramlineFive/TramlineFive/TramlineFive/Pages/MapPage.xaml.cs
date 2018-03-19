@@ -30,7 +30,7 @@ using Xamarin.Forms.Xaml;
 namespace TramlineFive.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MapPage : ContentPage
+    public partial class MapPage : Grid
     {
         private bool initialized;
 
@@ -39,7 +39,7 @@ namespace TramlineFive.Pages
             InitializeComponent();
         }
 
-        protected override async void OnAppearing()
+        public async Task OnAppearing()
         {
             if (initialized)
                 return;

@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.MapPage"
              xmlns:v="clr-namespace:TramlineFive.Views"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
-             Title="Карта"
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}">
 
-    <ContentPage.Resources>
+    <Grid.Resources>
         <ResourceDictionary>
             <cv:ColorConverter x:Key="ColorConverter" />
         </ResourceDictionary>
-    </ContentPage.Resources>
+    </Grid.Resources>
     
     <Grid x:Name="grid">
         <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" IsEnabled="True" IsRunning="True" IsVisible="True" />
@@ -21,7 +20,7 @@
                 <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
             </StackLayout.GestureRecognizers>
 
-            <Image Source="Resources/drawable/mylocation.png">
+            <Image>
                 <Image.Source>
                     <OnPlatform x:TypeArguments="ImageSource">
                         <OnPlatform.Android>
@@ -35,5 +34,5 @@
             </Image>
         </StackLayout>
     </Grid>
-</ContentPage>
+</Grid>
     
