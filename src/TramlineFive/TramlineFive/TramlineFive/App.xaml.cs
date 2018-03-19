@@ -26,10 +26,11 @@ namespace TramlineFive
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
 
             IPermissionService permissionService = DependencyService.Get<IPermissionService>();
+            
             if (!permissionService.HasLocationPermissions())
                 MainPage = new Pages.LocationPromptPage();
             else
-                MainPage = new Pages.MasterDetail();
+                MainPage = new MasterPage();
         }
 
         protected override async void OnStart()
