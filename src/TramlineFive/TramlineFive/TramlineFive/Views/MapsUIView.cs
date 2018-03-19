@@ -11,7 +11,7 @@ namespace TramlineFive.Views
     {
         public Mapsui.Map NativeMap { get; }
 
-        protected internal MapsUIView()
+        public MapsUIView()
         {
             NativeMap = new Mapsui.Map();
             NativeMap.BackColor = Color.White;
