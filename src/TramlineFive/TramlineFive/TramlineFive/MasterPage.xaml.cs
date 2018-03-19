@@ -8,6 +8,7 @@ using TramlineFive.Common.ViewModels;
 using TramlineFive.Pages;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using static Xamarin.Forms.Grid;
 
 namespace TramlineFive
 {
@@ -20,6 +21,23 @@ namespace TramlineFive
         private FavouritesPage favouritesPage = new FavouritesPage();
 
         private View Current => content.Children[0];
+        public View View => content;
+        public IGridList<View> Children => content.Children;
+
+        private View currentPage;
+        public View CurrentPage
+        {
+            get
+            {
+                return currentPage;
+            }
+            set
+            {
+                currentPage = value;
+                ChangeCurrentPage(value);
+            }
+        }
+
         public MasterPage()
         {
             InitializeComponent();
@@ -53,7 +71,7 @@ namespace TramlineFive
                 ChangeCurrentPage(mapPage);
         }
         
-        private void ChangeCurrentPage(Grid page)
+        private void ChangeCurrentPage(View page)
         {
             foreach (View child in content.Children)
             {
