@@ -15,10 +15,9 @@ namespace TramlineFive.Services
         {
             get
             {
-                MasterDetailPage main = Application.Current.MainPage as MasterDetailPage;
-                TabbedPage tabbed = (main.Detail as NavigationPage).CurrentPage as TabbedPage;
+                MasterPage main = Application.Current.MainPage as MasterPage;
 
-                return tabbed.Children.IndexOf(tabbed.Children.First(p => p.GetType() == typeof(VirtualTablesPage)));
+                return main.Children.IndexOf(main.Children.First(p => p.GetType() == typeof(VirtualTablesPage)));
             }
         }
 
@@ -33,9 +32,8 @@ namespace TramlineFive.Services
 
         public void ChangeTab(int index)
         {
-            MasterDetailPage main = Application.Current.MainPage as MasterDetailPage;
-            TabbedPage tabbed = (main.Detail as NavigationPage).CurrentPage as TabbedPage;
-            tabbed.CurrentPage = tabbed.Children[index];
+            MasterPage main = Application.Current.MainPage as MasterPage;
+            main.CurrentPage = main.Children[index];
         }
 
         public void DisplayToast(string message)
