@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" package="com.TramlineFive" android:versionName="2.5.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" package="com.TramlineFive.beta" android:versionName="2.5.0">
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="26" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -8,7 +8,5 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
-	<application android:label="Tramline Five BETA" android:icon="@drawable/icon">
-		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyC31D2b4_f86wpyIMUV_tVvBWtKIxKG6j8" />
-	</application>
+	<application android:label="Tramline Five BETA" />
 </manifest>

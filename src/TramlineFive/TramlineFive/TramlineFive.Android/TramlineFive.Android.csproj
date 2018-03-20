@@ -76,6 +76,9 @@
     <Reference Include="ConcurrentCollections, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ConcurrentHashSet.1.0.2\lib\netstandard1.0\ConcurrentCollections.dll</HintPath>
     </Reference>
+    <Reference Include="EngineIoClientDotNet, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EngineIoClientDotNet.1.0.3\lib\netstandard1.3\EngineIoClientDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="FormsViewGroup, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.2.5.0.280555\lib\MonoAndroid10\FormsViewGroup.dll</HintPath>
     </Reference>
@@ -163,20 +166,14 @@
     <Reference Include="Remotion.Linq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Remotion.Linq.2.1.2\lib\portable-net45+win+wpa81+wp80\Remotion.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Rg.Plugins.Popup, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Rg.Plugins.Popup.1.0.4\lib\MonoAndroid\Rg.Plugins.Popup.dll</HintPath>
-    </Reference>
-    <Reference Include="Rg.Plugins.Popup.Droid, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Rg.Plugins.Popup.1.0.4\lib\MonoAndroid\Rg.Plugins.Popup.Droid.dll</HintPath>
-    </Reference>
-    <Reference Include="Rg.Plugins.Popup.Platform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Rg.Plugins.Popup.1.0.4\lib\MonoAndroid\Rg.Plugins.Popup.Platform.dll</HintPath>
-    </Reference>
     <Reference Include="SkiaSharp, Version=1.59.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SkiaSharp.1.59.3\lib\MonoAndroid\SkiaSharp.dll</HintPath>
     </Reference>
     <Reference Include="SkiaSharp.Views.Android, Version=1.59.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SkiaSharp.Views.1.59.3\lib\MonoAndroid\SkiaSharp.Views.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="SocketIoClientDotNet, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SocketIoClientDotNet.1.0.3\lib\netstandard1.3\SocketIoClientDotNet.dll</HintPath>
     </Reference>
     <Reference Include="SQLite-net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\sqlite-net-pcl.1.4.118\lib\netstandard1.1\SQLite-net.dll</HintPath>
@@ -195,6 +192,9 @@
     </Reference>
     <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SQLitePCLRaw.provider.e_sqlite3.android.1.1.9\lib\MonoAndroid\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine, Version=0.9.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SuperSocket.ClientEngine.Core.0.9.0\lib\netstandard1.3\SuperSocket.ClientEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -215,11 +215,20 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
+    <Reference Include="UXDivers.Gorilla.SDK, Version=1.2.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\UXDivers.GorillaPlayer.SDK.1.2.0.6\lib\MonoAndroid10\UXDivers.Gorilla.SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="UXDivers.Gorilla.SDK.Droid, Version=1.2.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\UXDivers.GorillaPlayer.SDK.1.2.0.6\lib\MonoAndroid10\UXDivers.Gorilla.SDK.Droid.dll</HintPath>
+    </Reference>
     <Reference Include="Version.Plugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xam.Plugin.Version.1.0.0.0\lib\MonoAndroid10\Version.Plugin.dll</HintPath>
     </Reference>
     <Reference Include="Version.Plugin.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xam.Plugin.Version.1.0.0.0\lib\MonoAndroid10\Version.Plugin.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSocket4Net, Version=0.15.1.10, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebSocket4Net.0.15.1\lib\netstandard1.3\WebSocket4Net.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Android.Arch.Core.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Android.Arch.Core.Common.1.0.0\lib\MonoAndroid80\Xamarin.Android.Arch.Core.Common.dll</HintPath>
@@ -290,15 +299,6 @@
     <Reference Include="Xamarin.Forms.Xaml, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.2.5.0.280555\lib\MonoAndroid10\Xamarin.Forms.Xaml.dll</HintPath>
     </Reference>
-    <Reference Include="Xamarin.GooglePlayServices.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.GooglePlayServices.Base.42.1021.1\lib\MonoAndroid70\Xamarin.GooglePlayServices.Base.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.GooglePlayServices.Basement, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.GooglePlayServices.Basement.42.1021.1\lib\MonoAndroid70\Xamarin.GooglePlayServices.Basement.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.GooglePlayServices.Tasks, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.GooglePlayServices.Tasks.42.1021.1\lib\MonoAndroid70\Xamarin.GooglePlayServices.Tasks.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -311,6 +311,7 @@
     <Compile Include="Services\ToastService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <ProguardConfiguration Include="proguard.cfg" />
     <None Include="Resources\AboutResources.txt" />
@@ -413,9 +414,6 @@
     <Error Condition="!Exists('..\..\packages\Xamarin.Forms.2.5.0.280555\build\netstandard1.0\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.2.5.0.280555\build\netstandard1.0\Xamarin.Forms.targets'))" />
     <Error Condition="!Exists('..\..\packages\Xamarin.Build.Download.0.4.2\build\Xamarin.Build.Download.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Build.Download.0.4.2\build\Xamarin.Build.Download.props'))" />
     <Error Condition="!Exists('..\..\packages\Xamarin.Build.Download.0.4.2\build\Xamarin.Build.Download.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Build.Download.0.4.2\build\Xamarin.Build.Download.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Xamarin.GooglePlayServices.Basement.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Basement.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.GooglePlayServices.Basement.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Basement.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Xamarin.GooglePlayServices.Tasks.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Tasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.GooglePlayServices.Tasks.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Tasks.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Xamarin.GooglePlayServices.Base.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Base.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.GooglePlayServices.Base.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Base.targets'))" />
   </Target>
   <Import Project="..\..\packages\Xamarin.Android.Support.Annotations.26.1.0.1\build\MonoAndroid80\Xamarin.Android.Support.Annotations.targets" Condition="Exists('..\..\packages\Xamarin.Android.Support.Annotations.26.1.0.1\build\MonoAndroid80\Xamarin.Android.Support.Annotations.targets')" />
   <Import Project="..\..\packages\Xamarin.Android.Arch.Core.Common.1.0.0\build\MonoAndroid80\Xamarin.Android.Arch.Core.Common.targets" Condition="Exists('..\..\packages\Xamarin.Android.Arch.Core.Common.1.0.0\build\MonoAndroid80\Xamarin.Android.Arch.Core.Common.targets')" />
@@ -439,7 +437,4 @@
   <Import Project="..\..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" />
   <Import Project="..\..\packages\Xamarin.Forms.2.5.0.280555\build\netstandard1.0\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.5.0.280555\build\netstandard1.0\Xamarin.Forms.targets')" />
   <Import Project="..\..\packages\Xamarin.Build.Download.0.4.2\build\Xamarin.Build.Download.targets" Condition="Exists('..\..\packages\Xamarin.Build.Download.0.4.2\build\Xamarin.Build.Download.targets')" />
-  <Import Project="..\..\packages\Xamarin.GooglePlayServices.Basement.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Basement.targets" Condition="Exists('..\..\packages\Xamarin.GooglePlayServices.Basement.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Basement.targets')" />
-  <Import Project="..\..\packages\Xamarin.GooglePlayServices.Tasks.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Tasks.targets" Condition="Exists('..\..\packages\Xamarin.GooglePlayServices.Tasks.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Tasks.targets')" />
-  <Import Project="..\..\packages\Xamarin.GooglePlayServices.Base.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Base.targets" Condition="Exists('..\..\packages\Xamarin.GooglePlayServices.Base.42.1021.1\build\MonoAndroid70\Xamarin.GooglePlayServices.Base.targets')" />
 </Project>

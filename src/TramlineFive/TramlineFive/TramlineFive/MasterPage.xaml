@@ -9,11 +9,11 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
-        <Grid BackgroundColor="DodgerBlue">
-            <iconize:IconLabel Text="fa-bars" FontSize="24" Margin="10,0,0,0"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Start" />
+        <Grid BackgroundColor="#4CACE8">
+            <iconize:IconLabel Text="fa-bars" FontSize="22" Margin="15,0,0,0"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Start" />
 
-            <Label Text="Tramline Five" TextColor="White" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"  />
-            <iconize:IconLabel Text="fa-search" FontSize="24" Margin="0,0,10,0" TextColor="White" VerticalOptions="Center" HorizontalOptions="End" />
+            <Label Text="Трамваи" TextColor="White" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"  />
+            <iconize:IconLabel Text="fa-search" FontSize="22" Margin="0,0,15,0" TextColor="White" VerticalOptions="Center" HorizontalOptions="End" />
 
         </Grid>
 
@@ -33,7 +33,7 @@
                 <Grid.GestureRecognizers>
                     <TapGestureRecognizer Tapped="mapClicked"/>
                 </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-map-marker" FontSize="24"  TextColor="Black" VerticalOptions="Center" HorizontalOptions="Center" />
+                <iconize:IconLabel Text="fa-map-marker" FontSize="24"  TextColor="#4CACE8" VerticalOptions="Center" HorizontalOptions="Center" />
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.GestureRecognizers>
