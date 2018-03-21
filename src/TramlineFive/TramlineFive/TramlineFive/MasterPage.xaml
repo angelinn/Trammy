@@ -89,7 +89,7 @@
             </Grid>
             <Grid Grid.Column="2">
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding SettingsPage}" CommandParameter="Settings" />
+                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Settings" />
                 </Grid.GestureRecognizers>
                 <iconize:IconLabel Text="fa-cog" FontSize="24"
                                    TextColor="{Binding IsSettingsVisible, Converter={StaticResource BoolToColor}}"

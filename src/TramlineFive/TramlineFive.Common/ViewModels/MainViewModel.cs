@@ -29,12 +29,6 @@ namespace TramlineFive.Common.ViewModels
             SearchCommand = new RelayCommand(() => ActivateSearch());
             CancelSearchCommand = new RelayCommand(() => IsSearchVisible = false);
             ChangeViewCommand = new RelayCommand<string>((p) => ChangeView(p));
-
-            RaisePropertyChanged("IsSearchVisible");
-            RaisePropertyChanged("IsMapVisible");
-            RaisePropertyChanged("IsSettingsVisible");
-            RaisePropertyChanged("IsFavouritesVisible");
-            RaisePropertyChanged("IsHistoryVisible");
         }
 
         private void ChangeView(string view)
