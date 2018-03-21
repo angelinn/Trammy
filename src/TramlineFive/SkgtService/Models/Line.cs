@@ -15,6 +15,15 @@ namespace SkgtService.Models
         public List<Arrival> Arrivals { get; set; }
 
         public string LastTimings => String.Join(", ", Arrivals.Take(3).Select(t => t.Time));
+        public int Minutes
+        {
+            get
+            {
+                DateTime closest = DateTime.Parse(Arrivals[0].Time);
+                return (int)Math.Round((DateTime.Now - closest).TotalMinutes);
+            }
+        }
+
         public string TransportType
         {
             get

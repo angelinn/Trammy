@@ -12,19 +12,19 @@
             <cv:InverseBoolConverter x:Key="InverseBool" />
             <cv:ReferenceToBoolConverter x:Key="ReferenceToBool" />
             <cv:ImageSourceConverter x:Key="ImageSource" />
+            <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="15">
+    <Grid Padding="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="100" />
+            <RowDefinition Height="110" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="15" />
         </Grid.RowDefinitions>
-
+        
         <Frame Padding="0" Margin="0" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
-            <Grid
-                >
+            <Grid>
                 <StackLayout>
                     <ActivityIndicator IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
                     <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" HorizontalOptions="Center" />
@@ -50,27 +50,27 @@
                 </Grid>
             </Grid>
         </Frame>
-        <ListView Grid.Row="1" Margin="-5,0,-5,0" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="90" SelectedItem="{Binding Selected, Mode=TwoWay}">
+        <ListView Grid.Row="1" Margin="-5,0,-5,0" SeparatorVisibility="None" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="115" SelectedItem="{Binding Selected, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.View>
                             <Frame Margin="5" Padding="0" HasShadow="True">
-                                <Grid>
+                                <Grid BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="64" />
-                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="100" />
                                     </Grid.ColumnDefinitions>
-                                    <Image Source="{Binding VehicleType, Converter={StaticResource ImageSource}}" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="46" WidthRequest="46" />
-                                    <StackLayout Grid.Column="1" VerticalOptions="Center">
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="{Binding TransportType}" />
-                                            <Label Text="{Binding Name}" />
-                                        </StackLayout>
-                                        <Label Text="{Binding LastTimings}" />
+                                    <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
+                                        <Label Text="{Binding Name}" FontSize="40" />
+                                        <Label Text="{Binding TransportType}" />
+                                        <Label Text="{Binding LastTimings}"  />
+                                    </StackLayout>
+                                    <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0,0,0,0">
+                                        <Label Text="{Binding Minutes}" FontSize="40" HorizontalOptions="Center"/>
+                                        <Label Text="минути" HorizontalOptions="Center" />
                                     </StackLayout>
                                 </Grid>
-
                             </Frame>
                         </ViewCell.View>
                     </ViewCell>

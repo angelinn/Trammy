@@ -5,11 +5,11 @@
              x:Class="TramlineFive.Pages.FavouritesPage"
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
-    <Grid>
+    <Grid Padding="5">
         <Label Text="Тук е самотно. Добавете спирка към любими." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasFavourites}" Margin="5" />
         
         <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
-        
+
         <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="50">
             <ListView.ItemTemplate>
                 <DataTemplate>

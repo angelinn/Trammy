@@ -4,24 +4,26 @@
              x:Class="TramlineFive.Pages.HistoryPage"
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
-    <Grid>
+    <Grid Padding="5">
         <Label Text="Няма история на търсенията. Потърсете спирка." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasHistory}" Margin="5" />
 
         <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
 
-        <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="50">
+        <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="60" SeparatorVisibility="None">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.View>
-                            <StackLayout Spacing="0" Padding="10,0,0,0" VerticalOptions="Center">
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding StopCode, StringFormat='({0})'}" />
-                                    <Label Text="{Binding Name}" />
-                                </StackLayout>
+                            <Frame Margin="5" Padding="0">
+                                <StackLayout Spacing="0" Padding="10,0,0,0" VerticalOptions="Center">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding StopCode, StringFormat='({0})'}" />
+                                        <Label Text="{Binding Name}" />
+                                    </StackLayout>
 
-                                <Label Text="{Binding TimeStamp}" />
-                            </StackLayout>
+                                    <Label Text="{Binding TimeStamp}" />
+                                </StackLayout>
+                            </Frame>
                         </ViewCell.View>
                     </ViewCell>
                 </DataTemplate>
