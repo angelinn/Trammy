@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace TramlineFive.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class SettingsPage : ContentPage
+	public partial class SettingsPage : Grid
 	{
 		public SettingsPage ()
 		{
