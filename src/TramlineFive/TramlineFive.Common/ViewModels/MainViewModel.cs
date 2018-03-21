@@ -57,7 +57,6 @@ namespace TramlineFive.Common.ViewModels
                 {
                     MessengerInstance.Send(new StopSelectedMessage(query));
                 }
-                IsSearchVisible = false;
             }
         }
 
