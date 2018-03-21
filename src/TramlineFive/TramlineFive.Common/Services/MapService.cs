@@ -153,7 +153,6 @@ namespace TramlineFive.Common.Services
             if (e.Feature != null && e.Feature.Styles.First().Enabled)
             {
                 StopLocation location = e.Feature["stopObject"] as StopLocation;
-                interaction.ChangeTab(interaction.VirtualTablesIndex);
 
                 Messenger.Default.Send(new StopSelectedMessage(location.Code));
                 return;

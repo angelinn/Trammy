@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 using SkgtService;
 using SkgtService.Exceptions;
 using SkgtService.Models;
@@ -34,7 +35,7 @@ namespace TramlineFive.Common.ViewModels
 
         private async Task OnStopSelected(string stopCode)
         {
-            InteractionService.ChangeTab(InteractionService.VirtualTablesIndex);
+            SimpleIoc.Default.GetInstance<MainViewModel>().ChangeViewCommand.Execute("Search");
             await CheckStopAsync(stopCode);
         }
 

@@ -11,16 +11,6 @@ namespace TramlineFive.Services
 {
     public class InteractionService : IInteractionService
     {
-        public int VirtualTablesIndex
-        {
-            get
-            {
-                MasterPage main = Application.Current.MainPage as MasterPage;
-
-                return main.Children.IndexOf(main.Children.First(p => p.GetType() == typeof(VirtualTablesPage)));
-            }
-        }
-
         public async Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel)
         {
             if (!String.IsNullOrEmpty(cancel))
@@ -28,12 +18,6 @@ namespace TramlineFive.Services
 
             await Application.Current.MainPage.DisplayAlert(title, message, ok);
             return true;
-        }
-
-        public void ChangeTab(int index)
-        {
-            MasterPage main = Application.Current.MainPage as MasterPage;
-            main.CurrentPage = main.Children[index];
         }
 
         public void DisplayToast(string message)

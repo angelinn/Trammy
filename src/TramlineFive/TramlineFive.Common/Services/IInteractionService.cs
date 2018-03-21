@@ -7,9 +7,7 @@ namespace TramlineFive.Common.Services
 {
     public interface IInteractionService
     {
-        int VirtualTablesIndex { get; }
         Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel = "");
-        void ChangeTab(int index);
         void DisplayToast(string message);
     }
 }
