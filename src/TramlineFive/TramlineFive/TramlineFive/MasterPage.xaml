@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              xmlns:views="clr-namespace:TramlineFive.Views"
+             xmlns:pages="clr-namespace:TramlineFive.Pages"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              x:Class="TramlineFive.MasterPage"
@@ -11,6 +12,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <cv:InverseBoolConverter x:Key="InverseBool" />
+            <cv:BoolToColorConverter x:Key="BoolToColor" />
         </ResourceDictionary>
     </ContentPage.Resources>
     
@@ -53,6 +55,11 @@
         </Grid>
 
         <Grid Grid.Row="1" x:Name="content">
+            <pages:MapPage x:Name="mapPage" IsVisible="{Binding BindingContext.IsMapVisible, Source={x:Reference Name=content}}" />
+            <pages:VirtualTablesPage IsVisible="{Binding BindingContext.IsSearchVisible, Source={x:Reference Name=content}}" />
+            <pages:SettingsPage IsVisible="{Binding BindingContext.IsSettingsVisible, Source={x:Reference Name=content}}" />
+            <pages:FavouritesPage IsVisible="{Binding BindingContext.IsFavouritesVisible, Source={x:Reference Name=content}}" />
+            <pages:HistoryPage IsVisible="{Binding BindingContext.IsHistoryVisible, Source={x:Reference Name=content}}" />
         </Grid>
 
         <Grid Grid.Row="2" BackgroundColor="White">
@@ -66,33 +73,43 @@
             </Grid.ColumnDefinitions>
             <Grid>
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="mapClicked"/>
+                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Map" />
                 </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-map-marker" FontSize="24"  TextColor="#4CACE8" VerticalOptions="Center" HorizontalOptions="Center" />
+                <iconize:IconLabel Text="fa-map-marker" FontSize="24" 
+                                   TextColor="{Binding IsMapVisible, Converter={StaticResource BoolToColor}}"
+                                   VerticalOptions="Center" HorizontalOptions="Center" />
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="vtClicked" />
+                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Search" />
                 </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-search" FontSize="24"   TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Center" />
+                <iconize:IconLabel Text="fa-search" FontSize="24"
+                                   TextColor="{Binding IsSearchVisible, Converter={StaticResource BoolToColor}}"
+                                   VerticalOptions="Center" HorizontalOptions="Center" />
             </Grid>
             <Grid Grid.Column="2">
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="favClicked" />
+                    <TapGestureRecognizer Command="{Binding SettingsPage}" CommandParameter="Settings" />
                 </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-cog" FontSize="24"  TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Center" />
+                <iconize:IconLabel Text="fa-cog" FontSize="24"
+                                   TextColor="{Binding IsSettingsVisible, Converter={StaticResource BoolToColor}}"
+                                   VerticalOptions="Center" HorizontalOptions="Center" />
             </Grid>
             <Grid Grid.Column="3">
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="favClicked" />
+                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Favourites" />
                 </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-star" FontSize="24"  TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Center" />
+                <iconize:IconLabel Text="fa-star" FontSize="24" 
+                                   TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"
+                                   VerticalOptions="Center" HorizontalOptions="Center" />
             </Grid>
             <Grid Grid.Column="4">
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="hClicked"/>
+                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
                 </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-history" FontSize="24"  TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Center" />
+                <iconize:IconLabel Text="fa-history" FontSize="24"
+                                   TextColor="{Binding IsHistoryVisible, Converter={StaticResource BoolToColor}}"
+                                   VerticalOptions="Center" HorizontalOptions="Center" />
             </Grid>
         </Grid>
     </Grid>
