@@ -50,7 +50,7 @@
                 </Grid>
             </Grid>
         </Frame>
-        <ListView Grid.Row="1" Margin="-5,0,-5,0" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="60" SelectedItem="{Binding Selected, Mode=TwoWay}">
+        <ListView Grid.Row="1" Margin="-5,0,-5,0" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="90" SelectedItem="{Binding Selected, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
