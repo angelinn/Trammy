@@ -7,7 +7,7 @@
              MasterBehavior="Popover">
 
     <MasterDetailPage.Master>
-        <ContentPage Title="Tramline Five" BackgroundColor="DodgerBlue">
+        <ContentPage Title="Tramline Five" BackgroundColor="#4CACE8">
             <ContentPage.Resources>
                 <ResourceDictionary>
                     <Style TargetType="StackLayout" x:Key="MenuItem">

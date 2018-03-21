@@ -9,6 +9,9 @@ using Android.OS;
 using HockeyApp.Android;
 using TramlineFive.Droid.Services;
 using Android;
+using GalaSoft.MvvmLight.Ioc;
+using TramlineFive.Common.Services;
+using TramlineFive.Services;
 
 namespace TramlineFive.Droid
 {
@@ -35,6 +38,18 @@ namespace TramlineFive.Droid
             PermissionService.Init(this);
 
             LoadApplication(new App());
+            //        LoadApplication(UXDivers.Gorilla.Droid.Player.CreateApplication(
+            //this,
+            //new UXDivers.Gorilla.Config("Good Gorilla")
+            //  .RegisterAssemblyFromType<TramlineFive.Common.ViewModels.Locator.ViewModelLocator>()
+            //  .RegisterAssemblyFromType<TramlineFive.App>()));
+
+            //        if (!SimpleIoc.Default.ContainsCreated<IApplicationService>())
+            //        {
+            //            SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
+            //            SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
+            //            SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
+            //        }
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;

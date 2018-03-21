@@ -16,6 +16,7 @@ namespace TramlineFive.Common.ViewModels.Locator
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<FavouritesViewModel>();
             SimpleIoc.Default.Register<MapViewModel>();
+            SimpleIoc.Default.Register<MainViewModel>();
         }
 
         public VirtualTablesViewModel VirtualTablesViewModel => SimpleIoc.Default.GetInstance<VirtualTablesViewModel>();
@@ -25,5 +26,6 @@ namespace TramlineFive.Common.ViewModels.Locator
         public SettingsViewModel SettingsViewModel => SimpleIoc.Default.GetInstance<SettingsViewModel>();
         public FavouritesViewModel FavouritesViewModel => SimpleIoc.Default.GetInstance<FavouritesViewModel>();
         public MapViewModel MapViewModel => SimpleIoc.Default.GetInstance<MapViewModel>();
+        public MainViewModel MainViewModel => SimpleIoc.Default.GetInstance<MainViewModel>();
     }
 }

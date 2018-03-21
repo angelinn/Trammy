@@ -11,7 +11,7 @@
             <cv:ColorConverter x:Key="ColorConverter" />
         </ResourceDictionary>
     </Grid.Resources>
-    
+
     <Grid x:Name="grid">
         <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" IsEnabled="True" IsRunning="True" IsVisible="True" />
         <v:MapsUIView IsVisible="{Binding IsMapVisible}" />

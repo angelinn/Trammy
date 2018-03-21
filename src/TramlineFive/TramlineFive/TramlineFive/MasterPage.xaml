@@ -2,7 +2,18 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
-             x:Class="TramlineFive.MasterPage">
+             xmlns:views="clr-namespace:TramlineFive.Views"
+             xmlns:d="clr-namespace:TramlineFive.Behaviors"
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             x:Class="TramlineFive.MasterPage"
+             BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:InverseBoolConverter x:Key="InverseBool" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <Grid RowSpacing="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="55" />
@@ -10,11 +21,35 @@
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid BackgroundColor="#4CACE8">
-            <iconize:IconLabel Text="fa-bars" FontSize="22" Margin="15,0,0,0"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Start" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <iconize:IconLabel Text="fa-bars" IsVisible="{Binding IsSearchVisible, Converter={StaticResource InverseBool}}" FontSize="22" Margin="15,0,0,0"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Start" />
+            <Grid>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CancelSearchCommand}" />
+                </Grid.GestureRecognizers>
+                <iconize:IconLabel Text="fa-arrow-left" IsVisible="{Binding IsSearchVisible}" FontSize="22" Margin="15,0,0,0"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Start" />
+            </Grid>
 
-            <Label Text="Трамваи" TextColor="White" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"  />
-            <iconize:IconLabel Text="fa-search" FontSize="22" Margin="0,0,15,0" TextColor="White" VerticalOptions="Center" HorizontalOptions="End" />
+            <Label Grid.ColumnSpan="2" Text="Трамваи" TextColor="White" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"  />
+            <Grid Grid.Column="1">
+                <views:CustomEntry x:Name="search" Text="{Binding Query}" Keyboard="Numeric" IsVisible="{Binding IsSearchVisible}" BackgroundColor="#4CACE8" Placeholder="Код на спирка" TextColor="White" PlaceholderColor="White"  Margin="5">
+                    <views:CustomEntry.Behaviors>
+                        <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
+                    </views:CustomEntry.Behaviors>
+                </views:CustomEntry>
 
+                <Grid VerticalOptions="Center" HorizontalOptions="End">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SearchCommand}" />
+                    </Grid.GestureRecognizers>
+
+                    <iconize:IconLabel Text="fa-search" FontSize="22" Margin="0,0,15,0" TextColor="White"  />
+                </Grid>
+
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="1" x:Name="content">

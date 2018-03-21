@@ -1,9 +1,11 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TramlineFive.Common.Messages;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.Pages;
 using Xamarin.Forms;
@@ -50,7 +52,13 @@ namespace TramlineFive
             content.Children.Add(vtPage);
             content.Children.Add(favouritesPage);
             content.Children.Add(historyPage);
+
+            Messenger.Default.Register<FocusSearchMessage>(this, (m) =>
+            {
+                search.Focus();
+            });
         }
+
         bool appeared;
         protected override async void OnAppearing()
         {
@@ -68,9 +76,9 @@ namespace TramlineFive
 
         private void mapClicked(object sender, EventArgs e)
         {
-                ChangeCurrentPage(mapPage);
+            ChangeCurrentPage(mapPage);
         }
-        
+
         private void ChangeCurrentPage(View page)
         {
             foreach (View child in content.Children)
@@ -85,7 +93,7 @@ namespace TramlineFive
 
         private void vtClicked(object sender, EventArgs e)
         {
-                ChangeCurrentPage(vtPage);
+            ChangeCurrentPage(vtPage);
         }
         private void favClicked(object sender, EventArgs e)
         {

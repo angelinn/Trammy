@@ -52,7 +52,7 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-        private async Task CheckStopAsync(string selected)
+        public async Task CheckStopAsync(string selected)
         {
             StopCode = selected;
             await SearchByStopCodeAsync();

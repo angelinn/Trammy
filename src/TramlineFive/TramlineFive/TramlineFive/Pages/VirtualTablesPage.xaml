@@ -5,7 +5,7 @@
              xmlns:d="clr-namespace:TramlineFive.Behaviors;assembly=TramlineFive"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
-             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
+             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" BackgroundColor="#FAFAFA">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -15,68 +15,75 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="10">
+    <Grid Padding="15">
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="5*" />
+            <RowDefinition Height="130" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
 
-        <StackLayout HorizontalOptions="Center" Margin="0,0,0,30">
-            <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}" Keyboard="Numeric">
-                <Entry.Behaviors>
-                    <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchByStopCodeCommand}" />
-                </Entry.Behaviors>
-            </Entry>
-            <Button Text="Проверяване" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" Command="{Binding SearchByStopCodeCommand}" />
-        </StackLayout>
-
-        <Grid Grid.Row="1">
-            <StackLayout>
-                <ActivityIndicator IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
-                <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" HorizontalOptions="Center" />
+        <Frame Padding="15">
+            <StackLayout HorizontalOptions="FillAndExpand"  >
+                <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}" Keyboard="Numeric">
+                    <Entry.Behaviors>
+                        <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchByStopCodeCommand}" />
+                    </Entry.Behaviors>
+                </Entry>
+                <Button Text="Проверяване" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" Command="{Binding SearchByStopCodeCommand}" />
             </StackLayout>
-            <Grid BackgroundColor="DodgerBlue" Padding="5" Margin="5,0,5,0" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="40" />
-                </Grid.ColumnDefinitions>
-                <StackLayout VerticalOptions="CenterAndExpand">
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                        <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="White" FontSize="14" />
-                        <Label Text="{Binding StopInfo.Name}" TextColor="White" FontSize="14" />
-                    </StackLayout>
-                    <Label Text="{Binding Direction}" HorizontalOptions="Center" IsVisible="{Binding Direction, Converter={StaticResource ReferenceToBool}}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14" />
+        </Frame>
+
+        <Frame Grid.Row="2" Padding="0" Margin="0">
+            <Grid >
+                <StackLayout>
+                    <ActivityIndicator IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
+                    <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" HorizontalOptions="Center" />
                 </StackLayout>
-                <Grid Grid.Column="1">
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
-                    </Grid.GestureRecognizers>
-                    <iconize:IconLabel Text="fa-star" Margin="0,0,5,0" FontSize="32"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" />
+                <Grid BackgroundColor="DodgerBlue" Padding="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+                    <StackLayout VerticalOptions="CenterAndExpand">
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                            <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="White" FontSize="14" />
+                            <Label Text="{Binding StopInfo.Name}" TextColor="White" FontSize="14" />
+                        </StackLayout>
+                        <Label Text="{Binding Direction}" HorizontalOptions="Center" IsVisible="{Binding Direction, Converter={StaticResource ReferenceToBool}}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14" />
+                    </StackLayout>
+                    <Grid Grid.Column="1">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
+                        </Grid.GestureRecognizers>
+                        <iconize:IconLabel Text="fa-star" Margin="0,0,5,0" FontSize="32"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" />
+                    </Grid>
                 </Grid>
             </Grid>
-        </Grid>
-
-        <ListView Grid.Row="2" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="60" SelectedItem="{Binding Selected, Mode=TwoWay}">
+        </Frame>
+        <ListView Grid.Row="3" Margin="-5" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="60" SelectedItem="{Binding Selected, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.View>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="64" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Image Source="{Binding VehicleType, Converter={StaticResource ImageSource}}" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="46" WidthRequest="46" />
-                                <StackLayout Grid.Column="1" VerticalOptions="Center">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="{Binding TransportType}" />
-                                        <Label Text="{Binding Name}" />
+                            <Frame Margin="5" Padding="0" HasShadow="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="64" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding VehicleType, Converter={StaticResource ImageSource}}" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="46" WidthRequest="46" />
+                                    <StackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="{Binding TransportType}" />
+                                            <Label Text="{Binding Name}" />
+                                        </StackLayout>
+                                        <Label Text="{Binding LastTimings}" />
                                     </StackLayout>
-                                    <Label Text="{Binding LastTimings}" />
-                                </StackLayout>
-                            </Grid>
+                                </Grid>
+
+                            </Frame>
                         </ViewCell.View>
                     </ViewCell>
                 </DataTemplate>

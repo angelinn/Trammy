@@ -10,8 +10,8 @@ namespace TramlineFive.Services
     {
         public async void ChangePage(string pageName)
         {
-            NavigationPage main = (Application.Current.MainPage as MasterDetailPage).Detail as NavigationPage;
-            await main.PushAsync(Activator.CreateInstance(Type.GetType($"TramlineFive.Pages.{pageName}Page")) as Page);
+            MasterPage main = Application.Current.MainPage as MasterPage;
+            // await main.PushAsync(Activator.CreateInstance(Type.GetType($"TramlineFive.Pages.{pageName}Page")) as Page);
 
 
             (Application.Current.MainPage as MasterDetailPage).IsPresented = false;
