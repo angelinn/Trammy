@@ -12,10 +12,11 @@ using Android;
 using GalaSoft.MvvmLight.Ioc;
 using TramlineFive.Common.Services;
 using TramlineFive.Services;
+using Plugin.Iconize;
 
 namespace TramlineFive.Droid
 {
-    [Activity(Label = "TramlineFive BETA", Icon = "@drawable/icon", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Gorilla Player", Icon = "@drawable/icon", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
@@ -37,19 +38,24 @@ namespace TramlineFive.Droid
             ToastService.Init(this);
             PermissionService.Init(this);
 
-            LoadApplication(new App());
-            //        LoadApplication(UXDivers.Gorilla.Droid.Player.CreateApplication(
-            //this,
-            //new UXDivers.Gorilla.Config("Good Gorilla")
-            //  .RegisterAssemblyFromType<TramlineFive.Common.ViewModels.Locator.ViewModelLocator>()
-            //  .RegisterAssemblyFromType<TramlineFive.App>()));
+#if GORILLA_PLAYER
+            LoadApplication(UXDivers.Gorilla.Droid.Player.CreateApplication(
+                 this,
+                 new UXDivers.Gorilla.Config("Good Gorilla")
+                  .RegisterAssemblyFromType<TramlineFive.Common.ViewModels.Locator.ViewModelLocator>()
+                  .RegisterAssemblyFromType<TramlineFive.App>()
+                  .RegisterAssemblyFromType<Plugin.Iconize.IconLabel>()
+                  .RegisterAssemblyFromType<Plugin.Iconize.Fonts.FontAwesomeModule>()));
 
-            //        if (!SimpleIoc.Default.ContainsCreated<IApplicationService>())
-            //        {
-            //            SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
-            //            SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
-            //            SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
-            //        }
+            if (!SimpleIoc.Default.ContainsCreated<IApplicationService>())
+            {
+                SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
+                SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
+                SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
+            }
+#else
+            LoadApplication(new App());
+#endif
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;

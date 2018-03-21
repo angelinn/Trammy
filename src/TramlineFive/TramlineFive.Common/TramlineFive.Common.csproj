@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
     <PackageTargetFallback>portable-net45+win8+wpa81</PackageTargetFallback>
+    <Configurations>Debug;Release;GorillaPlayer</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
