@@ -17,26 +17,14 @@
 
     <Grid Padding="15">
         <Grid.RowDefinitions>
-            <RowDefinition Height="130" />
-            <RowDefinition Height="20" />
             <RowDefinition Height="100" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="30" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
         </Grid.RowDefinitions>
 
-        <Frame Padding="15">
-            <StackLayout HorizontalOptions="FillAndExpand"  >
-                <Entry Placeholder="Код на спирка..." Text="{Binding StopCode}" Keyboard="Numeric">
-                    <Entry.Behaviors>
-                        <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchByStopCodeCommand}" />
-                    </Entry.Behaviors>
-                </Entry>
-                <Button Text="Проверяване" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" Command="{Binding SearchByStopCodeCommand}" />
-            </StackLayout>
-        </Frame>
-
-        <Frame Grid.Row="2" Padding="0" Margin="0">
-            <Grid >
+        <Frame Padding="0" Margin="0" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
+            <Grid
+                >
                 <StackLayout>
                     <ActivityIndicator IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
                     <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" HorizontalOptions="Center" />
@@ -62,7 +50,7 @@
                 </Grid>
             </Grid>
         </Frame>
-        <ListView Grid.Row="3" Margin="-5" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="60" SelectedItem="{Binding Selected, Mode=TwoWay}">
+        <ListView Grid.Row="1" Margin="-5,0,-5,0" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="60" SelectedItem="{Binding Selected, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -90,7 +78,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="3"
+        <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="2"
                TextColor="DodgerBlue" HorizontalOptions="Center">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding VersionCommand}" />
