@@ -46,7 +46,7 @@ namespace TramlineFive.DataAccess.Domain
 
         public static async Task<IEnumerable<HistoryDomain>> TakeAsync(int count = 10)
         {
-            return (await TramlineFiveContext.Take<History>(count)).Select(h => new HistoryDomain(h));
+            return (await TramlineFiveContext.TakeByDescending<History, DateTime>(h => h.TimeStamp, count)).Select(h => new HistoryDomain(h));
         }
 
         public static async Task CleanHistoryAsync()

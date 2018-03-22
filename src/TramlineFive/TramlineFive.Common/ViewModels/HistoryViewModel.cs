@@ -60,7 +60,7 @@ namespace TramlineFive.Common.ViewModels
         {
             IsLoading = true;
 
-            History = new ObservableCollection<HistoryDomain>((await HistoryDomain.TakeAsync()).Reverse());
+            History = new ObservableCollection<HistoryDomain>(await HistoryDomain.TakeAsync());
             RaisePropertyChanged("History");
             RaisePropertyChanged("HasHistory");
 
