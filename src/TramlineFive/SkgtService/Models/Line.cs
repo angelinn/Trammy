@@ -20,7 +20,7 @@ namespace SkgtService.Models
             get
             {
                 DateTime closest = DateTime.Parse(Arrivals[0].Time);
-                return (int)Math.Round((DateTime.Now - closest).TotalMinutes);
+                return (int)Math.Round((closest - DateTime.Now).TotalMinutes);
             }
         }
 
