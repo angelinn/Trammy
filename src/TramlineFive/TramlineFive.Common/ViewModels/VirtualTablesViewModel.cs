@@ -78,7 +78,11 @@ namespace TramlineFive.Common.ViewModels
 
             try
             {
-                StopInfo = await new ArrivalsService().GetByStopCodeAsync(stopCode);
+                StopInfo info = await new ArrivalsService().GetByStopCodeAsync(stopCode);
+
+                IsLoading = false;
+
+                StopInfo = info;
                 Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
                 await HistoryDomain.AddAsync(stopCode, stopInfo.Name);
             }
@@ -86,8 +90,6 @@ namespace TramlineFive.Common.ViewModels
             {
                 await InteractionService.DisplayAlertAsync("Exception", e.Message, "OK");
             }
-
-            IsLoading = false;
         }
 
         private Line selected;

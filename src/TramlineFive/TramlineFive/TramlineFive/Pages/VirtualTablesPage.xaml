@@ -16,19 +16,22 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="0">
+    <Grid Padding="0,0,0,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="110" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="15" />
         </Grid.RowDefinitions>
-        
-        <Frame Padding="0" Margin="0,10,0,0" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
+
+        <Grid Grid.RowSpan="3" VerticalOptions="Center" HorizontalOptions="Center">
+            <StackLayout>
+                <ActivityIndicator HeightRequest="64" IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
+                <Label Text="Търсене на спирка..." IsVisible="{Binding IsLoading}"/>
+            </StackLayout>
+        </Grid>
+        <Frame Padding="0" Margin="5" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
             <Grid>
-                <StackLayout>
-                    <ActivityIndicator IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
-                    <Label Text="{Binding Message}" IsVisible="{Binding NoTimings}" HorizontalOptions="Center" />
-                </StackLayout>
+
                 <Grid BackgroundColor="DodgerBlue" Padding="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

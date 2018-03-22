@@ -18,8 +18,13 @@ namespace TramlineFive.Pages
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class VirtualTablesPage : Grid
 	{
-        public static BindableProperty QueryProperty = BindableProperty.Create<VirtualTablesPage, string>(
-            v => v.Query, null, BindingMode.TwoWay, propertyChanged: QueryPropertyChanged);
+        public static BindableProperty QueryProperty = BindableProperty.Create(
+            propertyName: "Query",
+            declaringType: typeof(VirtualTablesPage),
+            returnType: typeof(string),
+            defaultValue: null,
+            defaultBindingMode: BindingMode.TwoWay,
+            propertyChanged: QueryPropertyChanged);
 
         private static void QueryPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
