@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using TramlineFive.Common.Messages;
+using TramlineFive.Common.Models;
 
 namespace TramlineFive.Common.ViewModels
 {
@@ -15,13 +17,13 @@ namespace TramlineFive.Common.ViewModels
         public ICommand CancelSearchCommand { get; private set; }
         public ICommand ChangeViewCommand { get; private set; }
 
-        private Dictionary<string, bool> pages = new Dictionary<string, bool>
+        private Dictionary<string, ViewData> pages = new Dictionary<string, ViewData>
         {
-            { "Map", true },
-            { "Search", false },
-            { "Settings", false },
-            { "Favourites", false },
-            { "History", false }
+            { "Map", new ViewData(true, "Трамваи") },
+            { "Search", new ViewData(false, "")  },
+            { "Settings", new ViewData(false, "Настройки")  },
+            { "Favourites", new ViewData(false, "Любими")  },
+            { "History", new ViewData(false, "История")  }
         };
 
         public MainViewModel()
@@ -31,16 +33,19 @@ namespace TramlineFive.Common.ViewModels
             ChangeViewCommand = new RelayCommand<string>((p) => ChangeView(p));
         }
 
-        private void ChangeView(string view)
+        private async void ChangeView(string view)
         {
+            Title = pages[view].Title;
+            await Task.Delay(1);
             foreach (string key in pages.Keys.ToList())
-                pages[key] = key == view;
+                pages[key].IsVisible = key == view;
 
             RaisePropertyChanged("IsSearchVisible");
             RaisePropertyChanged("IsMapVisible");
             RaisePropertyChanged("IsSettingsVisible");
             RaisePropertyChanged("IsFavouritesVisible");
             RaisePropertyChanged("IsHistoryVisible");
+
         }
 
         private void ActivateSearch()
@@ -60,6 +65,20 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
+        private string title = "Трамваи";
+        public string Title
+        {
+            get
+            {
+                return title;
+            }
+            set
+            {
+                title = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private string query;
         public string Query
         {
@@ -73,68 +92,68 @@ namespace TramlineFive.Common.ViewModels
                 RaisePropertyChanged();
             }
         }
-        
+
         public bool IsSearchVisible
         {
             get
             {
-                return pages["Search"];
+                return pages["Search"].IsVisible;
             }
             set
             {
-                pages["Search"] = value;
+                pages["Search"].IsVisible = value;
                 RaisePropertyChanged();
             }
         }
-        
+
         public bool IsMapVisible
         {
             get
             {
-                return pages["Map"];
+                return pages["Map"].IsVisible;
             }
             set
             {
-                pages["Map"] = value;
+                pages["Map"].IsVisible = value;
                 RaisePropertyChanged();
             }
         }
-        
+
         public bool IsFavouritesVisible
         {
             get
             {
-                return pages["Favourites"];
+                return pages["Favourites"].IsVisible;
             }
             set
             {
-                pages["Favourites"] = value;
+                pages["Favourites"].IsVisible = value;
                 RaisePropertyChanged();
             }
         }
-        
+
         public bool IsHistoryVisible
         {
             get
             {
-                return pages["History"];
+                return pages["History"].IsVisible;
             }
             set
             {
-                pages["History"] = value;
+                pages["History"].IsVisible = value;
                 RaisePropertyChanged();
             }
         }
-        
+
         public bool IsSettingsVisible
         {
             get
             {
-                return pages["Settings"];
+                return pages["Settings"].IsVisible;
             }
             set
             {
-                pages["Settings"] = value;
+                pages["Settings"].IsVisible = value;
                 RaisePropertyChanged();
             }
         }
