@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TramlineFive.Common.Services;
+using TramlineFive.Common.ViewModels;
 using TramlineFive.DataAccess;
 using TramlineFive.Services;
 using Xamarin.Forms;
@@ -38,6 +39,9 @@ namespace TramlineFive
             IDatabasePathService dbPathService = DependencyService.Get<IDatabasePathService>();
             TramlineFiveContext.DatabasePath = dbPathService.Path;
             await TramlineFiveContext.EnsureCreatedAsync();
+
+            await SimpleIoc.Default.GetInstance<HistoryViewModel>().LoadHistoryAsync();
+            await SimpleIoc.Default.GetInstance<FavouritesViewModel>().LoadFavouritesAsync();
         }
 
         protected override void OnSleep()

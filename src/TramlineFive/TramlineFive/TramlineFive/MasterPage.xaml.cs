@@ -53,9 +53,7 @@ namespace TramlineFive
                 Task[] loadingTasks = new Task[]
                 {
                     mapPage.OnAppearing(),
-                    SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync(),
-                    SimpleIoc.Default.GetInstance<HistoryViewModel>().LoadHistoryAsync(),
-                    SimpleIoc.Default.GetInstance<FavouritesViewModel>().LoadFavouritesAsync()
+                    SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync()
                 };
 
                 appeared = true;
