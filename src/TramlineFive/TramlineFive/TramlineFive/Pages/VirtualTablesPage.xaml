@@ -23,7 +23,7 @@
             <RowDefinition Height="15" />
         </Grid.RowDefinitions>
         
-        <Frame Padding="0" Margin="0" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
+        <Frame Padding="0" Margin="0,10,0,0" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}">
             <Grid>
                 <StackLayout>
                     <ActivityIndicator IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
