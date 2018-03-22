@@ -29,7 +29,7 @@ namespace TramlineFive.Common.ViewModels
         public MainViewModel()
         {
             SearchCommand = new RelayCommand(() => ActivateSearch());
-            CancelSearchCommand = new RelayCommand(() => IsSearchVisible = false);
+            CancelSearchCommand = new RelayCommand(() => ChangeView("Map"));
             ChangeViewCommand = new RelayCommand<string>((p) => ChangeView(p));
         }
 
