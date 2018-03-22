@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Bus64.png" />
+    <Content Include="Assets\green_rails.jpg" />
     <Content Include="Assets\mylocation.png" />
     <Content Include="Assets\Store\LargeTile.scale-100.png" />
     <Content Include="Assets\Store\LargeTile.scale-125.png" />

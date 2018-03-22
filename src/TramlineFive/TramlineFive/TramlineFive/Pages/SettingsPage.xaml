@@ -5,13 +5,13 @@
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              BindingContext="{Binding SettingsViewModel, Source={StaticResource Locator}}">
 
-    <ContentPage.Resources>
+    <Grid.Resources>
         <ResourceDictionary>
             <cv:InverseBoolConverter x:Key="InverseBool" />
         </ResourceDictionary>
-    </ContentPage.Resources>
-
-    <StackLayout Padding="10">
+    </Grid.Resources>
+    
+    <StackLayout Padding="10" >
         <Label Text="Изчистване на историята на търсенията" />
         <StackLayout Orientation="Horizontal">
             <Button Text="Изчисти история" Command="{Binding CleanHistoryCommand}" HorizontalOptions="Start" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
