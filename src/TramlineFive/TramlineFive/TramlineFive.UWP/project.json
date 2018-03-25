@@ -5,6 +5,7 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.2",
     "Microsoft.Toolkit.Uwp.Notifications": "2.1.0",
     "sqlite-net-pcl": "1.4.118",
+    "System.ValueTuple": "4.4.0",
     "Xam.Plugin.Geolocator": "4.2.0",
     "Xam.Plugin.Iconize": "2.0.0.37-beta",
     "Xam.Plugin.Iconize.FontAwesome": "2.0.0.37-beta",
