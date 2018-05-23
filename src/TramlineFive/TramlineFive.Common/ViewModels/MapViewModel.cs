@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
 
@@ -20,10 +21,12 @@ namespace TramlineFive.Common.ViewModels
     public class MapViewModel : BaseViewModel
     {
         private Map map;
+        public ICommand SearchCommand { get; private set; }
         public ICommand MyLocationCommand { get; private set; }
 
         public MapViewModel()
         {
+            SearchCommand = new RelayCommand(() => ActivateSearch());
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
         }
 
@@ -128,6 +131,28 @@ namespace TramlineFive.Common.ViewModels
                     });
                 }
             });
+        }
+
+        private string query;
+        public string Query
+        {
+            get
+            {
+                return query;
+            }
+            set
+            {
+                query = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private void ActivateSearch()
+        {
+            if (!String.IsNullOrEmpty(query))
+            {
+                MessengerInstance.Send(new StopSelectedMessage(query));
+            }
         }
     }
 }

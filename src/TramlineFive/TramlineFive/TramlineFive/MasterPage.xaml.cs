@@ -41,7 +41,7 @@ namespace TramlineFive
 
             Messenger.Default.Register<FocusSearchMessage>(this, (m) =>
             {
-                search.Focus();
+                //search.Focus();
             });
         }
 

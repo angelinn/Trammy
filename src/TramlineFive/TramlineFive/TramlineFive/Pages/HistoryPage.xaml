@@ -2,7 +2,8 @@
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.HistoryPage"
-             BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
+             BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}"
+             Margin="0,20,0,0">
 
     <Grid Padding="5">
         <Label Text="Няма история на търсенията. Потърсете спирка." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasHistory}" Margin="5" />

@@ -2,10 +2,9 @@
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
-             xmlns:d="clr-namespace:TramlineFive.Behaviors;assembly=TramlineFive"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
-             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" BackgroundColor="#FAFAFA">
+             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" BackgroundColor="#FAFAFA" Margin="0,20,0,0">
 
     <ContentPage.Resources>
         <ResourceDictionary>

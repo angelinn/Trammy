@@ -18,54 +18,21 @@
     
     <Grid RowSpacing="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="55" />
+            <RowDefinition Height="0" />
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
-        <Grid BackgroundColor="#4CACE8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <iconize:IconLabel Text="fa-bars" IsVisible="{Binding IsSearchVisible, Converter={StaticResource InverseBool}}" FontSize="22" Margin="15,0,0,0"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Start" />
-            <Grid>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CancelSearchCommand}" />
-                </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-arrow-left" IsVisible="{Binding IsSearchVisible}" FontSize="22" Margin="15,0,0,0"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Start" />
-            </Grid>
-
-            <Label Grid.ColumnSpan="2" Text="{Binding Title}" TextColor="White" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"  />
-            <Grid Grid.Column="1">
-                <views:CustomEntry x:Name="search" Text="{Binding Query}" Keyboard="Numeric" IsVisible="{Binding IsSearchVisible}" BackgroundColor="#4CACE8" Placeholder="Код на спирка" TextColor="White" PlaceholderColor="White"  Margin="5">
-                    <views:CustomEntry.Behaviors>
-                        <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
-                    </views:CustomEntry.Behaviors>
-                </views:CustomEntry>
-
-                <Grid VerticalOptions="Center" HorizontalOptions="End">
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SearchCommand}" />
-                    </Grid.GestureRecognizers>
-
-                    <iconize:IconLabel Text="fa-search" FontSize="22" Margin="0,0,15,0" TextColor="White"  />
-                </Grid>
-
-            </Grid>
-        </Grid>
 
         <Grid Grid.Row="1" x:Name="content">
             <pages:MapPage x:Name="mapPage" IsVisible="{Binding BindingContext.IsMapVisible, Source={x:Reference Name=content}}" />
-            <pages:VirtualTablesPage Query="{Binding BindingContext.Query, Source={x:Reference Name=content}}" IsVisible="{Binding BindingContext.IsSearchVisible, Source={x:Reference Name=content}}" />
-            <pages:SettingsPage IsVisible="{Binding BindingContext.IsSettingsVisible, Source={x:Reference Name=content}}" />
+            <pages:VirtualTablesPage IsVisible="{Binding BindingContext.IsSearchVisible, Source={x:Reference Name=content}}" />
             <pages:FavouritesPage IsVisible="{Binding BindingContext.IsFavouritesVisible, Source={x:Reference Name=content}}" />
             <pages:HistoryPage IsVisible="{Binding BindingContext.IsHistoryVisible, Source={x:Reference Name=content}}" />
         </Grid>
 
         <Grid Grid.Row="2" BackgroundColor="White">
-            <BoxView Grid.ColumnSpan="5" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+            <BoxView Grid.ColumnSpan="4" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -89,21 +56,13 @@
             </Grid>
             <Grid Grid.Column="2">
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Settings" />
-                </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-cog" FontSize="24"
-                                   TextColor="{Binding IsSettingsVisible, Converter={StaticResource BoolToColor}}"
-                                   VerticalOptions="Center" HorizontalOptions="Center" />
-            </Grid>
-            <Grid Grid.Column="3">
-                <Grid.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Favourites" />
                 </Grid.GestureRecognizers>
                 <iconize:IconLabel Text="fa-star" FontSize="24" 
                                    TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" />
             </Grid>
-            <Grid Grid.Column="4">
+            <Grid Grid.Column="3">
                 <Grid.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
                 </Grid.GestureRecognizers>

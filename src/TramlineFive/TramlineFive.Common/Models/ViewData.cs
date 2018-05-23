@@ -7,12 +7,10 @@ namespace TramlineFive.Common.Models
     public class ViewData
     {
         public bool IsVisible { get; set; }
-        public string Title { get; set; }
 
-        public ViewData(bool isVisible, string title)
+        public ViewData(bool isVisible)
         {
             IsVisible = isVisible;
-            Title = title;
         }
     }
 }

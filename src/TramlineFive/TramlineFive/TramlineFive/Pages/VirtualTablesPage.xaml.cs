@@ -18,30 +18,9 @@ namespace TramlineFive.Pages
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class VirtualTablesPage : Grid
 	{
-        public static BindableProperty QueryProperty = BindableProperty.Create(
-            propertyName: "Query",
-            declaringType: typeof(VirtualTablesPage),
-            returnType: typeof(string),
-            defaultValue: null,
-            defaultBindingMode: BindingMode.TwoWay,
-            propertyChanged: QueryPropertyChanged);
-
-        private static void QueryPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        public VirtualTablesPage()
         {
-            VirtualTablesPage current = bindable as VirtualTablesPage;
-            (current.BindingContext as VirtualTablesViewModel).StopCode = newValue as string;
+            InitializeComponent();
         }
-
-        public string Query
-        {
-            get { return GetValue(QueryProperty) as string; }
-            set { SetValue(QueryProperty, value); }
-        }
-
-        public VirtualTablesPage ()
-		{
-			InitializeComponent ();
-            Messenger.Default.Register<StopSelectedMessage>(this, (s) => Query = s.Selected);
-		}
     }
 }

@@ -20,13 +20,11 @@ namespace TramlineFive.Common.ViewModels
 {
     public class VirtualTablesViewModel : BaseViewModel
     {
-        public ICommand SearchByStopCodeCommand { get; private set; }
         public ICommand VersionCommand { get; private set; }
         public ICommand FavouriteCommand { get; private set; }
 
         public VirtualTablesViewModel()
         {
-            SearchByStopCodeCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
             VersionCommand = new RelayCommand(() => ApplicationService.OpenUri(version.ReleaseUrl));
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
 

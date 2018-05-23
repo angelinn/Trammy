@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.FavouritesPage"
-             BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
+             BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}"
+             Margin="0,20,0,0">
 
     <Grid Padding="5">
         <Label Text="Тук е самотно. Добавете спирка към любими." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasFavourites}" Margin="5" />
