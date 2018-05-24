@@ -35,14 +35,58 @@ namespace TramlineFive
             }
         }
 
+        private bool isOpened;
+
         public MasterPage()
         {
             InitializeComponent();
+            //kewl();
 
-            Messenger.Default.Register<FocusSearchMessage>(this, (m) =>
+            Messenger.Default.Register<SlideHamburgerMessage>(this, (m) =>
             {
-                //search.Focus();
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    System.Diagnostics.Debug.WriteLine("Received message");
+                    if (!isOpened)
+                    {
+                        System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(0, 0);");
+                        await slideMenu.TranslateTo(0, 0);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(-Width, 0);");
+                        await slideMenu.TranslateTo(-Width, 0);
+                    }
+
+                    isOpened = !isOpened;
+                });
             });
+        }
+
+        private async void kewl()
+        {
+            while (true)
+            {
+                if (!isOpened)
+                {
+                    System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(0, 0);");
+                    await slideMenu.TranslateTo(0, 0);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(-Width, 0);");
+                    await slideMenu.TranslateTo(-Width, 0);
+                }
+
+                isOpened = !isOpened;
+                await Task.Delay(3000);
+            }
+        }
+
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+            slideMenu.TranslationX = -Width;
         }
 
         protected override async void OnAppearing()
@@ -60,5 +104,6 @@ namespace TramlineFive
                 await Task.WhenAll(loadingTasks);
             }
         }
+        
     }
 }

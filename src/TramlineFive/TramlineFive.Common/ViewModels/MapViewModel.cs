@@ -23,11 +23,17 @@ namespace TramlineFive.Common.ViewModels
         private Map map;
         public ICommand SearchCommand { get; private set; }
         public ICommand MyLocationCommand { get; private set; }
+        public ICommand OpenHamburgerCommand { get; private set; }
 
         public MapViewModel()
         {
             SearchCommand = new RelayCommand(() => ActivateSearch());
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
+            OpenHamburgerCommand = new RelayCommand(() =>
+            {
+                System.Diagnostics.Debug.WriteLine("Sent message");
+                MessengerInstance.Send(new SlideHamburgerMessage());
+            });
         }
 
         public void Initialize(Map map)

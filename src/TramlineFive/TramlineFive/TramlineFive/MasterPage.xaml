@@ -15,8 +15,9 @@
             <cv:BoolToColorConverter x:Key="BoolToColor" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    
-    <Grid RowSpacing="0">
+
+    <AbsoluteLayout>
+        <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
         <Grid.RowDefinitions>
             <RowDefinition Height="0" />
             <RowDefinition Height="*" />
@@ -71,5 +72,10 @@
                                    VerticalOptions="Center" HorizontalOptions="Center" />
             </Grid>
         </Grid>
-    </Grid>
+        </Grid>
+
+        <Grid x:Name="slideMenu" Grid.RowSpan="3" HorizontalOptions="Start" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" WidthRequest="150" BackgroundColor="Red">
+
+        </Grid>
+    </AbsoluteLayout>
 </ContentPage>

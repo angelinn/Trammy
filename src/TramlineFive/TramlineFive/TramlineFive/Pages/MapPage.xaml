@@ -19,13 +19,18 @@
     <Grid x:Name="grid">
         <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" IsEnabled="True" IsRunning="True" IsVisible="True" />
         <v:MapsUIView IsVisible="{Binding IsMapVisible}" />
-        <Frame Margin="10,30,10,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="50" Padding="5,0,5,0">
+        <Frame Margin="10,30,10,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="50" Padding="5,0,5,0">    
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <iconize:IconLabel Text="fa-bars" FontSize="22" VerticalOptions="Center" Margin="15,0,0,0" />
+                <Grid Margin="15,0,0,0" HorizontalOptions="FillAndExpand" BackgroundColor="Red">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenHamburgerCommand}" />
+                    </Grid.GestureRecognizers>
+                    <iconize:IconLabel Text="fa-bars" FontSize="22" VerticalOptions="Center" />
+                </Grid>
                 <views:CustomEntry Grid.Column="1" TextColor="Gray" Text="{Binding Query}" Placeholder="Код на спирка..." FontSize="16" VerticalOptions="Center">
                     <views:CustomEntry.Behaviors>
                         <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
