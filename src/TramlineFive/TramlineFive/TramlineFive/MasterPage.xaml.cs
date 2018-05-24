@@ -18,6 +18,7 @@ namespace TramlineFive
     public partial class MasterPage : ContentPage
     {
         private bool appeared;
+        private bool isOpened;
         private View Current => content.Children[0];
         public View View => content;
         public IGridList<View> Children => content.Children;
@@ -35,42 +36,26 @@ namespace TramlineFive
             }
         }
 
-        private bool isOpened;
 
         public MasterPage()
         {
             InitializeComponent();
 
-            Messenger.Default.Register<SlideHamburgerMessage>(this, async (m) =>
-            {
-                await ToggleHamburgerAsync();
-            }); 
-        }
-
-        private async void ContentTapped(object sender, EventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("Content tapped");
-            if (isOpened)
-            {
-
-                System.Diagnostics.Debug.WriteLine("toggling");
-                await ToggleHamburgerAsync();
-            }
+            Messenger.Default.Register<SlideHamburgerMessage>(this, async (m) => await ToggleHamburgerAsync()); 
         }
 
         private async Task ToggleHamburgerAsync()
         {
             Task translation = null;
             Task fading = null;
+
             if (!isOpened)
             {
-                System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(0, 0);");
                 translation = slideMenu.TranslateTo(0, 0);
                 fading = overlay.FadeTo(0.5);
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(-Width, 0);");
                 translation = slideMenu.TranslateTo(-Width, 0);
                 fading = overlay.FadeTo(0);
             }

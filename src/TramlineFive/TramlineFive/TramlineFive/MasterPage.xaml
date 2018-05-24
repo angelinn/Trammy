@@ -76,7 +76,7 @@
 
         <Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" BackgroundColor="Black" Opacity="0">
             <Grid.GestureRecognizers>
-                <TapGestureRecognizer Tapped="ContentTapped" />
+                <TapGestureRecognizer Command="{Binding ToggleHamburgerCommand}" />
             </Grid.GestureRecognizers>
         </Grid>
 
