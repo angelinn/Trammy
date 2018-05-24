@@ -18,63 +18,69 @@
 
     <AbsoluteLayout>
         <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="0" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="50" />
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1" x:Name="content">
-            <pages:MapPage x:Name="mapPage" IsVisible="{Binding BindingContext.IsMapVisible, Source={x:Reference Name=content}}" />
-            <pages:VirtualTablesPage IsVisible="{Binding BindingContext.IsSearchVisible, Source={x:Reference Name=content}}" />
-            <pages:FavouritesPage IsVisible="{Binding BindingContext.IsFavouritesVisible, Source={x:Reference Name=content}}" />
-            <pages:HistoryPage IsVisible="{Binding BindingContext.IsHistoryVisible, Source={x:Reference Name=content}}" />
-        </Grid>
+            <Grid Grid.Row="1" x:Name="content">
+                <pages:MapPage x:Name="mapPage" IsVisible="{Binding BindingContext.IsMapVisible, Source={x:Reference Name=content}}" />
+                <pages:VirtualTablesPage IsVisible="{Binding BindingContext.IsSearchVisible, Source={x:Reference Name=content}}" />
+                <pages:FavouritesPage IsVisible="{Binding BindingContext.IsFavouritesVisible, Source={x:Reference Name=content}}" />
+                <pages:HistoryPage IsVisible="{Binding BindingContext.IsHistoryVisible, Source={x:Reference Name=content}}" />
+            </Grid>
 
-        <Grid Grid.Row="2" BackgroundColor="White">
-            <BoxView Grid.ColumnSpan="4" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Map" />
-                </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-map-marker" FontSize="24" 
+            <Grid Grid.Row="2" BackgroundColor="White">
+                <BoxView Grid.ColumnSpan="4" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Map" />
+                    </Grid.GestureRecognizers>
+                    <iconize:IconLabel Text="fa-map-marker" FontSize="24" 
                                    TextColor="{Binding IsMapVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" />
-            </Grid>
-            <Grid Grid.Column="1">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Search" />
-                </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-search" FontSize="24"
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Search" />
+                    </Grid.GestureRecognizers>
+                    <iconize:IconLabel Text="fa-search" FontSize="24"
                                    TextColor="{Binding IsSearchVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" />
-            </Grid>
-            <Grid Grid.Column="2">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Favourites" />
-                </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-star" FontSize="24" 
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Favourites" />
+                    </Grid.GestureRecognizers>
+                    <iconize:IconLabel Text="fa-star" FontSize="24" 
                                    TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" />
-            </Grid>
-            <Grid Grid.Column="3">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
-                </Grid.GestureRecognizers>
-                <iconize:IconLabel Text="fa-history" FontSize="24"
+                </Grid>
+                <Grid Grid.Column="3">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
+                    </Grid.GestureRecognizers>
+                    <iconize:IconLabel Text="fa-history" FontSize="24"
                                    TextColor="{Binding IsHistoryVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" />
+                </Grid>
             </Grid>
         </Grid>
+
+        <Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" BackgroundColor="Black" Opacity="0">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="ContentTapped" />
+            </Grid.GestureRecognizers>
         </Grid>
 
-        <Grid x:Name="slideMenu" Grid.RowSpan="3" HorizontalOptions="Start" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" WidthRequest="150" BackgroundColor="Red">
+        <Grid x:Name="slideMenu" HorizontalOptions="Start" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" WidthRequest="250" BackgroundColor="White">
 
         </Grid>
     </AbsoluteLayout>

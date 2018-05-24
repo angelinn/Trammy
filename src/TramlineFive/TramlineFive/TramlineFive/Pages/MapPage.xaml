@@ -25,7 +25,7 @@
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Grid Margin="15,0,0,0" HorizontalOptions="FillAndExpand" BackgroundColor="Red">
+                <Grid Padding="15,0,0,0" HorizontalOptions="FillAndExpand">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding OpenHamburgerCommand}" />
                     </Grid.GestureRecognizers>

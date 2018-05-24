@@ -40,47 +40,44 @@ namespace TramlineFive
         public MasterPage()
         {
             InitializeComponent();
-            //kewl();
 
-            Messenger.Default.Register<SlideHamburgerMessage>(this, (m) =>
+            Messenger.Default.Register<SlideHamburgerMessage>(this, async (m) =>
             {
-                Device.BeginInvokeOnMainThread(async () =>
-                {
-                    System.Diagnostics.Debug.WriteLine("Received message");
-                    if (!isOpened)
-                    {
-                        System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(0, 0);");
-                        await slideMenu.TranslateTo(0, 0);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(-Width, 0);");
-                        await slideMenu.TranslateTo(-Width, 0);
-                    }
-
-                    isOpened = !isOpened;
-                });
-            });
+                await ToggleHamburgerAsync();
+            }); 
         }
 
-        private async void kewl()
+        private async void ContentTapped(object sender, EventArgs e)
         {
-            while (true)
+            System.Diagnostics.Debug.WriteLine("Content tapped");
+            if (isOpened)
             {
-                if (!isOpened)
-                {
-                    System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(0, 0);");
-                    await slideMenu.TranslateTo(0, 0);
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(-Width, 0);");
-                    await slideMenu.TranslateTo(-Width, 0);
-                }
 
-                isOpened = !isOpened;
-                await Task.Delay(3000);
+                System.Diagnostics.Debug.WriteLine("toggling");
+                await ToggleHamburgerAsync();
             }
+        }
+
+        private async Task ToggleHamburgerAsync()
+        {
+            Task translation = null;
+            Task fading = null;
+            if (!isOpened)
+            {
+                System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(0, 0);");
+                translation = slideMenu.TranslateTo(0, 0);
+                fading = overlay.FadeTo(0.5);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("slideMenu.TranslateTo(-Width, 0);");
+                translation = slideMenu.TranslateTo(-Width, 0);
+                fading = overlay.FadeTo(0);
+            }
+
+            await Task.WhenAll(translation, fading);
+            overlay.InputTransparent = !overlay.InputTransparent;
+            isOpened = !isOpened;
         }
 
         protected override void OnSizeAllocated(double width, double height)
@@ -104,6 +101,6 @@ namespace TramlineFive
                 await Task.WhenAll(loadingTasks);
             }
         }
-        
+
     }
 }
