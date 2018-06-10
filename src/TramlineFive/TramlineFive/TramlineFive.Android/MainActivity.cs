@@ -13,6 +13,7 @@ using GalaSoft.MvvmLight.Ioc;
 using TramlineFive.Common.Services;
 using TramlineFive.Services;
 using Plugin.Iconize;
+using Refractored.XamForms.PullToRefresh.Droid;
 
 namespace TramlineFive.Droid
 {
@@ -37,6 +38,7 @@ namespace TramlineFive.Droid
 
             ToastService.Init(this);
             PermissionService.Init(this);
+            PullToRefreshLayoutRenderer.Init();
 
 #if GORILLA_PLAYER
             LoadApplication(UXDivers.Gorilla.Droid.Player.CreateApplication(
