@@ -5,7 +5,7 @@
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              xmlns:pull="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
-             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" BackgroundColor="#FAFAFA" Margin="0,20,0,0">
+             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" BackgroundColor="#FAFAFA">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -19,7 +19,7 @@
     <pull:PullToRefreshLayout IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsLoading}" RefreshCommand="{Binding RefreshCommand}">
         <Grid Padding="0,0,0,5">
             <Grid.RowDefinitions>
-                <RowDefinition Height="120" />
+                <RowDefinition Height="80" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="15" />
             </Grid.RowDefinitions>
@@ -31,8 +31,8 @@
                 </StackLayout>
             </Grid>
 
-            <Grid Margin="0,10,0,0">
-                <Image HeightRequest="120" Aspect="AspectFill" VerticalOptions="Start">
+            <Grid>
+                <Image HeightRequest="80" Aspect="AspectFill" VerticalOptions="Start">
                     <Image.Source>
                         <OnPlatform x:TypeArguments="ImageSource">
                             <OnPlatform.Android>
@@ -44,8 +44,8 @@
                         </OnPlatform>
                     </Image.Source>
                 </Image>
-                <Grid HeightRequest="120"  VerticalOptions="Start" BackgroundColor="Black" Opacity="0.4" />
-                <Frame HeightRequest="120" Padding="0" VerticalOptions="Start" BackgroundColor="Transparent" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
+                <Grid HeightRequest="80"  VerticalOptions="Start" BackgroundColor="Black" Opacity="0.4" />
+                <Frame HeightRequest="80" Padding="0" VerticalOptions="Start" BackgroundColor="Transparent" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
                     <Grid>
                         <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
                             <Label Text="{Binding StopInfo.Name}"  HorizontalTextAlignment="Center" TextColor="White" FontSize="20" FontAttributes="Bold" />

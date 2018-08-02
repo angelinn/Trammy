@@ -14,7 +14,21 @@ namespace TramlineFive.Pages
         public MapPage()
         {
             InitializeComponent();
+
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await slideMenu.TranslateTo(0, 0);
+
+                    await Task.Delay(2000);
+
+                    await slideMenu.TranslateTo(0, Height);
+                    await Task.Delay(2000);
+                }
+            });
         }
+
         
         public async Task OnAppearing()
         {
@@ -23,6 +37,13 @@ namespace TramlineFive.Pages
 
             initialized = true;
             await (BindingContext as MapViewModel).LoadAsync();
+        }
+
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+            slideMenu.TranslationY = -Height;
+            slideMenu.HeightRequest = 0.65 * Height;
         }
     }
 }

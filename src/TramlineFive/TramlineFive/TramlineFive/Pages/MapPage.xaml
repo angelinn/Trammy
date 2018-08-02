@@ -16,46 +16,51 @@
         </ResourceDictionary>
     </Grid.Resources>
 
-    <Grid x:Name="grid">
-        <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" IsEnabled="True" IsRunning="True" IsVisible="True" />
-        <v:MapsUIView IsVisible="{Binding IsMapVisible}" />
-        <Frame Margin="10,30,10,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="50" Padding="5,0,5,0">    
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid Padding="15,0,0,0" HorizontalOptions="FillAndExpand">
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenHamburgerCommand}" />
-                    </Grid.GestureRecognizers>
-                    <iconize:IconLabel Text="fa-bars" FontSize="22" VerticalOptions="Center" />
+    <AbsoluteLayout>
+        <Grid x:Name="grid" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+            <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" IsEnabled="True" IsRunning="True" IsVisible="True" />
+            <v:MapsUIView IsVisible="{Binding IsMapVisible}" />
+            <Frame Margin="10,30,10,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="50" Padding="5,0,5,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Padding="15,0,0,0" HorizontalOptions="FillAndExpand">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenHamburgerCommand}" />
+                        </Grid.GestureRecognizers>
+                        <iconize:IconLabel Text="fa-bars" FontSize="22" VerticalOptions="Center" />
+                    </Grid>
+                    <views:CustomEntry Grid.Column="1" TextColor="Gray" Text="{Binding Query}" Placeholder="Код на спирка..." FontSize="16" VerticalOptions="Center">
+                        <views:CustomEntry.Behaviors>
+                            <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
+                        </views:CustomEntry.Behaviors>
+                    </views:CustomEntry>
                 </Grid>
-                <views:CustomEntry Grid.Column="1" TextColor="Gray" Text="{Binding Query}" Placeholder="Код на спирка..." FontSize="16" VerticalOptions="Center">
-                    <views:CustomEntry.Behaviors>
-                        <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
-                    </views:CustomEntry.Behaviors>
-                </views:CustomEntry>
-            </Grid>
-        </Frame>
-        <StackLayout Margin="0,90,10,0" IsVisible="{Binding IsMyLocationVisible}" BackgroundColor="{Binding MyLocationColor, Converter={StaticResource ColorConverter}}" HeightRequest="32" Padding="5" WidthRequest="32" Opacity="0.8" HorizontalOptions="End" VerticalOptions="Start">
-            <StackLayout.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
-            </StackLayout.GestureRecognizers>
+            </Frame>
+            <StackLayout Margin="0,90,10,0" IsVisible="{Binding IsMyLocationVisible}" BackgroundColor="{Binding MyLocationColor, Converter={StaticResource ColorConverter}}" HeightRequest="32" Padding="5" WidthRequest="32" Opacity="0.8" HorizontalOptions="End" VerticalOptions="Start">
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
+                </StackLayout.GestureRecognizers>
 
-            <Image>
-                <Image.Source>
-                    <OnPlatform x:TypeArguments="ImageSource">
-                        <OnPlatform.Android>
-                            <FileImageSource File="Resources/drawable/mylocation.png" />
-                        </OnPlatform.Android>
-                        <OnPlatform.WinPhone>
-                            <FileImageSource File="assets/mylocation.png" />
-                        </OnPlatform.WinPhone>
-                    </OnPlatform>
-                </Image.Source>
-            </Image>
-        </StackLayout>
-    </Grid>
+                <Image>
+                    <Image.Source>
+                        <OnPlatform x:TypeArguments="ImageSource">
+                            <OnPlatform.Android>
+                                <FileImageSource File="Resources/drawable/mylocation.png" />
+                            </OnPlatform.Android>
+                            <OnPlatform.WinPhone>
+                                <FileImageSource File="assets/mylocation.png" />
+                            </OnPlatform.WinPhone>
+                        </OnPlatform>
+                    </Image.Source>
+                </Image>
+            </StackLayout>
+        </Grid>
+        <Grid x:Name="slideMenu" VerticalOptions="End" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
+            <pages:VirtualTablesPage />
+        </Grid>
+    </AbsoluteLayout>
 </Grid>
     

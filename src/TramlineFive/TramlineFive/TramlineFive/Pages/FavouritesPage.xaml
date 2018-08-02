@@ -11,26 +11,28 @@
         
         <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
 
-        <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="50">
+        <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="100">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.View>
-                            <Grid Padding="10,0,0,0" VerticalOptions="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="48" />
-                                </Grid.ColumnDefinitions>
-                                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                                    <Label Text="{Binding StopCode, StringFormat='({0})'}" />
-                                    <Label Text="{Binding Name}" />
-                                </StackLayout>
-                                <iconize:IconLabel Grid.Column="1" Text="fa-star-half-full" TextColor="DodgerBlue" FontSize="32">
-                                    <iconize:IconLabel.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
-                                    </iconize:IconLabel.GestureRecognizers>
-                                </iconize:IconLabel>
-                            </Grid>
+                            <Frame  Padding="10,0,0,0" VerticalOptions="Center" HeightRequest="100">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="48" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                        <Label Text="{Binding StopCode, StringFormat='({0})'}" />
+                                        <Label Text="{Binding Name}" />
+                                    </StackLayout>
+                                    <iconize:IconLabel Grid.Column="1" Text="fa-star-half-full" TextColor="DodgerBlue" FontSize="32">
+                                        <iconize:IconLabel.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
+                                        </iconize:IconLabel.GestureRecognizers>
+                                    </iconize:IconLabel>
+                                </Grid>
+                            </Frame>
                         </ViewCell.View>
                     </ViewCell>
                 </DataTemplate>
