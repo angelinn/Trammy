@@ -31,7 +31,7 @@
             </Grid>
 
             <Grid Grid.Row="2" BackgroundColor="White">
-                <BoxView Grid.ColumnSpan="4" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                <BoxView Grid.ColumnSpan="3" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
