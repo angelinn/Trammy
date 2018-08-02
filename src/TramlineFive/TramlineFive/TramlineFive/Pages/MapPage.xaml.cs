@@ -43,7 +43,7 @@ namespace TramlineFive.Pages
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
-            slideMenu.TranslationY = -Height;
+            slideMenu.TranslationY = Height;
             slideMenu.HeightRequest = 0.65 * Height;
         }
     }
