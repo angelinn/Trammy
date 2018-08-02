@@ -58,6 +58,12 @@
                 </Image>
             </StackLayout>
         </Grid>
+        <Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" BackgroundColor="Black" Opacity="0">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ShowMapCommand}" />
+            </Grid.GestureRecognizers>
+        </Grid>
+
         <Grid x:Name="slideMenu" VerticalOptions="End" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
             <pages:VirtualTablesPage />
         </Grid>

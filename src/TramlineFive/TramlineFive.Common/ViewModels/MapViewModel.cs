@@ -24,16 +24,14 @@ namespace TramlineFive.Common.ViewModels
         public ICommand SearchCommand { get; private set; }
         public ICommand MyLocationCommand { get; private set; }
         public ICommand OpenHamburgerCommand { get; private set; }
+        public ICommand ShowMapCommand { get; private set; }
 
         public MapViewModel()
         {
             SearchCommand = new RelayCommand(() => ActivateSearch());
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
-            OpenHamburgerCommand = new RelayCommand(() =>
-            {
-                System.Diagnostics.Debug.WriteLine("Sent message");
-                MessengerInstance.Send(new SlideHamburgerMessage());
-            });
+            OpenHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
+            ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage()));
         }
 
         public void Initialize(Map map)

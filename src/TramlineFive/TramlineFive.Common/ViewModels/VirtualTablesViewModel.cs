@@ -35,7 +35,6 @@ namespace TramlineFive.Common.ViewModels
 
         private async Task OnStopSelected(string stopCode)
         {
-            SimpleIoc.Default.GetInstance<MainViewModel>().ChangeViewCommand.Execute("Search");
             await CheckStopAsync(stopCode);
         }
 

@@ -19,7 +19,6 @@ namespace TramlineFive.Common.ViewModels
         private Dictionary<string, ViewData> pages = new Dictionary<string, ViewData>
         {
             { "Map", new ViewData(true) },
-            { "Search", new ViewData(false)  },
             { "Favourites", new ViewData(false)  },
             { "History", new ViewData(false)  }
         };
@@ -34,24 +33,10 @@ namespace TramlineFive.Common.ViewModels
         {
             foreach (string key in pages.Keys.ToList())
                 pages[key].IsVisible = key == view;
-
-            RaisePropertyChanged("IsSearchVisible");
+            
             RaisePropertyChanged("IsMapVisible");
             RaisePropertyChanged("IsFavouritesVisible");
             RaisePropertyChanged("IsHistoryVisible");
-        }
-
-        public bool IsSearchVisible
-        {
-            get
-            {
-                return pages["Search"].IsVisible;
-            }
-            set
-            {
-                pages["Search"].IsVisible = value;
-                RaisePropertyChanged();
-            }
         }
 
         public bool IsMapVisible

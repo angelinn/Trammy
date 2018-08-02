@@ -26,7 +26,6 @@
 
             <Grid Grid.Row="1" x:Name="content">
                 <pages:MapPage x:Name="mapPage" IsVisible="{Binding BindingContext.IsMapVisible, Source={x:Reference Name=content}}" />
-                <pages:VirtualTablesPage IsVisible="{Binding BindingContext.IsSearchVisible, Source={x:Reference Name=content}}" />
                 <pages:FavouritesPage IsVisible="{Binding BindingContext.IsFavouritesVisible, Source={x:Reference Name=content}}" />
                 <pages:HistoryPage IsVisible="{Binding BindingContext.IsHistoryVisible, Source={x:Reference Name=content}}" />
             </Grid>
@@ -34,7 +33,6 @@
             <Grid Grid.Row="2" BackgroundColor="White">
                 <BoxView Grid.ColumnSpan="4" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -49,21 +47,13 @@
                 </Grid>
                 <Grid Grid.Column="1">
                     <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Search" />
-                    </Grid.GestureRecognizers>
-                    <iconize:IconLabel Text="fa-search" FontSize="24"
-                                   TextColor="{Binding IsSearchVisible, Converter={StaticResource BoolToColor}}"
-                                   VerticalOptions="Center" HorizontalOptions="Center" />
-                </Grid>
-                <Grid Grid.Column="2">
-                    <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Favourites" />
                     </Grid.GestureRecognizers>
                     <iconize:IconLabel Text="fa-star" FontSize="24" 
                                    TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" />
                 </Grid>
-                <Grid Grid.Column="3">
+                <Grid Grid.Column="2">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
                     </Grid.GestureRecognizers>

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Threading.Tasks;
+using TramlineFive.Common.Messages;
 using TramlineFive.Common.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -15,17 +17,16 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
-            Task.Run(async () =>
+            Messenger.Default.Register<StopSelectedMessage>(this, async (m) =>
             {
-                while (true)
-                {
-                    await slideMenu.TranslateTo(0, 0);
+                await slideMenu.TranslateTo(0, 0);
+                overlay.InputTransparent = false;
+            });
 
-                    await Task.Delay(2000);
-
-                    await slideMenu.TranslateTo(0, Height);
-                    await Task.Delay(2000);
-                }
+            Messenger.Default.Register<ShowMapMessage>(this, async (m) =>
+            {
+                await slideMenu.TranslateTo(0, Height);
+                overlay.InputTransparent = true;
             });
         }
 
