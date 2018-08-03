@@ -18,7 +18,7 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
-            Messenger.Default.Register<StopSelectedMessage>(this, async (m) => await ToggleMap());
+            Messenger.Default.Register<StopSelectedMessage>(this, async (m) => { if (!isOpened) await ToggleMap(); });
             Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap());
         }
 

@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -68,6 +69,7 @@ namespace TramlineFive.Common.ViewModels
 
                 if (value != null)
                 {
+                    SimpleIoc.Default.GetInstance<MainViewModel>().ChangeViewCommand.Execute("Map");
                     MessengerInstance.Send(new StopSelectedMessage(selected.StopCode));
 
                     selected = null;
