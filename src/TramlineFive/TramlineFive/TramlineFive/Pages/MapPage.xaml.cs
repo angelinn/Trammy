@@ -59,6 +59,7 @@ namespace TramlineFive.Pages
             base.OnSizeAllocated(width, height);
             slideMenu.TranslationY = Height;
             slideMenu.HeightRequest = 0.65 * Height;
+            map.HeightRequest = Height;
         }
     }
 }
