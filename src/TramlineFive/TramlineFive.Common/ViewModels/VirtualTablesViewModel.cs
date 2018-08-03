@@ -22,13 +22,11 @@ namespace TramlineFive.Common.ViewModels
     {
         public ICommand VersionCommand { get; private set; }
         public ICommand FavouriteCommand { get; private set; }
-        public ICommand RefreshCommand { get; private set; }
 
         public VirtualTablesViewModel()
         {
             VersionCommand = new RelayCommand(() => ApplicationService.OpenUri(version.ReleaseUrl));
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
-            RefreshCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
         }

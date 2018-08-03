@@ -173,12 +173,6 @@
     <Reference Include="Plugin.Permissions.Abstractions, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plugin.Permissions.2.2.1\lib\MonoAndroid10\Plugin.Permissions.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Refractored.XamForms.PullToRefresh, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Refractored.XamForms.PullToRefresh.2.2.2\lib\MonoAndroid10\Refractored.XamForms.PullToRefresh.dll</HintPath>
-    </Reference>
-    <Reference Include="Refractored.XamForms.PullToRefresh.Droid, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Refractored.XamForms.PullToRefresh.2.2.2\lib\MonoAndroid10\Refractored.XamForms.PullToRefresh.Droid.dll</HintPath>
-    </Reference>
     <Reference Include="Remotion.Linq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Remotion.Linq.2.1.2\lib\portable-net45+win+wpa81+wp80\Remotion.Linq.dll</HintPath>
     </Reference>

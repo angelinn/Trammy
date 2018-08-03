@@ -16,78 +16,76 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <pull:PullToRefreshLayout IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsLoading}" RefreshCommand="{Binding RefreshCommand}">
-        <Grid Padding="0,0,0,5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="80" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="15" />
-            </Grid.RowDefinitions>
+    <Grid Padding="0,0,0,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
+        </Grid.RowDefinitions>
 
-            <Grid Grid.RowSpan="3" VerticalOptions="Center" HorizontalOptions="Center">
-                <StackLayout>
-                    <ActivityIndicator HeightRequest="64" IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
-                    <Label Text="Търсене на спирка..." IsVisible="{Binding IsLoading}"/>
-                </StackLayout>
-            </Grid>
-
-            <Grid>
-                <Frame HeightRequest="80" Padding="0" VerticalOptions="Start" BackgroundColor="#FAFAFA" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        
-                        <StackLayout Grid.Column="1" VerticalOptions="Center" >
-                            <Label Text="{Binding StopInfo.Name}" FontSize="Default" FontAttributes="Bold" />
-                            <Label Text="{Binding StopInfo.Code}" TextColor="Gray" FontSize="Small" />
-                        </StackLayout>
-                        <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
-                            </Grid.GestureRecognizers>
-                            <iconize:IconLabel Text="fa-star" Margin="10" FontSize="32"  TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Center" />
-                        </Grid>
-                    </Grid>
-                </Frame>
-            </Grid>
-
-            <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.View>
-                                <Frame Margin="0,0,0,5" Padding="0" HasShadow="True">
-                                    <Grid BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="100" />
-                                        </Grid.ColumnDefinitions>
-                                        <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
-                                            <Label Text="{Binding Name}" TextColor="White" FontSize="40" />
-                                            <Label Text="{Binding TransportType}" TextColor="White" />
-                                            <Label Text="{Binding LastTimings}" TextColor="White" />
-                                        </StackLayout>
-                                        <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0,0,0,0">
-                                            <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>
-                                            <Label Text="минути" TextColor="White" HorizontalOptions="Center" />
-                                        </StackLayout>
-                                    </Grid>
-                                </Frame>
-                            </ViewCell.View>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-            <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="2"
-               TextColor="DodgerBlue" HorizontalOptions="Center">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding VersionCommand}" />
-                </Label.GestureRecognizers>
-            </Label>
+        <Grid Grid.RowSpan="3" VerticalOptions="Center" HorizontalOptions="Center">
+            <StackLayout>
+                <ActivityIndicator HeightRequest="64" IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
+                <Label Text="Търсене на спирка..." IsVisible="{Binding IsLoading}"/>
+            </StackLayout>
         </Grid>
-    </pull:PullToRefreshLayout>
+
+        <Grid>
+            <Frame HeightRequest="80" Padding="0" VerticalOptions="Start" BackgroundColor="#FAFAFA" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackLayout Grid.Column="1" VerticalOptions="Center" >
+                        <Label Text="{Binding StopInfo.Name}" FontSize="Default" FontAttributes="Bold" />
+                        <Label Text="{Binding StopInfo.Code}" TextColor="Gray" FontSize="Small" />
+                    </StackLayout>
+                    <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
+                        </Grid.GestureRecognizers>
+                        <iconize:IconLabel Text="fa-star" Margin="10" FontSize="32"  TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Center" />
+                    </Grid>
+                </Grid>
+            </Frame>
+        </Grid>
+
+        <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <Frame Margin="0,0,0,5" Padding="0" HasShadow="True">
+                                <Grid BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="100" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
+                                        <Label Text="{Binding Name}" TextColor="White" FontSize="40" />
+                                        <Label Text="{Binding TransportType}" TextColor="White" />
+                                        <Label Text="{Binding LastTimings}" TextColor="White" />
+                                    </StackLayout>
+                                    <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0,0,0,0">
+                                        <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>
+                                        <Label Text="минути" TextColor="White" HorizontalOptions="Center" />
+                                    </StackLayout>
+                                </Grid>
+                            </Frame>
+                        </ViewCell.View>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="2"
+               TextColor="DodgerBlue" HorizontalOptions="Center">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding VersionCommand}" />
+            </Label.GestureRecognizers>
+        </Label>
+    </Grid>
 </Grid>
     
