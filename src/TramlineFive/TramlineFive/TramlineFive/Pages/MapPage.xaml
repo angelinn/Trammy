@@ -64,9 +64,9 @@
             </Grid.GestureRecognizers>
         </Grid>
 
-        <Grid x:Name="slideMenu" VerticalOptions="End" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
+        <Frame x:Name="slideMenu" Padding="0" VerticalOptions="End" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
             <pages:VirtualTablesPage />
-        </Grid>
+        </Frame>
     </AbsoluteLayout>
 </Grid>
     

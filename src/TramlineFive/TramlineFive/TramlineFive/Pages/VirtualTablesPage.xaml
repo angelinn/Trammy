@@ -32,47 +32,33 @@
             </Grid>
 
             <Grid>
-                <Image HeightRequest="80" Aspect="AspectFill" VerticalOptions="Start">
-                    <Image.Source>
-                        <OnPlatform x:TypeArguments="ImageSource">
-                            <OnPlatform.Android>
-                                <FileImageSource File="Resources/drawable/green_rails.jpg" />
-                            </OnPlatform.Android>
-                            <OnPlatform.WinPhone>
-                                <FileImageSource File="Assets/green_rails.jpg" />
-                            </OnPlatform.WinPhone>
-                        </OnPlatform>
-                    </Image.Source>
-                </Image>
-                <Grid HeightRequest="80"  VerticalOptions="Start" BackgroundColor="Black" Opacity="0.4" />
-                <Frame HeightRequest="80" Padding="0" VerticalOptions="Start" BackgroundColor="Transparent" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
+                <Frame HeightRequest="80" Padding="0" VerticalOptions="Start" BackgroundColor="#FAFAFA" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
                     <Grid>
-                        <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                            <Label Text="{Binding StopInfo.Name}"  HorizontalTextAlignment="Center" TextColor="White" FontSize="20" FontAttributes="Bold" />
-                            <Label Text="{Binding StopInfo.Code}" HorizontalOptions="Center" TextColor="Orange" FontSize="20" FontAttributes="Bold" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackLayout Grid.Column="1" VerticalOptions="Center" >
+                            <Label Text="{Binding StopInfo.Name}" FontSize="Default" FontAttributes="Bold" />
+                            <Label Text="{Binding StopInfo.Code}" TextColor="Gray" FontSize="Small" />
                         </StackLayout>
-                        <Grid HorizontalOptions="Start" VerticalOptions="End">
+                        <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
                             </Grid.GestureRecognizers>
-                            <iconize:IconLabel Text="fa-star" Margin="10" FontSize="32"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" />
-                        </Grid>
-                        <Grid HorizontalOptions="End" VerticalOptions="End">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
-                            </Grid.GestureRecognizers>
-                            <iconize:IconLabel Text="fa-map-marker" Margin="10" FontSize="32"  TextColor="White" VerticalOptions="Center" HorizontalOptions="Center" />
+                            <iconize:IconLabel Text="fa-star" Margin="10" FontSize="32"  TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Center" />
                         </Grid>
                     </Grid>
                 </Frame>
             </Grid>
 
-            <ListView Grid.Row="1" Margin="-5,0,-5,0" SeparatorVisibility="None" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="115" SelectedItem="{Binding Selected, Mode=TwoWay}">
+            <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <Frame Margin="5" Padding="0" HasShadow="True">
+                                <Frame Margin="0,0,0,5" Padding="0" HasShadow="True">
                                     <Grid BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
