@@ -3,41 +3,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.FavouritesPage"
-             BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}"
-             Margin="0,20,0,0">
+             BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
-    <Grid Padding="5">
-        <Label Text="Тук е самотно. Добавете спирка към любими." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasFavourites}" Margin="5" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackLayout BackgroundColor="DodgerBlue">
+            <Label Text="Любими" Margin="15,40,0,0" TextColor="White" FontSize="Medium" />
+        </StackLayout>
         
-        <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
+        <Grid Grid.Row="1">
+            <Label Text="Тук е самотно. Добавете спирка към любими." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasFavourites}" Margin="5" />
 
-        <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="100">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.View>
-                            <Frame  Padding="10,0,0,0" VerticalOptions="Center" HeightRequest="100">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="48" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                                        <Label Text="{Binding StopCode, StringFormat='({0})'}" />
-                                        <Label Text="{Binding Name}" />
-                                    </StackLayout>
-                                    <iconize:IconLabel Grid.Column="1" Text="fa-star-half-full" TextColor="DodgerBlue" FontSize="32">
-                                        <iconize:IconLabel.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
-                                        </iconize:IconLabel.GestureRecognizers>
-                                    </iconize:IconLabel>
-                                </Grid>
-                            </Frame>
-                        </ViewCell.View>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
+
+            <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="60">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Frame Padding="0" VerticalOptions="Center" HeightRequest="100">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="48" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="48" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <iconize:IconLabel Text="fa-subway" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center" />
+
+                                        <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
+                                            <Label Text="{Binding Name}" />
+                                            <Label Text="{Binding StopCode}" FontSize="Small" TextColor="DodgerBlue" />
+                                        </StackLayout>
+                                        <iconize:IconLabel Grid.Column="2" Text="fa-star-half-full" TextColor="DodgerBlue" FontSize="32" VerticalOptions="Center">
+                                            <iconize:IconLabel.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
+                                            </iconize:IconLabel.GestureRecognizers>
+                                        </iconize:IconLabel>
+
+                                        <BoxView Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                                    </Grid>
+                                </Frame>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </Grid>
 
 </Grid>
