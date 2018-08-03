@@ -12,25 +12,39 @@ namespace TramlineFive.Pages
     public partial class MapPage : Grid
     {
         private bool initialized;
+        private bool isOpened;
 
         public MapPage()
         {
             InitializeComponent();
 
-            Messenger.Default.Register<StopSelectedMessage>(this, async (m) =>
-            {
-                await slideMenu.TranslateTo(0, 0);
-                overlay.InputTransparent = false;
-            });
-
-            Messenger.Default.Register<ShowMapMessage>(this, async (m) =>
-            {
-                await slideMenu.TranslateTo(0, Height);
-                overlay.InputTransparent = true;
-            });
+            Messenger.Default.Register<StopSelectedMessage>(this, async (m) => await ToggleMap());
+            Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap());
         }
 
-        
+        private async Task ToggleMap()
+        {
+            void resizeMap(double i) => map.HeightRequest = i;
+
+            Task vtSlide = null;
+            Task mapSlide = null;
+
+            if (isOpened)
+            {
+                vtSlide = slideMenu.TranslateTo(0, Height);
+                mapSlide = Task.Run(() => map.Animate("height", resizeMap, map.Height, Height));
+            }
+            else
+            {
+                vtSlide = slideMenu.TranslateTo(0, 0);
+                mapSlide = Task.Run(() => map.Animate("height", resizeMap, map.Height, 0.50 * Height));
+            }
+            
+            await Task.WhenAll(vtSlide, mapSlide);
+            overlay.InputTransparent = !overlay.InputTransparent;
+            isOpened = !isOpened;
+        }
+
         public async Task OnAppearing()
         {
             if (initialized)

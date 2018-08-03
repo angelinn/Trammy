@@ -19,7 +19,7 @@
     <AbsoluteLayout>
         <Grid x:Name="grid" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
             <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" IsEnabled="True" IsRunning="True" IsVisible="True" />
-            <v:MapsUIView IsVisible="{Binding IsMapVisible}" />
+            <v:MapsUIView x:Name="map" IsVisible="{Binding IsMapVisible}" VerticalOptions="Start" />
             <Frame Margin="10,30,10,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="50" Padding="5,0,5,0">
                 <Grid>
                     <Grid.ColumnDefinitions>
