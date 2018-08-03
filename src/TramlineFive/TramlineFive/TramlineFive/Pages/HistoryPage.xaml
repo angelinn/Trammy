@@ -1,35 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.HistoryPage"
-             BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}"
-             Margin="0,20,0,0">
+             BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
-    <Grid Padding="5">
-        <Label Text="Няма история на търсенията. Потърсете спирка." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasHistory}" Margin="5" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
+        <StackLayout BackgroundColor="DodgerBlue">
+            <Label Text="История" Margin="15,40,0,0" TextColor="White" FontSize="Medium" />
+        </StackLayout>
 
-        <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="60" SeparatorVisibility="None">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.View>
-                            <Frame Margin="5" Padding="0">
-                                <StackLayout Spacing="0" Padding="10,0,0,0" VerticalOptions="Center">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="{Binding StopCode, StringFormat='({0})'}" />
-                                        <Label Text="{Binding Name}" />
-                                    </StackLayout>
+        <Grid Grid.Row="1">
+            <Label Text="Няма история на търсенията. Потърсете спирка." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasHistory}" Margin="5" />
 
-                                    <Label Text="{Binding TimeStamp}" />
-                                </StackLayout>
-                            </Frame>
-                        </ViewCell.View>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
+
+            <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="60" SeparatorVisibility="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Frame Padding="0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="68" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <iconize:IconLabel Text="fa-history" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center" />
+
+                                        <StackLayout Spacing="0" VerticalOptions="Center" Grid.Column="1">
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{Binding Name}" />
+                                                <Label Text="{Binding StopCode, StringFormat='({0})'}" />
+                                            </StackLayout>
+
+                                            <Label Text="{Binding TimeStamp}" FontSize="Small" TextColor="DodgerBlue" />
+                                        </StackLayout>
+
+                                        <BoxView Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                                    </Grid>
+                                </Frame>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </Grid>
 </Grid>
     
