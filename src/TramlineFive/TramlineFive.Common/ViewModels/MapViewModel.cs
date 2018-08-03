@@ -32,6 +32,8 @@ namespace TramlineFive.Common.ViewModels
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
             OpenHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
             ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage()));
+
+            MessengerInstance.Register<StopSelectedMessage>(this, (m) => MapService.MoveToStop(m.Selected));
         }
 
         public void Initialize(Map map)

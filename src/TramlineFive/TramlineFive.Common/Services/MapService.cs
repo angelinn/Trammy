@@ -148,6 +148,24 @@ namespace TramlineFive.Common.Services
             };
         }
 
+        public static void MoveToStop(string code)
+        {
+            foreach (Feature feature in features)
+            {
+                StopLocation location = feature["stopObject"] as StopLocation;
+                if (location.Code == code)
+                {
+                    Point point = new Point(location.Lon, location.Lat);
+                    Point local = SphericalMercator.FromLonLat(point.X, point.Y);
+
+                    SymbolStyle style = feature.Styles.First() as SymbolStyle;
+                    style.Enabled = true;
+
+                    MoveTo(local);
+                }
+            }
+        }
+
         private static void OnMapInfo(object sender, Mapsui.UI.InfoEventArgs e)
         {
             if (e.Feature != null && e.Feature.Styles.First().Enabled)
@@ -172,7 +190,7 @@ namespace TramlineFive.Common.Services
                     style.Enabled = true;
                 }
             }
-
+            
             map.ViewChanged(true);
         }
 
