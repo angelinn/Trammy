@@ -44,10 +44,10 @@ namespace TramlineFive.Common.Services
             interaction = SimpleIoc.Default.GetInstance<IInteractionService>();
         }
 
-        public static void MoveTo(Point point)
+        public static void MoveTo(Point point, int zoom = 14)
         {
             map.NavigateTo(point);
-            map.NavigateTo(map.Resolutions[14]);
+            map.NavigateTo(map.Resolutions[zoom]);
         }
 
         public static void MoveToUser(Point point)
@@ -161,7 +161,7 @@ namespace TramlineFive.Common.Services
                     SymbolStyle style = feature.Styles.First() as SymbolStyle;
                     style.Enabled = true;
 
-                    MoveTo(local);
+                    MoveTo(local, 16);
                 }
             }
         }
