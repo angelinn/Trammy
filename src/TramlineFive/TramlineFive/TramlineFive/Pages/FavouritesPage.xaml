@@ -28,7 +28,7 @@
                                 <Frame Padding="0" VerticalOptions="Center" HeightRequest="100">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="48" />
+                                            <ColumnDefinition Width="68" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="48" />
                                         </Grid.ColumnDefinitions>
