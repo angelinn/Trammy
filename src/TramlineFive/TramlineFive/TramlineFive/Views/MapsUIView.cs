@@ -3,8 +3,10 @@ using Mapsui.Styles;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
+using Xamarin.Forms;
 
 namespace TramlineFive.Views
 {
@@ -15,9 +17,16 @@ namespace TramlineFive.Views
         public MapsUIView()
         {
             NativeMap = new Mapsui.Map();
-            NativeMap.BackColor = Color.White;
+            NativeMap.BackColor = Mapsui.Styles.Color.White;
 
             SimpleIoc.Default.GetInstance<MapService>().Initialize(NativeMap);
+        }
+
+        void HeightAnimation(double i) => HeightRequest = i;
+        
+        public Task AnimateHeightAsync(double from, double to)
+        {
+            return Task.Run(() => this.Animate("Height", HeightAnimation, from, to));
         }
     }
 }

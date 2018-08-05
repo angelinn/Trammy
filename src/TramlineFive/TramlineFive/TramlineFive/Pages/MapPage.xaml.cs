@@ -23,15 +23,13 @@ namespace TramlineFive.Pages
 
         private async Task ToggleMap(ShowMapMessage message)
         {
-            void resizeMap(double i) => map.HeightRequest = i;
-
             Task vtSlide = null;
             Task mapSlide = null;
 
             if (!message.Show && isOpened)
             {
                 vtSlide = slideMenu.TranslateTo(0, Height);
-                mapSlide = Task.Run(() => map.Animate("height", resizeMap, map.Height, Height));
+                mapSlide = map.AnimateHeightAsync(map.Height, Height);
             }
             else if (message.Show)
             {
@@ -45,7 +43,7 @@ namespace TramlineFive.Pages
                 slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
 
                 vtSlide = slideMenu.TranslateTo(0, 0);
-                mapSlide = Task.Run(() => map.Animate("height", resizeMap, map.Height, Height - (Height * coef * 0.23)));
+                mapSlide = map.AnimateHeightAsync(map.Height, Height - (Height * coef * 0.23));
             }
             
             await Task.WhenAll(vtSlide, mapSlide);
