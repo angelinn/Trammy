@@ -22,8 +22,9 @@ namespace TramlineFive
                 SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
                 SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
                 SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
+                SimpleIoc.Default.Register<MapService>();
             }
-
+            
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
 
             IPermissionService permissionService = DependencyService.Get<IPermissionService>();

@@ -3,6 +3,7 @@ using Mapsui.Styles;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
 
 namespace TramlineFive.Views
@@ -16,8 +17,7 @@ namespace TramlineFive.Views
             NativeMap = new Mapsui.Map();
             NativeMap.BackColor = Color.White;
 
-            MapViewModel mapViewModel = SimpleIoc.Default.GetInstance<MapViewModel>();
-            mapViewModel.Initialize(NativeMap);
+            SimpleIoc.Default.GetInstance<MapService>().Initialize(NativeMap);
         }
     }
 }

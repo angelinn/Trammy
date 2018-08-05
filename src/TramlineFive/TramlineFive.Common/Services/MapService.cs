@@ -21,17 +21,17 @@ namespace TramlineFive.Common.Services
 {
     public class MapService
     {
-        private static Map map;
-        private static SymbolStyle pinStyle;
-        private static SymbolStyle userStyle;
-        private static List<Feature> features;
-        private static IInteractionService interaction;
+        private Map map;
+        private SymbolStyle pinStyle;
+        private SymbolStyle userStyle;
+        private List<Feature> features;
+        private IInteractionService interaction;
 
         private const int STOP_THRESHOLD = 500;
 
-        public static void Initialize(Map map)
+        public void Initialize(Map map)
         {
-            MapService.map = map;
+            this.map = map;
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             map.Info += OnMapInfo;
             LoadPinStyles();
@@ -44,13 +44,13 @@ namespace TramlineFive.Common.Services
             interaction = SimpleIoc.Default.GetInstance<IInteractionService>();
         }
 
-        public static void MoveTo(Point point, int zoom = 14)
+        public void MoveTo(Point point, int zoom = 14)
         {
             map.NavigateTo(point);
             map.NavigateTo(map.Resolutions[zoom]);
         }
 
-        public static void MoveToUser(Point point)
+        public void MoveToUser(Point point)
         {
             map.NavigateTo(point);
             map.NavigateTo(map.Resolutions[16]);
@@ -82,7 +82,7 @@ namespace TramlineFive.Common.Services
             map.ViewChanged(true);
         }
 
-        private static void LoadUserLocationPin()
+        private void LoadUserLocationPin()
         {
             Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
             Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.person.png");
@@ -95,7 +95,7 @@ namespace TramlineFive.Common.Services
             };
         }
 
-        private static void LoadPinStyles()
+        private void LoadPinStyles()
         {
             Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
             Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.pin.png");
@@ -110,7 +110,7 @@ namespace TramlineFive.Common.Services
         }
 
 
-        private static ILayer LoadStops()
+        private ILayer LoadStops()
         {
             Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
             Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.stops-bg.json");
@@ -148,7 +148,7 @@ namespace TramlineFive.Common.Services
             };
         }
 
-        public static void MoveToStop(string code)
+        public void MoveToStop(string code)
         {
             foreach (Feature feature in features)
             {
@@ -166,7 +166,7 @@ namespace TramlineFive.Common.Services
             }
         }
 
-        private static void OnMapInfo(object sender, Mapsui.UI.InfoEventArgs e)
+        private void OnMapInfo(object sender, Mapsui.UI.InfoEventArgs e)
         {
             if (e.Feature != null && e.Feature.Styles.First().Enabled)
             {

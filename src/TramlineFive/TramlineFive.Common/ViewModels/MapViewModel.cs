@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 using Mapsui;
 using Mapsui.Geometries;
 using Mapsui.Layers;
@@ -20,10 +21,11 @@ namespace TramlineFive.Common.ViewModels
 {
     public class MapViewModel : BaseViewModel
     {
-        private Map map;
         public ICommand MyLocationCommand { get; private set; }
         public ICommand OpenHamburgerCommand { get; private set; }
         public ICommand ShowMapCommand { get; private set; }
+
+        private MapService mapService;
 
         public MapViewModel()
         {
@@ -31,12 +33,9 @@ namespace TramlineFive.Common.ViewModels
             OpenHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
             ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage(false)));
 
-            MessengerInstance.Register<StopSelectedMessage>(this, (m) => MapService.MoveToStop(m.Selected));
-        }
+            mapService = SimpleIoc.Default.GetInstance<MapService>();
 
-        public void Initialize(Map map)
-        {
-            this.map = map;
+            MessengerInstance.Register<StopSelectedMessage>(this, (m) => mapService.MoveToStop(m.Selected));
         }
 
         private bool isMapVisible;
@@ -83,8 +82,6 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task LoadAsync()
         {
-            MapService.Initialize(map);
-
             await LocalizeAsync();
             IsMapVisible = true;
             IsMyLocationVisible = true;
@@ -116,14 +113,14 @@ namespace TramlineFive.Common.ViewModels
 
                         ApplicationService.RunOnUIThread(() =>
                         {
-                            MapService.MoveToUser(userLocationMap);
+                            mapService.MoveToUser(userLocationMap);
                         });
                     }
                     else
                     {
                         ApplicationService.RunOnUIThread(() =>
                         {
-                            MapService.MoveTo(centerOfSofiaMap);
+                            mapService.MoveTo(centerOfSofiaMap);
                         });
                     }
                 }
@@ -131,7 +128,7 @@ namespace TramlineFive.Common.ViewModels
                 {
                     ApplicationService.RunOnUIThread(() =>
                     {
-                        MapService.MoveTo(centerOfSofiaMap);
+                        mapService.MoveTo(centerOfSofiaMap);
                     });
                 }
             });
