@@ -22,6 +22,7 @@ namespace TramlineFive.Pages
 
             Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
             Messenger.Default.Register<MapClickedMessage>(this, (m) => OnMapClicked());
+       
         }
 
         private async void OnMapClicked()
@@ -40,20 +41,23 @@ namespace TramlineFive.Pages
             int coef = linesCount > 2 ? 2 : linesCount;
             slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
 
-            Task vtSlide = slideMenu.TranslateTo(0, 0);
+            Task vtSlide = slideMenu.TranslateTo(0, 0, 750);
             Task mapSlide = map.AnimateHeightAsync(map.Height, Height - (Height * coef * 0.23));
 
 
             await Task.WhenAll(vtSlide, mapSlide);
+            await Task.Delay(250);
             isOpened = !isOpened;
         }
 
         private async Task HideVirtualTables()
         {
-            Task vtSlide = slideMenu.TranslateTo(0, Height);
+            Task vtSlide = slideMenu.TranslateTo(0, Height, 750);
             Task mapSlide = map.AnimateHeightAsync(map.Height, Height);
 
             await Task.WhenAll(vtSlide, mapSlide);
+            await Task.Delay(250);
+
             isOpened = false;
         }
 
