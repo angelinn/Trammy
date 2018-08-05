@@ -22,11 +22,14 @@ namespace TramlineFive.Common.ViewModels
     {
         public ICommand VersionCommand { get; private set; }
         public ICommand FavouriteCommand { get; private set; }
+        public ICommand SearchCommand { get; private set; }
 
         public VirtualTablesViewModel()
         {
+
             VersionCommand = new RelayCommand(() => ApplicationService.OpenUri(version.ReleaseUrl));
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
+            SearchCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
         }
@@ -70,7 +73,6 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task SearchByStopCodeAsync()
         {
-            StopInfo = null;
             IsLoading = true;
 
             try
@@ -81,8 +83,8 @@ namespace TramlineFive.Common.ViewModels
 
                 StopInfo = info;
                 Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
-
-                MessengerInstance.Send(new ShowMapMessage { ArrivalsCount = info.Lines.Count });
+               
+                MessengerInstance.Send(new ShowMapMessage(true, StopInfo.Lines.Count));
                 await HistoryDomain.AddAsync(stopCode, stopInfo.Name);
             }
             catch (Exception e)

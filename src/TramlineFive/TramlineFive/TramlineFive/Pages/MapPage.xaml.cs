@@ -18,25 +18,31 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
-            Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m.ArrivalsCount));
+            Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
         }
 
-        private async Task ToggleMap(int arrivalsCount = 0)
+        private async Task ToggleMap(ShowMapMessage message)
         {
             void resizeMap(double i) => map.HeightRequest = i;
 
             Task vtSlide = null;
             Task mapSlide = null;
 
-            if (isOpened)
+            if (!message.Show && isOpened)
             {
                 vtSlide = slideMenu.TranslateTo(0, Height);
                 mapSlide = Task.Run(() => map.Animate("height", resizeMap, map.Height, Height));
             }
-            else
+            else if (message.Show)
             {
-                int coef = arrivalsCount > 2 ? 2 : arrivalsCount;
-                slideMenu.HeightRequest = Height * (coef + 1 ) * 0.20;
+                if (isOpened)
+                {
+                    overlay.InputTransparent = !overlay.InputTransparent;
+                    isOpened = !isOpened;
+                }
+                
+                int coef = message.ArrivalsCount > 2 ? 2 : message.ArrivalsCount;
+                slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
 
                 vtSlide = slideMenu.TranslateTo(0, 0);
                 mapSlide = Task.Run(() => map.Animate("height", resizeMap, map.Height, Height - (Height * coef * 0.23)));

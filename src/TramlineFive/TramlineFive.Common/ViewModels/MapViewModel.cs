@@ -21,17 +21,15 @@ namespace TramlineFive.Common.ViewModels
     public class MapViewModel : BaseViewModel
     {
         private Map map;
-        public ICommand SearchCommand { get; private set; }
         public ICommand MyLocationCommand { get; private set; }
         public ICommand OpenHamburgerCommand { get; private set; }
         public ICommand ShowMapCommand { get; private set; }
 
         public MapViewModel()
         {
-            SearchCommand = new RelayCommand(() => ActivateSearch());
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
             OpenHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
-            ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage()));
+            ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage(false)));
 
             MessengerInstance.Register<StopSelectedMessage>(this, (m) => MapService.MoveToStop(m.Selected));
         }
@@ -137,28 +135,6 @@ namespace TramlineFive.Common.ViewModels
                     });
                 }
             });
-        }
-
-        private string query;
-        public string Query
-        {
-            get
-            {
-                return query;
-            }
-            set
-            {
-                query = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private void ActivateSearch()
-        {
-            if (!String.IsNullOrEmpty(query))
-            {
-                MessengerInstance.Send(new StopSelectedMessage(query));
-            }
         }
     }
 }

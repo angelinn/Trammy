@@ -32,15 +32,18 @@
                         </Grid.GestureRecognizers>
                         <iconize:IconLabel Text="fa-bars" FontSize="22" VerticalOptions="Center" />
                     </Grid>
-                    <views:CustomEntry Grid.Column="1" TextColor="Gray" Text="{Binding Query}" Placeholder="Код на спирка..." FontSize="16" VerticalOptions="Center">
+                    <views:CustomEntry BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}"
+                                       Grid.Column="1" TextColor="Gray" Placeholder="Код на спирка..." FontSize="16" VerticalOptions="Center"
+                                       Text="{Binding StopCode}">
                         <views:CustomEntry.Behaviors>
                             <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
                         </views:CustomEntry.Behaviors>
                     </views:CustomEntry>
                     <ActivityIndicator Grid.Column="1" HorizontalOptions="End" Scale=".5"
-                                       IsVisible="{Binding VirtualTablesViewModel.IsLoading, Source={StaticResource Locator}}"
-                                       IsRunning="{Binding VirtualTablesViewModel.IsLoading, Source={StaticResource Locator}}"
-                                       IsEnabled="{Binding VirtualTablesViewModel.IsLoading, Source={StaticResource Locator}}"/>
+                                       BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}"
+                                       IsVisible="{Binding IsLoading}"
+                                       IsRunning="{Binding IsLoading}"
+                                       IsEnabled="{Binding IsLoading}"/>
                 </Grid>
             </Frame>
             <StackLayout Margin="0,90,10,0" IsVisible="{Binding IsMyLocationVisible}" BackgroundColor="{Binding MyLocationColor, Converter={StaticResource ColorConverter}}" HeightRequest="32" Padding="5" WidthRequest="32" Opacity="0.8" HorizontalOptions="End" VerticalOptions="Start">
