@@ -31,4 +31,8 @@
     <ProjectReference Include="..\TramlineFive.DataAccess\TramlineFive.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
+
 </Project>

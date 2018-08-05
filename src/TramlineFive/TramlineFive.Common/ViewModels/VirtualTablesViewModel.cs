@@ -86,9 +86,13 @@ namespace TramlineFive.Common.ViewModels
                 MessengerInstance.Send(new ShowMapMessage(true, StopInfo.Lines.Count));
                 await HistoryDomain.AddAsync(stopCode, stopInfo.Name);
             }
+            catch (StopNotFoundException)
+            {
+                await InteractionService.DisplayAlertAsync("Няма данни", $"Няма данни за спирка {stopCode}.", "OK");
+            }
             catch (Exception e)
             {
-                await InteractionService.DisplayAlertAsync("Exception", e.Message, "OK");
+                await InteractionService.DisplayAlertAsync("Грешка", e.Message, "OK");
             }
         }
 
