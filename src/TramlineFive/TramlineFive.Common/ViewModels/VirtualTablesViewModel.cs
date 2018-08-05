@@ -26,10 +26,9 @@ namespace TramlineFive.Common.ViewModels
 
         public VirtualTablesViewModel()
         {
-
             VersionCommand = new RelayCommand(() => ApplicationService.OpenUri(version.ReleaseUrl));
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
-            SearchCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
+            SearchCommand = new RelayCommand(() => MessengerInstance.Send(new StopSelectedMessage(StopCode)));
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
         }
