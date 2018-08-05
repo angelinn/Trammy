@@ -3,27 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
-             xmlns:pull="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
              BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" BackgroundColor="#FAFAFA">
 
-    <ContentPage.Resources>
+    <Grid.Resources>
         <ResourceDictionary>
             <cv:InverseBoolConverter x:Key="InverseBool" />
             <cv:ReferenceToBoolConverter x:Key="ReferenceToBool" />
             <cv:ImageSourceConverter x:Key="ImageSource" />
             <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
         </ResourceDictionary>
-    </ContentPage.Resources>
+    </Grid.Resources>
 
-    <Grid Padding="0,0,0,5">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="15" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.RowSpan="3" VerticalOptions="Center" HorizontalOptions="Center">
+        <Grid Grid.RowSpan="2" VerticalOptions="Center" HorizontalOptions="Center">
             <StackLayout>
                 <ActivityIndicator HeightRequest="64" IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
                 <Label Text="Търсене на спирка..." IsVisible="{Binding IsLoading}"/>
@@ -31,28 +29,28 @@
         </Grid>
 
         <Grid>
-            <Frame HeightRequest="80" Padding="0" VerticalOptions="Start" BackgroundColor="#FAFAFA" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
+            <Frame HeightRequest="80" Padding="0" HasShadow="True" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="68" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-
+                    <iconize:IconLabel Text="fa-subway" FontSize="24" TextColor="DodgerBlue" VerticalOptions="Center" HorizontalOptions="Center" />
                     <StackLayout Grid.Column="1" VerticalOptions="Center" >
                         <Label Text="{Binding StopInfo.Name}" FontSize="Default" FontAttributes="Bold" />
-                        <Label Text="{Binding StopInfo.Code}" TextColor="Gray" FontSize="Small" />
+                        <Label Text="{Binding StopInfo.Code}" TextColor="DodgerBlue" FontSize="Small" />
                     </StackLayout>
-                    <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                    <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,5,0">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
                         </Grid.GestureRecognizers>
-                        <iconize:IconLabel Text="fa-star" Margin="10" FontSize="32"  TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Center" />
+                        <iconize:IconLabel Text="fa-star" Margin="10" FontSize="32"  TextColor="DodgerBlue" VerticalOptions="Center" HorizontalOptions="Center" />
                     </Grid>
                 </Grid>
             </Frame>
         </Grid>
 
-        <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="Center" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
+        <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -80,7 +78,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="2"
+        <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="1"
                TextColor="DodgerBlue" HorizontalOptions="Center">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding VersionCommand}" />

@@ -18,11 +18,10 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
-            Messenger.Default.Register<StopSelectedMessage>(this, async (m) => { if (!isOpened) await ToggleMap(); });
-            Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap());
+            Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m.ArrivalsCount));
         }
 
-        private async Task ToggleMap()
+        private async Task ToggleMap(int arrivalsCount = 0)
         {
             void resizeMap(double i) => map.HeightRequest = i;
 
@@ -36,8 +35,11 @@ namespace TramlineFive.Pages
             }
             else
             {
+                int coef = arrivalsCount > 2 ? 2 : arrivalsCount;
+                slideMenu.HeightRequest = Height * (coef + 1 ) * 0.20;
+
                 vtSlide = slideMenu.TranslateTo(0, 0);
-                mapSlide = Task.Run(() => map.Animate("height", resizeMap, map.Height, 0.50 * Height));
+                mapSlide = Task.Run(() => map.Animate("height", resizeMap, map.Height, Height - (Height * coef * 0.23)));
             }
             
             await Task.WhenAll(vtSlide, mapSlide);
@@ -57,8 +59,7 @@ namespace TramlineFive.Pages
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
-            slideMenu.TranslationY = Height;
-            slideMenu.HeightRequest = 0.65 * Height;
+            slideMenu.TranslationY = isOpened ? 0 : Height;
             map.HeightRequest = Height;
         }
     }

@@ -81,6 +81,8 @@ namespace TramlineFive.Common.ViewModels
 
                 StopInfo = info;
                 Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
+
+                MessengerInstance.Send(new ShowMapMessage { ArrivalsCount = info.Lines.Count });
                 await HistoryDomain.AddAsync(stopCode, stopInfo.Name);
             }
             catch (Exception e)

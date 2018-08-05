@@ -6,5 +6,6 @@ namespace TramlineFive.Common.Messages
 {
     public class ShowMapMessage
     {
+        public int ArrivalsCount { get; set; }
     }
 }
