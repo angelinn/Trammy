@@ -21,16 +21,15 @@ namespace TramlineFive.Pages
             InitializeComponent();
 
             Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
-            SimpleIoc.Default.GetInstance<MapService>().OnMapClicked += OnMapClicked;
+            Messenger.Default.Register<MapClickedMessage>(this, (m) => OnMapClicked());
         }
 
-        private async void OnMapClicked(object sender, MapClickEventArgs e)
+        private async void OnMapClicked()
         {
+            Messenger.Default.Send(new MapClickedResponseMessage(isOpened));
+
             if (isOpened)
-            {
                 await HideVirtualTables();
-                e.IsHandled = true;
-            }
         }
 
         private async Task ShowVirtualTables(int linesCount)

@@ -14,16 +14,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using TramlineFive.Common.Maps;
 using TramlineFive.Common.Messages;
 
 namespace TramlineFive.Common.Services
 {
-    public class MapClickEventArgs: EventArgs
-    {
-        public bool IsHandled { get; set; }
-
-    }
     public class MapService
     {
         private Map map;
@@ -32,9 +28,20 @@ namespace TramlineFive.Common.Services
         private List<Feature> features;
         private IInteractionService interaction;
 
-        public event EventHandler<MapClickEventArgs> OnMapClicked;
+        private Queue<MapClickedResponseMessage> messages = new Queue<MapClickedResponseMessage>();
+
+        private ManualResetEvent mapClickResetEvent = new ManualResetEvent(false);
 
         private const int STOP_THRESHOLD = 500;
+
+        public MapService()
+        {
+            Messenger.Default.Register<MapClickedResponseMessage>(this, (m) =>
+            {
+                messages.Enqueue(m);
+                mapClickResetEvent.Set();
+            });
+        }
 
         public void Initialize(Map map)
         {
@@ -175,9 +182,12 @@ namespace TramlineFive.Common.Services
 
         private void OnMapInfo(object sender, Mapsui.UI.InfoEventArgs e)
         {
-            MapClickEventArgs eventArgs = new MapClickEventArgs();
-            OnMapClicked?.Invoke(this, eventArgs);
-            if (eventArgs.IsHandled)
+            Messenger.Default.Send(new MapClickedMessage());
+            mapClickResetEvent.WaitOne();
+            mapClickResetEvent.Reset();
+
+            MapClickedResponseMessage message = messages.Dequeue();
+            if (message.Handled)
                 return;
 
             if (e.Feature != null && e.Feature.Styles.First().Enabled)
