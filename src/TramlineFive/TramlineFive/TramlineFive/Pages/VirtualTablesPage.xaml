@@ -21,13 +21,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.RowSpan="2" VerticalOptions="Center" HorizontalOptions="Center">
-            <StackLayout>
-                <ActivityIndicator HeightRequest="64" IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" />
-                <Label Text="Търсене на спирка..." IsVisible="{Binding IsLoading}"/>
-            </StackLayout>
-        </Grid>
-
         <Grid>
             <Frame HeightRequest="80" Padding="0" HasShadow="True" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
                 <Grid>

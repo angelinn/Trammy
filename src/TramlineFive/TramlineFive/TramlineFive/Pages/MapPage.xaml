@@ -37,6 +37,10 @@
                             <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
                         </views:CustomEntry.Behaviors>
                     </views:CustomEntry>
+                    <ActivityIndicator Grid.Column="1" HorizontalOptions="End" Scale=".5"
+                                       IsVisible="{Binding VirtualTablesViewModel.IsLoading, Source={StaticResource Locator}}"
+                                       IsRunning="{Binding VirtualTablesViewModel.IsLoading, Source={StaticResource Locator}}"
+                                       IsEnabled="{Binding VirtualTablesViewModel.IsLoading, Source={StaticResource Locator}}"/>
                 </Grid>
             </Frame>
             <StackLayout Margin="0,90,10,0" IsVisible="{Binding IsMyLocationVisible}" BackgroundColor="{Binding MyLocationColor, Converter={StaticResource ColorConverter}}" HeightRequest="32" Padding="5" WidthRequest="32" Opacity="0.8" HorizontalOptions="End" VerticalOptions="Start">
