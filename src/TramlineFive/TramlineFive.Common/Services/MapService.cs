@@ -19,6 +19,11 @@ using TramlineFive.Common.Messages;
 
 namespace TramlineFive.Common.Services
 {
+    public class MapClickEventArgs: EventArgs
+    {
+        public bool IsHandled { get; set; }
+
+    }
     public class MapService
     {
         private Map map;
@@ -26,6 +31,8 @@ namespace TramlineFive.Common.Services
         private SymbolStyle userStyle;
         private List<Feature> features;
         private IInteractionService interaction;
+
+        public event EventHandler<MapClickEventArgs> OnMapClicked;
 
         private const int STOP_THRESHOLD = 500;
 
@@ -168,6 +175,11 @@ namespace TramlineFive.Common.Services
 
         private void OnMapInfo(object sender, Mapsui.UI.InfoEventArgs e)
         {
+            MapClickEventArgs eventArgs = new MapClickEventArgs();
+            OnMapClicked?.Invoke(this, eventArgs);
+            if (eventArgs.IsHandled)
+                return;
+
             if (e.Feature != null && e.Feature.Styles.First().Enabled)
             {
                 StopLocation location = e.Feature["stopObject"] as StopLocation;

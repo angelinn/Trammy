@@ -1,7 +1,9 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Threading.Tasks;
 using TramlineFive.Common.Messages;
+using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -19,36 +21,49 @@ namespace TramlineFive.Pages
             InitializeComponent();
 
             Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
+            SimpleIoc.Default.GetInstance<MapService>().OnMapClicked += OnMapClicked;
+        }
+
+        private async void OnMapClicked(object sender, MapClickEventArgs e)
+        {
+            if (isOpened)
+            {
+                await HideVirtualTables();
+                e.IsHandled = true;
+            }
+        }
+
+        private async Task ShowVirtualTables(int linesCount)
+        {
+            if (isOpened)
+                isOpened = false;
+
+            int coef = linesCount > 2 ? 2 : linesCount;
+            slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
+
+            Task vtSlide = slideMenu.TranslateTo(0, 0);
+            Task mapSlide = map.AnimateHeightAsync(map.Height, Height - (Height * coef * 0.23));
+
+
+            await Task.WhenAll(vtSlide, mapSlide);
+            isOpened = !isOpened;
+        }
+
+        private async Task HideVirtualTables()
+        {
+            Task vtSlide = slideMenu.TranslateTo(0, Height);
+            Task mapSlide = map.AnimateHeightAsync(map.Height, Height);
+
+            await Task.WhenAll(vtSlide, mapSlide);
+            isOpened = false;
         }
 
         private async Task ToggleMap(ShowMapMessage message)
         {
-            Task vtSlide = null;
-            Task mapSlide = null;
-
             if (!message.Show && isOpened)
-            {
-                vtSlide = slideMenu.TranslateTo(0, Height);
-                mapSlide = map.AnimateHeightAsync(map.Height, Height);
-            }
+                await HideVirtualTables();
             else if (message.Show)
-            {
-                if (isOpened)
-                {
-                    overlay.InputTransparent = !overlay.InputTransparent;
-                    isOpened = !isOpened;
-                }
-                
-                int coef = message.ArrivalsCount > 2 ? 2 : message.ArrivalsCount;
-                slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
-
-                vtSlide = slideMenu.TranslateTo(0, 0);
-                mapSlide = map.AnimateHeightAsync(map.Height, Height - (Height * coef * 0.23));
-            }
-            
-            await Task.WhenAll(vtSlide, mapSlide);
-            overlay.InputTransparent = !overlay.InputTransparent;
-            isOpened = !isOpened;
+                await ShowVirtualTables(message.ArrivalsCount);
         }
 
         public async Task OnAppearing()
