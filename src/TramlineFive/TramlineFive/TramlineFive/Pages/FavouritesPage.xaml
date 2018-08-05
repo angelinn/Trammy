@@ -25,7 +25,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <Frame Padding="0" VerticalOptions="Center" HeightRequest="100">
+                                <Frame Padding="0" VerticalOptions="FillAndExpand">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="68" />
