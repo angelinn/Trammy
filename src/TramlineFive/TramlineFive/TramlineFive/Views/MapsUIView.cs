@@ -24,9 +24,9 @@ namespace TramlineFive.Views
 
         void HeightAnimation(double i) => HeightRequest = i;
         
-        public Task AnimateHeightAsync(double from, double to)
+        public Animation AnimateHeightAsync(double from, double to)
         {
-            return Task.Run(() => this.Animate("Height", HeightAnimation, from, to, 16, 750));
+            return new Animation(HeightAnimation, from, to);
         }
     }
 }
