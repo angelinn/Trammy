@@ -61,7 +61,6 @@ namespace TramlineFive.Common.Services
         public void MoveTo(Point point, int zoom = 14)
         {
             map.NavigateTo(point);
-            map.NavigateTo(map.Resolutions[zoom]);
         }
 
         public void MoveToUser(Point point)
