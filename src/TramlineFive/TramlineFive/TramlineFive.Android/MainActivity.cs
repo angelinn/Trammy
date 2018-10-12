@@ -13,6 +13,7 @@ using GalaSoft.MvvmLight.Ioc;
 using TramlineFive.Common.Services;
 using TramlineFive.Services;
 using Plugin.Iconize;
+using Android.Content;
 
 namespace TramlineFive.Droid
 {

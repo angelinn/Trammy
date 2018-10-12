@@ -24,15 +24,17 @@ namespace TramlineFive
                 SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
                 SimpleIoc.Default.Register<MapService>();
             }
-            
+
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
 
             IPermissionService permissionService = DependencyService.Get<IPermissionService>();
-            
+
             if (!permissionService.HasLocationPermissions())
                 MainPage = new Pages.LocationPromptPage();
             else
                 MainPage = new MasterPage();
+
+            DependencyService.Get<IVersionCheckingService>().CreateTask();
         }
 
         protected override async void OnStart()

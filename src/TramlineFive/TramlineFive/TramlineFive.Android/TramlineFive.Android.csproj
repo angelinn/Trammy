@@ -329,9 +329,11 @@
     <Compile Include="Renderers\MapViewRenderer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AlarmReceiver.cs" />
     <Compile Include="Services\DatabasePathService.cs" />
     <Compile Include="Services\PermissionService.cs" />
     <Compile Include="Services\ToastService.cs" />
+    <Compile Include="Services\VersionCheckingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -351,6 +353,10 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SkgtService\SkgtService.csproj">
+      <Project>{DE6ECD4B-B927-4098-AAE2-8D5187298E5D}</Project>
+      <Name>SkgtService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\TramlineFive.Common\TramlineFive.Common.csproj">
       <Project>{53AC0DA3-1CA0-47C1-9398-3AD43B9C89B7}</Project>
       <Name>TramlineFive.Common</Name>
