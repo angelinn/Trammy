@@ -35,7 +35,7 @@ namespace TramlineFive.Common.ViewModels
 
             mapService = SimpleIoc.Default.GetInstance<MapService>();
 
-            MessengerInstance.Register<StopSelectedMessage>(this, (m) => mapService.MoveToStop(m.Selected));
+            MessengerInstance.Register<StopSelectedMessage>(this, OnStopSelectedMessageReceived);
         }
 
         private bool isMapVisible;
@@ -132,6 +132,12 @@ namespace TramlineFive.Common.ViewModels
                     });
                 }
             });
+        }
+
+        private void OnStopSelectedMessageReceived(StopSelectedMessage message)
+        {
+            if (message.Clicked)
+                mapService.MoveToStop(message.Selected);
         }
     }
 }

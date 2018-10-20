@@ -149,7 +149,15 @@ namespace TramlineFive.Common.Services
                         new SymbolStyle
                         {
                             Enabled = pinStyle.Enabled,
-                            BitmapId = pinStyle.BitmapId
+                            BitmapId = pinStyle.BitmapId,
+                            SymbolOffset = new Offset(0, 10)
+                        },
+                        new LabelStyle
+                        {
+                            Enabled = pinStyle.Enabled,
+                            Text = $"{location.PublicName} ({location.Code})",
+                            Offset = new Offset(0, -50),
+                            Opacity = 0.7f
                         }
                     }
                 };
@@ -176,9 +184,9 @@ namespace TramlineFive.Common.Services
                     Point point = new Point(location.Lon, location.Lat);
                     Point local = SphericalMercator.FromLonLat(point.X, point.Y);
 
-                    SymbolStyle style = feature.Styles.First() as SymbolStyle;
-                    style.Enabled = true;
-
+                    foreach (Style style in feature.Styles)
+                        style.Enabled = true;
+                    
                     MoveTo(local, 16);
                 }
             }
@@ -196,13 +204,13 @@ namespace TramlineFive.Common.Services
 
                 if (Math.Abs(difference.X) < STOP_THRESHOLD && Math.Abs(difference.Y) < STOP_THRESHOLD)
                 {
-                    SymbolStyle style = feature.Styles.First() as SymbolStyle;
-                    style.Enabled = true;
+                    foreach (Style style in feature.Styles)
+                        style.Enabled = true;
                 }
             }
         }
 
-        private void OnMapInfo(object sender, Mapsui.UI.InfoEventArgs e)
+        private void OnMapInfo(object sender, InfoEventArgs e)
         {
             Messenger.Default.Send(new MapClickedMessage());
             mapClickResetEvent.WaitOne();
@@ -216,7 +224,7 @@ namespace TramlineFive.Common.Services
             {
                 StopLocation location = e.Feature["stopObject"] as StopLocation;
 
-                Messenger.Default.Send(new StopSelectedMessage(location.Code));
+                Messenger.Default.Send(new StopSelectedMessage(location.Code, false));
                 return;
             }
             ShowNearbyStops(e.WorldPosition);
