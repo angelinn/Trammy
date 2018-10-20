@@ -70,13 +70,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
-        <Label Text="{Binding Version.VersionNumber, StringFormat='Налична е версия v{0}. Кликнете за сваляне.'}" Grid.Row="1"
-               TextColor="DodgerBlue" HorizontalOptions="Center">
-            <Label.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding VersionCommand}" />
-            </Label.GestureRecognizers>
-        </Label>
     </Grid>
 </Grid>
     
