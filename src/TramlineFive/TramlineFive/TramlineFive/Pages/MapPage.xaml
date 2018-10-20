@@ -51,24 +51,20 @@
                                        IsEnabled="{Binding IsLoading}"/>
                 </Grid>
             </Frame>
-            <StackLayout Margin="0,90,10,0" IsVisible="{Binding IsMyLocationVisible}" BackgroundColor="{Binding MyLocationColor, Converter={StaticResource ColorConverter}}" HeightRequest="32" Padding="5" WidthRequest="32" Opacity="0.8" HorizontalOptions="End" VerticalOptions="Start">
-                <StackLayout.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
-                </StackLayout.GestureRecognizers>
-
-                <Image>
-                    <Image.Source>
-                        <OnPlatform x:TypeArguments="ImageSource">
-                            <OnPlatform.Android>
-                                <FileImageSource File="Resources/drawable/mylocation.png" />
-                            </OnPlatform.Android>
-                            <OnPlatform.WinPhone>
-                                <FileImageSource File="assets/mylocation.png" />
-                            </OnPlatform.WinPhone>
-                        </OnPlatform>
-                    </Image.Source>
-                </Image>
-            </StackLayout>
+            <Grid>
+            <views:FloatingActionButton Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="Start" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,90,0,0">
+                    <views:FloatingActionButton.Image>
+                        <OnPlatform x:TypeArguments="FileImageSource">
+                        <OnPlatform.Android>
+                            <FileImageSource File="Resources/drawable/mylocation.png" />
+                        </OnPlatform.Android>
+                        <OnPlatform.WinPhone>
+                            <FileImageSource File="assets/mylocation.png" />
+                        </OnPlatform.WinPhone>
+                    </OnPlatform>
+                </views:FloatingActionButton.Image>
+            </views:FloatingActionButton>
+            </Grid>
         </Grid>
         <Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" Opacity="0">
             <Grid.GestureRecognizers>
