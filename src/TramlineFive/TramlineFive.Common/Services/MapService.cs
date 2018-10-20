@@ -157,7 +157,7 @@ namespace TramlineFive.Common.Services
                             Enabled = pinStyle.Enabled,
                             Text = $"{location.PublicName} ({location.Code})",
                             Offset = new Offset(0, -50),
-                            Opacity = 0.7f
+                            //Opacity = 0.7f
                         }
                     }
                 };

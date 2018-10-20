@@ -21,7 +21,7 @@ namespace TramlineFive.Common.Maps
         private static HttpTileSource CreateTileSource()
         {
             return new HttpTileSource(new GlobalSphericalMercator(0, 18),
-                "http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+                "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png",
                 new[] { "a", "b", "c" }, name: "Humanitarian",
                 attribution: OpenStreetMap);
         }
