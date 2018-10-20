@@ -41,14 +41,14 @@ namespace TramlineFive.Pages
             int coef = linesCount > 2 ? 2 : linesCount;
             slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
             
-            await slideMenu.TranslateTo(0, 0, 750);
+            await slideMenu.TranslateTo(0, 0, 400);
 
             isOpened = !isOpened;
         }
 
         private async Task HideVirtualTables()
         {
-            await slideMenu.TranslateTo(0, Height, 750);
+            await slideMenu.TranslateTo(0, Height, 400);
 
             isOpened = false;
         }
