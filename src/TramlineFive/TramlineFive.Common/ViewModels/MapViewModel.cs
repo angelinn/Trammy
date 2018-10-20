@@ -120,7 +120,7 @@ namespace TramlineFive.Common.ViewModels
                     {
                         ApplicationService.RunOnUIThread(() =>
                         {
-                            mapService.MoveTo(centerOfSofiaMap);
+                            mapService.MoveTo(centerOfSofiaMap, 14);
                         });
                     }
                 }
@@ -128,7 +128,7 @@ namespace TramlineFive.Common.ViewModels
                 {
                     ApplicationService.RunOnUIThread(() =>
                     {
-                        mapService.MoveTo(centerOfSofiaMap);
+                        mapService.MoveTo(centerOfSofiaMap, 14);
                     });
                 }
             });

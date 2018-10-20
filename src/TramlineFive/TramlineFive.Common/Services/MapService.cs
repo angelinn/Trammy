@@ -59,9 +59,11 @@ namespace TramlineFive.Common.Services
             interaction = SimpleIoc.Default.GetInstance<IInteractionService>();
         }
 
-        public void MoveTo(Point point, int zoom = 14)
+        public void MoveTo(Point point, int? zoom = null)
         {
             map.NavigateTo(point);
+            if (zoom.HasValue)
+                map.NavigateTo(map.Resolutions[zoom.Value]);
         }
 
         public void MoveToUser(Point point)
