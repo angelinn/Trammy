@@ -44,7 +44,7 @@ namespace TramlineFive
             Messenger.Default.Register<SlideHamburgerMessage>(this, async (m) => await ToggleHamburgerAsync()); 
         }
 
-        private async Task ToggleHamburgerAsync()
+        public async Task ToggleHamburgerAsync()
         {
             Task translation = null;
             Task fading = null;

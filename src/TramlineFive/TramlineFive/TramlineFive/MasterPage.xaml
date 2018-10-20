@@ -7,6 +7,7 @@
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              x:Class="TramlineFive.MasterPage"
+             NavigationPage.HasNavigationBar="False"
              BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}">
 
     <ContentPage.Resources>
@@ -71,7 +72,69 @@
         </Grid>
 
         <Grid x:Name="slideMenu" HorizontalOptions="Start" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" WidthRequest="250" BackgroundColor="White">
+            <StackLayout Spacing="0">
+                <StackLayout.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="iconize:IconLabel" x:Key="MenuIcon">
+                            <Setter Property="Margin" Value="15,0,5,0" />
+                            <Setter Property="FontSize" Value="20" />
+                            <Setter Property="VerticalOptions" Value="Center" />
+                            <Setter Property="HorizontalOptions" Value="Center" />
+                        </Style>
 
+                        <Style TargetType="Label" x:Key="MenuText">
+                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="VerticalOptions" Value="Center" />
+                            <Setter Property="TextColor" Value="Black" />
+                            <Setter Property="Grid.Column" Value="1" />
+                        </Style>
+
+                        <Style TargetType="Grid" x:Key="MenuItemContainer">
+                            <Setter Property="HeightRequest" Value="50" />
+                            <Setter Property="VerticalOptions" Value="Center" />
+                            <Setter Property="ColumnDefinitions">
+                                <Setter.Value>
+                                    <ColumnDefinitionCollection>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </ColumnDefinitionCollection>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ResourceDictionary>
+                </StackLayout.Resources>
+                <Grid HeightRequest="180" BackgroundColor="DodgerBlue">
+                    <StackLayout VerticalOptions="End">
+                        <Image HorizontalOptions="Start" HeightRequest="128" WidthRequest="128">
+                            <Image.Source>
+                                <OnPlatform x:TypeArguments="ImageSource">
+                                    <OnPlatform.Android>
+                                        <FileImageSource File="Resources/drawable/icon.png" />
+                                    </OnPlatform.Android>
+
+                                    <OnPlatform.WinPhone>
+                                        <FileImageSource File="Assets/Store/Square44x44Logo.scale-400.png" />
+                                    </OnPlatform.WinPhone>
+                                </OnPlatform>
+                            </Image.Source>
+                        </Image>
+                        <Label Text="Tramline Five v2.8" TextColor="White" Margin="5,-10,5,05"/>
+                    </StackLayout>
+                </Grid>
+                <Grid Style="{StaticResource MenuItemContainer}">
+                    <iconize:IconLabel Text="fa-cog" Style="{StaticResource MenuIcon}" />
+                    <Label Text="Настройки" Style="{StaticResource MenuText}" />
+
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenSettingsCommand}" />
+                    </Grid.GestureRecognizers>
+                </Grid>
+
+                <Grid Style="{StaticResource MenuItemContainer}">
+                    <iconize:IconLabel Text="fa-info" Style="{StaticResource MenuIcon}"/>
+                    <Label Text="Информация" Style="{StaticResource MenuText}" />
+                </Grid>
+            </StackLayout>
         </Grid>
     </AbsoluteLayout>
 </ContentPage>
