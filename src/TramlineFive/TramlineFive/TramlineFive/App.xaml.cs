@@ -32,7 +32,7 @@ namespace TramlineFive
             if (!permissionService.HasLocationPermissions())
                 MainPage = new Pages.LocationPromptPage();
             else
-                MainPage = new MasterPage();
+                MainPage = new NavigationPage(new MasterPage());
 
             DependencyService.Get<IVersionCheckingService>().CreateTask();
         }
