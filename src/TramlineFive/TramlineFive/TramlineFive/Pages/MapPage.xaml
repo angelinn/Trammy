@@ -8,7 +8,6 @@
              xmlns:views="clr-namespace:TramlineFive.Views"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
-      	xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
 
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}">
 
@@ -21,7 +20,6 @@
     <AbsoluteLayout>
         <Grid x:Name="grid" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
             <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                <ffimageloading:CachedImage DownsampleToViewSize="True" Source="D2s.gif"/>
                 <Label Text="Зареждане..." FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
             </StackLayout>
             <v:MapsUIView x:Name="map" IsVisible="{Binding IsMapVisible}" VerticalOptions="Start" />
@@ -52,7 +50,7 @@
                 </Grid>
             </Frame>
             <Grid>
-            <views:FloatingActionButton Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="Start" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,90,0,0">
+            <views:FloatingActionButton Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="Start" ButtonColor="White" BackgroundColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,90,0,0">
                     <views:FloatingActionButton.Image>
                         <OnPlatform x:TypeArguments="FileImageSource">
                         <OnPlatform.Android>

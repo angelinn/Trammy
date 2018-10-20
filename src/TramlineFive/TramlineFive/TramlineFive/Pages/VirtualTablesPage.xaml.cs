@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
-using Rg.Plugins.Popup.Services;
 using SkgtService.Models;
 using System;
 using System.Collections.Generic;
