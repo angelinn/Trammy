@@ -49,10 +49,9 @@
                                        IsEnabled="{Binding IsLoading}"/>
                 </Grid>
             </Frame>
-            <Grid>
-            <views:FloatingActionButton Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="Start" ButtonColor="White" BackgroundColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,90,0,0">
-                    <views:FloatingActionButton.Image>
-                        <OnPlatform x:TypeArguments="FileImageSource">
+            <views:FloatingActionButton Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="Start" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,90,0,0">
+                <views:FloatingActionButton.Image>
+                    <OnPlatform x:TypeArguments="FileImageSource">
                         <OnPlatform.Android>
                             <FileImageSource File="Resources/drawable/mylocation.png" />
                         </OnPlatform.Android>
@@ -61,8 +60,10 @@
                         </OnPlatform.WinPhone>
                     </OnPlatform>
                 </views:FloatingActionButton.Image>
+                <views:FloatingActionButton.BackgroundColor>
+                    <OnPlatform x:TypeArguments="Color" WinPhone="White" />
+                </views:FloatingActionButton.BackgroundColor>
             </views:FloatingActionButton>
-            </Grid>
         </Grid>
         <Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" Opacity="0">
             <Grid.GestureRecognizers>
