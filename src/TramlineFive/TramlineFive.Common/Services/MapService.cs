@@ -6,6 +6,7 @@ using Mapsui.Layers;
 using Mapsui.Projection;
 using Mapsui.Providers;
 using Mapsui.Styles;
+using Mapsui.UI;
 using SkgtService;
 using SkgtService.Models.Locations;
 using System;
@@ -92,6 +93,8 @@ namespace TramlineFive.Common.Services
             };
 
             map.Layers.Add(layer);
+
+            ShowNearbyStops(point);
             map.ViewChanged(true);
         }
 
@@ -179,6 +182,24 @@ namespace TramlineFive.Common.Services
             }
         }
 
+        private void ShowNearbyStops(Point position)
+        {
+            foreach (Feature feature in features)
+            {
+                StopLocation location = feature["stopObject"] as StopLocation;
+
+                Point point = new Point(location.Lon, location.Lat);
+                Point local = SphericalMercator.FromLonLat(point.X, point.Y);
+                Point difference = position - local;
+
+                if (Math.Abs(difference.X) < STOP_THRESHOLD && Math.Abs(difference.Y) < STOP_THRESHOLD)
+                {
+                    SymbolStyle style = feature.Styles.First() as SymbolStyle;
+                    style.Enabled = true;
+                }
+            }
+        }
+
         private void OnMapInfo(object sender, Mapsui.UI.InfoEventArgs e)
         {
             Messenger.Default.Send(new MapClickedMessage());
@@ -196,22 +217,7 @@ namespace TramlineFive.Common.Services
                 Messenger.Default.Send(new StopSelectedMessage(location.Code));
                 return;
             }
-
-            foreach (Feature feature in features)
-            {
-                StopLocation location = feature["stopObject"] as StopLocation;
-
-                Point point = new Point(location.Lon, location.Lat);
-                Point local = SphericalMercator.FromLonLat(point.X, point.Y);
-                Point difference = e.WorldPosition - local;
-
-                if (Math.Abs(difference.X) < STOP_THRESHOLD && Math.Abs(difference.Y) < STOP_THRESHOLD)
-                {
-                    SymbolStyle style = feature.Styles.First() as SymbolStyle;
-                    style.Enabled = true;
-                }
-            }
-            
+            ShowNearbyStops(e.WorldPosition);
             map.ViewChanged(true);
         }
 
