@@ -23,7 +23,7 @@
                 <Label Text="Зареждане..." FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
             </StackLayout>
             <v:MapsUIView x:Name="map" IsVisible="{Binding IsMapVisible}" VerticalOptions="Start" />
-            <Frame Margin="10,30,10,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="50" Padding="5,0,5,0">
+            <Frame x:Name="searchBar" Margin="10,40,10,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="50" Padding="5,0,5,0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />

@@ -48,6 +48,12 @@ namespace TramlineFive.DataAccess
             return await db.Table<T>().Take(10).ToListAsync();
         }
 
+        public static async Task<IEnumerable<T>> TakeAll<T>() where T : new()
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+            return await db.Table<T>().ToListAsync();
+        }
+
         public static async Task<IEnumerable<T>> TakeByDescending<T, U>(System.Linq.Expressions.Expression<Func<T, U>> func, int count = 10) where T : new()
         {
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);

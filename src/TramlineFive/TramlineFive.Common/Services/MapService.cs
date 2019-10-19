@@ -210,7 +210,7 @@ namespace TramlineFive.Common.Services
             }
         }
 
-        private void OnMapInfo(object sender, InfoEventArgs e)
+        private void OnMapInfo(object sender, MapInfoEventArgs e)
         {
             Messenger.Default.Send(new MapClickedMessage());
             mapClickResetEvent.WaitOne();
@@ -220,14 +220,14 @@ namespace TramlineFive.Common.Services
             if (message.Handled)
                 return;
 
-            if (e.Feature != null && e.Feature.Styles.First().Enabled)
+            if (e.MapInfo.Feature != null && e.MapInfo.Feature.Styles.First().Enabled)
             {
-                StopLocation location = e.Feature["stopObject"] as StopLocation;
+                StopLocation location = e.MapInfo.Feature["stopObject"] as StopLocation;
 
                 Messenger.Default.Send(new StopSelectedMessage(location.Code, false));
                 return;
             }
-            ShowNearbyStops(e.WorldPosition);
+            ShowNearbyStops(e.MapInfo.WorldPosition);
             map.ViewChanged(true);
         }
 

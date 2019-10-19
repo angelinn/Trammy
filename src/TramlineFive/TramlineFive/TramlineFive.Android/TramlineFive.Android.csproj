@@ -18,8 +18,7 @@
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidStoreUncompressedFileExtensions />
     <MandroidI18n />
     <JavaMaximumHeapSize />
@@ -119,17 +118,17 @@
     <Reference Include="HtmlAgilityPack, Version=1.6.5.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\HtmlAgilityPack.1.6.5\lib\netstandard2.0\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="Mapsui, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mapsui.1.3.2\lib\MonoAndroid\Mapsui.dll</HintPath>
+    <Reference Include="Mapsui, Version=1.4.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mapsui.1.4.8\lib\MonoAndroid\Mapsui.dll</HintPath>
     </Reference>
-    <Reference Include="Mapsui.Geometries, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mapsui.1.3.2\lib\MonoAndroid\Mapsui.Geometries.dll</HintPath>
+    <Reference Include="Mapsui.Geometries, Version=1.4.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mapsui.1.4.8\lib\MonoAndroid\Mapsui.Geometries.dll</HintPath>
     </Reference>
-    <Reference Include="Mapsui.Rendering.Skia, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mapsui.1.3.2\lib\MonoAndroid\Mapsui.Rendering.Skia.dll</HintPath>
+    <Reference Include="Mapsui.Rendering.Skia, Version=1.4.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mapsui.1.4.8\lib\MonoAndroid\Mapsui.Rendering.Skia.dll</HintPath>
     </Reference>
-    <Reference Include="Mapsui.UI.Android, Version=1.3.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mapsui.1.3.2\lib\MonoAndroid\Mapsui.UI.Android.dll</HintPath>
+    <Reference Include="Mapsui.UI.Android, Version=1.4.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mapsui.1.4.8\lib\MonoAndroid\Mapsui.UI.Android.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
@@ -188,11 +187,14 @@
     <Reference Include="Remotion.Linq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Remotion.Linq.2.1.2\lib\portable-net45+win+wpa81+wp80\Remotion.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="SkiaSharp, Version=1.59.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SkiaSharp.1.59.3\lib\MonoAndroid\SkiaSharp.dll</HintPath>
+    <Reference Include="SkiaSharp, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.1.68.0\lib\MonoAndroid\SkiaSharp.dll</HintPath>
     </Reference>
-    <Reference Include="SkiaSharp.Views.Android, Version=1.59.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SkiaSharp.Views.1.59.3\lib\MonoAndroid\SkiaSharp.Views.Android.dll</HintPath>
+    <Reference Include="SkiaSharp.Extended.Svg, Version=1.60.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.Svg.1.60.0\lib\netstandard2.0\SkiaSharp.Extended.Svg.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp.Views.Android, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.Views.1.68.0\lib\MonoAndroid\SkiaSharp.Views.Android.dll</HintPath>
     </Reference>
     <Reference Include="SocketIoClientDotNet, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SocketIoClientDotNet.1.0.3\lib\netstandard1.3\SocketIoClientDotNet.dll</HintPath>

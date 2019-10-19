@@ -33,9 +33,9 @@ namespace TramlineFive.DataAccess.Domain
             return new FavouriteDomain(added);
         }
 
-        public static async Task<IEnumerable<FavouriteDomain>> TakeAsync(int count = 10)
+        public static async Task<IEnumerable<FavouriteDomain>> TakeAsync()
         {
-            return (await TramlineFiveContext.Take<Favourite>(count)).Select(f => new FavouriteDomain(f));
+            return (await TramlineFiveContext.TakeAll<Favourite>()).Select(f => new FavouriteDomain(f));
         }
 
         public static async Task RemoveAsync(string stopCode)
