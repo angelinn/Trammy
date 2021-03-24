@@ -8,8 +8,8 @@ namespace TramlineFive.Converters
 {
     public class BoolToColorConverter : IValueConverter
     {
-        private string selectedColor = "#4CACE8";
-        private string notSelectedColor = "#808080";
+        private string selectedColor = "#1e90ff";
+        private string notSelectedColor = "#717578";
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -25,3 +25,4 @@ namespace TramlineFive.Converters
         }
     }
 }
+ 
