@@ -17,19 +17,19 @@
         </ResourceDictionary>
     </Grid.Resources>
 
-    <AbsoluteLayout>
+    <AbsoluteLayout> 
         <Grid x:Name="grid" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
             <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
                 <Label Text="Зареждане..." FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
             </StackLayout>
             <v:MapsUIView x:Name="map" IsVisible="{Binding IsMapVisible}" VerticalOptions="Start" />
-            <Frame x:Name="searchBar" Margin="10,40,10,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="50" Padding="5,0,5,0">
+            <Frame x:Name="searchBar" Margin="15,40,15,0" BackgroundColor="White" VerticalOptions="Start" HeightRequest="47" Padding="5,0,5,0" CornerRadius="30" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid Padding="15,0,0,0" HorizontalOptions="FillAndExpand">
+                    <Grid Padding="25,0,0,0" HorizontalOptions="FillAndExpand">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding OpenHamburgerCommand}" />
                         </Grid.GestureRecognizers>
@@ -49,10 +49,10 @@
                                        IsEnabled="{Binding IsLoading}"/>
                 </Grid>
             </Frame>
-            <views:FloatingActionButton Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="Start" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,90,0,0">
+            <views:FloatingActionButton Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="End" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,0,0,20">
                 <views:FloatingActionButton.Image>
                     <OnPlatform x:TypeArguments="FileImageSource">
-                        <OnPlatform.Android>
+                        <OnPlatform.Android> 
                             <FileImageSource File="Resources/drawable/mylocation.png" />
                         </OnPlatform.Android>
                         <OnPlatform.WinPhone>
