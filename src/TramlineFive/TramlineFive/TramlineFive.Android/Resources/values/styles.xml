@@ -23,6 +23,9 @@
 
     <item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
     <item name="android:windowTranslucentStatus">true</item>
+    <item name="android:navigationBarColor">@android:color/white</item>
+    <item name="android:fitsSystemWindows">true</item>
+
   </style>
 
   <style name="AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
