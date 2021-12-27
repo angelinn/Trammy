@@ -6,8 +6,9 @@ using Xamarin.Forms.PlatformConfiguration;
 
 namespace TramlineFive.Services
 {
-    public interface IDatabasePathService
+    public interface PathService
     {
         string Path { get; }
+        string BasePath { get; }
     }
 }

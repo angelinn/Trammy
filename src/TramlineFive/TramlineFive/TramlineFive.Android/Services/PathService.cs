@@ -12,13 +12,14 @@ using Android.Widget;
 using TramlineFive.Services;
 using TramlineFive.Droid.Services;
 
-[assembly: Xamarin.Forms.Dependency(typeof(DatabasePathService))]
+[assembly: Xamarin.Forms.DependencyAttribute(typeof(TramlineFive.Droid.Services.PathService))]
 namespace TramlineFive.Droid.Services
 {
-    public class DatabasePathService : IDatabasePathService
+    public class PathService : TramlineFive.Services.PathService
     {
         public string Path => 
             System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "tramlinefive.db");
+        public string BasePath => System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
 
     }
 }

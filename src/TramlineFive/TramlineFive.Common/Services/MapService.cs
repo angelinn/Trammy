@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using TramlineFive.Common.Maps;
 using TramlineFive.Common.Messages;
 
@@ -44,7 +45,7 @@ namespace TramlineFive.Common.Services
             });
         }
 
-        public void Initialize(Map map)
+        public async Task Initialize(Map map)
         {
             this.map = map;
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
@@ -52,7 +53,7 @@ namespace TramlineFive.Common.Services
             LoadPinStyles();
             LoadUserLocationPin();
 
-            ILayer stopsLayer = LoadStops();
+            ILayer stopsLayer = await LoadStops();
             map.Layers.Add(stopsLayer);
             map.InfoLayers.Add(stopsLayer);
 
@@ -128,14 +129,11 @@ namespace TramlineFive.Common.Services
         }
 
 
-        private ILayer LoadStops()
+        private async Task<ILayer> LoadStops()
         {
-            Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
-            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.stops-bg.json");
-
             features = new List<Feature>();
 
-            List<StopLocation> stops = new StopsLoader().LoadStops(stream);
+            List<StopLocation> stops = await StopsLoader.LoadStopsAsync();
             foreach (var location in stops)
             {
                 Point stopLocation = new Point(location.Lon, location.Lat);

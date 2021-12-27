@@ -336,7 +336,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AlarmReceiver.cs" />
-    <Compile Include="Services\DatabasePathService.cs" />
+    <Compile Include="Services\PathService.cs" />
     <Compile Include="Services\PermissionService.cs" />
     <Compile Include="Services\ToastService.cs" />
     <Compile Include="Services\VersionCheckingService.cs" />
