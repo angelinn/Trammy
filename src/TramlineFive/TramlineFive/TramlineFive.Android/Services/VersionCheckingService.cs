@@ -33,7 +33,7 @@ namespace TramlineFive.Droid.Services
                 alarmIntent.PutExtra("title", "Налична е нова версия");
                 alarmIntent.PutExtra("message", "Натиснете тук за сваляне на новата версия.");
 
-                PendingIntent pending = PendingIntent.GetBroadcast(mainActivity, 0, alarmIntent, PendingIntentFlags.UpdateCurrent);
+                PendingIntent pending = PendingIntent.GetBroadcast(mainActivity, 0, alarmIntent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
 
                 AlarmManager alarmManager = mainActivity.GetSystemService(Context.AlarmService).JavaCast<AlarmManager>();
                 alarmManager.SetInexactRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + CHECK_TIME, CHECK_TIME, pending);
@@ -47,7 +47,7 @@ namespace TramlineFive.Droid.Services
             Intent alarmIntent = new Intent(mainActivity, typeof(AlarmReceiver));
             alarmIntent.PutExtra("title", "Налична е нова версия");
             alarmIntent.PutExtra("message", "Натиснете тук за сваляне.");
-            PendingIntent pending = PendingIntent.GetBroadcast(mainActivity, 0, alarmIntent, PendingIntentFlags.NoCreate);
+            PendingIntent pending = PendingIntent.GetBroadcast(mainActivity, 0, alarmIntent, PendingIntentFlags.NoCreate | PendingIntentFlags.Immutable);
 
             if (pending != null)
                 Log.Info("VERSION", "Pending is not null (alarm is already created)");

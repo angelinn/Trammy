@@ -18,7 +18,7 @@ using TramlineFive.Services;
 
 namespace TramlineFive.Droid.Services
 {
-    [BroadcastReceiver]
+    [BroadcastReceiver(Exported = true)]
     [IntentFilter(new string[] { "com.company.BROADCAST" })]
     public class AlarmReceiver : BroadcastReceiver
     {
@@ -42,7 +42,7 @@ namespace TramlineFive.Droid.Services
 
                     Intent notificationIntent = new Intent(Intent.ActionView);
                     notificationIntent.SetData(Android.Net.Uri.Parse(version.ReleaseUrl));
-                    PendingIntent pending = PendingIntent.GetActivity(context, 0, notificationIntent, PendingIntentFlags.CancelCurrent);
+                    PendingIntent pending = PendingIntent.GetActivity(context, 0, notificationIntent, PendingIntentFlags.CancelCurrent | PendingIntentFlags.Immutable);
 
                     NotificationManager manager = NotificationManager.FromContext(context);
 
