@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
 
         <Grid>
-            <Frame HeightRequest="80" Padding="0" HasShadow="True" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
+            <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="68" />
@@ -32,6 +32,7 @@
                     <StackLayout Grid.Column="1" VerticalOptions="Center" >
                         <Label Text="{Binding StopInfo.Name}" FontSize="Default" FontAttributes="Bold" />
                         <Label Text="{Binding StopInfo.Code}" TextColor="DodgerBlue" FontSize="Small" />
+                        
                     </StackLayout>
                     <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,5,0">
                         <Grid.GestureRecognizers>
@@ -39,8 +40,10 @@
                         </Grid.GestureRecognizers>
                         <iconize:IconLabel Text="fa-star" Margin="10" FontSize="32"  TextColor="DodgerBlue" VerticalOptions="Center" HorizontalOptions="Center" />
                     </Grid>
+
+                    <BoxView Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
                 </Grid>
-            </Frame>
+            </Grid>
         </Grid>
 
         <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">

@@ -89,17 +89,17 @@ namespace TramlineFive.Common.ViewModels
 
         private async Task OnMyLocationTappedAsync()
         {
-            Task t = LocalizeAsync();
+            Task<bool> t = LocalizeAsync();
 
             MyLocationColor = "LightGray";
             await Task.Delay(100);
             MyLocationColor = "White";
             await Task.Delay(100);
-        }
+        } 
 
-        private async Task LocalizeAsync()
+        private async Task<bool> LocalizeAsync()
         {
-            await Task.Run(async () =>
+            return await Task.Run(async () =>
             {
                 Point centerOfSofia = new Point(42.6977, 23.3219);
                 Point centerOfSofiaMap = SphericalMercator.FromLonLat(centerOfSofia.Y, centerOfSofia.X);
@@ -115,14 +115,17 @@ namespace TramlineFive.Common.ViewModels
                         {
                             mapService.MoveToUser(userLocationMap);
                         });
+
+                        return true;
                     }
-                    else
+
+                    ApplicationService.RunOnUIThread(() =>
                     {
-                        ApplicationService.RunOnUIThread(() =>
-                        {
-                            mapService.MoveTo(centerOfSofiaMap, 14);
-                        });
-                    }
+                        mapService.MoveTo(centerOfSofiaMap, 14);
+                    });
+
+                    return false;
+
                 }
                 catch (Exception ex)
                 {
@@ -130,6 +133,8 @@ namespace TramlineFive.Common.ViewModels
                     {
                         mapService.MoveTo(centerOfSofiaMap, 14);
                     });
+
+                    return false;
                 }
             });
         }
