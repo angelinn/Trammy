@@ -23,8 +23,7 @@ namespace SkgtService
         {
             if (!File.Exists(PATH))
             {
-                byte[] stops = await DownloadStopsAsync();
-                File.WriteAllBytes(PATH, stops);
+                await UpdateStopsAsync();
             }
 
             string json = File.ReadAllText(PATH);
@@ -41,12 +40,12 @@ namespace SkgtService
             return JsonConvert.DeserializeObject<List<StopLocation>>(json);
         }
 
-        public static async Task<byte[]> DownloadStopsAsync()
+        public static async Task UpdateStopsAsync()
         {
             using (HttpClient client = new HttpClient())
             {
                 byte[] stops = await client.GetByteArrayAsync(URL);
-                return stops;
+                File.WriteAllBytes(PATH, stops);
             }
         }
     }

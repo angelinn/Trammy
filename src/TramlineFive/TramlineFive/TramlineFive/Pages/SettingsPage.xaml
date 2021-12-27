@@ -21,6 +21,9 @@
                 </ActivityIndicator.HorizontalOptions>
             </ActivityIndicator>
         </StackLayout>
+
+        <Label Text="Презареди спирки" />
+        <Button Text="GO" Command="{Binding UpdateStopsCommand}" />
     </StackLayout>
 
 </ContentPage>
