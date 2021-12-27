@@ -12,5 +12,7 @@ namespace TramlineFive.UWP.Services
     public class DatabasePathService : PathService
     {
         public string Path => System.IO.Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "tramlinefive.db");
+
+        public string BasePath => Windows.Storage.ApplicationData.Current.LocalFolder.Path;
     }
 }
