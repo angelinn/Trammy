@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
+using SkgtService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,9 @@ namespace TramlineFive
 
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
 
+            PathService dbPathService = DependencyService.Get<PathService>();
+            StopsLoader.Initialize(dbPathService.BasePath);
+
             IPermissionService permissionService = DependencyService.Get<IPermissionService>();
 
             if (!permissionService.HasLocationPermissions())
@@ -39,7 +43,7 @@ namespace TramlineFive
 
         protected override async void OnStart()
         {
-            IDatabasePathService dbPathService = DependencyService.Get<IDatabasePathService>();
+            PathService dbPathService = DependencyService.Get<PathService>();
             TramlineFiveContext.DatabasePath = dbPathService.Path;
             await TramlineFiveContext.EnsureCreatedAsync();
 
