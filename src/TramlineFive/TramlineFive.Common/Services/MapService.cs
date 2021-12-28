@@ -28,7 +28,7 @@ namespace TramlineFive.Common.Services
         private SymbolStyle pinStyle;
         private SymbolStyle userStyle;
         private List<Feature> features;
-        private IInteractionService interaction;
+        private IApplicationService applicationService;
 
         private Queue<MapClickedResponseMessage> messages = new Queue<MapClickedResponseMessage>();
 
@@ -57,7 +57,7 @@ namespace TramlineFive.Common.Services
             map.Layers.Add(stopsLayer);
             map.InfoLayers.Add(stopsLayer);
 
-            interaction = SimpleIoc.Default.GetInstance<IInteractionService>();
+            applicationService = SimpleIoc.Default.GetInstance<IApplicationService>();
         }
 
         public void MoveTo(Point point, int? zoom = null)

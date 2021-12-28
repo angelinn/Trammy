@@ -133,7 +133,7 @@
                                 </OnPlatform>
                             </Image.Source>
                         </Image>
-                        <Label Text="Tramline Five v2.8" TextColor="White" Margin="5,-10,5,05"/>
+                        <Label Text="Tramline Five v2.11" TextColor="White" Margin="5,-10,5,05"/>
                     </StackLayout>
                 </Grid>
                 <Grid Style="{StaticResource MenuItemContainer}">

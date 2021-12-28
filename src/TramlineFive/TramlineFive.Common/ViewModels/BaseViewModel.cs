@@ -12,13 +12,11 @@ namespace TramlineFive.Common.ViewModels
     public class BaseViewModel : ViewModelBase
     {
         protected IApplicationService ApplicationService { get; private set; }
-        protected IInteractionService InteractionService { get; private set; }
         protected INavigationService NavigationService { get; private set; }
 
         public BaseViewModel()
         {
             ApplicationService = SimpleIoc.Default.GetInstance<IApplicationService>();
-            InteractionService = SimpleIoc.Default.GetInstance<IInteractionService>();
             NavigationService = SimpleIoc.Default.GetInstance<INavigationService>();
         }
     }

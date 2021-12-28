@@ -32,12 +32,12 @@ namespace TramlineFive.Common.ViewModels
 
         private async Task RemoveFavouriteAsync(FavouriteDomain favourite)
         {
-            if (await InteractionService.DisplayAlertAsync("", $"Премахване на {favourite.Name}?", "Да", "Не"))
+            if (await ApplicationService.DisplayAlertAsync("", $"Премахване на {favourite.Name}?", "Да", "Не"))
             {
                 await FavouriteDomain.RemoveAsync(favourite.StopCode);
                 Favourites.Remove(favourite);
 
-                InteractionService.DisplayToast($"{favourite.Name} е премахната");
+                ApplicationService.DisplayToast($"{favourite.Name} е премахната");
                 RaisePropertyChanged("HasFavourites");
             }
         }

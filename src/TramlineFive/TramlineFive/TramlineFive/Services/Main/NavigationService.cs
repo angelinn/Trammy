@@ -4,7 +4,7 @@ using System.Text;
 using TramlineFive.Common.Services;
 using Xamarin.Forms;
 
-namespace TramlineFive.Services
+namespace TramlineFive.Services.Main
 {
     public class NavigationService : INavigationService
     {

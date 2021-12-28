@@ -41,5 +41,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadXFormsNugetUpgradeInfoBarTramlineFiveHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>

@@ -35,7 +35,7 @@ namespace TramlineFive.Common.ViewModels
             IsLoading = false;
 
             MessengerInstance.Send(new HistoryClearedMessage());
-            InteractionService.DisplayToast("Историята е изчистена");
+            ApplicationService.DisplayToast("Историята е изчистена");
         } 
 
         private async Task ReloadStopsAsync()
@@ -43,7 +43,7 @@ namespace TramlineFive.Common.ViewModels
             IsUpdatingStops = true;
 
             await StopsLoader.UpdateStopsAsync();
-            InteractionService.DisplayToast("Stops updated.");
+            ApplicationService.DisplayToast("Stops updated.");
 
             IsUpdatingStops = false;
             RaisePropertyChanged("UpdatedMessage");

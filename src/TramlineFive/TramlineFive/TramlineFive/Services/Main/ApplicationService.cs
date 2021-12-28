@@ -7,10 +7,12 @@ using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
 using Xamarin.Forms;
 
-namespace TramlineFive.Services
+namespace TramlineFive.Services.Main
 {
     public class ApplicationService : IApplicationService
     {
+        public IDictionary<string, object> Properties => Application.Current.Properties;
+
         public async Task<Position> GetCurrentPositionAsync()
         {
             Plugin.Geolocator.Abstractions.Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
@@ -39,6 +41,20 @@ namespace TramlineFive.Services
         public void RunOnUIThread(Action action)
         {
             Device.BeginInvokeOnMainThread(action);
+        }
+
+        public async Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel)
+        {
+            if (!String.IsNullOrEmpty(cancel))
+                return await Application.Current.MainPage.DisplayAlert(title, message, ok, cancel);
+
+            await Application.Current.MainPage.DisplayAlert(title, message, ok);
+            return true;
+        }
+
+        public void DisplayToast(string message)
+        {
+            DependencyService.Get<IToastService>().ShowToast(message);
         }
     }
 }

@@ -14,7 +14,7 @@ using Android.Widget;
 using GalaSoft.MvvmLight.Ioc;
 using SkgtService.Models;
 using TramlineFive.Common.Services;
-using TramlineFive.Services;
+using TramlineFive.Services.Main;
 
 namespace TramlineFive.Droid.Services
 {

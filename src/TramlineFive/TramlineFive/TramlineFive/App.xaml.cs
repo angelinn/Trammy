@@ -29,7 +29,7 @@ namespace TramlineFive
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
 
             IPathService dbPathService = DependencyService.Get<IPathService>();
-            StopsLoader.Initialize(dbPathService.BasePath);
+            StopsLoader.Initialize(dbPathService.BaseFilePath);
 
             IPermissionService permissionService = DependencyService.Get<IPermissionService>();
 
@@ -44,7 +44,7 @@ namespace TramlineFive
         protected override async void OnStart()
         {
             IPathService dbPathService = DependencyService.Get<IPathService>();
-            TramlineFiveContext.DatabasePath = dbPathService.Path;
+            TramlineFiveContext.DatabasePath = dbPathService.DBPath;
             await TramlineFiveContext.EnsureCreatedAsync();
 
             await SimpleIoc.Default.GetInstance<HistoryViewModel>().LoadHistoryAsync();

@@ -42,11 +42,11 @@ namespace TramlineFive.Common.ViewModels
             if (added != null)
             {
                 MessengerInstance.Send(new FavouriteAddedMessage(added));
-                InteractionService.DisplayToast($"Спирка {added.Name} е добавена към любими");
+                ApplicationService.DisplayToast($"Спирка {added.Name} е добавена към любими");
             }
             else
             {
-                InteractionService.DisplayToast($"Спирката вече съществува в любими");
+                ApplicationService.DisplayToast($"Спирката вече съществува в любими");
             }
         }
 
@@ -64,7 +64,7 @@ namespace TramlineFive.Common.ViewModels
             }
             catch (Exception ex)
             {
-                await InteractionService.DisplayAlertAsync("exception", ex.InnerException.Message, "ok");
+                await ApplicationService.DisplayAlertAsync("exception", ex.InnerException.Message, "ok");
             }
         }
 
@@ -86,11 +86,11 @@ namespace TramlineFive.Common.ViewModels
             }
             catch (StopNotFoundException)
             {
-                await InteractionService.DisplayAlertAsync("Няма данни", $"Няма данни за спирка {stopCode}.", "OK");
+                await ApplicationService.DisplayAlertAsync("Няма данни", $"Няма данни за спирка {stopCode}.", "OK");
             }
             catch (Exception e)
             {
-                await InteractionService.DisplayAlertAsync("Грешка", e.Message, "OK");
+                await ApplicationService.DisplayAlertAsync("Грешка", e.Message, "OK");
             }
         }
 

@@ -8,7 +8,7 @@ namespace TramlineFive.Services
 {
     public interface IPathService
     {
-        string Path { get; }
-        string BasePath { get; }
+        string DBPath { get; }
+        string BaseFilePath { get; }
     }
 }
