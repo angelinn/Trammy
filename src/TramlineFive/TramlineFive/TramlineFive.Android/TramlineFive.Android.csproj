@@ -242,12 +242,6 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
-    <Reference Include="UXDivers.Gorilla.SDK, Version=1.2.0.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\UXDivers.GorillaPlayer.SDK.1.2.0.6\lib\MonoAndroid10\UXDivers.Gorilla.SDK.dll</HintPath>
-    </Reference>
-    <Reference Include="UXDivers.Gorilla.SDK.Droid, Version=1.2.0.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\UXDivers.GorillaPlayer.SDK.1.2.0.6\lib\MonoAndroid10\UXDivers.Gorilla.SDK.Droid.dll</HintPath>
-    </Reference>
     <Reference Include="Version.Plugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xam.Plugin.Version.1.0.0.0\lib\MonoAndroid10\Version.Plugin.dll</HintPath>
     </Reference>

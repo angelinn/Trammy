@@ -39,24 +39,7 @@ namespace TramlineFive.Droid
             ToastService.Init(this);
             PermissionService.Init(this);
 
-#if GORILLA_PLAYER
-            LoadApplication(UXDivers.Gorilla.Droid.Player.CreateApplication(
-                 this,
-                 new UXDivers.Gorilla.Config("Good Gorilla")
-                  .RegisterAssemblyFromType<TramlineFive.Common.ViewModels.Locator.ViewModelLocator>()
-                  .RegisterAssemblyFromType<TramlineFive.App>()
-                  .RegisterAssemblyFromType<Plugin.Iconize.IconLabel>()
-                  .RegisterAssemblyFromType<Plugin.Iconize.Fonts.FontAwesomeModule>()));
-
-            if (!SimpleIoc.Default.ContainsCreated<IApplicationService>())
-            {
-                SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
-                SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
-                SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
-            }
-#else
             LoadApplication(new App());
-#endif
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
