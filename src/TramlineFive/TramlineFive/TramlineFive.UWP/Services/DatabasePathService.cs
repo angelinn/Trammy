@@ -9,10 +9,10 @@ using TramlineFive.UWP.Services;
 [assembly: Xamarin.Forms.Dependency(typeof(DatabasePathService))]
 namespace TramlineFive.UWP.Services
 {
-    public class DatabasePathService : PathService
+    public class DatabasePathService : IPathService
     {
-        public string Path => System.IO.Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "tramlinefive.db");
+        public string DBPath => System.IO.Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "tramlinefive.db");
 
-        public string BasePath => Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+        public string BaseFilePath => Windows.Storage.ApplicationData.Current.LocalFolder.Path;
     }
 }
