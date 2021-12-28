@@ -16,6 +16,10 @@ namespace TramlineFive.Common.ViewModels
         public ICommand CleanHistoryCommand { get; private set; } 
         public ICommand UpdateStopsCommand { get; private set; }
 
+        public string UpdatedMessage => ApplicationService.Properties.ContainsKey("StopsUpdated") ? 
+            ApplicationService.Properties["StopsUpdated"].ToString() : 
+            "Не е обновявано";
+
         public SettingsViewModel()
         {
             CleanHistoryCommand = new RelayCommand(async () => await CleanHistoryAsync());
@@ -32,12 +36,17 @@ namespace TramlineFive.Common.ViewModels
 
             MessengerInstance.Send(new HistoryClearedMessage());
             InteractionService.DisplayToast("Историята е изчистена");
-        }
+        } 
 
         private async Task ReloadStopsAsync()
         {
+            IsUpdatingStops = true;
+
             await StopsLoader.UpdateStopsAsync();
             InteractionService.DisplayToast("Stops updated.");
+
+            IsUpdatingStops = false;
+            RaisePropertyChanged("UpdatedMessage");
         }
 
         private bool isLoading;
@@ -50,6 +59,20 @@ namespace TramlineFive.Common.ViewModels
             set
             {
                 isLoading = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool isUpdatingStops;
+        public bool IsUpdatingStops
+        {
+            get
+            {
+                return isUpdatingStops;
+            }
+            set
+            {
+                isUpdatingStops = value;
                 RaisePropertyChanged();
             }
         }

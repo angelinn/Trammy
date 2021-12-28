@@ -14,6 +14,8 @@ namespace SkgtService
         private const string URL = "https://routes.sofiatraffic.bg/resources/stops-bg.json";
         private static string PATH = String.Empty;
 
+        public static event EventHandler OnStopsUpdated;
+
         public static void Initialize(string basePath)
         {
             PATH = Path.Combine(basePath, "stops.json");
@@ -46,6 +48,8 @@ namespace SkgtService
             {
                 byte[] stops = await client.GetByteArrayAsync(URL);
                 File.WriteAllBytes(PATH, stops);
+
+                OnStopsUpdated?.Invoke(null, new EventArgs());
             }
         }
     }

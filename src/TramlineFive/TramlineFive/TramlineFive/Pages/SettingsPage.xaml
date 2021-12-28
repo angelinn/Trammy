@@ -23,7 +23,15 @@
         </StackLayout>
 
         <Label Text="Презареди спирки" />
-        <Button Text="GO" Command="{Binding UpdateStopsCommand}" />
+
+        <Button Text="GO" Command="{Binding UpdateStopsCommand}" IsEnabled="{Binding IsUpdatingStops, Converter={StaticResource InverseBool}}" HorizontalOptions="Start" />
+        <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}">
+            <ActivityIndicator.HorizontalOptions>
+                <OnPlatform x:TypeArguments="LayoutOptions" Android="StartAndExpand" WinPhone="FillAndExpand" />
+            </ActivityIndicator.HorizontalOptions>
+        </ActivityIndicator>
+        <Label Text="{Binding UpdatedMessage, StringFormat='Последно обновено: {0}'}" />
+
     </StackLayout>
 
 </ContentPage>

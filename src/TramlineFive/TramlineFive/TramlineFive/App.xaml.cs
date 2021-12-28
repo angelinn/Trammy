@@ -8,6 +8,7 @@ using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.DataAccess;
 using TramlineFive.Services;
+using TramlineFive.Services.Main;
 using Xamarin.Forms;
 
 namespace TramlineFive
@@ -21,14 +22,13 @@ namespace TramlineFive
             if (!SimpleIoc.Default.ContainsCreated<IApplicationService>())
             {
                 SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
-                SimpleIoc.Default.Register<IInteractionService>(() => new InteractionService());
                 SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
                 SimpleIoc.Default.Register<MapService>();
             }
 
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
 
-            PathService dbPathService = DependencyService.Get<PathService>();
+            IPathService dbPathService = DependencyService.Get<IPathService>();
             StopsLoader.Initialize(dbPathService.BasePath);
 
             IPermissionService permissionService = DependencyService.Get<IPermissionService>();
@@ -43,12 +43,19 @@ namespace TramlineFive
 
         protected override async void OnStart()
         {
-            PathService dbPathService = DependencyService.Get<PathService>();
+            IPathService dbPathService = DependencyService.Get<IPathService>();
             TramlineFiveContext.DatabasePath = dbPathService.Path;
             await TramlineFiveContext.EnsureCreatedAsync();
 
             await SimpleIoc.Default.GetInstance<HistoryViewModel>().LoadHistoryAsync();
             await SimpleIoc.Default.GetInstance<FavouritesViewModel>().LoadFavouritesAsync();
+
+            StopsLoader.OnStopsUpdated += OnStopsUpdated;
+        }
+
+        private void OnStopsUpdated(object sender, EventArgs e)
+        {
+            Application.Current.Properties["StopsUpdated"] = DateTime.Now;
         }
 
         protected override void OnSleep()
