@@ -43,7 +43,7 @@ namespace TramlineFive.Common.ViewModels
             IsUpdatingStops = true;
 
             await StopsLoader.UpdateStopsAsync();
-            ApplicationService.DisplayToast("Stops updated.");
+            ApplicationService.DisplayNotification("Tramline 5", "Спирките са обновени");
 
             IsUpdatingStops = false;
             RaisePropertyChanged("UpdatedMessage");

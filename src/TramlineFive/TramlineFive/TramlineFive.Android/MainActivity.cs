@@ -38,6 +38,7 @@ namespace TramlineFive.Droid
 
             ToastService.Init(this);
             PermissionService.Init(this);
+            PushService.SetContext(this);
 
             LoadApplication(new App());
 

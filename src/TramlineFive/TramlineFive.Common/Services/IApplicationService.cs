@@ -17,5 +17,7 @@ namespace TramlineFive.Common.Services
 
         Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel = "");
         void DisplayToast(string message);
+        void DisplayNotification(string title, string message);
+
     }
 }

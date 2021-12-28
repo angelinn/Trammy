@@ -56,5 +56,10 @@ namespace TramlineFive.Services.Main
         {
             DependencyService.Get<IToastService>().ShowToast(message);
         }
+
+        public void DisplayNotification(string title, string message)
+        {
+            DependencyService.Get<IPushService>().PushNotification(title, message);
+        }
     }
 }
