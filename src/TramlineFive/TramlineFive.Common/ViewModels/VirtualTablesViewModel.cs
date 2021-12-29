@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Ioc;
 using SkgtService;
 using SkgtService.Exceptions;
 using SkgtService.Models;
+using SkgtService.Models.Locations;
 using SkgtService.Parsers;
 using System;
 using System.Collections.Generic;
@@ -23,12 +24,40 @@ namespace TramlineFive.Common.ViewModels
         public ICommand FavouriteCommand { get; private set; }
         public ICommand SearchCommand { get; private set; }
 
+        public List<string> FilteredStops { get; private set; } 
+
         public VirtualTablesViewModel()
         {
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
             SearchCommand = new RelayCommand(() => MessengerInstance.Send(new StopSelectedMessage(StopCode, true)));
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
+            MessengerInstance.Register<SearchFocusedMessage>(this, (m) => { IsFocused = m.Focused; RaisePropertyChanged("IsSearching"); });
+        }
+
+        public bool IsFocused { get; set; }
+
+        public bool IsSearching => IsFocused && !String.IsNullOrEmpty(stopCode);
+
+        private string selectedSuggestion;
+        public string SelectedSuggestion
+        {
+            get
+            {
+                return selectedSuggestion;
+            }
+            set
+            {
+                selectedSuggestion = value;
+
+                if (!String.IsNullOrEmpty(selectedSuggestion))
+                {
+                    string code = selectedSuggestion.Substring(0, 4);
+                    CheckStopAsync(code);
+                }
+
+                RaisePropertyChanged();
+            }
         }
 
         private async Task OnStopSelected(string stopCode)
@@ -92,6 +121,19 @@ namespace TramlineFive.Common.ViewModels
             {
                 await ApplicationService.DisplayAlertAsync("Грешка", e.Message, "OK");
             }
+        } 
+
+        public void FilterStops()
+        {
+            if (String.IsNullOrEmpty(stopCode))
+                return;
+
+            if (Char.IsDigit(stopCode[0]))
+                FilteredStops = StopsLoader.Stops.Where(s => s.Code.Contains(stopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+            else
+                FilteredStops = StopsLoader.Stops.Where(s => s.PublicName.ToLower().Contains(stopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+
+            RaisePropertyChanged("FilteredStops");
         }
 
         private Line selected;
@@ -189,6 +231,9 @@ namespace TramlineFive.Common.ViewModels
             {
                 stopCode = value;
                 RaisePropertyChanged();
+                RaisePropertyChanged("IsSearching");
+
+                FilterStops();
             }
         }
     }

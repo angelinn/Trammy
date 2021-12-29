@@ -76,5 +76,15 @@ namespace TramlineFive.Pages
             slideMenu.TranslationY = isOpened ? 0 : Height;
             map.HeightRequest = Height;
         }
+
+        private void OnSearchFocused(object sender, FocusEventArgs e)
+        {
+            Messenger.Default.Send(new SearchFocusedMessage(true));
+        }
+
+        private void OnSearchUnfocused(object sender, FocusEventArgs e)
+        {
+            Messenger.Default.Send(new SearchFocusedMessage(false));
+        }
     }
 }
