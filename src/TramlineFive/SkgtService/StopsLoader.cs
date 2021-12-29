@@ -15,6 +15,7 @@ namespace SkgtService
         private static string PATH = String.Empty;
 
         public static event EventHandler OnStopsUpdated;
+        public static List<StopLocation> Stops { get; private set; } 
 
         public static void Initialize(string basePath)
         {
@@ -28,8 +29,10 @@ namespace SkgtService
                 await UpdateStopsAsync();
             }
 
-            string json = File.ReadAllText(PATH);
-            return JsonConvert.DeserializeObject<List<StopLocation>>(json);
+            string json = File.ReadAllText(PATH); 
+            Stops = JsonConvert.DeserializeObject<List<StopLocation>>(json);
+
+            return Stops;
         }
 
         public static List<StopLocation> LoadStops(Stream stream)
@@ -39,7 +42,9 @@ namespace SkgtService
             {
                 json = reader.ReadToEnd();
             }
-            return JsonConvert.DeserializeObject<List<StopLocation>>(json);
+
+            Stops = JsonConvert.DeserializeObject<List<StopLocation>>(json);
+            return Stops;
         }
 
         public static async Task UpdateStopsAsync()
