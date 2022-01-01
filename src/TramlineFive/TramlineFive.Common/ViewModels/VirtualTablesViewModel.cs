@@ -54,6 +54,7 @@ namespace TramlineFive.Common.ViewModels
                 {
                     string code = selectedSuggestion.Substring(0, 4);
                     CheckStopAsync(code);
+                    MessengerInstance.Send(new StopSelectedMessage(code, true));
                 }
 
                 RaisePropertyChanged();

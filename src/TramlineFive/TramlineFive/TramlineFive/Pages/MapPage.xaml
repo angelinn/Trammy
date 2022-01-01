@@ -25,11 +25,11 @@
                 <RowDefinition Height="200" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackLayout Grid.RowSpan="4" HorizontalOptions="Center" VerticalOptions="Center">
+            <StackLayout Grid.RowSpan="4" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label Text="Зареждане..." FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
             </StackLayout>
             <v:MapsUIView Grid.RowSpan="4" x:Name="map" IsVisible="{Binding IsMapVisible}" VerticalOptions="Start" />
-            <Frame Grid.Row="1" x:Name="searchBar" Margin="15,0,15,0" BackgroundColor="White" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" >
+            <Frame Grid.Row="1" x:Name="searchBar" Margin="15,0,15,0" BackgroundColor="White" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
@@ -42,7 +42,7 @@
                         <iconize:IconLabel Text="fa-bars" FontSize="22" VerticalOptions="Center" />
                     </Grid>
                     <views:CustomEntry BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}"
-                                           Grid.Column="1" TextColor="Gray" Placeholder="Код на спирка..." FontSize="16" VerticalOptions="Center"
+                                           Grid.Column="1" TextColor="Gray" Placeholder="Код/име на спирка..." FontSize="16" VerticalOptions="Center"
                                            Text="{Binding StopCode}" Focused="OnSearchFocused" Unfocused="OnSearchUnfocused">
                         <views:CustomEntry.Behaviors>
                             <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
