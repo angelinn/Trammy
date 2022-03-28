@@ -9,6 +9,7 @@ using Mapsui.Styles;
 using Mapsui.UI;
 using SkgtService;
 using SkgtService.Models.Locations;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -98,17 +99,54 @@ namespace TramlineFive.Common.Services
             map.ViewChanged(true);
         }
 
+        private int CreateBitmap(Stream data, double scale)
+        {
+            var svg = new SkiaSharp.Extended.Svg.SKSvg();
+            svg.Load(data);
+
+            var info = new SKImageInfo(
+                (int)(svg.Picture.CullRect.Width * scale),
+                (int)(svg.Picture.CullRect.Height * scale))
+            {
+                AlphaType = SKAlphaType.Premul
+            };
+
+            var bitmap = new SKBitmap(info);
+            var canvas = new SKCanvas(bitmap);
+            canvas.Clear();
+            canvas.Scale((float)scale);
+
+            // paint.ColorFilter = SKColorFilter.CreateBlendMode(
+            //     Color.ToSKColor(),
+            //     SKBlendMode.SrcIn
+            // ); // use the source color
+
+            var paint = new SKPaint() { IsAntialias = true };
+            canvas.DrawPicture(svg.Picture, paint);
+
+            var image = SKImage.FromBitmap(bitmap);
+            var bitmapData = image.Encode(SKEncodedImageFormat.Png, 100);
+            var bitmapDataArray = bitmapData.ToArray();
+            var stream = new MemoryStream(bitmapDataArray);
+            var bitmapId = BitmapRegistry.Instance.Register(stream);
+            return bitmapId;
+        }
+
         private void LoadUserLocationPin()
         {
             Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
-            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.person.png");
+            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.Resources.location.svg");
 
-            var bitmapId = BitmapRegistry.Instance.Register(stream);
+            var svg = new SkiaSharp.Extended.Svg.SKSvg();
+            svg.Load(stream); 
+
+            int bitmapId = BitmapRegistry.Instance.Register(svg.Picture);
 
             userStyle = new SymbolStyle
             {
-                BitmapId = bitmapId
-            };
+                BitmapId = bitmapId,
+                SymbolScale = 2
+            }; 
         }
 
         private void LoadPinStyles()

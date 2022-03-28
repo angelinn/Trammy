@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="person.png" />
     <None Remove="pin.png" />
+    <None Remove="Resources\location.svg" />
     <None Remove="stops-bg.json" />
     <None Remove="stops.json" />
   </ItemGroup>
@@ -16,6 +17,7 @@
   <ItemGroup>
     <EmbeddedResource Include="person.png" />
     <EmbeddedResource Include="pin.png" />
+    <EmbeddedResource Include="Resources\location.svg" />
     <EmbeddedResource Include="stops-bg.json" />
     <EmbeddedResource Include="stops.json" />
   </ItemGroup>
