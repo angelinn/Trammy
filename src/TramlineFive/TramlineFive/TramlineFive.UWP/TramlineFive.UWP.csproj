@@ -234,7 +234,6 @@
       <Version>5.0.0.2337</Version>
     </PackageReference>
   </ItemGroup>
-<<<<<<< HEAD
   <ItemGroup>
     <None Include="TramlineFive.UWP_TemporaryKey.pfx" />
   </ItemGroup>
@@ -243,8 +242,6 @@
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-=======
->>>>>>> c7d59d5 (Revert "Attempt to load svg pin.")
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
