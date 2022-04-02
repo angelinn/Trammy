@@ -1,5 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
+using Mapsui;
+using Mapsui.Projection;
+using Mapsui.UI.Forms;
 using System;
 using System.Threading.Tasks;
 using TramlineFive.Common.Messages;
@@ -16,13 +19,47 @@ namespace TramlineFive.Pages
         private bool initialized;
         private bool isOpened;
 
+        private readonly MapService mapService;
+
         public MapPage()
         {
             InitializeComponent();
 
             Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
             Messenger.Default.Register<MapClickedMessage>(this, (m) => OnMapClicked());
-       
+            Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
+            Messenger.Default.Register<UpdateLocationMessage>(this, m => map.MyLocationLayer.UpdateMyLocation(new Position(m.Position.Latitude, m.Position.Longitude)));
+
+            Map nativeMap = new Map
+            {
+                BackColor = Mapsui.Styles.Color.White,
+                CRS = "EPSG:3857",
+                Transformation = new MinimalTransformation(),
+            };
+
+            mapService = SimpleIoc.Default.GetInstance<MapService>();
+            mapService.Initialize(nativeMap, map.Navigator);
+
+            map.MapClicked += OnMapClicked;
+            map.Info += OnMapInfo;
+            map.PinClicked += OnPinClicked;
+
+            map.Map = nativeMap;
+        }
+
+        private void OnPinClicked(object sender, Mapsui.UI.Forms.PinClickedEventArgs e)
+        {
+
+        }
+
+        private void OnMapInfo(object sender, Mapsui.UI.MapInfoEventArgs e)
+        {
+            mapService.OnMapInfo(sender, e);
+        }
+
+        private void OnMapClicked(object sender, Mapsui.UI.Forms.MapClickedEventArgs e)
+        {
+
         }
 
         private async void OnMapClicked()

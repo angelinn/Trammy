@@ -17,7 +17,7 @@ namespace TramlineFive
     {
         public App()
         {
-            InitializeComponent();
+            InitializeComponent(); 
 
             if (!SimpleIoc.Default.ContainsCreated<IApplicationService>())
             {

@@ -21,7 +21,7 @@ namespace TramlineFive.Views
 
             try
             {
-                SimpleIoc.Default.GetInstance<MapService>().Initialize(NativeMap);
+                //SimpleIoc.Default.GetInstance<MapService>().Initialize(NativeMap);
             }
             catch (Exception ex)
             {

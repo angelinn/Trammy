@@ -101,27 +101,26 @@ namespace TramlineFive.Common.ViewModels
         {
             return await Task.Run(async () =>
             {
-                Point centerOfSofia = new Point(42.6977, 23.3219);
-                Point centerOfSofiaMap = SphericalMercator.FromLonLat(centerOfSofia.Y, centerOfSofia.X);
+                Position centerOfSofia = new Position(42.6977, 23.3219);
+                Point centerOfSofiaMap = SphericalMercator.FromLonLat(centerOfSofia.Longitude, centerOfSofia.Latitude);
 
                 try
                 {
                     if (ApplicationService.HasLocationPermissions())
                     {
                         Position position = await ApplicationService.GetCurrentPositionAsync();
-                        Point userLocationMap = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
 
                         ApplicationService.RunOnUIThread(() =>
                         {
-                            mapService.MoveToUser(userLocationMap);
+                            mapService.MoveToUser(position, true);
                         });
 
                         return true;
-                    }
+                    } 
 
                     ApplicationService.RunOnUIThread(() =>
                     {
-                        mapService.MoveTo(centerOfSofiaMap, 14);
+                        mapService.MoveTo(centerOfSofia, 14, true);
                     });
 
                     return false;
@@ -131,7 +130,7 @@ namespace TramlineFive.Common.ViewModels
                 {
                     ApplicationService.RunOnUIThread(() =>
                     {
-                        mapService.MoveTo(centerOfSofiaMap, 14);
+                        mapService.MoveTo(centerOfSofia, 14, true);
                     });
 
                     return false;

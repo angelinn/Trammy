@@ -58,7 +58,7 @@
                     </Grid.GestureRecognizers>
 
                     <StackLayout Spacing="0">
-                        <iconize:IconLabel Text="fa-star-o" FontSize="22" 
+                        <iconize:IconLabel Text="fa-star" FontSize="22" 
                                    TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
 
@@ -68,7 +68,7 @@
                 <Grid Grid.Column="2">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
-                    </Grid.GestureRecognizers>
+                    </Grid.GestureRecognizers> 
                     <StackLayout Spacing="0">
                         <iconize:IconLabel Text="fa-history" FontSize="22"
                                    TextColor="{Binding IsHistoryVisible, Converter={StaticResource BoolToColor}}"

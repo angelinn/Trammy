@@ -15,7 +15,7 @@ namespace TramlineFive.Common.Maps
 
         public static TileLayer CreateTileLayer()
         {
-            return new TileLayer(CreateTileSource(), fetchStrategy: new FetchStrategy()) { Name = "Humanitarian" };
+            return new TileLayer(CreateTileSource(), dataFetchStrategy: new DataFetchStrategy()) { Name = "Humanitarian" };
         }
 
         private static HttpTileSource CreateTileSource()

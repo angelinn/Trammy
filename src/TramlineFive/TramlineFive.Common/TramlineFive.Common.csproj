@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTargetFallback>portable-net45+win8+wpa81</PackageTargetFallback>
     <Configurations>Debug;Release;GorillaPlayer</Configurations>
   </PropertyGroup>
@@ -9,7 +9,6 @@
   <ItemGroup>
     <None Remove="person.png" />
     <None Remove="pin.png" />
-    <None Remove="Resources\location.svg" />
     <None Remove="stops-bg.json" />
     <None Remove="stops.json" />
   </ItemGroup>
@@ -17,13 +16,16 @@
   <ItemGroup>
     <EmbeddedResource Include="person.png" />
     <EmbeddedResource Include="pin.png" />
-    <EmbeddedResource Include="Resources\location.svg" />
+<<<<<<< HEAD
+    <EmbeddedResource Include="location.svg" />
+=======
+>>>>>>> c7d59d5 (Revert "Attempt to load svg pin.")
     <EmbeddedResource Include="stops-bg.json" />
     <EmbeddedResource Include="stops.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mapsui" Version="1.4.8" />
+    <PackageReference Include="Mapsui" Version="3.0.2" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.0.1-alpha" />
     <PackageReference Include="Octokit" Version="0.28.0" />
   </ItemGroup>
@@ -35,6 +37,7 @@
 
   <ItemGroup>
     <Folder Include="Exceptions\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

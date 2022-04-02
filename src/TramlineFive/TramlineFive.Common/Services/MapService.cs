@@ -7,9 +7,14 @@ using Mapsui.Projection;
 using Mapsui.Providers;
 using Mapsui.Styles;
 using Mapsui.UI;
+using Mapsui.Utilities;
 using SkgtService;
 using SkgtService.Models.Locations;
+<<<<<<< HEAD
 using SkiaSharp;
+using Svg.Skia;
+=======
+>>>>>>> c7d59d5 (Revert "Attempt to load svg pin.")
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +25,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TramlineFive.Common.Maps;
 using TramlineFive.Common.Messages;
+using TramlineFive.Common.Models;
 
 namespace TramlineFive.Common.Services
 {
@@ -29,6 +35,8 @@ namespace TramlineFive.Common.Services
         private SymbolStyle pinStyle;
         private SymbolStyle userStyle;
         private List<Feature> features;
+
+        private INavigator navigator;
 
         private Queue<MapClickedResponseMessage> messages = new Queue<MapClickedResponseMessage>();
 
@@ -45,63 +53,84 @@ namespace TramlineFive.Common.Services
             });
         }
 
-        public async Task Initialize(Map map)
+        public async Task Initialize(Map map, INavigator navigator)
         {
             this.map = map;
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
-            map.Info += OnMapInfo;
             LoadPinStyles();
             LoadUserLocationPin();
 
+            this.navigator = navigator;
+
             ILayer stopsLayer = await LoadStops();
             map.Layers.Add(stopsLayer);
-            map.InfoLayers.Add(stopsLayer);
         }
 
-        public void MoveTo(Point point, int? zoom = null)
+        public void MoveTo(Position position, int? zoom = null, bool home = false)
         {
-            map.NavigateTo(point);
+            Point point = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
+
+            if (home)
+                map.Home = n => n.CenterOn(point);
+
+            navigator.CenterOn(point);
             if (zoom.HasValue)
-                map.NavigateTo(map.Resolutions[zoom.Value]);
+                navigator.ZoomTo(map.Resolutions[zoom.Value]);
+
+            SendMapRefreshMessage();
         }
 
-        public void MoveToUser(Point point)
+        private void SendMapRefreshMessage()
         {
-            map.NavigateTo(point);
-            map.NavigateTo(map.Resolutions[16]);
-
-            if (map.Layers.Last().Name == "User location layer")
-                map.Layers.Remove(map.Layers.Last());
-
-            Feature feature = new Feature
-            {
-                Geometry = point,
-                Styles = new List<IStyle>
-                {
-                    new SymbolStyle
-                    {
-                        Enabled = userStyle.Enabled,
-                        BitmapId = userStyle.BitmapId
-                    }
-                }
-            };
-
-            Layer layer = new Layer
-            {
-                Name = "User location layer",
-                Style = null,
-                DataSource = new MemoryProvider(new List<Feature>() { feature })
-            };
-
-            map.Layers.Add(layer);
-
-            ShowNearbyStops(point);
-            map.ViewChanged(true);
+            Messenger.Default.Send(new RefreshMapMessage());
         }
 
+        public void MoveToUser(Position position, bool home = false)
+        {
+            //navigator.CenterOn(point);
+
+            //if (map.Layers.Last().Name == "User location layer")
+            //    map.Layers.Remove(map.Layers.Last());
+
+            //Feature feature = new Feature
+            //{
+            //    Geometry = point,
+            //    Styles = new List<IStyle>
+            //    {
+            //        new SymbolStyle
+            //        {
+            //            Enabled = userStyle.Enabled,
+            //            BitmapId = userStyle.BitmapId
+            //        }
+            //    }
+            //};
+
+            //Layer layer = new Layer
+            //{
+            //    Name = "User location layer",
+            //    Style = null,
+            //    DataSource = new MemoryProvider(new List<Feature>() { feature })
+            //};
+
+            //map.Layers.Add(layer);
+
+            Messenger.Default.Send(new UpdateLocationMessage(position));
+            Point userLocationMap = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
+
+            if (home)
+                map.Home = n => n.CenterOn(userLocationMap);
+
+            navigator.CenterOn(userLocationMap);
+            navigator.ZoomTo(map.Resolutions[16]);
+
+            ShowNearbyStops(userLocationMap);
+            SendMapRefreshMessage();
+        }
+
+<<<<<<< HEAD
         private int CreateBitmap(Stream data, double scale)
         {
-            var svg = new SkiaSharp.Extended.Svg.SKSvg();
+            var svg = new SKSvg();
             svg.Load(data);
 
             var info = new SKImageInfo(
@@ -135,18 +164,25 @@ namespace TramlineFive.Common.Services
         private void LoadUserLocationPin()
         {
             Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
-            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.Resources.location.svg");
+            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.location.svg");
 
-            var svg = new SkiaSharp.Extended.Svg.SKSvg();
+            var svg = new SKSvg();
             svg.Load(stream); 
 
             int bitmapId = BitmapRegistry.Instance.Register(svg.Picture);
+=======
+        private void LoadUserLocationPin()
+        {
+            Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
+            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.person.png");
+
+            var bitmapId = BitmapRegistry.Instance.Register(stream);
+>>>>>>> c7d59d5 (Revert "Attempt to load svg pin.")
 
             userStyle = new SymbolStyle
             {
-                BitmapId = bitmapId,
-                SymbolScale = 2
-            }; 
+                BitmapId = bitmapId
+            };
         }
 
         private void LoadPinStyles()
@@ -203,7 +239,8 @@ namespace TramlineFive.Common.Services
             {
                 Name = "Stops layer",
                 DataSource = new MemoryProvider(features),
-                Style = null
+                Style = null,
+                IsMapInfoLayer = true
             };
         }
 
@@ -214,13 +251,12 @@ namespace TramlineFive.Common.Services
                 StopLocation location = feature["stopObject"] as StopLocation;
                 if (location.Code == code)
                 {
-                    Point point = new Point(location.Lon, location.Lat);
-                    Point local = SphericalMercator.FromLonLat(point.X, point.Y);
+                    Position point = new Position(location.Lat, location.Lon);
 
                     foreach (Style style in feature.Styles)
                         style.Enabled = true;
                     
-                    MoveTo(local, 16);
+                    MoveTo(point, 16);
                 }
             }
         }
@@ -243,7 +279,7 @@ namespace TramlineFive.Common.Services
             }
         }
 
-        private void OnMapInfo(object sender, MapInfoEventArgs e)
+        public void OnMapInfo(object sender, MapInfoEventArgs e)
         {
             Messenger.Default.Send(new MapClickedMessage());
             mapClickResetEvent.WaitOne();
@@ -261,7 +297,7 @@ namespace TramlineFive.Common.Services
                 return;
             }
             ShowNearbyStops(e.MapInfo.WorldPosition);
-            map.ViewChanged(true);
+            SendMapRefreshMessage();
         }
 
     }

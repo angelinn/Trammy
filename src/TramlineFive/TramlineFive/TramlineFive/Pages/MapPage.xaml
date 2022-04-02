@@ -8,6 +8,7 @@
              xmlns:views="clr-namespace:TramlineFive.Views"
              xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
+             xmlns:mapsui="clr-namespace:Mapsui.UI.Forms;assembly=Mapsui.UI.Forms"
 
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}">
 
@@ -28,7 +29,8 @@
             <StackLayout Grid.RowSpan="4" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label Text="Зареждане..." FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
             </StackLayout>
-            <v:MapsUIView Grid.RowSpan="4" x:Name="map" IsVisible="{Binding IsMapVisible}" VerticalOptions="Start" />
+            <mapsui:MapView Grid.RowSpan="4" x:Name="map" IsVisible="{Binding IsMapVisible}" VerticalOptions="Start" 
+                            IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False" />
             <Frame Grid.Row="1" x:Name="searchBar" Margin="15,0,15,0" BackgroundColor="White" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" >
                 <Grid>
                     <Grid.ColumnDefinitions>
