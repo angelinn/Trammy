@@ -51,14 +51,14 @@ namespace TramlineFive.Common.Services
                 messages.Enqueue(m);
                 mapClickResetEvent.Set();
             });
-        }
+        } 
 
         public async Task Initialize(Map map, INavigator navigator)
         {
             this.map = map;
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             LoadPinStyles();
-            LoadUserLocationPin();
+            //LoadUserLocationPin();
 
             this.navigator = navigator;
 
