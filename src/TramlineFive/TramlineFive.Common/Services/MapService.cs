@@ -9,12 +9,9 @@ using Mapsui.Styles;
 using Mapsui.UI;
 using Mapsui.Utilities;
 using SkgtService;
-using SkgtService.Models.Locations;
-<<<<<<< HEAD
-using SkiaSharp;
+using SkgtService.Models.Locations; 
+using SkiaSharp; 
 using Svg.Skia;
-=======
->>>>>>> c7d59d5 (Revert "Attempt to load svg pin.")
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -127,7 +124,6 @@ namespace TramlineFive.Common.Services
             SendMapRefreshMessage();
         }
 
-<<<<<<< HEAD
         private int CreateBitmap(Stream data, double scale)
         {
             var svg = new SKSvg();
@@ -164,20 +160,9 @@ namespace TramlineFive.Common.Services
         private void LoadUserLocationPin()
         {
             Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
-            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.location.svg");
-
-            var svg = new SKSvg();
-            svg.Load(stream); 
-
-            int bitmapId = BitmapRegistry.Instance.Register(svg.Picture);
-=======
-        private void LoadUserLocationPin()
-        {
-            Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
             Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.person.png");
 
             var bitmapId = BitmapRegistry.Instance.Register(stream);
->>>>>>> c7d59d5 (Revert "Attempt to load svg pin.")
 
             userStyle = new SymbolStyle
             {
