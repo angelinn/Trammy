@@ -7,14 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mapsui" Version="3.0.2" />
-    <PackageReference Include="Mapsui.Forms" Version="3.0.2" />
+    <PackageReference Include="Mapsui" Version="4.0.0-beta.3" />
+    <PackageReference Include="Mapsui.Forms" Version="4.0.0-beta.3" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.0.1-alpha" />
-    <PackageReference Include="SkiaSharp" Version="2.80.2" />
-    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.80.2" />
+    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.232" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.0-preview.232" />
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
-    <PackageReference Include="SkiaSharp.Views" Version="2.80.2" />
-    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.2" />
+    <PackageReference Include="SkiaSharp.Views" Version="2.88.0-preview.232" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.0-preview.232" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
     <PackageReference Include="Xam.Plugin.Geolocator" Version="4.5.0.6" />
     <PackageReference Include="Xam.Plugin.Iconize" Version="3.5.0.129" />

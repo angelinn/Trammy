@@ -2,9 +2,8 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using Mapsui;
-using Mapsui.Geometries;
 using Mapsui.Layers;
-using Mapsui.Projection;
+using Mapsui.Projections;
 using Mapsui.Styles;
 using System;
 using System.Collections.Generic;
@@ -101,8 +100,8 @@ namespace TramlineFive.Common.ViewModels
         {
             return await Task.Run(async () =>
             {
-                Position centerOfSofia = new Position(42.6977, 23.3219);
-                Point centerOfSofiaMap = SphericalMercator.FromLonLat(centerOfSofia.Longitude, centerOfSofia.Latitude);
+                MPoint centerOfSofia = new MPoint(42.6977, 23.3219);
+                MPoint centerOfSofiaMap = SphericalMercator.FromLonLat(centerOfSofia);
 
                 try
                 {

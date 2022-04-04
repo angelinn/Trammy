@@ -1,8 +1,10 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using Mapsui;
-using Mapsui.Projection;
 using Mapsui.UI.Forms;
+using Mapsui.Widgets;
+using Mapsui.Widgets.ScaleBar;
+using Mapsui.Widgets.Zoom;
 using System;
 using System.Threading.Tasks;
 using TramlineFive.Common.Messages;
@@ -33,8 +35,7 @@ namespace TramlineFive.Pages
             Map nativeMap = new Map
             {
                 BackColor = Mapsui.Styles.Color.White,
-                CRS = "EPSG:3857",
-                Transformation = new MinimalTransformation(),
+                CRS = "EPSG:3857"
             };
 
             mapService = SimpleIoc.Default.GetInstance<MapService>();
@@ -77,7 +78,7 @@ namespace TramlineFive.Pages
 
             int coef = linesCount > 2 ? 2 : linesCount;
             slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
-            
+
             await slideMenu.TranslateTo(0, 0, 400);
 
             isOpened = !isOpened;

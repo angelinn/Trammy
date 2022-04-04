@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="person.png" />
     <None Remove="pin.png" />
+    <None Remove="pin.svg" />
     <None Remove="stops-bg.json" />
     <None Remove="stops.json" />
   </ItemGroup>
@@ -17,12 +18,13 @@
     <EmbeddedResource Include="person.png" />
     <EmbeddedResource Include="pin.png" />
     <EmbeddedResource Include="location.svg" />
+    <EmbeddedResource Include="pin.svg" />
     <EmbeddedResource Include="stops-bg.json" />
     <EmbeddedResource Include="stops.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mapsui" Version="3.0.2" />
+    <PackageReference Include="Mapsui" Version="4.0.0-beta.3" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.0.1-alpha" />
     <PackageReference Include="Octokit" Version="0.28.0" />
   </ItemGroup>

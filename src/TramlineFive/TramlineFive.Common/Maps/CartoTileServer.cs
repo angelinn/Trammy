@@ -1,7 +1,8 @@
 ﻿using BruTile.Predefined;
 using BruTile.Web;
 using Mapsui.Fetcher;
-using Mapsui.Layers;
+using Mapsui.Tiling.Fetcher;
+using Mapsui.Tiling.Layers;
 using System;
 using System.Collections.Generic;
 using System.Text;

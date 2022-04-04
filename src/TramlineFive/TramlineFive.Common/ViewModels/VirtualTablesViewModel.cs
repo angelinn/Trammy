@@ -23,6 +23,7 @@ namespace TramlineFive.Common.ViewModels
     {
         public ICommand FavouriteCommand { get; private set; }
         public ICommand SearchCommand { get; private set; }
+        public ICommand RefreshCommand { get; private set; }
 
         public List<string> FilteredStops { get; private set; } 
 
@@ -30,9 +31,11 @@ namespace TramlineFive.Common.ViewModels
         {
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
             SearchCommand = new RelayCommand(() => MessengerInstance.Send(new StopSelectedMessage(StopCode, true)));
+            RefreshCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
             MessengerInstance.Register<SearchFocusedMessage>(this, (m) => { IsFocused = m.Focused; RaisePropertyChanged("IsSearching"); });
+
         }
 
         public bool IsFocused { get; set; }
