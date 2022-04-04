@@ -1,10 +1,9 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using Mapsui;
-using Mapsui.Geometries;
 using Mapsui.Layers;
-using Mapsui.Projection;
 using Mapsui.Providers;
+using Mapsui.Rendering.Skia;
 using Mapsui.Styles;
 using Mapsui.UI;
 using Mapsui.Utilities;
@@ -23,6 +22,9 @@ using System.Threading.Tasks;
 using TramlineFive.Common.Maps;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
+using Mapsui.Projections;
+using Mapsui.Utilities;
+using Mapsui.Tiling;
 
 namespace TramlineFive.Common.Services
 {
@@ -31,7 +33,7 @@ namespace TramlineFive.Common.Services
         private Map map;
         private SymbolStyle pinStyle;
         private SymbolStyle userStyle;
-        private List<Feature> features;
+        private List<IFeature> features;
 
         private INavigator navigator;
 
@@ -53,6 +55,7 @@ namespace TramlineFive.Common.Services
         public async Task Initialize(Map map, INavigator navigator)
         {
             this.map = map;
+
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             LoadPinStyles();
             //LoadUserLocationPin();
@@ -63,9 +66,9 @@ namespace TramlineFive.Common.Services
             map.Layers.Add(stopsLayer);
         }
 
-        public void MoveTo(Position position, int? zoom = null, bool home = false)
-        {
-            Point point = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
+        public void MoveTo(MPoint position, int? zoom = null, bool home = false)
+        { 
+            MPoint point = SphericalMercator.FromLonLat(position);
 
             if (home)
                 map.Home = n => n.CenterOn(point);
@@ -80,6 +83,7 @@ namespace TramlineFive.Common.Services
         private void SendMapRefreshMessage()
         {
             Messenger.Default.Send(new RefreshMapMessage());
+
         }
 
         public void MoveToUser(Position position, bool home = false)
@@ -112,8 +116,9 @@ namespace TramlineFive.Common.Services
             //map.Layers.Add(layer);
 
             Messenger.Default.Send(new UpdateLocationMessage(position));
-            Point userLocationMap = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
+            (double x, double y) = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
 
+            MPoint userLocationMap = new MPoint(x, y);
             if (home)
                 map.Home = n => n.CenterOn(userLocationMap);
 
@@ -168,49 +173,47 @@ namespace TramlineFive.Common.Services
             {
                 BitmapId = bitmapId
             };
-        }
+        } 
 
         private void LoadPinStyles()
         {
-            Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
-            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.pin.png");
-
-            var bitmapId = BitmapRegistry.Instance.Register(stream);
+            int bitmapId = typeof(MapService).LoadSvgId("pin.svg");
 
             pinStyle = new SymbolStyle
-            {
+            { 
                 BitmapId = bitmapId,
-                Enabled = false
-            };
+                Enabled = false,
+                SymbolScale = 0.3f
+            }; 
         }
 
 
         private async Task<ILayer> LoadStops()
         {
-            features = new List<Feature>();
+            features = new List<IFeature>();
 
             List<StopLocation> stops = await StopsLoader.LoadStopsAsync();
             foreach (var location in stops)
             {
-                Point stopLocation = new Point(location.Lon, location.Lat);
-                Point stopMapLocation = SphericalMercator.FromLonLat(stopLocation.X, stopLocation.Y);
+                MPoint stopLocation = new MPoint(location.Lon, location.Lat);
+                MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(stopLocation.X, stopLocation.Y));
 
-                Feature feature = new Feature
+                IFeature feature = new PointFeature(stopMapLocation)
                 {
-                    Geometry = stopMapLocation,
                     Styles = new List<IStyle>
                     {
                         new SymbolStyle
                         {
                             Enabled = pinStyle.Enabled,
                             BitmapId = pinStyle.BitmapId,
-                            SymbolOffset = new Offset(0, 10)
+                            SymbolOffset = new Offset(0, 30),
+                            SymbolScale = pinStyle.SymbolScale
                         },
                         new LabelStyle
                         {
                             Enabled = pinStyle.Enabled,
                             Text = $"{location.PublicName} ({location.Code})",
-                            Offset = new Offset(0, -50),
+                            Offset = new Offset(0, -45),
                             //Opacity = 0.7f
                         }
                     }
@@ -223,7 +226,7 @@ namespace TramlineFive.Common.Services
             return new Layer
             {
                 Name = "Stops layer",
-                DataSource = new MemoryProvider(features),
+                DataSource = new MemoryProvider<IFeature>(features),
                 Style = null,
                 IsMapInfoLayer = true
             };
@@ -231,12 +234,12 @@ namespace TramlineFive.Common.Services
 
         public void MoveToStop(string code)
         {
-            foreach (Feature feature in features)
+            foreach (IFeature feature in features)
             {
                 StopLocation location = feature["stopObject"] as StopLocation;
                 if (location.Code == code)
                 {
-                    Position point = new Position(location.Lat, location.Lon);
+                    MPoint point = new MPoint(location.Lon, location.Lat);
 
                     foreach (Style style in feature.Styles)
                         style.Enabled = true;
@@ -246,15 +249,15 @@ namespace TramlineFive.Common.Services
             }
         }
 
-        private void ShowNearbyStops(Point position)
+        private void ShowNearbyStops(MPoint position)
         {
-            foreach (Feature feature in features)
+            foreach (IFeature feature in features)
             {
                 StopLocation location = feature["stopObject"] as StopLocation;
 
-                Point point = new Point(location.Lon, location.Lat);
-                Point local = SphericalMercator.FromLonLat(point.X, point.Y);
-                Point difference = position - local;
+                MPoint point = new MPoint(location.Lon, location.Lat);
+                MPoint local = SphericalMercator.FromLonLat(point);
+                MPoint difference = position - local;
 
                 if (Math.Abs(difference.X) < STOP_THRESHOLD && Math.Abs(difference.Y) < STOP_THRESHOLD)
                 {
