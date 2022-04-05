@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TramlineFive.Android", "TramlineFive\TramlineFive.Android\TramlineFive.Android.csproj", "{BF80659D-FEEA-435E-B5FB-55F808EFF276}"
 EndProject
@@ -238,6 +238,8 @@ Global
 		{B6186E8B-8E88-4F83-A1A3-5ACDC11FCC4E}.AppStore|x86.Build.0 = Release|x86
 		{B6186E8B-8E88-4F83-A1A3-5ACDC11FCC4E}.AppStore|x86.Deploy.0 = Release|x86
 		{B6186E8B-8E88-4F83-A1A3-5ACDC11FCC4E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{B6186E8B-8E88-4F83-A1A3-5ACDC11FCC4E}.Debug|Any CPU.Build.0 = Debug|x86
+		{B6186E8B-8E88-4F83-A1A3-5ACDC11FCC4E}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{B6186E8B-8E88-4F83-A1A3-5ACDC11FCC4E}.Debug|ARM.ActiveCfg = Debug|ARM
 		{B6186E8B-8E88-4F83-A1A3-5ACDC11FCC4E}.Debug|ARM.Build.0 = Debug|ARM
 		{B6186E8B-8E88-4F83-A1A3-5ACDC11FCC4E}.Debug|ARM.Deploy.0 = Debug|ARM
