@@ -74,7 +74,7 @@
                 <views:FloatingActionButton.Image>
                     <OnPlatform x:TypeArguments="FileImageSource">
                         <OnPlatform.Android>
-                            <FileImageSource File="Resources/drawable/mylocation.png" />
+                            <FileImageSource File="Resources/drawable/my_location.xml" />
                         </OnPlatform.Android>
                         <OnPlatform.WinPhone>
                             <FileImageSource File="assets/mylocation.png" />
