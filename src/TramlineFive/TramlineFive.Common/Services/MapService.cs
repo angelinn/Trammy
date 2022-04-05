@@ -57,7 +57,7 @@ namespace TramlineFive.Common.Services
             this.map = map;
             MPoint centerOfSofia = new MPoint(23.3219, 42.6977); 
             MPoint point = SphericalMercator.FromLonLat(centerOfSofia);
-            map.Home = n => { n.CenterOn(point); n.ZoomTo(16); };
+            map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[14]); };
 
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             LoadPinStyles();

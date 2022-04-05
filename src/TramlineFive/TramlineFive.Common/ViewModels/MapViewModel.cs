@@ -100,9 +100,6 @@ namespace TramlineFive.Common.ViewModels
         {
             return await Task.Run(async () =>
             {
-                MPoint centerOfSofia = new MPoint(23.3219, 42.6977);
-                MPoint centerOfSofiaMap = SphericalMercator.FromLonLat(centerOfSofia);
-
                 try
                 {
                     if (ApplicationService.HasLocationPermissions())
@@ -115,23 +112,13 @@ namespace TramlineFive.Common.ViewModels
                         });
 
                         return true;
-                    } 
-
-                    ApplicationService.RunOnUIThread(() =>
-                    {
-                        mapService.MoveTo(centerOfSofia, 14, true);
-                    });
+                    }
 
                     return false;
 
                 }
                 catch (Exception ex)
                 {
-                    ApplicationService.RunOnUIThread(() =>
-                    {
-                        mapService.MoveTo(centerOfSofia, 14, true);
-                    });
-
                     return false;
                 }
             });
