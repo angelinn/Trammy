@@ -100,7 +100,7 @@ namespace TramlineFive.Common.ViewModels
         {
             return await Task.Run(async () =>
             {
-                MPoint centerOfSofia = new MPoint(42.6977, 23.3219);
+                MPoint centerOfSofia = new MPoint(23.3219, 42.6977);
                 MPoint centerOfSofiaMap = SphericalMercator.FromLonLat(centerOfSofia);
 
                 try

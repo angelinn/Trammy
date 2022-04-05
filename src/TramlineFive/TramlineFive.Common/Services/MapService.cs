@@ -55,6 +55,9 @@ namespace TramlineFive.Common.Services
         public async Task Initialize(Map map, INavigator navigator)
         {
             this.map = map;
+            MPoint centerOfSofia = new MPoint(23.3219, 42.6977); 
+            MPoint point = SphericalMercator.FromLonLat(centerOfSofia);
+            map.Home = n => { n.CenterOn(point); n.ZoomTo(16); };
 
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             LoadPinStyles();
