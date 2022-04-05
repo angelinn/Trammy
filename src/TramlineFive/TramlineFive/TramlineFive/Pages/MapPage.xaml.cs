@@ -44,8 +44,14 @@ namespace TramlineFive.Pages
             map.MapClicked += OnMapClicked;
             map.Info += OnMapInfo;
             map.PinClicked += OnPinClicked;
+            map.Zoomed += OnMapZoom;
 
             map.Map = nativeMap;
+        }
+
+        private void OnMapZoom(object sender, Mapsui.UI.ZoomedEventArgs e)
+        {
+
         }
 
         private void OnPinClicked(object sender, Mapsui.UI.Forms.PinClickedEventArgs e)

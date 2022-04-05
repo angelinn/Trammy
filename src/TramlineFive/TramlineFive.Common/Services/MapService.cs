@@ -67,20 +67,21 @@ namespace TramlineFive.Common.Services
 
             ILayer stopsLayer = await LoadStops();
             map.Layers.Add(stopsLayer);
+
+            navigator.Navigated = (sender, args) =>
+            {
+                SendMapRefreshMessage();
+            };
         }
 
-        public void MoveTo(MPoint position, int? zoom = null, bool home = false)
+        public void MoveTo(MPoint position, int zoom, bool home = false)
         { 
             MPoint point = SphericalMercator.FromLonLat(position);
 
             if (home)
                 map.Home = n => n.CenterOn(point);
 
-            navigator.CenterOn(point);
-            if (zoom.HasValue)
-                navigator.ZoomTo(map.Resolutions[zoom.Value]);
-
-            SendMapRefreshMessage();
+            navigator.NavigateTo(point, map.Resolutions[zoom], 1000, Easing.CubicOut);
         }
 
         private void SendMapRefreshMessage()
@@ -122,15 +123,14 @@ namespace TramlineFive.Common.Services
             (double x, double y) = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
 
             MPoint userLocationMap = new MPoint(x, y);
-            if (home)
-                map.Home = n => n.CenterOn(userLocationMap);
 
-            navigator.CenterOn(userLocationMap);
-            navigator.ZoomTo(map.Resolutions[16]);
+            navigator.NavigateTo(userLocationMap, map.Resolutions[16], 1000, home ? null : Easing.Linear);
+
+            //navigator.CenterOn(userLocationMap);
+            //navigator.ZoomTo(map.Resolutions[16]);
 
             ShowNearbyStops(userLocationMap);
-            SendMapRefreshMessage();
-        }
+        } 
 
         private int CreateBitmap(Stream data, double scale)
         {
