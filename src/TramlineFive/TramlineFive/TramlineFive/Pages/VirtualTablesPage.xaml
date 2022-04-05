@@ -15,7 +15,7 @@
         </ResourceDictionary>
     </Grid.Resources>
 
-    <RefreshView IsRefreshing="{Binding IsLoading}" Command="{Binding RefreshCommand}">
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" RefreshColor="DodgerBlue">
         <ScrollView>
             <Grid>
                 <Grid.RowDefinitions>

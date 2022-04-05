@@ -25,13 +25,16 @@ namespace TramlineFive.Common.ViewModels
         public ICommand SearchCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
 
-        public List<string> FilteredStops { get; private set; } 
+        public List<string> FilteredStops { get; private set; }
 
         public VirtualTablesViewModel()
         {
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
             SearchCommand = new RelayCommand(() => MessengerInstance.Send(new StopSelectedMessage(StopCode, true)));
-            RefreshCommand = new RelayCommand(async () => await SearchByStopCodeAsync());
+            RefreshCommand = new RelayCommand(async () => {
+                await SearchByStopCodeAsync();
+                IsRefreshing = false;
+            });
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
             MessengerInstance.Register<SearchFocusedMessage>(this, (m) => { IsFocused = m.Focused; RaisePropertyChanged("IsSearching"); });
@@ -220,6 +223,20 @@ namespace TramlineFive.Common.ViewModels
             set
             {
                 isLoading = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool isRefreshing;
+        public bool IsRefreshing
+        { 
+            get
+            {
+                return isRefreshing;
+            }
+            set
+            {
+                isRefreshing = value;
                 RaisePropertyChanged();
             }
         }
