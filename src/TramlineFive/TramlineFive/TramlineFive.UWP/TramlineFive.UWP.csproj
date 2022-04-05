@@ -235,9 +235,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TramlineFive.UWP_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
     <SDKReference Include="WindowsMobile, Version=10.0.19041.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
