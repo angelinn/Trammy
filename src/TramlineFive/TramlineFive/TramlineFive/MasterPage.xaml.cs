@@ -76,14 +76,10 @@ namespace TramlineFive
             base.OnAppearing();
             if (!appeared)
             {
-                Task[] loadingTasks = new Task[]
-                {
-                    mapPage.OnAppearing(),
-                    SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync()
-                };
+                mapPage.OnAppearing();
+                //Task task = SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync();
 
                 appeared = true;
-                await Task.WhenAll(loadingTasks);
             }
         }
 

@@ -101,13 +101,13 @@ namespace TramlineFive.Pages
                 await ShowVirtualTables(message.ArrivalsCount);
         }
 
-        public async Task OnAppearing()
+        public void OnAppearing()
         {
             if (initialized)
                 return;
 
             initialized = true;
-            await (BindingContext as MapViewModel).LoadAsync();
+            Task task = (BindingContext as MapViewModel).LoadAsync();
         }
 
         protected override void OnSizeAllocated(double width, double height)
