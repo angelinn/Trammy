@@ -1,16 +1,12 @@
-﻿using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Messaging;
 using Mapsui;
 using Mapsui.Layers;
 using Mapsui.Providers;
-using Mapsui.Rendering.Skia;
 using Mapsui.Styles;
 using Mapsui.UI;
 using Mapsui.Utilities;
 using SkgtService;
-using SkgtService.Models.Locations; 
-using SkiaSharp; 
-using Svg.Skia;
+using SkgtService.Models.Locations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,8 +19,6 @@ using TramlineFive.Common.Maps;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using Mapsui.Projections;
-using Mapsui.Utilities;
-using Mapsui.Tiling;
 
 namespace TramlineFive.Common.Services
 {
@@ -50,32 +44,28 @@ namespace TramlineFive.Common.Services
                 messages.Enqueue(m);
                 mapClickResetEvent.Set();
             });
-        } 
+        }
 
         public async Task Initialize(Map map, INavigator navigator)
         {
             this.map = map;
-            MPoint centerOfSofia = new MPoint(23.3219, 42.6977); 
+            MPoint centerOfSofia = new MPoint(23.3219, 42.6977);
             MPoint point = SphericalMercator.FromLonLat(centerOfSofia);
-            map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[14]); };
+            map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[15]); };
 
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             LoadPinStyles();
-            //LoadUserLocationPin();
 
             this.navigator = navigator;
 
             ILayer stopsLayer = await LoadStops();
             map.Layers.Add(stopsLayer);
 
-            navigator.Navigated = (sender, args) =>
-            {
-                SendMapRefreshMessage();
-            };
+            navigator.Navigated = (sender, args) => SendMapRefreshMessage();
         }
 
         public void MoveTo(MPoint position, int zoom, bool home = false)
-        { 
+        {
             MPoint point = SphericalMercator.FromLonLat(position);
 
             if (home)
@@ -87,38 +77,10 @@ namespace TramlineFive.Common.Services
         private void SendMapRefreshMessage()
         {
             Messenger.Default.Send(new RefreshMapMessage());
-
         }
 
         public void MoveToUser(Position position, bool home = false)
         {
-            //navigator.CenterOn(point);
-
-            //if (map.Layers.Last().Name == "User location layer")
-            //    map.Layers.Remove(map.Layers.Last());
-
-            //Feature feature = new Feature
-            //{
-            //    Geometry = point,
-            //    Styles = new List<IStyle>
-            //    {
-            //        new SymbolStyle
-            //        {
-            //            Enabled = userStyle.Enabled,
-            //            BitmapId = userStyle.BitmapId
-            //        }
-            //    }
-            //};
-
-            //Layer layer = new Layer
-            //{
-            //    Name = "User location layer",
-            //    Style = null,
-            //    DataSource = new MemoryProvider(new List<Feature>() { feature })
-            //};
-
-            //map.Layers.Add(layer);
-
             Messenger.Default.Send(new UpdateLocationMessage(position));
             (double x, double y) = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
 
@@ -126,68 +88,19 @@ namespace TramlineFive.Common.Services
 
             navigator.NavigateTo(userLocationMap, map.Resolutions[16], 1000, home ? null : Easing.Linear);
 
-            //navigator.CenterOn(userLocationMap);
-            //navigator.ZoomTo(map.Resolutions[16]);
-
             ShowNearbyStops(userLocationMap);
-        } 
-
-        private int CreateBitmap(Stream data, double scale)
-        {
-            var svg = new SKSvg();
-            svg.Load(data);
-
-            var info = new SKImageInfo(
-                (int)(svg.Picture.CullRect.Width * scale),
-                (int)(svg.Picture.CullRect.Height * scale))
-            {
-                AlphaType = SKAlphaType.Premul
-            };
-
-            var bitmap = new SKBitmap(info);
-            var canvas = new SKCanvas(bitmap);
-            canvas.Clear();
-            canvas.Scale((float)scale);
-
-            // paint.ColorFilter = SKColorFilter.CreateBlendMode(
-            //     Color.ToSKColor(),
-            //     SKBlendMode.SrcIn
-            // ); // use the source color
-
-            var paint = new SKPaint() { IsAntialias = true };
-            canvas.DrawPicture(svg.Picture, paint);
-
-            var image = SKImage.FromBitmap(bitmap);
-            var bitmapData = image.Encode(SKEncodedImageFormat.Png, 100);
-            var bitmapDataArray = bitmapData.ToArray();
-            var stream = new MemoryStream(bitmapDataArray);
-            var bitmapId = BitmapRegistry.Instance.Register(stream);
-            return bitmapId;
         }
-
-        private void LoadUserLocationPin()
-        {
-            Assembly assembly = typeof(MapService).GetTypeInfo().Assembly;
-            Stream stream = assembly.GetManifestResourceStream("TramlineFive.Common.person.png");
-
-            var bitmapId = BitmapRegistry.Instance.Register(stream);
-
-            userStyle = new SymbolStyle
-            {
-                BitmapId = bitmapId
-            };
-        } 
 
         private void LoadPinStyles()
         {
             int bitmapId = typeof(MapService).LoadSvgId("pin.svg");
 
             pinStyle = new SymbolStyle
-            { 
+            {
                 BitmapId = bitmapId,
                 Enabled = false,
                 SymbolScale = 0.3f
-            }; 
+            };
         }
 
 
@@ -210,17 +123,19 @@ namespace TramlineFive.Common.Services
                             Enabled = pinStyle.Enabled,
                             BitmapId = pinStyle.BitmapId,
                             SymbolOffset = new Offset(0, 30),
-                            SymbolScale = pinStyle.SymbolScale
+                            SymbolScale = pinStyle.SymbolScale,
+                            MaxVisible = 8
                         },
                         new LabelStyle
                         {
                             Enabled = pinStyle.Enabled,
+                            MaxVisible = 4,
                             Text = $"{location.PublicName} ({location.Code})",
-                            Offset = new Offset(0, -45),
-                            //Opacity = 0.7f
+                            Offset = new Offset(0, -45)
+                            //Opacity = 0.7f,
                         }
                     }
-                };
+                }; 
 
                 feature["stopObject"] = location;
                 features.Add(feature);
@@ -246,7 +161,7 @@ namespace TramlineFive.Common.Services
 
                     foreach (Style style in feature.Styles)
                         style.Enabled = true;
-                    
+
                     MoveTo(point, 16);
                 }
             }
