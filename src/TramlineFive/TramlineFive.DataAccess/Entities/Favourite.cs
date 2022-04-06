@@ -11,5 +11,6 @@ namespace TramlineFive.DataAccess.Entities
         public int ID { get; set; }
         public string Name { get; set; }
         public string StopCode { get; set; }
+        public int TimesClicked { get; set; }
     }
 }

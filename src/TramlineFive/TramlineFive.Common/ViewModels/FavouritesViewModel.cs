@@ -22,11 +22,23 @@ namespace TramlineFive.Common.ViewModels
         {
             MessengerInstance.Register<FavouriteAddedMessage>(this, (f) => OnFavouriteAdded(f.Added));
             RemoveCommand = new RelayCommand<FavouriteDomain>(async (f) => await RemoveFavouriteAsync(f));
+
+            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
+        }
+
+        private async Task OnStopSelected(string stopCode)
+        {
+            FavouriteDomain favourite = Favourites.FirstOrDefault(f => f.StopCode == stopCode);
+            if (favourite != null)
+            {
+                await FavouriteDomain.IncrementAsync(favourite.StopCode);
+                ++favourite.TimesClicked;
+            }
         }
 
         private void OnFavouriteAdded(FavouriteDomain favourite)
         {
-            Favourites.Insert(0, favourite);
+            Favourites.Add(favourite);
             RaisePropertyChanged("HasFavourites");
         }
 
@@ -46,7 +58,7 @@ namespace TramlineFive.Common.ViewModels
         {
             IsLoading = true;
 
-            Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).Reverse());
+            Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).Reverse().OrderByDescending(f => f.TimesClicked));
             RaisePropertyChanged("Favourites");
             RaisePropertyChanged("HasFavourites");
 

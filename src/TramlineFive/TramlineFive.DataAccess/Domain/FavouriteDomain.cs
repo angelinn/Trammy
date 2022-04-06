@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,15 +8,30 @@ using TramlineFive.DataAccess.Entities;
 
 namespace TramlineFive.DataAccess.Domain
 {
-    public class FavouriteDomain
+    public class FavouriteDomain : ObservableObject
     {
         public string Name { get; set; }
         public string StopCode { get; set; }
+
+        private int timesClicked;
+        public int TimesClicked
+        {
+            get
+            {
+                return timesClicked;
+            }
+            set
+            {
+                timesClicked = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public FavouriteDomain(Favourite entity)
         {
             Name = entity.Name;
             StopCode = entity.StopCode;
+            TimesClicked = entity.TimesClicked;
         }
 
         public static async Task<FavouriteDomain> AddAsync(string name, string stopCode)
@@ -26,7 +42,8 @@ namespace TramlineFive.DataAccess.Domain
             Favourite added = new Favourite
             {
                 Name = name,
-                StopCode = stopCode
+                StopCode = stopCode,
+                TimesClicked = 1
             };
 
             await TramlineFiveContext.AddAsync(added);
@@ -41,6 +58,11 @@ namespace TramlineFive.DataAccess.Domain
         public static async Task RemoveAsync(string stopCode)
         {
             await TramlineFiveContext.RemoveFavouriteAsync(stopCode);
+        }
+
+        public static async Task IncrementAsync(string stopCode)
+        {
+            await TramlineFiveContext.IncrementFavouriteAsync(stopCode);
         }
     }
 }

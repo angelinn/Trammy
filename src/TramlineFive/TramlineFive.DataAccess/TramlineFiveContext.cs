@@ -42,6 +42,15 @@ namespace TramlineFive.DataAccess
             await db.InsertAsync(entity);
         }
 
+        public static async Task IncrementFavouriteAsync(string stopCode)
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+            Favourite favourite = await db.FindAsync<Favourite>(f => f.StopCode == stopCode);
+
+            ++favourite.TimesClicked;
+            await db.UpdateAsync(favourite);
+        }
+
         public static async Task<IEnumerable<T>> Take<T>(int count = 10) where T : new()
         {
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);

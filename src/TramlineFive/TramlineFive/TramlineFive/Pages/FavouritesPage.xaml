@@ -38,6 +38,7 @@
                                         <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
                                             <Label Text="{Binding Name}" />
                                             <Label Text="{Binding StopCode}" FontSize="Small" TextColor="DodgerBlue" />
+                                            <Label Text="{Binding TimesClicked}" FontSize="Small" TextColor="DodgerBlue" />
                                         </StackLayout>
                                         <iconize:IconLabel Grid.Column="2" Text="fa-ellipsis-v" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center">
                                             <iconize:IconLabel.GestureRecognizers>
