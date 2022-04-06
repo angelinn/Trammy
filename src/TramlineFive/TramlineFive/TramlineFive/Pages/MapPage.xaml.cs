@@ -27,7 +27,7 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
-            Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
+            Messenger.Default.Register<ShowMapMessage>(this, (m) => ToggleMap(m));
             Messenger.Default.Register<MapClickedMessage>(this, (m) => OnMapClicked());
             Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
             Messenger.Default.Register<UpdateLocationMessage>(this, m => map.MyLocationLayer.UpdateMyLocation(new Position(m.Position.Latitude, m.Position.Longitude)));
@@ -99,12 +99,15 @@ namespace TramlineFive.Pages
             isOpened = false;
         }
 
-        private async Task ToggleMap(ShowMapMessage message)
+        private void ToggleMap(ShowMapMessage message)
         {
-            if (!message.Show && isOpened)
-                await HideVirtualTables();
-            else if (message.Show)
-                await ShowVirtualTables(message.ArrivalsCount);
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                if (!message.Show && isOpened)
+                    await HideVirtualTables();
+                else if (message.Show)
+                    await ShowVirtualTables(message.ArrivalsCount);
+            });
         }
 
         public void OnAppearing()

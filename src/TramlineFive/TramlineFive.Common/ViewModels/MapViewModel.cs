@@ -81,7 +81,7 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task LoadAsync()
         {
-            await LocalizeAsync();
+            await LocalizeAsync(true);
             IsMapVisible = true;
             IsMyLocationVisible = true;
         }
@@ -96,7 +96,7 @@ namespace TramlineFive.Common.ViewModels
             await Task.Delay(100);
         } 
 
-        private async Task<bool> LocalizeAsync()
+        private async Task<bool> LocalizeAsync(bool first = false)
         {
             return await Task.Run(async () =>
             {
@@ -111,6 +111,9 @@ namespace TramlineFive.Common.ViewModels
                             mapService.MoveToUser(position, true);
                         });
 
+                        if (first && ApplicationService.GetBoolSetting("ShowNearestStop", true))
+                            MessengerInstance.Send(new NearestFavouriteRequestedMessage(position));
+
                         return true;
                     }
 
@@ -122,7 +125,7 @@ namespace TramlineFive.Common.ViewModels
                     return false;
                 }
             });
-        }
+        } 
 
         private void OnStopSelectedMessageReceived(StopSelectedMessage message)
         {

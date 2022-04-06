@@ -28,6 +28,7 @@ namespace TramlineFive.Common.Services
         private SymbolStyle pinStyle;
         private SymbolStyle userStyle;
         private List<IFeature> features;
+        public static List<StopLocation> Stops;
 
         private INavigator navigator;
 
@@ -108,8 +109,8 @@ namespace TramlineFive.Common.Services
         {
             features = new List<IFeature>();
 
-            List<StopLocation> stops = await StopsLoader.LoadStopsAsync();
-            foreach (var location in stops)
+            Stops = await StopsLoader.LoadStopsAsync();
+            foreach (var location in Stops)
             {
                 MPoint stopLocation = new MPoint(location.Lon, location.Lat);
                 MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(stopLocation.X, stopLocation.Y));

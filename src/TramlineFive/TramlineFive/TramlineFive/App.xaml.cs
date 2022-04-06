@@ -24,6 +24,7 @@ namespace TramlineFive
                 SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
                 SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
                 SimpleIoc.Default.Register<MapService>();
+                SimpleIoc.Default.Register<LocationService>();
             }
 
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
@@ -55,7 +56,7 @@ namespace TramlineFive
 
         private void OnStopsUpdated(object sender, EventArgs e)
         {
-            Application.Current.Properties["StopsUpdated"] = DateTime.Now;
+            SimpleIoc.Default.GetInstance<IApplicationService>().SetStringSetting("StopsUpdated", DateTime.Now.ToString());
         }
 
         protected override void OnSleep()
