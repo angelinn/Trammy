@@ -44,7 +44,7 @@ namespace TramlineFive.Common.ViewModels
                 await Task.Delay(100);
 
             foreach (FavouriteDomain favourite in Favourites)
-            {
+            { 
                 StopLocation stop = MapService.Stops.FirstOrDefault(s => s.Code == favourite.StopCode);
                 double distance = locationService.GetDistance(location.Latitude, location.Longitude, stop.Lat, stop.Lon);
                 if (distance < minDistance)

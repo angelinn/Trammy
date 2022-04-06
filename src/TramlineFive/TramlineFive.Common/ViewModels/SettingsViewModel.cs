@@ -16,14 +16,16 @@ namespace TramlineFive.Common.ViewModels
         public ICommand CleanHistoryCommand { get; private set; } 
         public ICommand UpdateStopsCommand { get; private set; }
 
-        public string UpdatedMessage => ApplicationService.Properties.ContainsKey("StopsUpdated") ? 
-            ApplicationService.Properties["StopsUpdated"].ToString() : 
+        public string UpdatedMessage => ApplicationService.GetStringSetting("StopsUpdated", null) != null ?
+            ApplicationService.GetStringSetting("StopsUpdated", null) : 
             "Не е обновявано";
 
         public SettingsViewModel()
         {
             CleanHistoryCommand = new RelayCommand(async () => await CleanHistoryAsync());
             UpdateStopsCommand = new RelayCommand(async () => await ReloadStopsAsync());
+
+            ShowNearestStop = ApplicationService.GetBoolSetting("ShowNearestStop", true);
         }
 
         private async Task CleanHistoryAsync()
@@ -73,6 +75,21 @@ namespace TramlineFive.Common.ViewModels
             set
             {
                 isUpdatingStops = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool showNearestStop;
+        public bool ShowNearestStop
+        {
+            get
+            {
+                return showNearestStop;
+            }
+            set
+            {
+                showNearestStop = value;
+                ApplicationService.SetBoolSetting("ShowNearestStop", showNearestStop);
                 RaisePropertyChanged();
             }
         }

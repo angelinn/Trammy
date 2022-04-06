@@ -12,7 +12,7 @@
     </ContentPage.Resources>
     
     <StackLayout Padding="10" >
-        <Label Text="Изчистване на историята на търсенията" />
+        <Label Text="Изчистване на историята на търсенията" FontSize="Medium" />
         <StackLayout Orientation="Horizontal">
             <Button Text="Изчисти история" Command="{Binding CleanHistoryCommand}" HorizontalOptions="Start" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}">
@@ -22,7 +22,7 @@
             </ActivityIndicator>
         </StackLayout>
 
-        <Label Text="Презареди спирки" />
+        <Label Text="Презареди спирки" FontSize="Medium" Margin="0,20,0,0" />
 
         <Button Text="GO" Command="{Binding UpdateStopsCommand}" IsEnabled="{Binding IsUpdatingStops, Converter={StaticResource InverseBool}}" HorizontalOptions="Start" />
         <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}">
@@ -32,6 +32,8 @@
         </ActivityIndicator>
         <Label Text="{Binding UpdatedMessage, StringFormat='Последно обновено: {0}'}" />
 
+        <Label Text="Покажи най-близка спирка при стартиране" Margin="0,20,0,0" FontSize="Medium" />
+        <Switch IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" />
     </StackLayout>
 
 </ContentPage>
