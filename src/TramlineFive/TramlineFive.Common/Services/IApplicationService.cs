@@ -8,7 +8,12 @@ namespace TramlineFive.Common.Services
 {
     public interface IApplicationService
     {
-        IDictionary<string, object> Properties { get; }
+        string GetStringSetting(string key, string defaultValue);
+        bool GetBoolSetting(string key, bool defaultValue);
+        void SetStringSetting(string key, string value);
+        void SetBoolSetting(string key, bool value);
+
+
         string GetVersion();
         void OpenUri(string uri);
         void RunOnUIThread(Action action);
