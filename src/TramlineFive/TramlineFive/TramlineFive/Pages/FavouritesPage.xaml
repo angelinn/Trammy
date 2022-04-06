@@ -14,7 +14,7 @@
         <StackLayout BackgroundColor="DodgerBlue">
             <Label Text="Любими" Margin="15,40,0,0" TextColor="White" FontSize="Medium" />
         </StackLayout>
-        
+
         <Grid Grid.Row="1">
             <Label Text="Тук е самотно. Добавете спирка към любими." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasFavourites}" Margin="5" />
 
@@ -36,9 +36,12 @@
                                         <iconize:IconLabel Text="fa-subway" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center" />
 
                                         <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
-                                            <Label Text="{Binding Name}" />
-                                            <Label Text="{Binding StopCode}" FontSize="Small" TextColor="DodgerBlue" />
-                                            <Label Text="{Binding TimesClicked}" FontSize="Small" TextColor="DodgerBlue" />
+                                            <Label Text="{Binding Name}" />       
+
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{Binding StopCode}" FontSize="Small" TextColor="DodgerBlue" />
+                                                <Label Text="{Binding TimesClicked, StringFormat='({0})'}" FontSize="Small"  />
+                                            </StackLayout>
                                         </StackLayout>
                                         <iconize:IconLabel Grid.Column="2" Text="fa-ellipsis-v" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center">
                                             <iconize:IconLabel.GestureRecognizers>
