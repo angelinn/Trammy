@@ -28,6 +28,7 @@ namespace TramlineFive
             }
 
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
+            Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.MaterialModule());
 
             IPathService dbPathService = DependencyService.Get<IPathService>();
             StopsLoader.Initialize(dbPathService.BaseFilePath);
