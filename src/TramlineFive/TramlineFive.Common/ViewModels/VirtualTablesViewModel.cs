@@ -24,21 +24,23 @@ namespace TramlineFive.Common.ViewModels
         public ICommand FavouriteCommand { get; private set; }
         public ICommand SearchCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
+        public ICommand SearchByCodeCommand { get; private set; }   
 
         public List<string> FilteredStops { get; private set; }
 
         public VirtualTablesViewModel()
         {
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
-            SearchCommand = new RelayCommand<string>((i) => {
-                i = i ?? stopCode;
+            SearchCommand = new RelayCommand(() => {
+                MessengerInstance.Send(new StopSelectedMessage(stopCode, true));
+            });
+            SearchByCodeCommand = new RelayCommand<string>((i) => {
                 MessengerInstance.Send(new StopSelectedMessage(i, true));
             });
-
             RefreshCommand = new RelayCommand(async () => {
                 await SearchByStopCodeAsync();
                 IsRefreshing = false;
-            });
+            }); 
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
             MessengerInstance.Register<SearchFocusedMessage>(this, (m) => { IsFocused = m.Focused; RaisePropertyChanged("IsSearching"); });

@@ -60,11 +60,11 @@
                 </Grid>
             </Frame>
             <CollectionView Grid.Row="2" Margin="17,5,17,0" BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}" ItemsSource="{Binding Favourites}">
-                <CollectionView.ItemsLayout>
+                <CollectionView.ItemsLayout> 
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
-                </CollectionView.ItemsLayout>
+                </CollectionView.ItemsLayout> 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate> 
                         <Frame CornerRadius="30" BackgroundColor="White" WidthRequest="130" Padding="10,8,5,10">
                             <Grid ColumnSpacing="0">
                                 <Grid.ColumnDefinitions>
@@ -74,8 +74,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" Command="{Binding SearchCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Grid}, AncestorLevel=1}}" />
-                                </Grid.GestureRecognizers>
+                                    <TapGestureRecognizer BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Grid}, AncestorLevel=1}}" />
+                                </Grid.GestureRecognizers> 
 
                                 <iconize:IconLabel Text="md-directions-bus" FontSize="17" VerticalOptions="Center" Margin="0,1,0,0" TextColor="Crimson" />
                                 <Label Grid.Column="1" Text="{Binding StopCode, StringFormat='({0})'}" TextColor="Black" FontSize="12"  HorizontalOptions="Start" />
