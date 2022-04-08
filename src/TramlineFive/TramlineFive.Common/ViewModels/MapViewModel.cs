@@ -104,11 +104,11 @@ namespace TramlineFive.Common.ViewModels
             await Task.Delay(100);
             MyLocationColor = "White";
             await Task.Delay(100);
-        }
+        } 
 
         private async Task<bool> LocalizeAsync(bool first = false)
         {
-            return await Task.Run(async () =>
+            return await Task.Run(async () => 
             {
                 try
                 {
@@ -133,7 +133,9 @@ namespace TramlineFive.Common.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    ApplicationService.DisplayToast("Моля включете местоположението.");
+                    if (!first)
+                        ApplicationService.DisplayToast("Моля включете местоположението.");
+
                     return false;
                 }
             });

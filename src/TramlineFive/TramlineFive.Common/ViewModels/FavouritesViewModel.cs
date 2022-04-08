@@ -23,7 +23,7 @@ namespace TramlineFive.Common.ViewModels
         public ICommand RemoveCommand { get; private set; }
 
         private readonly LocationService locationService;
-        private bool firstLocalization;
+        private bool firstLocalization = true;
 
         public FavouritesViewModel()
         {
