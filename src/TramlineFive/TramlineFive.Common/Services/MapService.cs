@@ -167,7 +167,7 @@ namespace TramlineFive.Common.Services
             }
         }
 
-        private void ShowNearbyStops(MPoint position)
+        public void ShowNearbyStops(MPoint position, bool hideOthers = false)
         {
             foreach (IFeature feature in features)
             {
@@ -182,8 +182,11 @@ namespace TramlineFive.Common.Services
                     foreach (Style style in feature.Styles)
                         style.Enabled = true;
                 }
+                else 
+                    foreach(Style style in feature.Styles)
+                        style.Enabled = false;
             }
-        }
+        } 
 
         public void OnMapInfo(object sender, MapInfoEventArgs e)
         {

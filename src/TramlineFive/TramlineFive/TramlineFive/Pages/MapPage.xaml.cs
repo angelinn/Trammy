@@ -44,14 +44,19 @@ namespace TramlineFive.Pages
             map.MapClicked += OnMapClicked;
             map.Info += OnMapInfo;
             map.PinClicked += OnPinClicked;
-            map.Zoomed += OnMapZoom;
 
             map.Map = nativeMap;
+            map.TouchAction += OnMapTouchAction;
         }
 
-        private void OnMapZoom(object sender, Mapsui.UI.ZoomedEventArgs e)
+        private void OnMapTouchAction(object sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)
         {
+            if (e.ActionType == SkiaSharp.Views.Forms.SKTouchAction.Released)
+            {
+                mapService.ShowNearbyStops(new MPoint(map.Viewport.CenterX, map.Viewport.CenterY), true);
+            }
 
+            System.Diagnostics.Debug.WriteLine($"Touch: {e.ActionType} {map.Viewport.CenterX} {map.Viewport.CenterY}");
         }
 
         private void OnPinClicked(object sender, Mapsui.UI.Forms.PinClickedEventArgs e)
