@@ -82,7 +82,6 @@ namespace TramlineFive.Common.Services
 
         public void MoveToUser(Position position, bool home = false)
         {
-            Messenger.Default.Send(new UpdateLocationMessage(position));
             (double x, double y) = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
 
             MPoint userLocationMap = new MPoint(x, y);

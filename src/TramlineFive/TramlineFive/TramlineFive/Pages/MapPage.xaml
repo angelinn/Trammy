@@ -59,7 +59,7 @@
                                            IsEnabled="{Binding IsLoading}"/>
                 </Grid>
             </Frame>
-            <CollectionView Grid.Row="2" Margin="17,5,17,0" BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}" ItemsSource="{Binding Favourites}">
+            <CollectionView Grid.Row="2" Margin="17,5,17,0" ItemsSource="{Binding RecommendedStops}">
                 <CollectionView.ItemsLayout> 
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
                 </CollectionView.ItemsLayout> 

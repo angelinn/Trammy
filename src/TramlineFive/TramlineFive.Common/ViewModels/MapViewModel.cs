@@ -7,7 +7,9 @@ using Mapsui.Projections;
 using Mapsui.Styles;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +17,13 @@ using System.Windows.Input;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
+using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels
 {
     public class MapViewModel : BaseViewModel
     {
+        public ObservableCollection<ArrivalStopModel> RecommendedStops { get; private set; } = new ObservableCollection<ArrivalStopModel>();
         public ICommand MyLocationCommand { get; private set; }
         public ICommand OpenHamburgerCommand { get; private set; }
         public ICommand ShowMapCommand { get; private set; }
@@ -35,6 +39,7 @@ namespace TramlineFive.Common.ViewModels
             mapService = SimpleIoc.Default.GetInstance<MapService>();
 
             MessengerInstance.Register<StopSelectedMessage>(this, OnStopSelectedMessageReceived);
+            MessengerInstance.Register<FavouritesChangedMessage>(this, OnFavouritesChanged);
         }
 
         private bool isMapVisible;
@@ -111,8 +116,7 @@ namespace TramlineFive.Common.ViewModels
                             mapService.MoveToUser(position, true);
                         });
 
-                        if (first && ApplicationService.GetBoolSetting("ShowNearestStop", true))
-                            MessengerInstance.Send(new NearestFavouriteRequestedMessage(position));
+                        MessengerInstance.Send(new UpdateLocationMessage(position));
 
                         return true;
                     }
@@ -126,6 +130,16 @@ namespace TramlineFive.Common.ViewModels
                 }
             });
         } 
+
+        private void OnFavouritesChanged(FavouritesChangedMessage message)
+        {
+            RecommendedStops.Clear();
+
+            foreach (ArrivalStopModel favourite in message.Favourites.Take(5).Select(f => new ArrivalStopModel(f.StopCode, f.Name)))
+            {
+                RecommendedStops.Add(favourite);
+            }
+        }
 
         private void OnStopSelectedMessageReceived(StopSelectedMessage message)
         {

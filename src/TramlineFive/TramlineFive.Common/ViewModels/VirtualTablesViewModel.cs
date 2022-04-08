@@ -31,12 +31,8 @@ namespace TramlineFive.Common.ViewModels
         public VirtualTablesViewModel()
         {
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
-            SearchCommand = new RelayCommand(() => {
-                MessengerInstance.Send(new StopSelectedMessage(stopCode, true));
-            });
-            SearchByCodeCommand = new RelayCommand<string>((i) => {
-                MessengerInstance.Send(new StopSelectedMessage(i, true));
-            });
+            SearchCommand = new RelayCommand(() => MessengerInstance.Send(new StopSelectedMessage(stopCode, true)));
+            SearchByCodeCommand = new RelayCommand<string>((i) => MessengerInstance.Send(new StopSelectedMessage(i, true)));
             RefreshCommand = new RelayCommand(async () => {
                 await SearchByStopCodeAsync();
                 IsRefreshing = false;
@@ -44,7 +40,6 @@ namespace TramlineFive.Common.ViewModels
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
             MessengerInstance.Register<SearchFocusedMessage>(this, (m) => { IsFocused = m.Focused; RaisePropertyChanged("IsSearching"); });
-
         }
 
         public bool IsFocused { get; set; }
