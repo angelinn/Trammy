@@ -121,11 +121,14 @@ namespace TramlineFive.Common.ViewModels
                         return true;
                     }
 
+                    ApplicationService.DisplayToast("Достъпът до местоположение не е позволен");
+
                     return false;
 
                 }
                 catch (Exception ex)
                 {
+                    ApplicationService.DisplayToast("Моля включете местоположението.");
                     return false;
                 }
             });

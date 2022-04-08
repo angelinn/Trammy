@@ -73,7 +73,7 @@ namespace TramlineFive.Services.Main
 
         public void DisplayToast(string message)
         {
-            DependencyService.Get<IToastService>().ShowToast(message);
+            Device.BeginInvokeOnMainThread(() => DependencyService.Get<IToastService>().ShowToast(message));
         }
 
         public void DisplayNotification(string title, string message)
