@@ -54,8 +54,9 @@ namespace TramlineFive.Pages
             if (e.ActionType == SkiaSharp.Views.Forms.SKTouchAction.Released)
             {
                 mapService.ShowNearbyStops(new MPoint(map.Viewport.CenterX, map.Viewport.CenterY), true);
-                System.Diagnostics.Debug.WriteLine($"Show stops");
+                map.Refresh();
 
+                System.Diagnostics.Debug.WriteLine($"Show stops");
             }
 
             System.Diagnostics.Debug.WriteLine($"Touch: {e.ActionType} {map.Viewport.CenterX} {map.Viewport.CenterY}");
