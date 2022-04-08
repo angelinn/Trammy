@@ -23,6 +23,7 @@ namespace TramlineFive.Common.ViewModels
         public ICommand RemoveCommand { get; private set; }
 
         private readonly LocationService locationService;
+        private bool firstLocalization;
 
         public FavouritesViewModel()
         {
@@ -30,7 +31,14 @@ namespace TramlineFive.Common.ViewModels
             RemoveCommand = new RelayCommand<FavouriteDomain>(async (f) => await RemoveFavouriteAsync(f));
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
-            MessengerInstance.Register<NearestFavouriteRequestedMessage>(this, async (pos) => await OnNearestFavouriteRequested(pos.Position));
+            MessengerInstance.Register<UpdateLocationMessage>(this, async (message) =>
+            {
+                if (firstLocalization && ApplicationService.GetBoolSetting("ShowNearestStop", true))
+                {
+                    firstLocalization = false;
+                    await OnNearestFavouriteRequested(message.Position);
+                }
+            }); 
 
             locationService = SimpleIoc.Default.GetInstance<LocationService>();
         }
@@ -72,6 +80,8 @@ namespace TramlineFive.Common.ViewModels
         {
             Favourites.Add(favourite);
             RaisePropertyChanged("HasFavourites");
+
+            MessengerInstance.Send(new FavouritesChangedMessage(Favourites.ToList()));
         }
 
         private async Task RemoveFavouriteAsync(FavouriteDomain favourite)
@@ -83,6 +93,8 @@ namespace TramlineFive.Common.ViewModels
 
                 ApplicationService.DisplayToast($"{favourite.Name} е премахната");
                 RaisePropertyChanged("HasFavourites");
+
+                MessengerInstance.Send(new FavouritesChangedMessage(Favourites.ToList()));
             }
         }
 
@@ -90,11 +102,13 @@ namespace TramlineFive.Common.ViewModels
         {
             IsLoading = true;
 
-            Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).Reverse().OrderByDescending(f => f.TimesClicked));
+            Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).OrderByDescending(f => f.TimesClicked));
             RaisePropertyChanged("Favourites");
-            RaisePropertyChanged("HasFavourites");
+            RaisePropertyChanged("HasFavourites"); 
 
             IsLoading = false;
+
+            MessengerInstance.Send(new FavouritesChangedMessage(Favourites.ToList()));
         }
 
         public bool HasFavourites => (Favourites == null || Favourites.Count == 0) && !isLoading;
