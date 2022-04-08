@@ -68,6 +68,20 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
+        private int suggestionsHeight;
+        public int SuggestionsHeight
+        {
+            get
+            {
+                return suggestionsHeight;
+            }
+            set
+            {
+                suggestionsHeight = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private async Task OnStopSelected(string stopCode)
         {
             await CheckStopAsync(stopCode);
@@ -142,6 +156,8 @@ namespace TramlineFive.Common.ViewModels
                 FilteredStops = StopsLoader.Stops.Where(s => s.PublicName.ToLower().Contains(stopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
 
             RaisePropertyChanged("FilteredStops");
+
+            SuggestionsHeight = FilteredStops.Count * 50;
         }
 
         private Line selected;
