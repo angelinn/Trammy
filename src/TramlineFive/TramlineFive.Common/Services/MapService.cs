@@ -169,6 +169,8 @@ namespace TramlineFive.Common.Services
 
         public void ShowNearbyStops(MPoint position, bool hideOthers = false)
         {
+            List<StopLocation> nearbyStops = new List<StopLocation>();
+
             foreach (IFeature feature in features)
             {
                 StopLocation location = feature["stopObject"] as StopLocation;
@@ -179,6 +181,8 @@ namespace TramlineFive.Common.Services
 
                 if (Math.Abs(difference.X) < STOP_THRESHOLD && Math.Abs(difference.Y) < STOP_THRESHOLD)
                 {
+                    nearbyStops.Add(location);
+
                     foreach (Style style in feature.Styles)
                         style.Enabled = true;
                 }
@@ -186,6 +190,8 @@ namespace TramlineFive.Common.Services
                     foreach(Style style in feature.Styles)
                         style.Enabled = false;
             }
+
+            Messenger.Default.Send(new NearbyStopsMessage(nearbyStops));
         } 
 
         public void OnMapInfo(object sender, MapInfoEventArgs e)

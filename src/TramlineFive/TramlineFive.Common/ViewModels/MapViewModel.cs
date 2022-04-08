@@ -24,11 +24,15 @@ namespace TramlineFive.Common.ViewModels
     public class MapViewModel : BaseViewModel
     {
         public ObservableCollection<ArrivalStopModel> RecommendedStops { get; private set; } = new ObservableCollection<ArrivalStopModel>();
+
         public ICommand MyLocationCommand { get; private set; }
         public ICommand OpenHamburgerCommand { get; private set; }
         public ICommand ShowMapCommand { get; private set; }
 
         private MapService mapService;
+
+        private List<ArrivalStopModel> topFavourites = new List<ArrivalStopModel>();
+        private List<ArrivalStopModel> nearbyStops = new List<ArrivalStopModel>();
 
         public MapViewModel()
         {
@@ -40,6 +44,7 @@ namespace TramlineFive.Common.ViewModels
 
             MessengerInstance.Register<StopSelectedMessage>(this, OnStopSelectedMessageReceived);
             MessengerInstance.Register<FavouritesChangedMessage>(this, OnFavouritesChanged);
+            MessengerInstance.Register<NearbyStopsMessage>(this, OnNearbyStops);
         }
 
         private bool isMapVisible;
@@ -99,7 +104,7 @@ namespace TramlineFive.Common.ViewModels
             await Task.Delay(100);
             MyLocationColor = "White";
             await Task.Delay(100);
-        } 
+        }
 
         private async Task<bool> LocalizeAsync(bool first = false)
         {
@@ -132,15 +137,42 @@ namespace TramlineFive.Common.ViewModels
                     return false;
                 }
             });
-        } 
+        }
 
         private void OnFavouritesChanged(FavouritesChangedMessage message)
         {
+            topFavourites.Clear();
+            topFavourites.AddRange(message.Favourites.Take(5).Select(f => new ArrivalStopModel(f.StopCode, f.Name)));
+
+            BuildRecommendedStops();
+        }
+
+        private void OnNearbyStops(NearbyStopsMessage message)
+        {
+            nearbyStops.Clear();
+            nearbyStops.AddRange(message.NearbyStops.Take(5).Select(f => new ArrivalStopModel(f.Code, f.PublicName)));
+
+            BuildRecommendedStops();
+        }
+
+        private void BuildRecommendedStops()
+        {
             RecommendedStops.Clear();
 
-            foreach (ArrivalStopModel favourite in message.Favourites.Take(5).Select(f => new ArrivalStopModel(f.StopCode, f.Name)))
+            List<ArrivalStopModel> nearbyWithoutFavourites = nearbyStops.Where(n => !topFavourites.Any(f => f.StopCode == n.StopCode)).ToList();
+
+            if (nearbyWithoutFavourites.Count == 0)
             {
-                RecommendedStops.Add(favourite);
+                foreach (ArrivalStopModel stop in topFavourites)
+                    RecommendedStops.Add(stop);
+            }
+            else
+            {
+                if (topFavourites.Count > 0)
+                    RecommendedStops.Add(topFavourites[0]);
+
+                foreach (ArrivalStopModel stop in nearbyWithoutFavourites)
+                    RecommendedStops.Add(stop);
             }
         }
 
