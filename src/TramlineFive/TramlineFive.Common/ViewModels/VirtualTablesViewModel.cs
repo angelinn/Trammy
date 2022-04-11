@@ -40,6 +40,14 @@ namespace TramlineFive.Common.ViewModels
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
             MessengerInstance.Register<SearchFocusedMessage>(this, (m) => { IsFocused = m.Focused; RaisePropertyChanged("IsSearching"); });
+            MessengerInstance.Register<FavouritesChangedMessage>(this, (m) =>
+            { 
+                if (StopInfo != null)
+                {
+                    StopInfo.IsFavourite = m.Favourites.Any(f => f.StopCode == StopInfo.Code);
+                    RaisePropertyChanged("StopInfo");
+                }
+            });
         }
 
         public bool IsFocused { get; set; }
@@ -131,6 +139,8 @@ namespace TramlineFive.Common.ViewModels
 
                 StopInfo = info;
                 Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
+                FavouriteDomain favourite = await FavouriteDomain.FindAsync(info.Code);
+                StopInfo.IsFavourite = favourite != null;
                
                 MessengerInstance.Send(new ShowMapMessage(true, StopInfo.Lines.Count));
                 await HistoryDomain.AddAsync(stopCode, stopInfo.Name);

@@ -63,6 +63,15 @@ namespace TramlineFive.DataAccess.Domain
         public static async Task IncrementAsync(string stopCode)
         {
             await TramlineFiveContext.IncrementFavouriteAsync(stopCode);
+        } 
+
+        public static async Task<FavouriteDomain> FindAsync(string stopCode)
+        {
+            Favourite favourite = await TramlineFiveContext.FindFavouriteAsync(stopCode);
+            if (favourite == null)
+                return null;
+
+            return new FavouriteDomain(favourite);
         }
     }
 }

@@ -9,5 +9,6 @@ namespace SkgtService.Models
         public string Name { get; set; }
         public string Code { get; set; }
         public List<Line> Lines { get; set; }
+        public bool IsFavourite { get; set; }
     }
 }

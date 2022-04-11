@@ -11,6 +11,7 @@
             <cv:ReferenceToBoolConverter x:Key="ReferenceToBool" />
             <cv:ImageSourceConverter x:Key="ImageSource" />
             <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
+            <cv:BoolToFavouriteColorConverter x:Key="BoolToFavourite" />
         </ResourceDictionary>
     </Grid.Resources>
 
@@ -40,7 +41,7 @@
                                     <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
                                 </Grid.GestureRecognizers>
 
-                                <Label FontFamily="mio" Text="&#xe838;" Margin="10" FontSize="40" TextColor="#eae9f0" HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Label FontFamily="mio" Text="&#xe838;" Margin="10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
                             </Grid>
 
                             <BoxView Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
