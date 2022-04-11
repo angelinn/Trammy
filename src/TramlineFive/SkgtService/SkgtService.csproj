@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Configurations>Debug;Release;GorillaPlayer</Configurations>
+    <Configurations>Debug;Release;GorillaPlayer</Configurations> 
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
