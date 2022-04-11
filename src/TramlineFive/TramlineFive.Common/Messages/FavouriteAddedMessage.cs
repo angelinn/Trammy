@@ -3,15 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using TramlineFive.DataAccess.Domain;
 
-namespace TramlineFive.Common.Messages
-{
-    public class FavouriteAddedMessage
-    {
-        public FavouriteDomain Added { get; set; }
+namespace TramlineFive.Common.Messages;
 
-        public FavouriteAddedMessage(FavouriteDomain added)
-        {
-            Added = added;
-        }
-    }
-}
+public record FavouriteAddedMessage(FavouriteDomain Added);
