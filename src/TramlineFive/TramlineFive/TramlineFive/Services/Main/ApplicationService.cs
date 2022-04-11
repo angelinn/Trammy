@@ -44,7 +44,7 @@ namespace TramlineFive.Services.Main
 
         public string GetVersion()
         {
-            return Version.Plugin.CrossVersion.Current.Version.Substring(0, 5);
+            return AppInfo.VersionString;
         }
 
         public void OpenUri(string uri)
