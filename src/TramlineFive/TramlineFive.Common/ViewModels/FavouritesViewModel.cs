@@ -81,6 +81,7 @@ namespace TramlineFive.Common.ViewModels
             Favourites.Add(favourite);
             RaisePropertyChanged("HasFavourites");
 
+            ApplicationService.VibrateShort();
             MessengerInstance.Send(new FavouritesChangedMessage(Favourites.ToList()));
         }
 
@@ -92,6 +93,8 @@ namespace TramlineFive.Common.ViewModels
                 Favourites.Remove(favourite);
 
                 ApplicationService.DisplayToast($"{favourite.Name} е премахната");
+                ApplicationService.VibrateShort();
+
                 RaisePropertyChanged("HasFavourites");
 
                 MessengerInstance.Send(new FavouritesChangedMessage(Favourites.ToList()));
