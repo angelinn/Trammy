@@ -13,6 +13,7 @@ using GalaSoft.MvvmLight.Ioc;
 using TramlineFive.Common.Services;
 using TramlineFive.Services;
 using Android.Content;
+using System.Reflection;
 
 namespace TramlineFive.Droid
 {
@@ -41,6 +42,12 @@ namespace TramlineFive.Droid
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+
+            AndroidEnvironment.UnhandledExceptionRaiser += delegate (object sender, RaiseThrowableEventArgs args) {
+                typeof(System.Exception).GetField("stack_trace", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .SetValue(args.Exception, null);
+                throw args.Exception;
+            };
         }
 
         protected override void OnResume()
@@ -58,6 +65,7 @@ namespace TramlineFive.Droid
         {
             throw new NotImplementedException();
         }
-    }
+
+}
 }
 
