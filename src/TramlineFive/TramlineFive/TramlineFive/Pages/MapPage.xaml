@@ -6,7 +6,6 @@
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              xmlns:pages="clr-namespace:TramlineFive.Pages"
              xmlns:views="clr-namespace:TramlineFive.Views"
-             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Forms;assembly=Mapsui.UI.Forms"
 
@@ -39,11 +38,12 @@
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid Padding="25,0,0,0" HorizontalOptions="FillAndExpand">
+                    <Grid HorizontalOptions="FillAndExpand">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding OpenHamburgerCommand}" />
                         </Grid.GestureRecognizers>
-                        <iconize:IconLabel Text="fa-bars" FontSize="22" VerticalOptions="Center" TextColor="DodgerBlue" />
+
+                        <Label FontFamily="mio" Text="&#xe5d2;" Margin="5,0,0,0" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center" TextColor="DodgerBlue" />
                     </Grid>
                     <views:CustomEntry BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}"
                                            Grid.Column="1" TextColor="Gray" Placeholder="Код/име на спирка..." FontSize="16" VerticalOptions="Center"
@@ -76,8 +76,8 @@
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Grid}, AncestorLevel=1}}" />
                                 </Grid.GestureRecognizers>
- 
-                                <iconize:IconLabel Text="md-directions-bus" FontSize="17" VerticalOptions="Center" Margin="0,1,0,0" TextColor="Crimson" />
+
+                                <Label FontFamily="mir" Text="&#xe530;" FontSize="17" VerticalOptions="Center" Margin="0,1,0,0" TextColor="Crimson" />
                                 <Label Grid.Column="1" Text="{Binding StopCode, StringFormat='({0})'}" TextColor="Black" FontSize="12"  HorizontalOptions="Start" />
                                 <Label Grid.Column="2" Text="{Binding Name}" TextColor="Black" LineBreakMode="TailTruncation" FontSize="12" HorizontalOptions="Start" />
                             </Grid>
@@ -98,7 +98,8 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <iconize:IconLabel Text="fa-search" TextColor="#9aa0a6" HorizontalOptions="Center" VerticalOptions="Center" FontSize="17" Margin="0,5,0,0" />
+                                        <Label FontFamily="mio" Text="&#xe8b6;" FontSize="23" VerticalOptions="Center" Margin="5,7,0,0" HorizontalOptions="Center" TextColor="#9aa0a6" />
+
                                         <Label Grid.Column="1" Text="{Binding}" TextColor="Black" VerticalOptions="Center" Margin="0,5,0,0" FontSize="15" />
                                     </Grid>
                                 </ViewCell.View>
@@ -129,7 +130,7 @@
             </Grid.GestureRecognizers>
         </Grid>
 
-        <Frame x:Name="slideMenu" Padding="0" VerticalOptions="End" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
+        <Frame x:Name="slideMenu" Padding="0" CornerRadius="35" VerticalOptions="End" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
             <pages:VirtualTablesPage />
         </Frame>
     </AbsoluteLayout>

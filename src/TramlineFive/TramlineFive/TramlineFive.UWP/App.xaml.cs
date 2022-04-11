@@ -64,13 +64,7 @@ namespace TramlineFive.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                List<Assembly> assembliesToInclude = new List<Assembly>
-                {
-                    typeof(Plugin.Iconize.Iconize).GetTypeInfo().Assembly,
-                    typeof(Plugin.Iconize.Fonts.FontAwesomeModule).GetTypeInfo().Assembly
-                };
-
-                Xamarin.Forms.Forms.Init(e, assembliesToInclude);
+                Xamarin.Forms.Forms.Init(e);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

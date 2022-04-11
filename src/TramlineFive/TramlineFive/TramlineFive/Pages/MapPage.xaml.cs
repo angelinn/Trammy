@@ -47,6 +47,7 @@ namespace TramlineFive.Pages
 
             map.Map = nativeMap;
             map.TouchAction += OnMapTouchAction;
+            map.MyLocationFollow = true;
         }
 
         private void OnMapTouchAction(object sender, SkiaSharp.Views.Forms.SKTouchEventArgs e)

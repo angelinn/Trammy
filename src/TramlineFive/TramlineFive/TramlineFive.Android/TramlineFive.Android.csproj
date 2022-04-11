@@ -365,12 +365,6 @@
     <PackageReference Include="Xam.Plugin.Geolocator">
       <Version>4.5.0.6</Version>
     </PackageReference>
-    <PackageReference Include="Xam.Plugin.Iconize.FontAwesome">
-      <Version>2.0.0.29-beta</Version>
-    </PackageReference>
-    <PackageReference Include="Xam.Plugin.Iconize.Material">
-      <Version>2.0.0.37-beta</Version>
-    </PackageReference>
     <PackageReference Include="Xam.Plugin.Version">
       <Version>1.0.0</Version>
     </PackageReference>

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.HistoryPage"
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
@@ -32,7 +31,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <iconize:IconLabel Text="fa-history" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center" />
+                                        <Label FontFamily="mio" Text="history" TextColor="DodgerBlue" FontSize="26" VerticalOptions="Center" HorizontalOptions="Center"  />
 
                                         <StackLayout Spacing="0" VerticalOptions="Center" Grid.Column="1">
                                             <StackLayout Orientation="Horizontal">

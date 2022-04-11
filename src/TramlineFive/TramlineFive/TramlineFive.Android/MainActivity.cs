@@ -12,12 +12,11 @@ using Android;
 using GalaSoft.MvvmLight.Ioc;
 using TramlineFive.Common.Services;
 using TramlineFive.Services;
-using Plugin.Iconize;
 using Android.Content;
 
 namespace TramlineFive.Droid
 {
-    [Activity(Label = "Tramline Five BETA", Icon = "@drawable/icon", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Tramline Five", Icon = "@drawable/icon", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
@@ -33,8 +32,6 @@ namespace TramlineFive.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-
-            Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs); // Could also be Resource.Id.tabs
 
             ToastService.Init(this);
             PermissionService.Init(this);

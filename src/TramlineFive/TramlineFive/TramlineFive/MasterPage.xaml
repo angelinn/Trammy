@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              xmlns:views="clr-namespace:TramlineFive.Views"
              xmlns:pages="clr-namespace:TramlineFive.Pages"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
@@ -45,7 +44,7 @@
                     </Grid.GestureRecognizers>
 
                     <StackLayout Spacing="0">
-                        <iconize:IconLabel Text="fa-map-marker" FontSize="22" 
+                        <Label FontFamily="mio" Text="fmd_good" FontSize="25" 
                                    TextColor="{Binding IsMapVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
 
@@ -58,19 +57,19 @@
                     </Grid.GestureRecognizers>
 
                     <StackLayout Spacing="0">
-                        <iconize:IconLabel Text="fa-star" FontSize="22" 
+                        <Label FontFamily="mio" Text="star_border" FontSize="25" 
                                    TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
 
                         <Label Text="Любими" FontAttributes="Bold" FontSize="12" HorizontalOptions="Center" TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"  />
                     </StackLayout>
-                </Grid>
+                </Grid> 
                 <Grid Grid.Column="2">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
                     </Grid.GestureRecognizers> 
                     <StackLayout Spacing="0">
-                        <iconize:IconLabel Text="fa-history" FontSize="22"
+                        <Label FontFamily="mio" Text="history" FontSize="25" 
                                    TextColor="{Binding IsHistoryVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
 
@@ -78,7 +77,7 @@
                     </StackLayout >
                 </Grid>
             </Grid>
-        </Grid>
+        </Grid> 
 
         <Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" BackgroundColor="Black" Opacity="0">
             <Grid.GestureRecognizers>
@@ -90,15 +89,16 @@
             <StackLayout Spacing="0">
                 <StackLayout.Resources>
                     <ResourceDictionary>
-                        <Style TargetType="iconize:IconLabel" x:Key="MenuIcon">
-                            <Setter Property="Margin" Value="15,0,5,0" />
-                            <Setter Property="FontSize" Value="20" />
+                        <Style TargetType="Label" x:Key="MenuIcon">
+                            <Setter Property="Margin" Value="15,3,5,0" />
+                            <Setter Property="FontSize" Value="25" />
                             <Setter Property="VerticalOptions" Value="Center" />
                             <Setter Property="HorizontalOptions" Value="Center" />
+                            <Setter Property="TextColor" Value="#9aa0a6" />
                         </Style>
 
                         <Style TargetType="Label" x:Key="MenuText">
-                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="FontSize" Value="14" />
                             <Setter Property="VerticalOptions" Value="Center" />
                             <Setter Property="TextColor" Value="Black" />
                             <Setter Property="Grid.Column" Value="1" />
@@ -110,7 +110,7 @@
                             <Setter Property="ColumnDefinitions">
                                 <Setter.Value>
                                     <ColumnDefinitionCollection>
-                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="50" />
                                         <ColumnDefinition Width="Auto" />
                                     </ColumnDefinitionCollection>
                                 </Setter.Value>
@@ -133,11 +133,11 @@
                                 </OnPlatform>
                             </Image.Source>
                         </Image>
-                        <Label Text="Tramline Five v2.11" TextColor="White" Margin="5,-10,5,05"/>
+                        <Label Text="Tramline Five v3.1.0" TextColor="White" Margin="5,-10,5,05"/>
                     </StackLayout>
                 </Grid>
                 <Grid Style="{StaticResource MenuItemContainer}">
-                    <iconize:IconLabel Text="fa-cog" Style="{StaticResource MenuIcon}" />
+                    <Label FontFamily="mio" Text="settings" Style="{StaticResource MenuIcon}" />
                     <Label Text="Настройки" Style="{StaticResource MenuText}" />
 
                     <Grid.GestureRecognizers>
@@ -146,7 +146,7 @@
                 </Grid>
 
                 <Grid Style="{StaticResource MenuItemContainer}">
-                    <iconize:IconLabel Text="fa-info" Style="{StaticResource MenuIcon}"/>
+                    <Label FontFamily="mio" Text="info" Style="{StaticResource MenuIcon}" />
                     <Label Text="Информация" Style="{StaticResource MenuText}" />
                 </Grid>
             </StackLayout>

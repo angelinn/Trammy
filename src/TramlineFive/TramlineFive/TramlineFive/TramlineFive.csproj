@@ -3,7 +3,37 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
+	<LangVersion>10.0</LangVersion>
+
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Font Awesome 6 Brands-Regular-400.otf" />
+    <None Remove="Resources\Font Awesome 6 Free-Regular-400.otf" />
+    <None Remove="Resources\Font Awesome 6 Free-Solid-900.otf" />
+    <None Remove="Resources\MaterialIcons-Regular.ttf" />
+    <None Remove="Resources\MaterialIconsOutlined-Regular.otf" />
+    <None Remove="Resources\MaterialIconsRound-Regular.otf" />
+    <None Remove="Resources\MaterialIconsSharp-Regular.otf" />
+    <None Remove="Resources\MaterialIconsTwoTone-Regular.otf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Font Awesome 6 Brands-Regular-400.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Font Awesome 6 Free-Regular-400.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Font Awesome 6 Free-Solid-900.otf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MaterialIcons-Regular.ttf" />
+    <EmbeddedResource Include="Resources\MaterialIconsOutlined-Regular.otf" />
+    <EmbeddedResource Include="Resources\MaterialIconsRound-Regular.otf" />
+    <EmbeddedResource Include="Resources\MaterialIconsSharp-Regular.otf" />
+    <EmbeddedResource Include="Resources\MaterialIconsTwoTone-Regular.otf" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Mapsui" Version="4.0.0-beta.3" />
@@ -18,6 +48,7 @@
     <PackageReference Include="Xam.Plugin.Geolocator" Version="4.5.0.6" />
     <PackageReference Include="Xam.Plugin.Iconize" Version="3.5.0.129" />
     <PackageReference Include="Xam.Plugin.Iconize.FontAwesome" Version="2.0.0.29-beta" />
+
     <PackageReference Include="Xam.Plugin.Iconize.Material" Version="2.0.0.37-beta" />
     <PackageReference Include="Xam.Plugin.Version" Version="1.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />

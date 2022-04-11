@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.FavouritesPage"
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
@@ -33,22 +32,25 @@
                                             <ColumnDefinition Width="48" />
                                         </Grid.ColumnDefinitions>
 
-                                        <iconize:IconLabel Text="fa-subway" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center" />
+
+                                        <Label FontFamily="mir" Text="directions_subway" TextColor="DodgerBlue" FontSize="31" VerticalOptions="Center" HorizontalOptions="Center" />
 
                                         <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
-                                            <Label Text="{Binding Name}" />       
+                                            <Label Text="{Binding Name}" />
 
                                             <StackLayout Orientation="Horizontal">
                                                 <Label Text="{Binding StopCode}" FontSize="Small" TextColor="DodgerBlue" />
                                                 <Label Text="{Binding TimesClicked, StringFormat='({0})'}" FontSize="Small"  />
                                             </StackLayout>
                                         </StackLayout>
-                                        <iconize:IconLabel Grid.Column="2" Text="fa-ellipsis-v" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center">
-                                            <iconize:IconLabel.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
-                                            </iconize:IconLabel.GestureRecognizers>
-                                        </iconize:IconLabel>
-
+                                        <Grid Grid.Column="2">
+                                            <Label FontFamily="mio" Text="more_vert" VerticalOptions="Center" TextColor="DodgerBlue" FontSize="28">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}" />
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                        </Grid>
+                                        
                                         <BoxView Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
                                     </Grid>
                                 </Frame>

@@ -2,7 +2,6 @@
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
-             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
              BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" BackgroundColor="#FAFAFA">
 
@@ -24,60 +23,61 @@
                 </Grid.RowDefinitions>
 
                 <Grid>
-            <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="68" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <iconize:IconLabel Text="fa-subway" FontSize="24" TextColor="DodgerBlue" VerticalOptions="Center" HorizontalOptions="Center" />
-                    <StackLayout Grid.Column="1" VerticalOptions="Center" >
-                        <Label Text="{Binding StopInfo.Name}" FontSize="Default" FontAttributes="Bold" />
-                        <Label Text="{Binding StopInfo.Code}" TextColor="DodgerBlue" FontSize="Small" />
+                    <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="68" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                    </StackLayout>
-                    <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,5,0">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
-                        </Grid.GestureRecognizers>
-                        <iconize:IconLabel Text="fa-star" Margin="10" FontSize="32"  TextColor="DodgerBlue" VerticalOptions="Center" HorizontalOptions="Center" />
+                            <Label FontFamily="mio" Text="&#xe570;" FontSize="40" TextColor="DodgerBlue" HorizontalOptions="Center" VerticalOptions="Center" />
+                            <StackLayout Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
+                                <Label Text="{Binding StopInfo.Name}" FontSize="Default" />
+                                <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="DodgerBlue" FontSize="Small" />
+                            </StackLayout>
+                            <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,5,0">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
+                                </Grid.GestureRecognizers>
+
+                                <Label FontFamily="mio" Text="&#xe838;" Margin="10" FontSize="40" TextColor="#eae9f0" HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Grid>
+
+                            <BoxView Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                        </Grid>
                     </Grid>
-
-                    <BoxView Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
                 </Grid>
+
+                <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <ViewCell.View>
+                                    <Frame Margin="0,0,0,5" Padding="0" HasShadow="True">
+                                        <Grid BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="100" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
+                                                <Label Text="{Binding Name}" TextColor="White" FontSize="40" />
+                                                <Label Text="{Binding TransportType}" TextColor="White" />
+                                                <Label Text="{Binding LastTimings}" TextColor="White" />
+                                            </StackLayout>
+                                            <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0,0,0,0">
+                                                <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>
+                                                <Label Text="минути" TextColor="White" HorizontalOptions="Center" />
+                                            </StackLayout>
+                                        </Grid>
+                                    </Frame>
+                                </ViewCell.View>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
             </Grid>
-        </Grid>
-
-        <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.View>
-                            <Frame Margin="0,0,0,5" Padding="0" HasShadow="True">
-                                <Grid BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="100" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
-                                        <Label Text="{Binding Name}" TextColor="White" FontSize="40" />
-                                        <Label Text="{Binding TransportType}" TextColor="White" />
-                                        <Label Text="{Binding LastTimings}" TextColor="White" />
-                                    </StackLayout>
-                                    <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0,0,0,0">
-                                        <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>
-                                        <Label Text="минути" TextColor="White" HorizontalOptions="Center" />
-                                    </StackLayout>
-                                </Grid>
-                            </Frame>
-                        </ViewCell.View>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-
-    </Grid>
-    </ScrollView>
+        </ScrollView>
     </RefreshView>
 </Grid>
     
