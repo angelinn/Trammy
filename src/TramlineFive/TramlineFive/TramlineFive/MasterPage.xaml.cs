@@ -77,7 +77,7 @@ namespace TramlineFive
             if (!appeared)
             {
                 mapPage.OnAppearing();
-                //Task task = SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync();
+                Task task = SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync();
 
                 appeared = true;
             }
