@@ -34,17 +34,30 @@ namespace TramlineFive.Services.Main
 
         public async Task<Position> GetCurrentPositionAsync()
         {
-            Plugin.Geolocator.Abstractions.Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
+            Location position = await Geolocation.GetLastKnownLocationAsync();
+            if (position == null)
+            {
+                GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(5));
+                position = await Geolocation.GetLocationAsync(request);
+            }
+
+            //Plugin.Geolocator.Abstractions.Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
+
             return new Position
             {
                 Latitude = position.Latitude,
                 Longitude = position.Longitude
             };
-        }
+        } 
 
         public string GetVersion()
         {
             return AppInfo.VersionString;
+        }
+
+        public void VibrateShort()
+        {
+            Vibration.Vibrate(TimeSpan.FromMilliseconds(30));
         }
 
         public void OpenUri(string uri)
