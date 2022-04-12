@@ -32,19 +32,11 @@ namespace TramlineFive.Common.Services
 
         private INavigator navigator;
 
-        private Queue<MapClickedResponseMessage> messages = new Queue<MapClickedResponseMessage>();
-
-        private ManualResetEvent mapClickResetEvent = new ManualResetEvent(false);
-
         private const int STOP_THRESHOLD = 500;
 
         public MapService()
         {
-            Messenger.Default.Register<MapClickedResponseMessage>(this, (m) =>
-            {
-                messages.Enqueue(m);
-                mapClickResetEvent.Set();
-            });
+
         }
 
         public async Task Initialize(Map map, INavigator navigator)
@@ -197,13 +189,7 @@ namespace TramlineFive.Common.Services
         public void OnMapInfo(object sender, MapInfoEventArgs e)
         {
             Messenger.Default.Send(new MapClickedMessage());
-            mapClickResetEvent.WaitOne();
-            mapClickResetEvent.Reset();
-
-            MapClickedResponseMessage message = messages.Dequeue();
-            if (message.Handled)
-                return;
-
+ 
             if (e.MapInfo.Feature != null && e.MapInfo.Feature.Styles.First().Enabled)
             {
                 StopLocation location = e.MapInfo.Feature["stopObject"] as StopLocation;
