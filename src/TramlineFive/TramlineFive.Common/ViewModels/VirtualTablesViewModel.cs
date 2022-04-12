@@ -137,11 +137,12 @@ namespace TramlineFive.Common.ViewModels
 
                 IsLoading = false;
 
+                FavouriteDomain favourite = await FavouriteDomain.FindAsync(info.Code);
+                info.IsFavourite = favourite != null;
+
                 StopInfo = info;
                 Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
-                FavouriteDomain favourite = await FavouriteDomain.FindAsync(info.Code);
-                StopInfo.IsFavourite = favourite != null;
-               
+
                 MessengerInstance.Send(new ShowMapMessage(true, StopInfo.Lines.Count));
                 await HistoryDomain.AddAsync(stopCode, stopInfo.Name);
             }
