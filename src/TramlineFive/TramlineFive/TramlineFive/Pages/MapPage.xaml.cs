@@ -69,6 +69,7 @@ namespace TramlineFive.Pages
 
         private async void OnMapInfo(object sender, Mapsui.UI.MapInfoEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine($"OnMapInfo is opened: {isOpened}");
             Messenger.Default.Send(new MapClickedResponseMessage(isOpened));
 
             if (isOpened)
@@ -79,7 +80,7 @@ namespace TramlineFive.Pages
 
         private void OnMapClicked(object sender, Mapsui.UI.Forms.MapClickedEventArgs e)
         {
-
+            System.Diagnostics.Debug.WriteLine($"OnMapClicked");
         }
 
         private void OnMapClicked()
@@ -97,11 +98,14 @@ namespace TramlineFive.Pages
 
             await slideMenu.TranslateTo(0, 0, 400);
 
+            map.HeightRequest = Height - slideMenu.HeightRequest + 150;
+
             isOpened = !isOpened;
         }
 
         private async Task HideVirtualTables()
         {
+            map.HeightRequest = Height;
             await slideMenu.TranslateTo(0, Height, 400);
 
             isOpened = false;

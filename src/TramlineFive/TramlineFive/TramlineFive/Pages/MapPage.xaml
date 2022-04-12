@@ -27,12 +27,12 @@
                 <RowDefinition Height="180" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackLayout Grid.RowSpan="4" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                <Label Text="Зареждане..." FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
-            </StackLayout>
-            <mapsui:MapView Grid.RowSpan="5" x:Name="map" VerticalOptions="FillAndExpand" HorizontalOptions="Fill"
-                            IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False" />
 
+            <StackLayout Grid.RowSpan="5" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
+                <mapsui:MapView x:Name="map" VerticalOptions="FillAndExpand" HorizontalOptions="Fill"
+                                IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False" />
+            </StackLayout>
+            
             <Frame Grid.Row="1" x:Name="searchBar" Margin="15,0,15,0" BackgroundColor="White" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" >
                 <Grid>
                     <Grid.ColumnDefinitions>
