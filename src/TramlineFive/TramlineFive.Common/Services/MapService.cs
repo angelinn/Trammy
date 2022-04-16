@@ -47,7 +47,7 @@ namespace TramlineFive.Common.Services
             this.map = map;
             MPoint centerOfSofia = new MPoint(23.3219, 42.6977);
             MPoint point = SphericalMercator.FromLonLat(centerOfSofia);
-            map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[15]); };
+            map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[15]); ShowNearbyStops(point); };
 
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             LoadPinStyles();
@@ -135,12 +135,12 @@ namespace TramlineFive.Common.Services
                             BitmapId = pinStyle.BitmapId,
                             SymbolOffset = new Offset(0, 30),
                             SymbolScale = pinStyle.SymbolScale,
-                            MaxVisible = MaxPinsZoom
+                            MaxVisible = MaxPinsZoom + 0.5
                         },
                         new LabelStyle
                         {
                             Enabled = pinStyle.Enabled,
-                            MaxVisible = MaxTextZoom,
+                            MaxVisible = MaxTextZoom + 0.5,
                             Text = $"{location.PublicName} ({location.Code})",
                             Offset = new Offset(0, -45)
                             //Opacity = 0.7f,
@@ -213,7 +213,7 @@ namespace TramlineFive.Common.Services
             {
                 StopLocation location = e.MapInfo.Feature["stopObject"] as StopLocation;
 
-                Messenger.Default.Send(new StopSelectedMessage(location.Code, false));
+                Messenger.Default.Send(new StopSelectedMessage(location.Code, true));
                 return;
             }
             ShowNearbyStops(e.MapInfo.WorldPosition);
