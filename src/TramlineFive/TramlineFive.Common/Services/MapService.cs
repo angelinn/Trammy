@@ -34,6 +34,9 @@ namespace TramlineFive.Common.Services
 
         private const int STOP_THRESHOLD = 500;
 
+        public int MaxPinsZoom { get; set; } = 6;
+        public int MaxTextZoom { get; set; } = 3;
+
         public MapService()
         {
 
@@ -50,6 +53,22 @@ namespace TramlineFive.Common.Services
             LoadPinStyles();
 
             this.navigator = navigator;
+
+            ILayer stopsLayer = await LoadStops();
+            map.Layers.Add(stopsLayer);
+
+            navigator.Navigated = (sender, args) => SendMapRefreshMessage();
+        }
+
+        public async Task ReloadMapAsync()
+        {
+            MPoint centerOfSofia = new MPoint(23.3219, 42.6977);
+            MPoint point = SphericalMercator.FromLonLat(centerOfSofia);
+            map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[15]); };
+
+            map.Layers.Clear();
+            map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
+            LoadPinStyles();
 
             ILayer stopsLayer = await LoadStops();
             map.Layers.Add(stopsLayer);
@@ -116,12 +135,12 @@ namespace TramlineFive.Common.Services
                             BitmapId = pinStyle.BitmapId,
                             SymbolOffset = new Offset(0, 30),
                             SymbolScale = pinStyle.SymbolScale,
-                            MaxVisible = 8
+                            MaxVisible = MaxPinsZoom
                         },
                         new LabelStyle
                         {
                             Enabled = pinStyle.Enabled,
-                            MaxVisible = 4,
+                            MaxVisible = MaxTextZoom,
                             Text = $"{location.PublicName} ({location.Code})",
                             Offset = new Offset(0, -45)
                             //Opacity = 0.7f,

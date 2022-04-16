@@ -41,10 +41,30 @@ namespace TramlineFive.Common.ViewModels
             ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage(false)));
 
             mapService = SimpleIoc.Default.GetInstance<MapService>();
+            int maxTextZoom = ApplicationService.GetIntSetting("MaxTextZoom", 0);
+            int maxPinsZoom = ApplicationService.GetIntSetting("MaxPinsZoom", 0);
+
+            if (maxTextZoom > 0)
+                mapService.MaxTextZoom = maxTextZoom;
+            if (maxPinsZoom > 0)
+                mapService.MaxPinsZoom = maxPinsZoom;
 
             MessengerInstance.Register<StopSelectedMessage>(this, OnStopSelectedMessageReceived);
             MessengerInstance.Register<FavouritesChangedMessage>(this, OnFavouritesChanged);
             MessengerInstance.Register<NearbyStopsMessage>(this, OnNearbyStops);
+            MessengerInstance.Register<SettingChanged<int>>(this, async (m) =>
+            {
+                if (m.Name == "MaxTextZoom" && m.Value > 0)
+                {
+                    mapService.MaxTextZoom = m.Value;
+                    await mapService.ReloadMapAsync();
+                }
+                else if (m.Name == "MaxPinsZoom" && m.Value > 0)
+                {
+                    mapService.MaxPinsZoom = m.Value;
+                    await mapService.ReloadMapAsync();
+                }
+            });
         }
 
         private bool isMapVisible;
@@ -104,11 +124,11 @@ namespace TramlineFive.Common.ViewModels
             await Task.Delay(100);
             MyLocationColor = "White";
             await Task.Delay(100);
-        } 
+        }
 
         private async Task<bool> LocalizeAsync(bool first = false)
         {
-            return await Task.Run(async () => 
+            return await Task.Run(async () =>
             {
                 try
                 {
