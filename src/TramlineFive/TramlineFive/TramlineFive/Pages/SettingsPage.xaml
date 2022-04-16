@@ -34,6 +34,12 @@
 
         <Label Text="Покажи най-близка спирка при стартиране" Margin="0,20,0,0" FontSize="Medium" />
         <Switch IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" />
+
+        <Label Text="Max zoom for text" Margin="0,20,0,0" FontSize="Medium" />
+        <Entry Text="{Binding MaxTextZoom}" />
+
+        <Label Text="Max zoom for pins" Margin="0,20,0,0" FontSize="Medium" />
+        <Entry Text="{Binding MaxPinsZoom}" />
     </StackLayout>
 
 </ContentPage>

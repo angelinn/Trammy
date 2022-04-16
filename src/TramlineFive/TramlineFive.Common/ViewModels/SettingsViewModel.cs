@@ -20,12 +20,49 @@ namespace TramlineFive.Common.ViewModels
             ApplicationService.GetStringSetting("StopsUpdated", null) : 
             "Не е обновявано";
 
+
         public SettingsViewModel()
         {
             CleanHistoryCommand = new RelayCommand(async () => await CleanHistoryAsync());
             UpdateStopsCommand = new RelayCommand(async () => await ReloadStopsAsync());
 
             ShowNearestStop = ApplicationService.GetBoolSetting("ShowNearestStop", true);
+            MaxTextZoom = ApplicationService.GetIntSetting("MaxTextZoom", 0);
+            MaxPinsZoom = ApplicationService.GetIntSetting("MaxPinsZoom", 0);
+        }
+
+        private int maxTextZoom;
+        public int MaxTextZoom
+        {
+            get 
+            { 
+                return maxTextZoom; 
+            }
+            set
+            {
+                maxTextZoom = value;
+
+                ApplicationService.SetIntSetting("MaxTextZoom", maxTextZoom);
+                MessengerInstance.Send(new SettingChanged<int>("MaxTextZoom", maxTextZoom));
+                RaisePropertyChanged(); 
+            }
+        }
+
+        private int maxPinsZoom; 
+        public int MaxPinsZoom
+        {
+            get 
+            { 
+                return maxPinsZoom;
+            }
+            set 
+            {
+                maxPinsZoom = value;
+
+                ApplicationService.SetIntSetting("MaxPinsZoom", maxPinsZoom);
+                MessengerInstance.Send(new SettingChanged<int>("MaxPinsZoom", maxPinsZoom));
+                RaisePropertyChanged(); 
+            }
         }
 
         private async Task CleanHistoryAsync()
