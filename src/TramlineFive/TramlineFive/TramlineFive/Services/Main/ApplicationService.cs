@@ -34,8 +34,8 @@ namespace TramlineFive.Services.Main
 
         public async Task<Position> GetCurrentPositionAsync()
         {
-            GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(5));
-            Location position = await Geolocation.GetLocationAsync(request);
+            GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(5));
+            Location position = await Geolocation.GetLocationAsync(request); 
 
             //Plugin.Geolocator.Abstractions.Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
 
