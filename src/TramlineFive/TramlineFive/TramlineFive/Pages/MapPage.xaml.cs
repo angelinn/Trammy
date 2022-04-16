@@ -98,14 +98,23 @@ namespace TramlineFive.Pages
 
             await slideMenu.TranslateTo(0, 0, 400);
 
-            map.HeightRequest = Height - slideMenu.HeightRequest + 150;
+            map.Animate("ShowStop",
+                new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height - slideMenu.HeightRequest + 150),
+                16,
+                100,
+                Easing.Linear);
 
             isOpened = !isOpened;
         }
 
         private async Task HideVirtualTables()
         {
-            map.HeightRequest = Height;
+            map.Animate("Expand",
+                new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height),
+                16,
+                100,
+                Easing.Linear);
+
             await slideMenu.TranslateTo(0, Height, 400);
 
             isOpened = false;
