@@ -25,7 +25,7 @@ namespace TramlineFive.Services.Main
         public void SetStringSetting(string key, string value)
         {
             Preferences.Set(key, value);
-        } 
+        }
 
         public void SetBoolSetting(string key, bool value)
         {
@@ -34,12 +34,8 @@ namespace TramlineFive.Services.Main
 
         public async Task<Position> GetCurrentPositionAsync()
         {
-            Location position = await Geolocation.GetLastKnownLocationAsync();
-            if (position == null)
-            {
-                GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(5));
-                position = await Geolocation.GetLocationAsync(request);
-            }
+            GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(5));
+            Location position = await Geolocation.GetLocationAsync(request);
 
             //Plugin.Geolocator.Abstractions.Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
 
@@ -48,7 +44,7 @@ namespace TramlineFive.Services.Main
                 Latitude = position.Latitude,
                 Longitude = position.Longitude
             };
-        } 
+        }
 
         public string GetVersion()
         {
@@ -93,5 +89,15 @@ namespace TramlineFive.Services.Main
         {
             DependencyService.Get<IPushService>().PushNotification(title, message);
         }
+
+        public int GetIntSetting(string key, int defaultValue)
+        {
+            return Preferences.Get(key, defaultValue);
+        }
+
+        public void SetIntSetting(string key, int value)
+        {
+            Preferences.Set(key, value);
+        }
     }
-}
+} 

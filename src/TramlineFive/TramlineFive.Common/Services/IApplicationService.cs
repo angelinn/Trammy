@@ -10,9 +10,10 @@ namespace TramlineFive.Common.Services
     {
         string GetStringSetting(string key, string defaultValue);
         bool GetBoolSetting(string key, bool defaultValue);
+        int GetIntSetting(string key, int defaultValue);
         void SetStringSetting(string key, string value);
         void SetBoolSetting(string key, bool value);
-
+        void SetIntSetting(string key, int value);
 
         string GetVersion();
         void OpenUri(string uri);
