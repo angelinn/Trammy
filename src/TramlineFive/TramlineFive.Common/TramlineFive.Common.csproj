@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Exceptions\**" />
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Exceptions\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Exceptions\**" />
+    <None Remove="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="person.png" />
     <None Remove="pin.png" />
     <None Remove="pin.svg" />
@@ -32,11 +41,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SkgtService\SkgtService.csproj" />
     <ProjectReference Include="..\TramlineFive.DataAccess\TramlineFive.DataAccess.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>

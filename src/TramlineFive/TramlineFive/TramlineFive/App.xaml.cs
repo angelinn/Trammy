@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TramlineFive.Common;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.DataAccess;
@@ -54,7 +55,7 @@ namespace TramlineFive
 
         private void OnStopsUpdated(object sender, EventArgs e)
         {
-            SimpleIoc.Default.GetInstance<IApplicationService>().SetStringSetting("StopsUpdated", DateTime.Now.ToString());
+            SimpleIoc.Default.GetInstance<IApplicationService>().SetStringSetting(Settings.StopsUpdated, DateTime.Now.ToString());
         }
 
         protected override void OnSleep()

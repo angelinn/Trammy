@@ -13,22 +13,19 @@ namespace TramlineFive.Common.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
-        public ICommand CleanHistoryCommand { get; private set; } 
-        public ICommand UpdateStopsCommand { get; private set; }
+        public ICommand CleanHistoryCommand { get; init; } 
+        public ICommand UpdateStopsCommand { get; init; }
 
-        public string UpdatedMessage => ApplicationService.GetStringSetting("StopsUpdated", null) != null ?
-            ApplicationService.GetStringSetting("StopsUpdated", null) : 
-            "Не е обновявано";
-
+        public string UpdatedMessage => ApplicationService.GetStringSetting(Settings.StopsUpdated, null) ?? "Не е обновявано";
 
         public SettingsViewModel()
         {
             CleanHistoryCommand = new RelayCommand(async () => await CleanHistoryAsync());
             UpdateStopsCommand = new RelayCommand(async () => await ReloadStopsAsync());
 
-            ShowNearestStop = ApplicationService.GetBoolSetting("ShowNearestStop", true);
-            MaxTextZoom = ApplicationService.GetIntSetting("MaxTextZoom", 0);
-            MaxPinsZoom = ApplicationService.GetIntSetting("MaxPinsZoom", 0);
+            ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, true);
+            MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
+            MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
         }
 
         private int maxTextZoom;
@@ -42,8 +39,8 @@ namespace TramlineFive.Common.ViewModels
             {
                 maxTextZoom = value;
 
-                ApplicationService.SetIntSetting("MaxTextZoom", maxTextZoom);
-                MessengerInstance.Send(new SettingChanged<int>("MaxTextZoom", maxTextZoom));
+                ApplicationService.SetIntSetting(Settings.MaxTextZoom, maxTextZoom);
+                MessengerInstance.Send(new SettingChanged<int>(Settings.MaxTextZoom, maxTextZoom));
                 RaisePropertyChanged(); 
             }
         }
@@ -59,8 +56,8 @@ namespace TramlineFive.Common.ViewModels
             {
                 maxPinsZoom = value;
 
-                ApplicationService.SetIntSetting("MaxPinsZoom", maxPinsZoom);
-                MessengerInstance.Send(new SettingChanged<int>("MaxPinsZoom", maxPinsZoom));
+                ApplicationService.SetIntSetting(Settings.MaxPinsZoom, maxPinsZoom);
+                MessengerInstance.Send(new SettingChanged<int>(Settings.MaxPinsZoom, maxPinsZoom));
                 RaisePropertyChanged(); 
             }
         }

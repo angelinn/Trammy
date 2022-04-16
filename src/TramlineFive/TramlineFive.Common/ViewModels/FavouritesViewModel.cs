@@ -33,7 +33,7 @@ namespace TramlineFive.Common.ViewModels
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
             MessengerInstance.Register<UpdateLocationMessage>(this, async (message) =>
             {
-                if (firstLocalization && ApplicationService.GetBoolSetting("ShowNearestStop", true))
+                if (firstLocalization && ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, true))
                 {
                     firstLocalization = false;
                     await OnNearestFavouriteRequested(message.Position);

@@ -41,8 +41,8 @@ namespace TramlineFive.Common.ViewModels
             ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage(false)));
 
             mapService = SimpleIoc.Default.GetInstance<MapService>();
-            int maxTextZoom = ApplicationService.GetIntSetting("MaxTextZoom", 0);
-            int maxPinsZoom = ApplicationService.GetIntSetting("MaxPinsZoom", 0);
+            int maxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
+            int maxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
 
             if (maxTextZoom > 0)
                 mapService.MaxTextZoom = maxTextZoom;
@@ -54,12 +54,12 @@ namespace TramlineFive.Common.ViewModels
             MessengerInstance.Register<NearbyStopsMessage>(this, OnNearbyStops);
             MessengerInstance.Register<SettingChanged<int>>(this, async (m) =>
             {
-                if (m.Name == "MaxTextZoom" && m.Value > 0)
+                if (m.Name == Settings.MaxTextZoom && m.Value > 0)
                 {
                     mapService.MaxTextZoom = m.Value;
                     await mapService.ReloadMapAsync();
                 }
-                else if (m.Name == "MaxPinsZoom" && m.Value > 0)
+                else if (m.Name == Settings.MaxPinsZoom && m.Value > 0)
                 {
                     mapService.MaxPinsZoom = m.Value;
                     await mapService.ReloadMapAsync();
