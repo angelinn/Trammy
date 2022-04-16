@@ -19,6 +19,7 @@ using TramlineFive.Common.Maps;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using Mapsui.Projections;
+using KdTree;
 
 namespace TramlineFive.Common.Services
 {
@@ -30,6 +31,9 @@ namespace TramlineFive.Common.Services
         private List<IFeature> features;
         public static List<StopLocation> Stops;
 
+        private readonly List<Style> activeStyles = new List<Style>();
+
+        private KdTree<float, IFeature> stopsTree;
         private INavigator navigator;
 
         private const int STOP_THRESHOLD = 500;
@@ -118,6 +122,7 @@ namespace TramlineFive.Common.Services
         private async Task<ILayer> LoadStops()
         {
             features = new List<IFeature>();
+            stopsTree = new KdTree<float, IFeature>(2, new KdTree.Math.GeoMath());
 
             Stops = await StopsLoader.LoadStopsAsync();
             foreach (var location in Stops)
@@ -146,10 +151,12 @@ namespace TramlineFive.Common.Services
                             //Opacity = 0.7f,
                         }
                     }
-                }; 
+                };
 
                 feature["stopObject"] = location;
                 features.Add(feature);
+
+                stopsTree.Add(new float[] { (float)location.Lat, (float)location.Lon }, feature);
             }
 
             return new Layer
@@ -163,6 +170,11 @@ namespace TramlineFive.Common.Services
 
         public void MoveToStop(string code)
         {
+            foreach (Style style in activeStyles)
+                style.Enabled = false;
+
+            activeStyles.Clear();
+
             foreach (IFeature feature in features)
             {
                 StopLocation location = feature["stopObject"] as StopLocation;
@@ -171,44 +183,49 @@ namespace TramlineFive.Common.Services
                     MPoint point = new MPoint(location.Lon, location.Lat);
 
                     foreach (Style style in feature.Styles)
+                    {
+                        activeStyles.Add(style);
                         style.Enabled = true;
+                    }
 
                     MoveTo(point, 16);
                 }
             }
         }
 
+
         public void ShowNearbyStops(MPoint position, bool hideOthers = false)
         {
             List<KeyValuePair<double, StopLocation>> nearbyStops = new List<KeyValuePair<double, StopLocation>>();
 
-            foreach (IFeature feature in features)
+            MPoint pointLan = SphericalMercator.ToLonLat(position);
+            var neighbours = stopsTree.GetNearestNeighbours(new float[] { (float)pointLan.Y, (float)pointLan.X }, 10);
+
+            foreach (Style style in activeStyles)
+                style.Enabled = false;
+
+            activeStyles.Clear();
+
+            int i = 0;
+            foreach (var neighbour in neighbours)
             {
-                StopLocation location = feature["stopObject"] as StopLocation;
+                StopLocation location = neighbour.Value["stopObject"] as StopLocation;
+                nearbyStops.Add(new KeyValuePair<double, StopLocation>(i++, location));
 
-                MPoint point = new MPoint(location.Lon, location.Lat);
-                MPoint local = SphericalMercator.FromLonLat(point);
-                MPoint difference = position - local;
-
-                if (Math.Abs(difference.X) < STOP_THRESHOLD && Math.Abs(difference.Y) < STOP_THRESHOLD)
+                foreach (Style style in neighbour.Value.Styles)
                 {
-                    nearbyStops.Add(new KeyValuePair<double, StopLocation>(Math.Abs(difference.X) + Math.Abs(difference.Y), location));
-
-                    foreach (Style style in feature.Styles)
-                        style.Enabled = true;
+                    activeStyles.Add(style);
+                    style.Enabled = true;
                 }
-                else 
-                    foreach(Style style in feature.Styles)
-                        style.Enabled = false;
             }
 
-            Messenger.Default.Send(new NearbyStopsMessage(nearbyStops.OrderBy(p => p.Key).Select(p => p.Value).ToList()));
-        } 
+            Messenger.Default.Send(new NearbyStopsMessage(nearbyStops.Select(p => p.Value).ToList()));
+        }
 
         public void OnMapInfo(object sender, MapInfoEventArgs e)
         {
             Messenger.Default.Send(new MapClickedMessage());
- 
+
             if (e.MapInfo.Feature != null && e.MapInfo.Feature.Styles.First().Enabled)
             {
                 StopLocation location = e.MapInfo.Feature["stopObject"] as StopLocation;
@@ -216,8 +233,8 @@ namespace TramlineFive.Common.Services
                 Messenger.Default.Send(new StopSelectedMessage(location.Code, true));
                 return;
             }
-            ShowNearbyStops(e.MapInfo.WorldPosition);
-            SendMapRefreshMessage();
+            //ShowNearbyStops(e.MapInfo.WorldPosition);
+            //SendMapRefreshMessage();
         }
 
     }
