@@ -17,9 +17,14 @@ namespace TramlineFive.UWP.Services
             return true;
         }
 
+        public bool OpenLocationSettingsPage()
+        {
+            return true;
+        }
+
         public void RequestLocationPermissions()
         {
-            throw new NotImplementedException();
+
         }
     }
 }
