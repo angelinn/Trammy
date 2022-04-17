@@ -102,7 +102,7 @@ namespace TramlineFive.Common.Services
 
             MPoint userLocationMap = new MPoint(x, y);
 
-            navigator.NavigateTo(userLocationMap, map.Resolutions[16], 1000, home ? null : Easing.Linear);
+            navigator.NavigateTo(userLocationMap, map.Resolutions[17], 1000, home ? null : Easing.Linear);
 
             ShowNearbyStops(userLocationMap);
         }
