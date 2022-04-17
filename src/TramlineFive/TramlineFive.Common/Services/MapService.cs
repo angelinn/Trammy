@@ -29,12 +29,12 @@ namespace TramlineFive.Common.Services
         private Map map;
         private SymbolStyle pinStyle;
         private SymbolStyle userStyle;
-        private List<IFeature> features;
         public static List<StopLocation> Stops;
 
+        private KdTree<float, IFeature> stopsTree;
+        private Dictionary<string, IFeature> stopsDictionary;
         private readonly List<Style> activeStyles = new List<Style>();
 
-        private KdTree<float, IFeature> stopsTree;
         private INavigator navigator;
 
         private const int STOP_THRESHOLD = 500;
@@ -119,11 +119,11 @@ namespace TramlineFive.Common.Services
             };
         }
 
-
         private async Task<ILayer> LoadStops()
         {
-            features = new List<IFeature>();
+            List<IFeature> features = new List<IFeature>();
             stopsTree = new KdTree<float, IFeature>(2, new KdTree.Math.GeoMath());
+            stopsDictionary = new Dictionary<string, IFeature>();
 
             Stops = await StopsLoader.LoadStopsAsync();
             foreach (var location in Stops)
@@ -159,6 +159,7 @@ namespace TramlineFive.Common.Services
                 features.Add(feature);
 
                 stopsTree.Add(new float[] { (float)location.Lat, (float)location.Lon }, feature);
+                stopsDictionary.Add(location.Code, feature);
             }
 
             return new Layer
@@ -177,24 +178,19 @@ namespace TramlineFive.Common.Services
 
             activeStyles.Clear();
 
-            foreach (IFeature feature in features)
+            IFeature feature = stopsDictionary[code];
+
+            StopLocation location = feature["stopObject"] as StopLocation;
+            MPoint point = new MPoint(location.Lon, location.Lat);
+
+            foreach (Style style in feature.Styles)
             {
-                StopLocation location = feature["stopObject"] as StopLocation;
-                if (location.Code == code)
-                {
-                    MPoint point = new MPoint(location.Lon, location.Lat);
-
-                    foreach (Style style in feature.Styles)
-                    {
-                        activeStyles.Add(style);
-                        style.Enabled = true;
-                    }
-
-                    MoveTo(point, 17);
-                }
+                activeStyles.Add(style);
+                style.Enabled = true;
             }
-        }
 
+            MoveTo(point, 17);
+        }
 
         public void ShowNearbyStops(MPoint position, bool hideOthers = false)
         {
