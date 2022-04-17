@@ -3,9 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.LocationPromptPage">
 
-    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="20">
-        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="Приложението има нужда от вашето местоположение, за да работи. Моля позволете на приложението да го достъпи." />
-        <Button Clicked="LocationPromptClicked" Text="ОК" />
-    </StackLayout>
+    <Grid BackgroundColor="DodgerBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="250" />
+        </Grid.RowDefinitions>
+        <StackLayout VerticalOptions="End" HorizontalOptions="Center">
+            <Label FontFamily="mio" Text="fmd_good" TextColor="White"  FontSize="186" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Label TextColor="White" FontSize="21" HorizontalTextAlignment="Center" Margin="15,10,15,10" Text="Приложението работи най-добре с използване на местоположение." />
+            <Label TextColor="LightGray" FontSize="15" HorizontalTextAlignment="Center" Text="Местоположението ви са лични данни, които не се съхраняват от нас и се използват само на вашето устройство." />
+        </StackLayout>
 
+        <Button Grid.Row="1" VerticalOptions="Start" Clicked="LocationPromptClicked" Text="ОК" BackgroundColor="White" Margin="30,20,30,0" CornerRadius="11" />
+    </Grid>
 </ContentPage>
