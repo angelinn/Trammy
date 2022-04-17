@@ -57,12 +57,12 @@ namespace TramlineFive.Common.ViewModels
                 if (m.Name == Settings.MaxTextZoom && m.Value > 0)
                 {
                     mapService.MaxTextZoom = m.Value;
-                    await mapService.ReloadMapAsync();
+                    await mapService.LoadMapAsync();
                 }
                 else if (m.Name == Settings.MaxPinsZoom && m.Value > 0)
                 {
                     mapService.MaxPinsZoom = m.Value;
-                    await mapService.ReloadMapAsync();
+                    await mapService.LoadMapAsync();
                 }
             });
         }

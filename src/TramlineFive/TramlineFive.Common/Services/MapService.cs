@@ -20,6 +20,7 @@ using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using Mapsui.Projections;
 using KdTree;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace TramlineFive.Common.Services
 {
@@ -38,8 +39,8 @@ namespace TramlineFive.Common.Services
 
         private const int STOP_THRESHOLD = 500;
 
-        public int MaxPinsZoom { get; set; } = 6;
-        public int MaxTextZoom { get; set; } = 3;
+        public int MaxPinsZoom { get; set; } = 15;
+        public int MaxTextZoom { get; set; } = 17;
 
         public MapService()
         {
@@ -49,9 +50,9 @@ namespace TramlineFive.Common.Services
         public async Task Initialize(Map map, INavigator navigator)
         {
             this.map = map;
-            MPoint centerOfSofia = new MPoint(23.3219, 42.6977);
+            MPoint centerOfSofia = new MPoint(23.3196994, 42.6969899);
             MPoint point = SphericalMercator.FromLonLat(centerOfSofia);
-            map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[15]); ShowNearbyStops(point); };
+            map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[17]); ShowNearbyStops(point); };
 
             map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
             LoadPinStyles();
@@ -64,9 +65,9 @@ namespace TramlineFive.Common.Services
             navigator.Navigated = (sender, args) => SendMapRefreshMessage();
         }
 
-        public async Task ReloadMapAsync()
+        public async Task LoadMapAsync()
         {
-            MPoint centerOfSofia = new MPoint(23.3219, 42.6977);
+            MPoint centerOfSofia = new MPoint(23.3196994, 42.6969899);
             MPoint point = SphericalMercator.FromLonLat(centerOfSofia);
             map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[15]); };
 
@@ -140,14 +141,15 @@ namespace TramlineFive.Common.Services
                             BitmapId = pinStyle.BitmapId,
                             SymbolOffset = new Offset(0, 30),
                             SymbolScale = pinStyle.SymbolScale,
-                            MaxVisible = MaxPinsZoom + 0.5
+                            MaxVisible = map.Resolutions[MaxPinsZoom]
                         },
                         new LabelStyle
                         {
                             Enabled = pinStyle.Enabled,
-                            MaxVisible = MaxTextZoom + 0.5,
+                            MaxVisible = map.Resolutions[MaxTextZoom],
                             Text = $"{location.PublicName} ({location.Code})",
-                            Offset = new Offset(0, -45)
+                            Offset = new Offset(0, -45),
+                            
                             //Opacity = 0.7f,
                         }
                     }
@@ -188,7 +190,7 @@ namespace TramlineFive.Common.Services
                         style.Enabled = true;
                     }
 
-                    MoveTo(point, 16);
+                    MoveTo(point, 17);
                 }
             }
         }
@@ -199,7 +201,7 @@ namespace TramlineFive.Common.Services
             List<KeyValuePair<double, StopLocation>> nearbyStops = new List<KeyValuePair<double, StopLocation>>();
 
             MPoint pointLan = SphericalMercator.ToLonLat(position);
-            var neighbours = stopsTree.GetNearestNeighbours(new float[] { (float)pointLan.Y, (float)pointLan.X }, 10);
+            var neighbours = stopsTree.GetNearestNeighbours(new float[] { (float)pointLan.Y, (float)pointLan.X }, 10).Select(n => n.Value).ToList();
 
             foreach (Style style in activeStyles)
                 style.Enabled = false;
@@ -209,17 +211,74 @@ namespace TramlineFive.Common.Services
             int i = 0;
             foreach (var neighbour in neighbours)
             {
-                StopLocation location = neighbour.Value["stopObject"] as StopLocation;
+                StopLocation location = neighbour["stopObject"] as StopLocation;
                 nearbyStops.Add(new KeyValuePair<double, StopLocation>(i++, location));
 
-                foreach (Style style in neighbour.Value.Styles)
+                foreach (Style style in neighbour.Styles)
                 {
                     activeStyles.Add(style);
                     style.Enabled = true;
                 }
             }
 
+            //FilterStops(neighbours);
+
             Messenger.Default.Send(new NearbyStopsMessage(nearbyStops.Select(p => p.Value).ToList()));
+        }
+
+        private void FilterStops(List<IFeature> features)
+        {
+            bool[] processed = new bool[features.Count];
+
+            int i = 0;
+            foreach (IFeature feature in features)
+            {
+                if (!processed[i])
+                {
+                    processed[i] = true;
+                    StopLocation location = feature["stopObject"] as StopLocation;
+
+                    foreach (Style style in feature.Styles)
+                    {
+                        activeStyles.Add(style);
+
+                        System.Diagnostics.Debug.WriteLine($"Enabling all styles for {location.Code}");
+                        style.Enabled = true;
+                    }
+
+                    int j = 0;
+                    foreach (IFeature otherFeature in features)
+                    {
+                        StopLocation otherLocation = otherFeature["stopObject"] as StopLocation;
+                        double distance = SimpleIoc.Default.GetInstance<LocationService>().GetDistance(location.Lat, location.Lon, otherLocation.Lat, otherLocation.Lon);
+
+                        if (distance < 10 && !processed[j])
+                        {
+                            processed[j] = true;
+
+                            foreach (Style style in otherFeature.Styles)
+                            {
+                                if (style is LabelStyle)
+                                {
+                                    activeStyles.Remove(style);
+                                    style.Enabled = false;
+                                    System.Diagnostics.Debug.WriteLine($"Disabling label style for {location.Code}");
+                                }
+                                else
+                                {
+                                    activeStyles.Add(style);
+                                    style.Enabled = true;
+                                    System.Diagnostics.Debug.WriteLine($"Enabling symbol style for {location.Code}");
+                                }
+                            }
+                        }
+
+                        ++j;
+                    }
+                }
+
+                ++i;
+            }
         }
 
         public void OnMapInfo(object sender, MapInfoEventArgs e)
