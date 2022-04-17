@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" package="com.TramlineFive.beta" android:versionName="3.1.0" android:versionCode="31">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" package="com.TramlineFive.beta" android:versionName="3.3.0" android:versionCode="33">
 	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="31" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
