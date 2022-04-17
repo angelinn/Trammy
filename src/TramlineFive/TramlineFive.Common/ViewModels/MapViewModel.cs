@@ -118,7 +118,8 @@ namespace TramlineFive.Common.ViewModels
 
         private async Task OnMyLocationTappedAsync()
         {
-            Task<bool> t = LocalizeAsync();
+            if (!await LocalizeAsync())
+                ApplicationService.OpenLocationUI();
 
             MyLocationColor = "LightGray";
             await Task.Delay(100);

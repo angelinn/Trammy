@@ -8,5 +8,6 @@ namespace TramlineFive.Services
     {
         bool HasLocationPermissions();
         void RequestLocationPermissions();
+        bool OpenLocationSettingsPage();
     }
 }

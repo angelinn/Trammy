@@ -25,6 +25,6 @@ namespace TramlineFive.Common.Services
         void DisplayToast(string message);
         void DisplayNotification(string title, string message);
         void VibrateShort();
-
+        void OpenLocationUI();
     }
 }

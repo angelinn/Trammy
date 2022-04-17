@@ -43,5 +43,13 @@ namespace TramlineFive.Droid.Services
                 };
             context.RequestPermissions(PermissionsLocation, 0);
         }
+
+        public bool OpenLocationSettingsPage()
+        {
+            var intent = new Intent(Android.Provider.Settings.ActionLocationSourceSettings);
+            intent.AddFlags(ActivityFlags.NewTask);
+            Application.Context.StartActivity(intent);
+            return true;
+        }
     }
 }

@@ -35,7 +35,7 @@ namespace TramlineFive.Services.Main
         public async Task<Position> GetCurrentPositionAsync()
         {
             GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromSeconds(5));
-            Location position = await Geolocation.GetLocationAsync(request); 
+            Location position = await Geolocation.GetLocationAsync(request);
 
             //Plugin.Geolocator.Abstractions.Position position = await CrossGeolocator.Current.GetPositionAsync(timeout: TimeSpan.FromSeconds(5));
 
@@ -44,6 +44,11 @@ namespace TramlineFive.Services.Main
                 Latitude = position.Latitude,
                 Longitude = position.Longitude
             };
+        }
+
+        public void OpenLocationUI()
+        {
+            DependencyService.Get<IPermissionService>().OpenLocationSettingsPage();
         }
 
         public string GetVersion()
