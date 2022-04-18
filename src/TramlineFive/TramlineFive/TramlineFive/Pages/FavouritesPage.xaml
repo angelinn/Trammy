@@ -2,12 +2,14 @@
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.FavouritesPage"
+             xmlns:food="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
 
         <Grid BackgroundColor="DodgerBlue" >
@@ -24,12 +26,12 @@
                 <Label Text="tram" FontFamily="mio" FontSize="105" TextColor="DodgerBlue" HorizontalOptions="Center" Margin="0,10,0,0" Opacity="0.7" />
             </StackLayout>
 
-            <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="80" SeparatorColor="White" VerticalOptions="Fill" >
+            <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="80" SeparatorVisibility="None" VerticalOptions="Fill" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <SwipeView>
+                                <SwipeView Margin="10,5,10,5" >
                                     <SwipeView.RightItems>
                                         <SwipeItems>
                                             <SwipeItemView WidthRequest="100" Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}">
@@ -43,7 +45,10 @@
                                         </SwipeItems>
                                     </SwipeView.RightItems>
 
-                                    <Frame Margin="5,0,5,0" Padding="0" VerticalOptions="FillAndExpand" BackgroundColor="white" CornerRadius="30">
+                                    <food:PancakeView Padding="0" VerticalOptions="FillAndExpand" BackgroundColor="White" CornerRadius="25">
+                                        <food:PancakeView.Border>
+                                            <food:Border Color="DodgerBlue" Thickness="1" />
+                                        </food:PancakeView.Border>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="68" />
@@ -64,7 +69,7 @@
 
                                             <BoxView Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
                                         </Grid>
-                                    </Frame>
+                                    </food:PancakeView>
                                 </SwipeView>
                             </ViewCell.View>
                         </ViewCell>
