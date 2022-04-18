@@ -14,6 +14,7 @@ using TramlineFive.Common.Services;
 using TramlineFive.Services;
 using Android.Content;
 using System.Reflection;
+using Android.Util;
 
 namespace TramlineFive.Droid
 {
@@ -38,6 +39,8 @@ namespace TramlineFive.Droid
             PermissionService.Init(this);
             PushService.SetContext(this);
 
+            InitFontScale();
+
             LoadApplication(new App());
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -48,6 +51,16 @@ namespace TramlineFive.Droid
                     .SetValue(args.Exception, null);
                 throw args.Exception;
             };
+        }
+
+        private void InitFontScale()
+        {
+            Resources.Configuration.FontScale = (float)1;
+            //0.85 small, 1 standard, 1.15 big，1.3 more bigger ，1.45 supper big 
+            DisplayMetrics metrics = new DisplayMetrics();
+            WindowManager.DefaultDisplay.GetMetrics(metrics);
+            metrics.ScaledDensity = Resources.Configuration.FontScale * metrics.Density;
+            BaseContext.Resources.UpdateConfiguration(Resources.Configuration, metrics);
         }
 
         protected override void OnResume()
