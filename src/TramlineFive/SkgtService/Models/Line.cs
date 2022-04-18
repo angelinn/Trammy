@@ -12,9 +12,20 @@ namespace SkgtService.Models
         public string Direction { get; set; }
         [JsonProperty("vehicle_type")]
         public string VehicleType { get; set; }
-        public List<Arrival> Arrivals { get; set; }
+        public List<Arrival> Arrivals { get; set; } 
 
-        public string LastTimings => String.Join(", ", Arrivals.Take(3).Select(t => t.Time));
+        public string LastTimings => "Следващи: " + String.Join(", ", Arrivals.Take(3).Select(t => t.Time));
+        public string LastCalculated => "Следващи: " + String.Join(", ", Arrivals.Skip(1).Take(3).Select(t =>
+        {
+            TimeSpan arrival = DateTime.Parse(t.Time) - DateTime.Now;
+            int minutes = arrival.Minutes;
+
+            if (arrival.Hours > 0)
+                minutes += arrival.Hours * 60;
+
+            return minutes + " мин";
+        }));
+
         public int Minutes
         {
             get
