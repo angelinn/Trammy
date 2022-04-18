@@ -62,12 +62,12 @@
                                             </Grid.ColumnDefinitions>
                                             <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
                                                 <Label Text="{Binding Name}" TextColor="White" FontSize="40" />
-                                                <Label Text="{Binding TransportType}" TextColor="White" />
-                                                <Label Text="{Binding LastTimings}" TextColor="White" />
+                                                <Label Text="{Binding TransportType}" TextColor="White"  />
+                                                <Label Text="{Binding LastCalculated}" TextColor="White"  />
                                             </StackLayout>
                                             <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0,0,0,0">
                                                 <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>
-                                                <Label Text="минути" TextColor="White" HorizontalOptions="Center" />
+                                                <Label Text="минути" TextColor="White" HorizontalOptions="Center"  />
                                             </StackLayout>
                                         </Grid>
                                     </Frame>
