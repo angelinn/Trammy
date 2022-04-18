@@ -106,10 +106,11 @@ namespace TramlineFive.Common.ViewModels
             IsLoading = true;
 
             Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).OrderByDescending(f => f.TimesClicked));
-            RaisePropertyChanged("Favourites");
-            RaisePropertyChanged("HasFavourites"); 
 
             IsLoading = false;
+
+            RaisePropertyChanged("Favourites");
+            RaisePropertyChanged("HasFavourites");
 
             MessengerInstance.Send(new FavouritesChangedMessage(Favourites.ToList()));
         }
