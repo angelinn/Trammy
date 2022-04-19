@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="licenses.yaml" />
     <None Remove="person.png" />
     <None Remove="pin.png" />
     <None Remove="pin.svg" />
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="licenses.yaml" />
     <EmbeddedResource Include="person.png" />
     <EmbeddedResource Include="pin.png" />
     <EmbeddedResource Include="location.svg" />
@@ -39,6 +41,7 @@
     <PackageReference Include="Mapsui" Version="4.0.0-beta.3" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.0.1-alpha" />
     <PackageReference Include="Octokit" Version="0.28.0" />
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
 
   <ItemGroup>

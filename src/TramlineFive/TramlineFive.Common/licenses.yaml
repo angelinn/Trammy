@@ -1,0 +1,30 @@
+﻿licenses:
+  - name: "Mapsui"
+    license: "MIT"
+    url: "https://github.com/Mapsui/Mapsui"
+  
+  - name: "Xamarin Forms"
+    license: "MIT"
+    url: "https://github.com/xamarin/Forms"
+
+  - name: "Xamarin Essentials"
+    license: "MIT" 
+    url: "https://github.com/xamarin/Essentials"
+
+  - name: "Newtonsonft.JSON"
+    license: "MIT"
+    url: ""
+
+  - name: "YamlDotNet"
+
+  - name: "PancakeView"
+
+  - name: "sqlite"
+
+  - name: "kd tree"
+    license: "MIT"
+    url: "https://github.com/codeandcats/KdTree"
+
+  - name: "octokit"
+
+  - name: "mvvmlight"

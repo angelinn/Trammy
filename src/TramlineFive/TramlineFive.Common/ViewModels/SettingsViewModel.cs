@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using TramlineFive.Common.Messages;
+using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
 using TramlineFive.DataAccess.Domain;
 
