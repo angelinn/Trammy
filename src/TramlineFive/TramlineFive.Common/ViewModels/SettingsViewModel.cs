@@ -30,7 +30,7 @@ namespace TramlineFive.Common.ViewModels
             ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, true);
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
-            SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, "wikimedia");
+            SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, TileServerSettings.TileServers.Keys.First());
         }
 
         private int maxTextZoom;

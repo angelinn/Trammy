@@ -56,7 +56,7 @@ namespace TramlineFive.Common.Services
             map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[17]); ShowNearbyStops(point); };
 
             await TileServerSettings.LoadTileServersAsync();
-            map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "wikimedia"));
+            map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
             LoadPinStyles();
 
             this.navigator = navigator;
@@ -74,7 +74,7 @@ namespace TramlineFive.Common.Services
             map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[15]); };
 
             map.Layers.Clear();
-            map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "wikimedia"));
+            map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
             LoadPinStyles();
 
             ILayer stopsLayer = await LoadStops();
