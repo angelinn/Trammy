@@ -2,30 +2,34 @@
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.HistoryPage"
+             xmlns:food="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions> 
 
-        <StackLayout BackgroundColor="DodgerBlue">
-            <Label Text="История" Margin="15,40,0,0" TextColor="White" FontSize="Medium" />
-        </StackLayout>
+        <Grid BackgroundColor="DodgerBlue">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
+                <Label Text="history" FontFamily="mio" TextColor="White" FontSize="30" VerticalTextAlignment="End"  />
+                <Label Text="История" HorizontalTextAlignment="Center" TextColor="White" FontSize="24" Margin="5,40,0,0" />
+            </StackLayout>
+        </Grid>
 
         <Grid Grid.Row="1">
             <Label Text="Няма история на търсенията. Потърсете спирка." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasHistory}" Margin="5" />
 
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
 
-            <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="60" SeparatorVisibility="None">
+            <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="70" SeparatorVisibility="None">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
+                        <ViewCell> 
                             <ViewCell.View>
-                                <Frame Padding="0">
-                                    <Grid>
+                                <food:PancakeView Margin="5,0,0,0">
+                                    <Grid> 
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="68" />
                                             <ColumnDefinition Width="*" />
@@ -42,9 +46,8 @@
                                             <Label Text="{Binding TimeStamp}" FontSize="Small" TextColor="DodgerBlue" />
                                         </StackLayout>
 
-                                        <BoxView Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
                                     </Grid>
-                                </Frame>
+                                </food:PancakeView>
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>

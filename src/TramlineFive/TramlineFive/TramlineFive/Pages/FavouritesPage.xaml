@@ -14,7 +14,7 @@
 
         <Grid BackgroundColor="DodgerBlue" >
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
-                <Label Text="tram" FontFamily="mio" TextColor="White" FontSize="30" VerticalTextAlignment="End"  />
+                <Label Text="favorite" FontFamily="mio" TextColor="White" FontSize="30" VerticalTextAlignment="End"  />
                 <Label Text="Любими" HorizontalTextAlignment="Center" Margin="5,40,0,0" TextColor="White" FontSize="24" />
             </StackLayout>
         </Grid>
@@ -22,18 +22,18 @@
         <Grid Grid.Row="1">
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
             <StackLayout HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding HasFavourites}" Padding="10">
-                <Label Text="Списъкът е празен. Потърсете спирка и я добавете към любими." FontAttributes="Italic" TextColor="Gray"  FontSize="21" HorizontalTextAlignment="Center" />
+                <Label Text="Списъкът е празен. Потърсете спирка и я добавете към любими." TextColor="Gray"  FontSize="21" HorizontalTextAlignment="Center" />
                 <Label Text="tram" FontFamily="mio" FontSize="105" TextColor="DodgerBlue" HorizontalOptions="Center" Margin="0,10,0,0" Opacity="0.7" />
             </StackLayout>
 
-            <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="80" SeparatorVisibility="None" VerticalOptions="Fill" >
+            <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="70" SeparatorVisibility="None" VerticalOptions="Fill" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <SwipeView Margin="10,5,10,5" >
+                                <SwipeView Margin="5,0,0,0" >
                                     <SwipeView.RightItems>
-                                        <SwipeItems>
+                                        <SwipeItems> 
                                             <SwipeItemView WidthRequest="100" Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}">
                                                 <Grid BackgroundColor="Red">
                                                     <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="0">
@@ -45,10 +45,7 @@
                                         </SwipeItems>
                                     </SwipeView.RightItems>
 
-                                    <food:PancakeView Padding="0" VerticalOptions="FillAndExpand" BackgroundColor="White" CornerRadius="25">
-                                        <food:PancakeView.Border>
-                                            <food:Border Color="DodgerBlue" Thickness="1" />
-                                        </food:PancakeView.Border>
+                                    <food:PancakeView Padding="0" VerticalOptions="FillAndExpand">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="68" />
@@ -66,8 +63,6 @@
                                                     <Label Text="{Binding TimesClicked, StringFormat='({0})'}" FontSize="Small"  />
                                                 </StackLayout>
                                             </StackLayout>
-
-                                            <BoxView Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
                                         </Grid>
                                     </food:PancakeView>
                                 </SwipeView>
