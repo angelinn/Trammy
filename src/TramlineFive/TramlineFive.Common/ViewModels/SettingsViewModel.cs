@@ -3,10 +3,12 @@ using SkgtService;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using TramlineFive.Common.Messages;
+using TramlineFive.Common.Services;
 using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels
@@ -18,6 +20,8 @@ namespace TramlineFive.Common.ViewModels
 
         public string UpdatedMessage => ApplicationService.GetStringSetting(Settings.StopsUpdated, null) ?? "Не е обновявано";
 
+        public List<string> TileServers => TileServerSettings.TileServers.Keys.ToList();
+
         public SettingsViewModel()
         {
             CleanHistoryCommand = new RelayCommand(async () => await CleanHistoryAsync());
@@ -26,6 +30,7 @@ namespace TramlineFive.Common.ViewModels
             ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, true);
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
+            SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, "wikimedia");
         }
 
         private int maxTextZoom;
@@ -59,6 +64,21 @@ namespace TramlineFive.Common.ViewModels
                 ApplicationService.SetIntSetting(Settings.MaxPinsZoom, maxPinsZoom);
                 MessengerInstance.Send(new SettingChanged<int>(Settings.MaxPinsZoom, maxPinsZoom));
                 RaisePropertyChanged(); 
+            }
+        }
+
+        private string selectedTileServer;
+        public string SelectedTileServer
+        {
+            get
+            {
+                return selectedTileServer;
+            }
+            set
+            {
+                selectedTileServer = value;
+                ApplicationService.SetStringSetting(Settings.SelectedTileServer, selectedTileServer);
+                MessengerInstance.Send(new SettingChanged<string>(Settings.SelectedTileServer, selectedTileServer));
             }
         }
 

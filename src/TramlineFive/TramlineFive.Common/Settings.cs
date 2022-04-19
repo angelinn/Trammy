@@ -10,4 +10,5 @@ public static class Settings
     public const string MaxTextZoom = "MaxTextZoom";
     public const string MaxPinsZoom = "MaxPinsZoom";
     public const string StopsUpdated = "StopsUpdated";
+    public const string SelectedTileServer = "SelectedTileServer";
 }

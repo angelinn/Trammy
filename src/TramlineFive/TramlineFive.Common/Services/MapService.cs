@@ -40,21 +40,23 @@ namespace TramlineFive.Common.Services
         private const int STOP_THRESHOLD = 500;
 
         public int MaxPinsZoom { get; set; } = 15;
-        public int MaxTextZoom { get; set; } = 17;
+        public int MaxTextZoom { get; set; } = 17; 
+
 
         public MapService()
         {
 
         }
 
-        public async Task Initialize(Map map, INavigator navigator)
+        public async Task Initialize(Map map, INavigator navigator, string tileServer)
         {
             this.map = map;
             MPoint centerOfSofia = new MPoint(23.3196994, 42.6969899);
             MPoint point = SphericalMercator.FromLonLat(centerOfSofia);
             map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[17]); ShowNearbyStops(point); };
 
-            map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
+            await TileServerSettings.LoadTileServersAsync();
+            map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "wikimedia"));
             LoadPinStyles();
 
             this.navigator = navigator;
@@ -65,14 +67,14 @@ namespace TramlineFive.Common.Services
             navigator.Navigated = (sender, args) => SendMapRefreshMessage();
         }
 
-        public async Task LoadMapAsync()
+        public async Task LoadMapAsync(string tileServer)
         {
             MPoint centerOfSofia = new MPoint(23.3196994, 42.6969899);
             MPoint point = SphericalMercator.FromLonLat(centerOfSofia);
             map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[15]); };
 
             map.Layers.Clear();
-            map.Layers.Add(HumanitarianTileServer.CreateTileLayer());
+            map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "wikimedia"));
             LoadPinStyles();
 
             ILayer stopsLayer = await LoadStops();

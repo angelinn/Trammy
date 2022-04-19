@@ -39,7 +39,8 @@ namespace TramlineFive.Pages
             };
 
             mapService = SimpleIoc.Default.GetInstance<MapService>();
-            mapService.Initialize(nativeMap, map.Navigator);
+
+            (BindingContext as MapViewModel).Initialize(nativeMap, map.Navigator);
 
             map.MapClicked += OnMapClicked;
             map.Info += OnMapInfo;

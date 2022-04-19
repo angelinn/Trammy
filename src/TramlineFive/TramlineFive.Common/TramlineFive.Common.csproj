@@ -21,6 +21,7 @@
     <None Remove="pin.svg" />
     <None Remove="stops-bg.json" />
     <None Remove="stops.json" />
+    <None Remove="tileservers.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +31,7 @@
     <EmbeddedResource Include="pin.svg" />
     <EmbeddedResource Include="stops-bg.json" />
     <EmbeddedResource Include="stops.json" />
+    <EmbeddedResource Include="tileservers.json" />
   </ItemGroup>
 
   <ItemGroup>

@@ -40,6 +40,9 @@
 
         <Label Text="Max zoom for pins" Margin="0,20,0,0" FontSize="Medium" />
         <Entry Text="{Binding MaxPinsZoom}" />
+
+        <Label Text="Tile servers" Margin="0,20,0,0" FontSize="Medium" />
+        <Picker ItemsSource="{Binding TileServers}" SelectedItem="{Binding SelectedTileServer}" />
     </StackLayout>
 
 </ContentPage>
