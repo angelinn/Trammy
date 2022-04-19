@@ -37,10 +37,9 @@ namespace TramlineFive.Pages
                 BackColor = Mapsui.Styles.Color.White,
                 CRS = "EPSG:3857"
             };
-
+            
             mapService = SimpleIoc.Default.GetInstance<MapService>();
-
-            (BindingContext as MapViewModel).Initialize(nativeMap, map.Navigator);
+            Task _ = (BindingContext as MapViewModel).Initialize(nativeMap, map.Navigator);
 
             map.MapClicked += OnMapClicked;
             map.Info += OnMapInfo;
