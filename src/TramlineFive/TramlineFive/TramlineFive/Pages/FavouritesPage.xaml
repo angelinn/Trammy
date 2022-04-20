@@ -46,7 +46,7 @@
                                         </SwipeItems>
                                     </SwipeView.RightItems>
 
-                                    <food:PancakeView Padding="0" VerticalOptions="FillAndExpand" xct:TouchEffect.NativeAnimation="True">
+                                    <food:PancakeView Padding="0" VerticalOptions="FillAndExpand" xct:TouchEffect.NativeAnimation="True" xct:TouchEffect.LongPressCommand="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" xct:TouchEffect.LongPressCommandParameter="{Binding}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="68" />
