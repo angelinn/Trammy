@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.SettingsPage"
-             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             xmlns:cv="clr-namespace:TramlineFive.Converters" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              Title="Настройки"
              BindingContext="{Binding SettingsViewModel, Source={StaticResource Locator}}">
 
@@ -13,38 +14,55 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <StackLayout Padding="10" >
-            <Label Text="Изчистване на историята на търсенията" FontSize="Medium" />
-            <StackLayout Orientation="Horizontal">
-                <Button Text="Изчисти история" Command="{Binding CleanHistoryCommand}" HorizontalOptions="Start" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}" />
-                <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}">
+        <StackLayout Padding="10">
+            <StackLayout Orientation="Horizontal" Padding="0,10,0,10" xct:TouchEffect.NativeAnimation="True">
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CleanHistoryCommand}" />
+                </StackLayout.GestureRecognizers>
+                
+                <Label FontFamily="mio" Text="delete" FontSize="24" TextColor="DodgerBlue" />
+                <Label Text="Изчистване на историята на търсенията" FontSize="Default" VerticalTextAlignment="Center" TextColor="Black" />
+                <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HeightRequest="10">
                     <ActivityIndicator.HorizontalOptions>
                         <OnPlatform x:TypeArguments="LayoutOptions" Android="StartAndExpand" WinPhone="FillAndExpand" />
                     </ActivityIndicator.HorizontalOptions>
                 </ActivityIndicator>
             </StackLayout>
+            <StackLayout Orientation="Horizontal" Padding="0,10,0,10" xct:TouchEffect.NativeAnimation="True">
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding UpdateStopsCommand}" />
+                </StackLayout.GestureRecognizers>
+                
+                <Label FontFamily="mio" Text="refresh" FontSize="24" TextColor="DodgerBlue" />
+                <Label Text="Презареди спирки" FontSize="Default" VerticalTextAlignment="Center" TextColor="Black" />
+                <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}" HeightRequest="10">
+                    <ActivityIndicator.HorizontalOptions>
+                        <OnPlatform x:TypeArguments="LayoutOptions" Android="StartAndExpand" WinPhone="FillAndExpand" />
+                    </ActivityIndicator.HorizontalOptions>
+                </ActivityIndicator>
+            </StackLayout>
+            <Label Text="{Binding UpdatedMessage, StringFormat='Последно обновено: {0}'}" FontSize="Small" Margin="0,5,0,0" />
 
-            <Label Text="Презареди спирки" FontSize="Medium" Margin="0,20,0,0" />
+            <StackLayout Orientation="Horizontal" Margin="0,15,0,0">
+                <Label FontFamily="mio" Text="history" FontSize="24" TextColor="DodgerBlue" VerticalTextAlignment="Center"  />
+                <Label Text="Покажи най-близка спирка при стартиране"  FontSize="Default" VerticalTextAlignment="Center" TextColor="Black"  />
+                <Switch IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" OnColor="DodgerBlue" ThumbColor="DodgerBlue" VerticalOptions="Center" />
+            </StackLayout>
 
-            <Button Text="GO" Command="{Binding UpdateStopsCommand}" IsEnabled="{Binding IsUpdatingStops, Converter={StaticResource InverseBool}}" HorizontalOptions="Start" />
-            <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}">
-                <ActivityIndicator.HorizontalOptions>
-                    <OnPlatform x:TypeArguments="LayoutOptions" Android="StartAndExpand" WinPhone="FillAndExpand" />
-                </ActivityIndicator.HorizontalOptions>
-            </ActivityIndicator>
-            <Label Text="{Binding UpdatedMessage, StringFormat='Последно обновено: {0}'}" />
+            <Grid>
+                <StackLayout Orientation="Horizontal" Margin="0,15,0,0">
+                    <Label FontFamily="mio" Text="map" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" />
+                    <Label Text="Tile сървър" FontSize="Default" VerticalTextAlignment="Center" TextColor="Black" />
 
-            <Label Text="Покажи най-близка спирка при стартиране" Margin="0,20,0,0" FontSize="Medium" />
-            <Switch IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" />
+                </StackLayout>
+                <Picker ItemsSource="{Binding TileServers}" SelectedItem="{Binding SelectedTileServer}" HorizontalOptions="End" WidthRequest="150" Margin="0,10,0,0" />
+            </Grid>
 
-            <Label Text="Max zoom for text" Margin="0,20,0,0" FontSize="Medium" />
+            <!--<Label Text="Max zoom for text" Margin="0,20,0,0" FontSize="Medium" />
             <Entry Text="{Binding MaxTextZoom}" />
 
             <Label Text="Max zoom for pins" Margin="0,20,0,0" FontSize="Medium" />
-            <Entry Text="{Binding MaxPinsZoom}" />
-
-            <Label Text="Tile servers" Margin="0,20,0,0" FontSize="Medium" />
-            <Picker ItemsSource="{Binding TileServers}" SelectedItem="{Binding SelectedTileServer}" />
+            <Entry Text="{Binding MaxPinsZoom}" />-->
         </StackLayout>
     </ScrollView>
 </ContentPage>
