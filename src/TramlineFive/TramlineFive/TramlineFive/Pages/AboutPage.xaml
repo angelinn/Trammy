@@ -13,6 +13,8 @@
         <Button Text="Докладвай бъг/предложение" HorizontalOptions="Start" />
 
         <Label Margin="0,20,0,0" Text="Това приложение е open source.&#x0a;&#x0a;Създадено е с цел улесняване на проверката на пристиганията на градския транспорт в България.&#x0a;&#x0a;Приложението не генерира печалба." />
+
+        <Button Text="Open source лицензи" Command="{Binding OpenLicensesPage}" />
     </StackLayout>
 </ContentPage>
     

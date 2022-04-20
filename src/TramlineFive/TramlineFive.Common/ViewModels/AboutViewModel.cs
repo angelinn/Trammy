@@ -1,6 +1,10 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace TramlineFive.Common.ViewModels
 {
@@ -21,5 +25,11 @@ namespace TramlineFive.Common.ViewModels
                 version = value;
             }
         }
+
+        public ICommand OpenLicensesPage => new RelayCommand(() =>
+        {
+            Task _ = SimpleIoc.Default.GetInstance<LicensesViewModel>().Initialize();
+            NavigationService.ChangePage("Licenses");
+        });
     }
 }

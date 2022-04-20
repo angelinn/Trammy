@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TramlineFive.Pages.LicensesPage"
+             Title="Open source лицензи"
+             BindingContext="{Binding LicensesViewModel, Source={StaticResource Locator}}">
+
+    <StackLayout Padding="10">
+        <Label HorizontalTextAlignment="Center" Text="Лицензи на библиотеки използвани в приложението" FontSize="25" />
+        <ListView ItemsSource="{Binding Licenses}" HasUnevenRows="True" IsGroupingEnabled="True" SeparatorVisibility="None">
+            <ListView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Margin="0,10,0,0">
+                            <Label Text="{Binding Key}" FontSize="15" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.GroupHeaderTemplate>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Name}" Detail="{Binding Url}" DetailColor="Blue" TextColor="Black" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>
+    

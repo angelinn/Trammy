@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using TramlineFive.Common.Models;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -11,7 +13,7 @@ namespace TramlineFive.Common.ViewModels;
 
 public class LicensesViewModel : BaseViewModel
 {
-    public Projects Licenses { get; private set; }
+    public List<IGrouping<string, Project>> Licenses { get; private set; }
 
     public async Task Initialize()
     {
@@ -20,11 +22,11 @@ public class LicensesViewModel : BaseViewModel
 
         string yaml = await reader.ReadToEndAsync();
 
-        var deserializer = new DeserializerBuilder()
+        IDeserializer deserializer = new DeserializerBuilder()
             .WithNamingConvention(LowerCaseNamingConvention.Instance)
             .Build();
 
-        Licenses = deserializer.Deserialize<Projects>(yaml);
+        Licenses = deserializer.Deserialize<Projects>(yaml).Licenses.GroupBy(l => l.License).ToList();
         RaisePropertyChanged("Licenses");
     }
 }
