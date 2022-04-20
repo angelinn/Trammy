@@ -9,6 +9,7 @@
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Forms;assembly=Mapsui.UI.Forms"
              xmlns:food="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
 
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}">
 
@@ -39,7 +40,7 @@
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid HorizontalOptions="FillAndExpand">
+                    <Grid HorizontalOptions="FillAndExpand" xct:TouchEffect.NativeAnimation="True">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding OpenHamburgerCommand}" />
                         </Grid.GestureRecognizers>
@@ -66,17 +67,17 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame CornerRadius="30" BackgroundColor="White" WidthRequest="130" Padding="10,8,5,10">
+                        <Frame CornerRadius="30" BackgroundColor="White" WidthRequest="130" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Frame}, AncestorLevel=1}}" />
+                            </Frame.GestureRecognizers>
+                            
                             <Grid ColumnSpacing="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="20" />
                                     <ColumnDefinition Width="40" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Grid}, AncestorLevel=1}}" />
-                                </Grid.GestureRecognizers>
 
                                 <Label FontFamily="mir" Text="&#xe530;" FontSize="17" VerticalOptions="Center" Margin="0,1,0,0" TextColor="Crimson" />
                                 <Label Grid.Column="1" Text="{Binding StopCode, StringFormat='({0})'}" TextColor="Black" FontSize="12"  HorizontalOptions="Start" />
@@ -85,7 +86,7 @@
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-            </CollectionView>
+            </CollectionView> 
 
             <Frame Grid.Row="2" Grid.RowSpan="2" Margin="15,-5,15,0" VerticalOptions="Start" Padding="0" CornerRadius="30" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
                 <ListView SeparatorColor="Transparent" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >

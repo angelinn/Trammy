@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             xmlns:cv="clr-namespace:TramlineFive.Converters" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
              BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" BackgroundColor="#FAFAFA">
 
@@ -36,7 +37,7 @@
                                 <Label Text="{Binding StopInfo.Name}" FontSize="Default" />
                                 <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="DodgerBlue" FontSize="Small" />
                             </StackLayout>
-                            <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,5,0">
+                            <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,5,0" xct:TouchEffect.NativeAnimation="True">
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
                                 </Grid.GestureRecognizers>

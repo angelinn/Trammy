@@ -5,6 +5,7 @@
              xmlns:pages="clr-namespace:TramlineFive.Pages"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="TramlineFive.MasterPage"
              NavigationPage.HasNavigationBar="False"
              BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}">
@@ -38,7 +39,7 @@
                 </Grid.ColumnDefinitions>
 
                 <BoxView Grid.ColumnSpan="3" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
-                <Grid>
+                <Grid xct:TouchEffect.NativeAnimation="True">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Map" />
                     </Grid.GestureRecognizers>
@@ -50,8 +51,8 @@
 
                         <Label Text="Карта" FontAttributes="Bold"  FontSize="12"  HorizontalOptions="Center" TextColor="{Binding IsMapVisible, Converter={StaticResource BoolToColor}}"  />
                     </StackLayout>
-                </Grid> 
-                <Grid Grid.Column="1">
+                </Grid>
+                <Grid Grid.Column="1" xct:TouchEffect.NativeAnimation="True">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Favourites" />
                     </Grid.GestureRecognizers>
@@ -63,8 +64,8 @@
 
                         <Label Text="Любими" FontAttributes="Bold" FontSize="12" HorizontalOptions="Center" TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"  />
                     </StackLayout>
-                </Grid> 
-                <Grid Grid.Column="2">
+                </Grid>
+                <Grid Grid.Column="2" xct:TouchEffect.NativeAnimation="True">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
                     </Grid.GestureRecognizers> 
@@ -136,16 +137,16 @@
                         <Label Text="Tramline Five v3.3.0" TextColor="White" Margin="5,-10,5,05"/>
                     </StackLayout>
                 </Grid>
-                <Grid Style="{StaticResource MenuItemContainer}">
+                <Grid Style="{StaticResource MenuItemContainer}" xct:TouchEffect.NativeAnimation="True">
                     <Label FontFamily="mio" Text="settings" Style="{StaticResource MenuIcon}" />
                     <Label Text="Настройки" Style="{StaticResource MenuText}" />
 
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding OpenSettingsCommand}" />
                     </Grid.GestureRecognizers>
-                </Grid>
+                </Grid> 
 
-                <Grid Style="{StaticResource MenuItemContainer}">
+                <Grid Style="{StaticResource MenuItemContainer}" xct:TouchEffect.NativeAnimation="True">
                     <Label FontFamily="mio" Text="info" Style="{StaticResource MenuIcon}" />
                     <Label Text="Информация" Style="{StaticResource MenuText}" />
                 </Grid>

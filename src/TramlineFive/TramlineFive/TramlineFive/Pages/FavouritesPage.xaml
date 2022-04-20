@@ -2,8 +2,9 @@
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.FavouritesPage"
-             xmlns:food="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-
+             xmlns:food="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+      
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
     <Grid>
@@ -35,7 +36,7 @@
                                     <SwipeView.RightItems>
                                         <SwipeItems> 
                                             <SwipeItemView WidthRequest="100" Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}">
-                                                <Grid BackgroundColor="Red">
+                                                <Grid BackgroundColor="Red" xct:TouchEffect.NativeAnimation="True">
                                                     <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="0">
                                                         <Label Text="delete" FontFamily="mio" FontSize="30" TextColor="White" HorizontalOptions="Center" />
                                                         <Label Text="Изтрий" TextColor="White" Margin="0,1,0,0" />
@@ -45,7 +46,7 @@
                                         </SwipeItems>
                                     </SwipeView.RightItems>
 
-                                    <food:PancakeView Padding="0" VerticalOptions="FillAndExpand">
+                                    <food:PancakeView Padding="0" VerticalOptions="FillAndExpand" xct:TouchEffect.NativeAnimation="True">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="68" />
