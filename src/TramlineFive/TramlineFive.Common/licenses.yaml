@@ -16,15 +16,24 @@
     url: ""
 
   - name: "YamlDotNet"
+    license: "MIT"
 
-  - name: "PancakeView"
+  - name: "Xamarin.Forms.PancakeView"
+    license: "MIT"
+    url: "https://github.com/sthewissen/Xamarin.Forms.PancakeView"
 
   - name: "sqlite"
+    license: "MIT" 
+    url: "https://github.com/praeclarum/sqlite-net"
 
   - name: "kd tree"
     license: "MIT"
     url: "https://github.com/codeandcats/KdTree"
 
   - name: "octokit"
+    license: "MIT"
+    url: "https://github.com/octokit/octokit.net"
 
   - name: "mvvmlight"
+    license: "MIT"
+    url: "https://github.com/lbugnion/mvvmlight"
