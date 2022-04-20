@@ -149,6 +149,10 @@
                 <Grid Style="{StaticResource MenuItemContainer}" xct:TouchEffect.NativeAnimation="True">
                     <Label FontFamily="mio" Text="info" Style="{StaticResource MenuIcon}" />
                     <Label Text="Информация" Style="{StaticResource MenuText}" />
+
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenAboutCommand}" />
+                    </Grid.GestureRecognizers>
                 </Grid>
             </StackLayout>
         </Grid>

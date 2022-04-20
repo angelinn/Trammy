@@ -16,6 +16,7 @@ namespace TramlineFive.Common.ViewModels
         public ICommand ChangeViewCommand { get; private set; }
         public ICommand ToggleHamburgerCommand { get; private set; }
         public ICommand OpenSettingsCommand { get; private set; }
+        public ICommand OpenAboutCommand { get; private set; }
 
         private Dictionary<string, ViewData> pages = new Dictionary<string, ViewData>
         {
@@ -29,6 +30,7 @@ namespace TramlineFive.Common.ViewModels
             ChangeViewCommand = new RelayCommand<string>((p) => ChangeView(p));
             ToggleHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
             OpenSettingsCommand = new RelayCommand(() => NavigationService.ChangePage("Settings"));
+            OpenAboutCommand = new RelayCommand(() => NavigationService.ChangePage("About"));
         }
 
         private void ChangeView(string view)

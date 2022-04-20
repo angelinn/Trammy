@@ -6,7 +6,7 @@
              BindingContext="{Binding AboutViewModel, Source={StaticResource Locator}}">
 
     <StackLayout Padding="10">
-        <Label Text="Tramline Five BETA" FontSize="Large" />
+        <Label Text="Tramline Five" FontSize="Large" />
         <Label Text="{Binding Version, StringFormat='Version: {0}'}" FontSize="Large" />
 
         <Button Text="FAQ" HorizontalOptions="Start" Margin="0,20,0,0" />
