@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Services;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -24,11 +25,15 @@ namespace TramlineFive.Pages
             masterPage = new MasterPage();
         }
 
-        private void LocationPromptClicked(object sender, EventArgs e)
+        private async void LocationPromptClicked(object sender, EventArgs e)
         {
-            IPermissionService permissionService = DependencyService.Get<IPermissionService>();
-            if (!permissionService.HasLocationPermissions())
-                permissionService.RequestLocationPermissions();
+            PermissionStatus status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+            if (status != PermissionStatus.Granted)
+                await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+
+            //IPermissionService permissionService = DependencyService.Get<IPermissionService>();
+            //if (!permissionService.HasLocationPermissions())
+            //    permissionService.RequestLocationPermissions();
 
             Application.Current.MainPage = new NavigationPage(masterPage);
         }

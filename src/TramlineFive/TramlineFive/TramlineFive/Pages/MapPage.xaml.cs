@@ -67,13 +67,13 @@ namespace TramlineFive.Pages
 
         }
 
-        private async void OnMapInfo(object sender, Mapsui.UI.MapInfoEventArgs e)
+        private void OnMapInfo(object sender, Mapsui.UI.MapInfoEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine($"OnMapInfo is opened: {isOpened}");
             Messenger.Default.Send(new MapClickedResponseMessage(isOpened));
 
             if (isOpened)
-                await HideVirtualTables();
+                HideVirtualTables();
             else
                 mapService.OnMapInfo(sender, e);
         }
@@ -88,7 +88,7 @@ namespace TramlineFive.Pages
 
         }
 
-        private async Task ShowVirtualTables(int linesCount)
+        private void ShowVirtualTables(int linesCount)
         {
             if (isOpened)
                 isOpened = false;
@@ -96,38 +96,33 @@ namespace TramlineFive.Pages
             int coef = linesCount > 2 ? 2 : linesCount;
             slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
 
-            await slideMenu.TranslateTo(0, 0, 400);
+            Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height - slideMenu.HeightRequest);
 
-            map.Animate("ShowStop",
-                new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height - slideMenu.HeightRequest + 150),
-                16,
-                100,
-                Easing.Linear);
+            Task _ = slideMenu.TranslateTo(0, 0, 400);
+            animation.Commit(map, "ShowMap", 16, 400);
+
 
             isOpened = !isOpened;
         }
 
-        private async Task HideVirtualTables()
+        private void HideVirtualTables()
         {
-            map.Animate("Expand",
-                new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height),
-                16,
-                100,
-                Easing.Linear);
+            Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height);
 
-            await slideMenu.TranslateTo(0, Height, 400);
+            Task _ = slideMenu.TranslateTo(0, Height, 400);
+            animation.Commit(map, "Expand", 16, 400);
 
             isOpened = false;
         }
 
         private void ToggleMap(ShowMapMessage message)
         {
-            Device.BeginInvokeOnMainThread(async () =>
+            Device.BeginInvokeOnMainThread(() =>
             {
                 if (!message.Show && isOpened)
-                    await HideVirtualTables();
+                    HideVirtualTables();
                 else if (message.Show)
-                    await ShowVirtualTables(message.ArrivalsCount);
+                    ShowVirtualTables(message.ArrivalsCount);
             });
         }
 

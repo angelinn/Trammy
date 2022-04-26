@@ -34,6 +34,7 @@ namespace TramlineFive.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            Xamarin.Essentials.Platform.Init(this, bundle); // add this line to your code, it may also be called: bundle
 
             ToastService.Init(this);
             PermissionService.Init(this);
@@ -79,6 +80,13 @@ namespace TramlineFive.Droid
             throw new NotImplementedException();
         }
 
-}
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
+        {
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+    }
 }
 

@@ -19,7 +19,7 @@ namespace TramlineFive.Common.Services
         void OpenUri(string uri);
         void RunOnUIThread(Action action);
         Task<Position> GetCurrentPositionAsync();
-        bool HasLocationPermissions();
+        Task<bool> HasLocationPermissions();
 
         Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel = "");
         void DisplayToast(string message);

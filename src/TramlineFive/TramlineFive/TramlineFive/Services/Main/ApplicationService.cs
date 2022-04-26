@@ -66,9 +66,9 @@ namespace TramlineFive.Services.Main
             Device.OpenUri(new Uri(uri));
         }
 
-        public bool HasLocationPermissions()
+        public async Task<bool> HasLocationPermissions()
         {
-            return DependencyService.Get<IPermissionService>().HasLocationPermissions();
+            return await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>() == PermissionStatus.Granted;
         }
 
         public void RunOnUIThread(Action action)
