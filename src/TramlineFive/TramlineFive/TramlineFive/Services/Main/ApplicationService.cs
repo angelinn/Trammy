@@ -46,6 +46,11 @@ namespace TramlineFive.Services.Main
             };
         }
 
+        public async Task<bool> RequestLocationPermissions()
+        {
+            return await Permissions.RequestAsync<Permissions.LocationWhenInUse>() == PermissionStatus.Granted;
+        }
+
         public void OpenLocationUI()
         {
             DependencyService.Get<IPermissionService>().OpenLocationSettingsPage();
@@ -105,4 +110,4 @@ namespace TramlineFive.Services.Main
             Preferences.Set(key, value);
         }
     }
-} 
+}

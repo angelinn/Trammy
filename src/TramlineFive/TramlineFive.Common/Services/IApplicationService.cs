@@ -26,5 +26,6 @@ namespace TramlineFive.Common.Services
         void DisplayNotification(string title, string message);
         void VibrateShort();
         void OpenLocationUI();
+        Task<bool> RequestLocationPermissions();
     }
 }

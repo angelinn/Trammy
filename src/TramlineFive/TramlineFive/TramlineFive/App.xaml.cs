@@ -10,6 +10,7 @@ using TramlineFive.Common.ViewModels;
 using TramlineFive.DataAccess;
 using TramlineFive.Services;
 using TramlineFive.Services.Main;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace TramlineFive
@@ -18,7 +19,7 @@ namespace TramlineFive
     {
         public App()
         {
-            InitializeComponent(); 
+            InitializeComponent();
 
             if (!SimpleIoc.Default.ContainsCreated<IApplicationService>())
             {
@@ -31,18 +32,23 @@ namespace TramlineFive
             IPathService dbPathService = DependencyService.Get<IPathService>();
             StopsLoader.Initialize(dbPathService.BaseFilePath);
 
-            IPermissionService permissionService = DependencyService.Get<IPermissionService>();
+            //IPermissionService permissionService = DependencyService.Get<IPermissionService>();
 
-            if (!permissionService.HasLocationPermissions())
-                MainPage = new Pages.LocationPromptPage();
-            else
-                MainPage = new NavigationPage(new MasterPage());
+            //if (!permissionService.HasLocationPermissions())
+            //    MainPage = new Pages.LocationPromptPage();
+            //else
+            //    MainPage = new NavigationPage(new MasterPage());
 
             DependencyService.Get<IVersionCheckingService>().CreateTask();
         }
 
         protected override async void OnStart()
         {
+            if (VersionTracking.IsFirstLaunchEver && await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>() != PermissionStatus.Granted)
+                MainPage = new Pages.LocationPromptPage();
+            else
+                MainPage = new NavigationPage(new MasterPage());
+
             IPathService dbPathService = DependencyService.Get<IPathService>();
             TramlineFiveContext.DatabasePath = dbPathService.DBPath;
             await TramlineFiveContext.EnsureCreatedAsync();

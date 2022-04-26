@@ -27,7 +27,7 @@ namespace TramlineFive.Common.ViewModels
 
         public ICommand MyLocationCommand { get; private set; }
         public ICommand OpenHamburgerCommand { get; private set; }
-        public ICommand ShowMapCommand { get; private set; } 
+        public ICommand ShowMapCommand { get; private set; }
         public ICommand ShowSearchCommand { get; private set; }
 
         private MapService mapService;
@@ -161,59 +161,66 @@ namespace TramlineFive.Common.ViewModels
 
         private async Task OnMyLocationTappedAsync()
         {
-            if (!await LocalizeAsync())
+            if (await LocalizeAsync() == LocationStatus.TurnedOff)
                 ApplicationService.OpenLocationUI();
         }
 
-        private async Task<bool> LocalizeAsync(bool first = false)
+        private async Task<LocationStatus> LocalizeAsync(bool first = false)
         {
-            return await Task.Run(async () =>
+            bool isAnimating = true;
+            Task _ = Task.Run(async () =>
             {
-                bool isAnimating = true;
-                Task _ = Task.Run(async () =>
+                while (isAnimating)
                 {
-                    while (isAnimating)
-                    {
-                        HasLocation = !HasLocation;
-                        await Task.Delay(500);
-                    }
-                });
-
-                try
-                {
-                    if (await ApplicationService.HasLocationPermissions())
-                    {
-                        Position position = await ApplicationService.GetCurrentPositionAsync();
-
-                        ApplicationService.RunOnUIThread(() =>
-                        {
-                            mapService.MoveToUser(position, true);
-                        });
-
-                        MessengerInstance.Send(new UpdateLocationMessage(position));
-
-                        isAnimating = false;
-                        HasLocation = true;
-                        return true;
-                    }
-
-                    ApplicationService.DisplayToast("Достъпът до местоположение не е позволен");
-
-                    isAnimating = false;
-                    HasLocation = false;
-                    return false;
-
-                }
-                catch (Exception ex)
-                {
-                    if (!first)
-                        ApplicationService.DisplayToast("Моля включете местоположението.");
-
-                    isAnimating = false;
-                    HasLocation = false;
-                    return false;
+                    HasLocation = !HasLocation;
+                    await Task.Delay(500);
                 }
             });
+
+            try
+            {
+                if (!await ApplicationService.HasLocationPermissions())
+                {
+                    if (first)
+                    {
+                        isAnimating = false;
+                        HasLocation = false;
+
+                        return LocationStatus.NoPermissions;
+                    }
+
+
+                    if (!await ApplicationService.RequestLocationPermissions())
+                    {
+                        isAnimating = false;
+                        HasLocation = false;
+
+                        return LocationStatus.NoPermissions;
+                    }
+                }
+
+                Position position = await ApplicationService.GetCurrentPositionAsync();
+
+                ApplicationService.RunOnUIThread(() =>
+                {
+                    mapService.MoveToUser(position, true);
+                });
+
+                MessengerInstance.Send(new UpdateLocationMessage(position));
+
+                isAnimating = false;
+                HasLocation = true;
+                return LocationStatus.Allowed;
+            }
+            catch (Exception ex)
+            {
+                if (!first)
+                    ApplicationService.DisplayToast("Моля включете местоположението.");
+
+                isAnimating = false;
+                HasLocation = false;
+                return LocationStatus.TurnedOff;
+            }
         }
 
         private void OnFavouritesChanged(FavouritesChangedMessage message)
