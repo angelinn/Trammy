@@ -11,7 +11,7 @@
         <StackLayout VerticalOptions="End" HorizontalOptions="Center">
             <Label FontFamily="mio" Text="fmd_good" TextColor="White"  FontSize="186" HorizontalOptions="Center" VerticalOptions="Center"/>
             <Label TextColor="White" FontSize="21" HorizontalTextAlignment="Center" Margin="15,10,15,10" Text="Приложението работи най-добре с използване на местоположение." />
-            <Label TextColor="LightGray" FontSize="15" HorizontalTextAlignment="Center" Text="Местоположението ви са лични данни, които не се съхраняват от нас и се използват само на вашето устройство." />
+            <Label TextColor="White" FontSize="15" HorizontalTextAlignment="Center" Text="Местоположението ви са лични данни, които не се съхраняват от нас и се използват само на вашето устройство." />
         </StackLayout>
 
         <Button Grid.Row="1" VerticalOptions="Start" Clicked="LocationPromptClicked" Text="ОК" BackgroundColor="White" Margin="30,20,30,0" CornerRadius="11" />

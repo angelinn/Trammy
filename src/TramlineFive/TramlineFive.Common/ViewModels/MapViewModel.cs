@@ -27,18 +27,48 @@ namespace TramlineFive.Common.ViewModels
 
         public ICommand MyLocationCommand { get; private set; }
         public ICommand OpenHamburgerCommand { get; private set; }
-        public ICommand ShowMapCommand { get; private set; }
+        public ICommand ShowMapCommand { get; private set; } 
+        public ICommand ShowSearchCommand { get; private set; }
 
         private MapService mapService;
 
         private List<ArrivalStopModel> topFavourites = new List<ArrivalStopModel>();
         private List<ArrivalStopModel> nearbyStops = new List<ArrivalStopModel>();
 
+        private bool hasLocation = true;
+        public bool HasLocation
+        {
+            get
+            {
+                return hasLocation;
+            }
+            set
+            {
+                hasLocation = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool isSearchVisible;
+        public bool IsSearchVisible
+        {
+            get
+            {
+                return isSearchVisible;
+            }
+            set
+            {
+                isSearchVisible = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public MapViewModel()
         {
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
             OpenHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
             ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage(false)));
+            ShowSearchCommand = new RelayCommand(() => IsSearchVisible = !isSearchVisible);
 
             mapService = SimpleIoc.Default.GetInstance<MapService>();
             int maxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
@@ -67,6 +97,11 @@ namespace TramlineFive.Common.ViewModels
             });
 
             MessengerInstance.Register<SettingChanged<string>>(this, async (m) => { if (m.Name == Settings.SelectedTileServer) await mapService.LoadMapAsync(m.Value); });
+            MessengerInstance.Register<SearchFocusedMessage>(this, m =>
+            {
+                if (!m.Focused)
+                    IsSearchVisible = false;
+            });
         }
 
         public async Task Initialize(Map nativeMap, INavigator navigator)
@@ -119,6 +154,7 @@ namespace TramlineFive.Common.ViewModels
         public async Task LoadAsync()
         {
             await LocalizeAsync(true);
+
             IsMapVisible = true;
             IsMyLocationVisible = true;
         }
@@ -127,17 +163,22 @@ namespace TramlineFive.Common.ViewModels
         {
             if (!await LocalizeAsync())
                 ApplicationService.OpenLocationUI();
-
-            MyLocationColor = "LightGray";
-            await Task.Delay(100);
-            MyLocationColor = "White";
-            await Task.Delay(100);
         }
 
         private async Task<bool> LocalizeAsync(bool first = false)
         {
             return await Task.Run(async () =>
             {
+                bool isAnimating = true;
+                Task _ = Task.Run(async () =>
+                {
+                    while (isAnimating)
+                    {
+                        HasLocation = !HasLocation;
+                        await Task.Delay(500);
+                    }
+                });
+
                 try
                 {
                     if (ApplicationService.HasLocationPermissions())
@@ -151,11 +192,15 @@ namespace TramlineFive.Common.ViewModels
 
                         MessengerInstance.Send(new UpdateLocationMessage(position));
 
+                        isAnimating = false;
+                        HasLocation = true;
                         return true;
                     }
 
                     ApplicationService.DisplayToast("Достъпът до местоположение не е позволен");
 
+                    isAnimating = false;
+                    HasLocation = false;
                     return false;
 
                 }
@@ -164,6 +209,8 @@ namespace TramlineFive.Common.ViewModels
                     if (!first)
                         ApplicationService.DisplayToast("Моля включете местоположението.");
 
+                    isAnimating = false;
+                    HasLocation = false;
                     return false;
                 }
             });
@@ -172,7 +219,7 @@ namespace TramlineFive.Common.ViewModels
         private void OnFavouritesChanged(FavouritesChangedMessage message)
         {
             topFavourites.Clear();
-            topFavourites.AddRange(message.Favourites.Take(5).Select(f => new ArrivalStopModel(f.StopCode, f.Name)));
+            topFavourites.AddRange(message.Favourites.Take(4).Select(f => new ArrivalStopModel(f.StopCode, f.Name)));
 
             BuildRecommendedStops();
         }
@@ -180,7 +227,7 @@ namespace TramlineFive.Common.ViewModels
         private void OnNearbyStops(NearbyStopsMessage message)
         {
             nearbyStops.Clear();
-            nearbyStops.AddRange(message.NearbyStops.Take(5).Select(f => new ArrivalStopModel(f.Code, f.PublicName)));
+            nearbyStops.AddRange(message.NearbyStops.Take(4).Select(f => new ArrivalStopModel(f.Code, f.PublicName)));
 
             BuildRecommendedStops();
         }
@@ -201,7 +248,7 @@ namespace TramlineFive.Common.ViewModels
                 if (topFavourites.Count > 0)
                     RecommendedStops.Add(topFavourites[0]);
 
-                foreach (ArrivalStopModel stop in nearbyWithoutFavourites)
+                foreach (ArrivalStopModel stop in nearbyWithoutFavourites.Take(4 - RecommendedStops.Count))
                     RecommendedStops.Add(stop);
             }
         }

@@ -16,25 +16,26 @@
     <Grid.Resources>
         <ResourceDictionary>
             <cv:ColorConverter x:Key="ColorConverter" />
+            <cv:LocationConverter x:Key="LocationConverter" />
         </ResourceDictionary>
     </Grid.Resources>
 
     <AbsoluteLayout>
         <Grid x:Name="grid" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid.RowDefinitions>
-                <RowDefinition Height="40" />
-                <RowDefinition Height="47" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="180" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="180" />
+                <RowDefinition Height="45" />
+                <RowDefinition Height="47" />
+                <RowDefinition Height="20" />
             </Grid.RowDefinitions>
 
             <StackLayout Grid.RowSpan="5" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
                 <mapsui:MapView x:Name="map" VerticalOptions="FillAndExpand" HorizontalOptions="Fill"
                                 IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False" />
             </StackLayout>
-            
-            <Frame Grid.Row="1" x:Name="searchBar" Margin="15,0,15,0" BackgroundColor="White" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" >
+
+            <Frame Grid.Row="3" x:Name="searchBar" Margin="15,0,15,0" BackgroundColor="White" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
@@ -67,28 +68,30 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame CornerRadius="30" BackgroundColor="White" WidthRequest="130" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Frame}, AncestorLevel=1}}" />
-                            </Frame.GestureRecognizers>
-                            
-                            <Grid ColumnSpacing="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="40" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+                        <Grid Padding="0,2,0,2">
+                            <Frame CornerRadius="30" BackgroundColor="White" WidthRequest="130" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Frame}, AncestorLevel=1}}" />
+                                </Frame.GestureRecognizers>
 
-                                <Label FontFamily="mir" Text="&#xe530;" FontSize="17" VerticalOptions="Center" Margin="0,1,0,0" TextColor="Crimson" />
-                                <Label Grid.Column="1" Text="{Binding StopCode, StringFormat='({0})'}" TextColor="Black" FontSize="12"  HorizontalOptions="Start" />
-                                <Label Grid.Column="2" Text="{Binding Name}" TextColor="Black" LineBreakMode="TailTruncation" FontSize="12" HorizontalOptions="Start" />
-                            </Grid>
-                        </Frame>
+                                <Grid ColumnSpacing="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label FontFamily="mir" Text="&#xe530;" FontSize="17" VerticalOptions="Center" Margin="0,1,0,0" TextColor="Crimson" />
+                                    <Label Grid.Column="1" Text="{Binding StopCode, StringFormat='({0})'}" TextColor="Black" FontSize="12"  HorizontalOptions="Start" />
+                                    <Label Grid.Column="2" Text="{Binding Name}" TextColor="Black" LineBreakMode="TailTruncation" FontSize="12" HorizontalOptions="Start" />
+                                </Grid>
+                            </Frame>
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-            </CollectionView> 
+            </CollectionView>
 
-            <Frame Grid.Row="2" Grid.RowSpan="2" Margin="15,-5,15,0" VerticalOptions="Start" Padding="0" CornerRadius="30" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
+            <Frame Grid.Row="1" Grid.RowSpan="2" Margin="15,-5,15,0" VerticalOptions="Start" Padding="0" CornerRadius="30" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
                 <ListView SeparatorColor="Transparent" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -110,7 +113,15 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Frame>
-            <views:FloatingActionButton Grid.RowSpan="5" Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="End" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,0,0,20">
+
+            <Frame Grid.Row="1" Margin="0,0,10,0" CornerRadius="50" Padding="0" xct:TouchEffect.NativeAnimation="True" HorizontalOptions="End" VerticalOptions="End" Background="white" HeightRequest="58" WidthRequest="58">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
+                </Frame.GestureRecognizers>
+
+                <Label FontFamily="mio" Text="{Binding HasLocation, Converter={StaticResource LocationConverter}}" TextColor="DodgerBlue" HorizontalOptions="Center" VerticalOptions="Center" FontSize="25" />
+            </Frame>
+            <!--<views:FloatingActionButton Grid.RowSpan="5" Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="End" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,0,0,20">
                 <views:FloatingActionButton.Image>
                     <OnPlatform x:TypeArguments="FileImageSource">
                         <OnPlatform.Android>
@@ -124,7 +135,7 @@
                 <views:FloatingActionButton.BackgroundColor>
                     <OnPlatform x:TypeArguments="Color" WinPhone="White" />
                 </views:FloatingActionButton.BackgroundColor>
-            </views:FloatingActionButton>
+            </views:FloatingActionButton>-->
         </Grid>
         <Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" Opacity="0">
             <Grid.GestureRecognizers>

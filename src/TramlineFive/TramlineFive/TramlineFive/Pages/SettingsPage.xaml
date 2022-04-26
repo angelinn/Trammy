@@ -32,7 +32,7 @@
                 <StackLayout.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding UpdateStopsCommand}" />
                 </StackLayout.GestureRecognizers>
-                
+
                 <Label FontFamily="mio" Text="refresh" FontSize="24" TextColor="DodgerBlue" />
                 <Label Text="Презареди спирки" FontSize="Default" VerticalTextAlignment="Center" TextColor="Black" />
                 <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}" HeightRequest="10">
