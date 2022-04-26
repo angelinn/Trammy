@@ -172,7 +172,7 @@ namespace TramlineFive.Common.Services
                 IsMapInfoLayer = true
             };
         }
-
+        
         public void MoveToStop(string code)
         {
             foreach (Style style in activeStyles)

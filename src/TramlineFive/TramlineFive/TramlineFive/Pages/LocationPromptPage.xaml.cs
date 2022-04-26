@@ -12,9 +12,16 @@ namespace TramlineFive.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LocationPromptPage : ContentPage
     {
+        private MasterPage masterPage;
+
         public LocationPromptPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            masterPage = new MasterPage();
         }
 
         private void LocationPromptClicked(object sender, EventArgs e)
@@ -23,7 +30,7 @@ namespace TramlineFive.Pages
             if (!permissionService.HasLocationPermissions())
                 permissionService.RequestLocationPermissions();
 
-            Application.Current.MainPage = new NavigationPage(new MasterPage());
+            Application.Current.MainPage = new NavigationPage(masterPage);
         }
     }
 }

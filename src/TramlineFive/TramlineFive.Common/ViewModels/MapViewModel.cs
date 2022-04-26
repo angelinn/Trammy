@@ -197,7 +197,7 @@ namespace TramlineFive.Common.ViewModels
                         return true;
                     }
 
-                    ApplicationService.DisplayToast("Достъпът до местоположение не е позволен");
+                    //ApplicationService.DisplayToast("Достъпът до местоположение не е позволен");
 
                     isAnimating = false;
                     HasLocation = false;
