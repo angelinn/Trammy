@@ -24,7 +24,9 @@ namespace TramlineFive.Common.ViewModels
         public ICommand FavouriteCommand { get; private set; }
         public ICommand SearchCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
-        public ICommand SearchByCodeCommand { get; private set; }   
+        public ICommand SearchByCodeCommand { get; private set; } 
+        
+        public ICommand AnimateFavouriteCommand { get; set; }
 
         public List<string> FilteredStops { get; private set; }
 
@@ -107,6 +109,8 @@ namespace TramlineFive.Common.ViewModels
             {
                 ApplicationService.DisplayToast($"Спирката вече съществува в любими");
             }
+
+            AnimateFavouriteCommand.Execute(null);
         }
 
         public async Task CheckStopAsync(string selected)
