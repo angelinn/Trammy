@@ -18,11 +18,18 @@ namespace TramlineFive.Common.ViewModels
         public ICommand OpenSettingsCommand { get; private set; }
         public ICommand OpenAboutCommand { get; private set; }
 
-        private Dictionary<string, ViewData> pages = new Dictionary<string, ViewData>
+        public ICommand ShowMapCommand { get { return pages[Names.Map].Show; } set { pages[Names.Map].Show = value; } }
+        public ICommand HideMapCommand { get { return pages[Names.Map].Hide; } set { pages[Names.Map].Hide = value; } }
+        public ICommand ShowFavouriteCommand { get { return pages[Names.Favourites].Show; } set { pages[Names.Favourites].Show = value; } }
+        public ICommand HideFavouriteCommand { get { return pages[Names.Favourites].Hide; } set { pages[Names.Favourites].Hide = value; } }
+        public ICommand ShowHistoryCommand { get { return pages[Names.History].Show; } set { pages[Names.History].Show = value; } }
+        public ICommand HideHistoryCommand { get { return pages[Names.History].Hide; } set { pages[Names.History].Hide = value; } }
+
+        private readonly Dictionary<string, ViewData> pages = new()
         {
-            { "Map", new ViewData(true) },
-            { "Favourites", new ViewData(false)  },
-            { "History", new ViewData(false)  }
+            { Names.Map, new ViewData(true) },
+            { Names.Favourites, new ViewData(false)  },
+            { Names.History, new ViewData(false)  }
         };
 
         public MainViewModel()
@@ -36,8 +43,16 @@ namespace TramlineFive.Common.ViewModels
         private void ChangeView(string view)
         {
             foreach (string key in pages.Keys.ToList())
+            {
+                if (pages[key].IsVisible)
+                    pages[key].Hide.Execute(null);
+
+                if (key == view)
+                    pages[key].Show.Execute(null);
+
                 pages[key].IsVisible = key == view;
-            
+            }
+
             RaisePropertyChanged("IsMapVisible");
             RaisePropertyChanged("IsFavouritesVisible");
             RaisePropertyChanged("IsHistoryVisible");

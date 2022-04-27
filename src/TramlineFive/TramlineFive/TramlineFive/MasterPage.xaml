@@ -26,9 +26,48 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="1" x:Name="content">
-                <pages:MapPage x:Name="mapPage" IsVisible="{Binding BindingContext.IsMapVisible, Source={x:Reference Name=content}}" />
-                <pages:FavouritesPage IsVisible="{Binding BindingContext.IsFavouritesVisible, Source={x:Reference Name=content}}" />
-                <pages:HistoryPage IsVisible="{Binding BindingContext.IsHistoryVisible, Source={x:Reference Name=content}}" />
+                <pages:MapPage x:Name="mapPage" IsVisible="{Binding BindingContext.IsMapVisible, Source={x:Reference Name=content}}" >
+                    <pages:MapPage.Behaviors>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding HideMapCommand}" >
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="0" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding ShowMapCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="1" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </pages:MapPage.Behaviors>
+                </pages:MapPage>
+                <pages:FavouritesPage Opacity="0" IsVisible="{Binding BindingContext.IsFavouritesVisible, Source={x:Reference Name=content}}" >
+                    <pages:FavouritesPage.Behaviors>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding HideFavouriteCommand}" >
+                                <d:AnimationBehavior.AnimationType>
+                                    <d:FadeAnimation Fade="0" />
+                                </d:AnimationBehavior.AnimationType>
+                            </d:AnimationBehavior>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding ShowFavouriteCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="1" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </pages:FavouritesPage.Behaviors>
+                </pages:FavouritesPage>
+                <pages:HistoryPage Opacity="0" IsVisible="{Binding BindingContext.IsHistoryVisible, Source={x:Reference Name=content}}" >
+                    <pages:HistoryPage.Behaviors>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding HideHistoryCommand}" >
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="0" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding ShowHistoryCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="1" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </pages:HistoryPage.Behaviors>
+                </pages:HistoryPage>
             </Grid>
 
             <Grid Grid.Row="2" BackgroundColor="White">
@@ -52,7 +91,8 @@
                         <Label Text="Карта" FontAttributes="Bold"  FontSize="12"  HorizontalOptions="Center" TextColor="{Binding IsMapVisible, Converter={StaticResource BoolToColor}}"  />
                     </StackLayout>
                 </Grid>
-                <Grid Grid.Column="1" xct:TouchEffect.NativeAnimation="True">
+                <Grid Grid.Column="1" xct:TouchEffect.NativeAnimation="True" 
+                      xct:TouchEffect.NativeAnimationColor="DodgerBlue">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Favourites" />
                     </Grid.GestureRecognizers>
@@ -65,7 +105,13 @@
                         <Label Text="Любими" FontAttributes="Bold" FontSize="12" HorizontalOptions="Center" TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"  />
                     </StackLayout>
                 </Grid>
-                <Grid Grid.Column="2" xct:TouchEffect.NativeAnimation="True">
+                <Grid Grid.Column="2" 
+            xct:TouchEffect.AnimationDuration="300"
+            xct:TouchEffect.AnimationEasing="CubicOut"
+            xct:TouchEffect.PressedScale="1.5"
+                    xct:TouchEffect.PressedBackgroundColor="DodgerBlue"
+                      xct:TouchEffect.PressedRotationX="180"
+                      xct:TouchEffect.NormalRotationX="0">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
                     </Grid.GestureRecognizers> 
