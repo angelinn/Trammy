@@ -34,8 +34,9 @@ namespace TramlineFive.Common.Services
         private KdTree<float, IFeature> stopsTree;
         private Dictionary<string, IFeature> stopsDictionary;
         private readonly List<Style> activeStyles = new List<Style>();
-
         private INavigator navigator;
+
+        private readonly LocationService locationService;
 
         private const int STOP_THRESHOLD = 500;
 
@@ -43,9 +44,9 @@ namespace TramlineFive.Common.Services
         public int MaxTextZoom { get; set; } = 17; 
 
 
-        public MapService()
+        public MapService(LocationService locationService)
         {
-
+            this.locationService = locationService;
         }
 
         public async Task Initialize(Map map, INavigator navigator, string tileServer)
@@ -248,7 +249,7 @@ namespace TramlineFive.Common.Services
                     foreach (IFeature otherFeature in features)
                     {
                         StopLocation otherLocation = otherFeature["stopObject"] as StopLocation;
-                        double distance = SimpleIoc.Default.GetInstance<LocationService>().GetDistance(location.Lat, location.Lon, otherLocation.Lat, otherLocation.Lon);
+                        double distance = locationService.GetDistance(location.Lat, location.Lon, otherLocation.Lat, otherLocation.Lon);
 
                         if (distance < 10 && !processed[j])
                         {

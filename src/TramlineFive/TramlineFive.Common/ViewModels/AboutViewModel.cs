@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,15 @@ namespace TramlineFive.Common.ViewModels
 {
     public class AboutViewModel : BaseViewModel
     {
+        private readonly LicensesViewModel licensesViewModel;
+
+        public AboutViewModel(IServiceProvider serviceProvider)
+        {
+            licensesViewModel = serviceProvider.GetService<LicensesViewModel>();
+        }
+
         private string version;
+
         public string Version
         {
             get
@@ -28,7 +37,7 @@ namespace TramlineFive.Common.ViewModels
 
         public ICommand OpenLicensesPage => new RelayCommand(() =>
         {
-            Task _ = SimpleIoc.Default.GetInstance<LicensesViewModel>().Initialize();
+            Task _ = licensesViewModel.Initialize();
             NavigationService.ChangePage("Licenses");
         });
     }

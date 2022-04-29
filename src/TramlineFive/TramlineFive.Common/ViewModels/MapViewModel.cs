@@ -63,14 +63,14 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-        public MapViewModel()
+        public MapViewModel(MapService mapService)
         {
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
             OpenHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
             ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage(false)));
             ShowSearchCommand = new RelayCommand(() => IsSearchVisible = !isSearchVisible);
 
-            mapService = SimpleIoc.Default.GetInstance<MapService>();
+            this.mapService = mapService;
             int maxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             int maxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
 

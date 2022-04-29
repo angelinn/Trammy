@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 
 using System.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
+using TramlineFive.Common.Services;
 
 namespace System.Runtime.CompilerServices
 {
@@ -15,27 +17,30 @@ namespace TramlineFive.Common.ViewModels.Locator
 {
     public class ViewModelLocator
     {
-        public ViewModelLocator()
-        {
-            SimpleIoc.Default.Register<VirtualTablesViewModel>();
-            SimpleIoc.Default.Register<HistoryViewModel>();
-            SimpleIoc.Default.Register<HamburgerViewModel>();
-            SimpleIoc.Default.Register<AboutViewModel>();
-            SimpleIoc.Default.Register<SettingsViewModel>();
-            SimpleIoc.Default.Register<FavouritesViewModel>();
-            SimpleIoc.Default.Register<LicensesViewModel>();
-            SimpleIoc.Default.Register<MapViewModel>();
-            SimpleIoc.Default.Register<MainViewModel>();
-        }
+        public VirtualTablesViewModel VirtualTablesViewModel => ServiceContainer.ServiceProvider.GetService<VirtualTablesViewModel>(); // SimpleIoc.Default.GetInstance<VirtualTablesViewModel>();
+        public HistoryViewModel HistoryViewModel => ServiceContainer.ServiceProvider.GetService<HistoryViewModel>(); // SimpleIoc.Default.GetInstance<HistoryViewModel>();
+        public HamburgerViewModel HamburgerViewModel => ServiceContainer.ServiceProvider.GetService<HamburgerViewModel>(); // SimpleIoc.Default.GetInstance<HamburgerViewModel>();
+        public AboutViewModel AboutViewModel => ServiceContainer.ServiceProvider.GetService<AboutViewModel>(); // SimpleIoc.Default.GetInstance<AboutViewModel>();
+        public SettingsViewModel SettingsViewModel => ServiceContainer.ServiceProvider.GetService<SettingsViewModel>(); // => ServiceContainer.ServiceProvider.GetService<SettingsViewModel>(); // SimpleIoc.Default.GetInstance<SettingsViewModel>();
+        public FavouritesViewModel FavouritesViewModel => ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>(); // => ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>(); // SimpleIoc.Default.GetInstance<FavouritesViewModel>();
+        public LicensesViewModel LicensesViewModel => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // SimpleIoc.Default.GetInstance<LicensesViewModel>();
+        public MapViewModel MapViewModel => ServiceContainer.ServiceProvider.GetService<MapViewModel>(); // => ServiceContainer.ServiceProvider.GetService<MapViewModel>();// SimpleIoc.Default.GetInstance<MapViewModel>();
+        public MainViewModel MainViewModel => ServiceContainer.ServiceProvider.GetService<MainViewModel>();// => ServiceContainer.ServiceProvider.GetService<MainViewModel>(); // SimpleIoc.Default.GetInstance<MainViewModel>();
+    }
 
-        public VirtualTablesViewModel VirtualTablesViewModel => SimpleIoc.Default.GetInstance<VirtualTablesViewModel>();
-        public HistoryViewModel HistoryViewModel => SimpleIoc.Default.GetInstance<HistoryViewModel>();
-        public HamburgerViewModel HamburgerViewModel => SimpleIoc.Default.GetInstance<HamburgerViewModel>();
-        public AboutViewModel AboutViewModel => SimpleIoc.Default.GetInstance<AboutViewModel>();
-        public SettingsViewModel SettingsViewModel => SimpleIoc.Default.GetInstance<SettingsViewModel>();
-        public FavouritesViewModel FavouritesViewModel => SimpleIoc.Default.GetInstance<FavouritesViewModel>();
-        public LicensesViewModel LicensesViewModel => SimpleIoc.Default.GetInstance<LicensesViewModel>();
-        public MapViewModel MapViewModel => SimpleIoc.Default.GetInstance<MapViewModel>();
-        public MainViewModel MainViewModel => SimpleIoc.Default.GetInstance<MainViewModel>();
+    public static class ViewModelExtensions
+    {
+        public static void AddViewModels(this IServiceCollection services)
+        {
+            services.AddSingleton<VirtualTablesViewModel>();
+            services.AddSingleton<HistoryViewModel>();
+            services.AddSingleton<HamburgerViewModel>();
+            services.AddSingleton<AboutViewModel>();
+            services.AddSingleton<SettingsViewModel>();
+            services.AddSingleton<FavouritesViewModel>();
+            services.AddSingleton<LicensesViewModel>();
+            services.AddSingleton<MapViewModel>();
+            services.AddSingleton<MainViewModel>();
+        }
     }
 }

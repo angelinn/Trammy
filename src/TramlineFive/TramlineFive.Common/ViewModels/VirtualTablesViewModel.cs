@@ -30,8 +30,14 @@ namespace TramlineFive.Common.ViewModels
 
         public List<string> FilteredStops { get; private set; }
 
-        public VirtualTablesViewModel()
+        private readonly ArrivalsService arrivalsService;
+        private readonly VersionService versionService;
+
+        public VirtualTablesViewModel(ArrivalsService arrivalsService, VersionService versionService)
         {
+            this.arrivalsService = arrivalsService;
+            this.versionService = versionService;
+
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
             SearchCommand = new RelayCommand(() => MessengerInstance.Send(new StopSelectedMessage(stopCode, true)));
             SearchByCodeCommand = new RelayCommand<string>((i) => MessengerInstance.Send(new StopSelectedMessage(i, true)));
@@ -123,7 +129,7 @@ namespace TramlineFive.Common.ViewModels
         {
             try
             {
-                Version = await VersionService.CheckForUpdates();
+                Version = await versionService.CheckForUpdates();
             }
             catch (Exception ex)
             {
@@ -137,7 +143,7 @@ namespace TramlineFive.Common.ViewModels
 
             try
             {
-                StopInfo info = await new ArrivalsService().GetByStopCodeAsync(stopCode);
+                StopInfo info = await arrivalsService.GetByStopCodeAsync(stopCode);
 
                 IsLoading = false;
 

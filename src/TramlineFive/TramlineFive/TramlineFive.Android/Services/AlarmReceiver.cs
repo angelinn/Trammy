@@ -12,7 +12,9 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Extensions.DependencyInjection;
 using SkgtService.Models;
+using TramlineFive.Common;
 using TramlineFive.Common.Services;
 using TramlineFive.Services.Main;
 
@@ -28,13 +30,13 @@ namespace TramlineFive.Droid.Services
         {
             try
             {
-                if (!SimpleIoc.Default.IsRegistered<IApplicationService>())
+                if (ServiceContainer.ServiceProvider.GetService<IApplicationService>() == null)
                 {
                     Log.Info("VERSION", "Application service not registered. Registering new instance...");
-                    SimpleIoc.Default.Register<IApplicationService, ApplicationService>();
+                     // SimpleIoc.Default.Register<IApplicationService, ApplicationService>();
                 }
 
-                NewVersion version = await VersionService.CheckForUpdates();
+                NewVersion version = await ServiceContainer.ServiceProvider.GetService<VersionService>().CheckForUpdates();
                 if (version != null)
                 {
                     string message = intent.GetStringExtra("message");

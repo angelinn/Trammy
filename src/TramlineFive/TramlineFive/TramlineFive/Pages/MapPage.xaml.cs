@@ -7,6 +7,7 @@ using Mapsui.Widgets.ScaleBar;
 using Mapsui.Widgets.Zoom;
 using System;
 using System.Threading.Tasks;
+using TramlineFive.Common;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
@@ -38,7 +39,7 @@ namespace TramlineFive.Pages
                 CRS = "EPSG:3857"
             };
             
-            mapService = SimpleIoc.Default.GetInstance<MapService>();
+            mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
             Task _ = (BindingContext as MapViewModel).Initialize(nativeMap, map.Navigator);
 
             map.MapClicked += OnMapClicked;

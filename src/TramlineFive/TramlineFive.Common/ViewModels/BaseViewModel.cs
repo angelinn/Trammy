@@ -1,10 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using TramlineFive.Common.Services;
 
 namespace TramlineFive.Common.ViewModels
@@ -16,8 +11,8 @@ namespace TramlineFive.Common.ViewModels
 
         public BaseViewModel()
         {
-            ApplicationService = SimpleIoc.Default.GetInstance<IApplicationService>();
-            NavigationService = SimpleIoc.Default.GetInstance<INavigationService>();
+            ApplicationService = ServiceContainer.ServiceProvider.GetService<IApplicationService>();
+            NavigationService = ServiceContainer.ServiceProvider.GetService<INavigationService>();
         }
     }
 }

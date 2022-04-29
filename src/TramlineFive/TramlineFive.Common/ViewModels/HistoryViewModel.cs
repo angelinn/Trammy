@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Common.Messages;
+using TramlineFive.Common.Services;
 using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels
@@ -49,7 +51,7 @@ namespace TramlineFive.Common.ViewModels
 
                 if (value != null)
                 {
-                    SimpleIoc.Default.GetInstance<MainViewModel>().ChangeViewCommand.Execute("Map");
+                    ServiceContainer.ServiceProvider.GetService<MainViewModel>().ChangeViewCommand.Execute("Map");
                     MessengerInstance.Send(new StopSelectedMessage(selected.StopCode, true));
 
                     selected = null;

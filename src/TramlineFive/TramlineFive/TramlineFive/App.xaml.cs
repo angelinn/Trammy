@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Extensions.DependencyInjection;
 using SkgtService;
 using System;
 using System.Collections.Generic;
@@ -21,13 +22,7 @@ namespace TramlineFive
         {
             InitializeComponent();
 
-            if (!SimpleIoc.Default.ContainsCreated<IApplicationService>())
-            {
-                SimpleIoc.Default.Register<IApplicationService>(() => new ApplicationService());
-                SimpleIoc.Default.Register<INavigationService>(() => new NavigationService());
-                SimpleIoc.Default.Register<MapService>();
-                SimpleIoc.Default.Register<LocationService>();
-            }
+            Startup.ConfigureServices();
 
             IPathService dbPathService = DependencyService.Get<IPathService>();
             StopsLoader.Initialize(dbPathService.BaseFilePath);
@@ -53,15 +48,15 @@ namespace TramlineFive
             TramlineFiveContext.DatabasePath = dbPathService.DBPath;
             await TramlineFiveContext.EnsureCreatedAsync();
 
-            await SimpleIoc.Default.GetInstance<HistoryViewModel>().LoadHistoryAsync();
-            await SimpleIoc.Default.GetInstance<FavouritesViewModel>().LoadFavouritesAsync();
+            await ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync();
+            await ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync();
 
             StopsLoader.OnStopsUpdated += OnStopsUpdated;
         }
 
         private void OnStopsUpdated(object sender, EventArgs e)
         {
-            SimpleIoc.Default.GetInstance<IApplicationService>().SetStringSetting(Settings.StopsUpdated, DateTime.Now.ToString());
+            ServiceContainer.ServiceProvider.GetService<IApplicationService>().SetStringSetting(Settings.StopsUpdated, DateTime.Now.ToString());
         }
 
         protected override void OnSleep()

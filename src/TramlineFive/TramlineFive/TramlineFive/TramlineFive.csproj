@@ -38,6 +38,7 @@
   <ItemGroup>
     <PackageReference Include="Mapsui" Version="4.0.0-beta.3" />
     <PackageReference Include="Mapsui.Forms" Version="4.0.0-beta.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.0.1-alpha" />
     <PackageReference Include="SkiaSharp" Version="2.88.0-preview.232" />
     <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.0-preview.232" />

@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TramlineFive.Common;
 using TramlineFive.Common.Messages;
+using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.Pages;
 using Xamarin.Forms;
@@ -77,7 +79,7 @@ namespace TramlineFive
             if (!appeared)
             {
                 mapPage.OnAppearing();
-                Task task = SimpleIoc.Default.GetInstance<VirtualTablesViewModel>().CheckForUpdatesAsync();
+                Task task = ServiceContainer.ServiceProvider.GetService<VirtualTablesViewModel>().CheckForUpdatesAsync();
 
                 appeared = true;
             }

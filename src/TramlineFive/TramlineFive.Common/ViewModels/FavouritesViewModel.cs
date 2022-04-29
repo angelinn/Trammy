@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using Mapsui;
+using Microsoft.Extensions.DependencyInjection;
 using SkgtService.Models.Locations;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace TramlineFive.Common.ViewModels
         private readonly LocationService locationService;
         private bool firstLocalization = true;
 
-        public FavouritesViewModel()
+        public FavouritesViewModel(LocationService locationService)
         {
             MessengerInstance.Register<FavouriteAddedMessage>(this, (f) => OnFavouriteAdded(f.Added));
             RemoveCommand = new RelayCommand<FavouriteDomain>(async (f) => await RemoveFavouriteAsync(f));
@@ -38,9 +39,9 @@ namespace TramlineFive.Common.ViewModels
                     firstLocalization = false;
                     await OnNearestFavouriteRequested(message.Position);
                 }
-            }); 
+            });
 
-            locationService = SimpleIoc.Default.GetInstance<LocationService>();
+            this.locationService = locationService;
         }
 
         private async Task OnNearestFavouriteRequested(Position location)
@@ -131,7 +132,7 @@ namespace TramlineFive.Common.ViewModels
 
                 if (value != null)
                 {
-                    SimpleIoc.Default.GetInstance<MainViewModel>().ChangeViewCommand.Execute("Map");
+                    ServiceContainer.ServiceProvider.GetService<MainViewModel>().ChangeViewCommand.Execute("Map");
                     MessengerInstance.Send(new StopSelectedMessage(selected.StopCode, true));
 
                     selected = null;
