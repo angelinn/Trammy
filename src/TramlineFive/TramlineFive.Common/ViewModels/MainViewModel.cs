@@ -24,6 +24,9 @@ namespace TramlineFive.Common.ViewModels
         public ICommand HideFavouriteCommand { get { return pages[Names.Favourites].Hide; } set { pages[Names.Favourites].Hide = value; } }
         public ICommand ShowHistoryCommand { get { return pages[Names.History].Show; } set { pages[Names.History].Show = value; } }
         public ICommand HideHistoryCommand { get { return pages[Names.History].Hide; } set { pages[Names.History].Hide = value; } }
+        public ICommand AnimateMapTouchCommand { get { return pages[Names.Map].AnimateButton; } set { pages[Names.Map].AnimateButton = value; } }
+        public ICommand AnimateFavouritesTouchCommand { get { return pages[Names.Favourites].AnimateButton; } set { pages[Names.Favourites].AnimateButton = value; } }
+        public ICommand AnimateHistoryTouchCommand { get { return pages[Names.History].AnimateButton; } set { pages[Names.History].AnimateButton = value; } }
 
         private readonly Dictionary<string, ViewData> pages = new()
         {
@@ -48,7 +51,10 @@ namespace TramlineFive.Common.ViewModels
                     pages[key].Hide.Execute(null);
 
                 if (key == view)
+                {
                     pages[key].Show.Execute(null);
+                    pages[key].AnimateButton.Execute(null);
+                }
 
                 pages[key].IsVisible = key == view;
             }

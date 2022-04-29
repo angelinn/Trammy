@@ -10,6 +10,7 @@ namespace TramlineFive.Common.Models
         public bool IsVisible { get; set; }
         public ICommand Show { get; set; }
         public ICommand Hide { get; set; }
+        public ICommand AnimateButton { get; set; }
 
         public ViewData(bool isVisible)
         {

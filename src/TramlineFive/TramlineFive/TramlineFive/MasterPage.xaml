@@ -78,10 +78,17 @@
                 </Grid.ColumnDefinitions>
 
                 <BoxView Grid.ColumnSpan="3" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
-                <Grid xct:TouchEffect.NativeAnimation="True">
+                <Grid>
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Map" />
                     </Grid.GestureRecognizers>
+                    <Grid.Behaviors>
+                        <d:AnimationBehavior AnimateCommand="{Binding AnimateMapTouchCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <xct:FlipHorizontalAnimation />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </Grid.Behaviors>
 
                     <StackLayout Spacing="0">
                         <Label FontFamily="mio" Text="fmd_good" FontSize="25" 
@@ -91,11 +98,17 @@
                         <Label Text="Карта" FontAttributes="Bold"  FontSize="12"  HorizontalOptions="Center" TextColor="{Binding IsMapVisible, Converter={StaticResource BoolToColor}}"  />
                     </StackLayout>
                 </Grid>
-                <Grid Grid.Column="1" xct:TouchEffect.NativeAnimation="True" 
-                      xct:TouchEffect.NativeAnimationColor="DodgerBlue">
+                <Grid Grid.Column="1">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Favourites" />
                     </Grid.GestureRecognizers>
+                    <Grid.Behaviors>
+                        <d:AnimationBehavior AnimateCommand="{Binding AnimateFavouritesTouchCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <xct:FlipHorizontalAnimation />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </Grid.Behaviors>
 
                     <StackLayout Spacing="0">
                         <Label FontFamily="mio" Text="star_border" FontSize="25" 
@@ -105,16 +118,18 @@
                         <Label Text="Любими" FontAttributes="Bold" FontSize="12" HorizontalOptions="Center" TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"  />
                     </StackLayout>
                 </Grid>
-                <Grid Grid.Column="2" 
-            xct:TouchEffect.AnimationDuration="300"
-            xct:TouchEffect.AnimationEasing="CubicOut"
-            xct:TouchEffect.PressedScale="1.5"
-                    xct:TouchEffect.PressedBackgroundColor="DodgerBlue"
-                      xct:TouchEffect.PressedRotationX="180"
-                      xct:TouchEffect.NormalRotationX="0">
+                <Grid Grid.Column="2">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
-                    </Grid.GestureRecognizers> 
+                    </Grid.GestureRecognizers>
+                    <Grid.Behaviors>
+                        <d:AnimationBehavior AnimateCommand="{Binding AnimateHistoryTouchCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <xct:FlipHorizontalAnimation />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </Grid.Behaviors>
+                    
                     <StackLayout Spacing="0">
                         <Label FontFamily="mio" Text="history" FontSize="25" 
                                    TextColor="{Binding IsHistoryVisible, Converter={StaticResource BoolToColor}}"
