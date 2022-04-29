@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SkgtService.Models
+namespace SkgtService.Models;
+
+public class Arrival
 {
-    public class Arrival
-    {
-        public string Time { get; set; }
-    }
+    public string Time { get; set; }
 }

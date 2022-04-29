@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SkgtService.Exceptions
+namespace SkgtService.Exceptions;
+
+public class StopNotFoundException : Exception
 {
-    public class StopNotFoundException : Exception
-    {
-        public StopNotFoundException(string message = "") : base(message)
-        {   }
-    }
+    public StopNotFoundException(string message = "") : base(message)
+    {   }
 }

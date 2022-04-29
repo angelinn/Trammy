@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SkgtService.Exceptions
+namespace SkgtService.Exceptions;
+
+public class StopRequestException : Exception
 {
-    public class StopRequestException : Exception
-    {
-        public StopRequestException(string message = "") : base(message)
-        {   }
-    }
+    public StopRequestException(string message = "") : base(message)
+    {   }
 }

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SkgtService.Exceptions
+namespace SkgtService.Exceptions;
+
+public class TramlineFiveException : Exception
 {
-    public class TramlineFiveException : Exception
-    {
-        public TramlineFiveException(string message) : base(message)
-        {   }
-    }
+    public TramlineFiveException(string message) : base(message)
+    {   }
 }

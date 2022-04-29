@@ -7,55 +7,51 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkgtService
+namespace SkgtService;
+
+public static class StopsLoader
 {
-    public static class StopsLoader
+    private const string URL = "https://routes.sofiatraffic.bg/resources/stops-bg.json";
+    private static string PATH = String.Empty;
+
+    public static event EventHandler OnStopsUpdated;
+    public static List<StopLocation> Stops { get; private set; }
+
+    public static void Initialize(string basePath)
     {
-        private const string URL = "https://routes.sofiatraffic.bg/resources/stops-bg.json";
-        private static string PATH = String.Empty;
+        PATH = Path.Combine(basePath, "stops.json");
+    }
 
-        public static event EventHandler OnStopsUpdated;
-        public static List<StopLocation> Stops { get; private set; } 
-
-        public static void Initialize(string basePath)
+    public static async Task<List<StopLocation>> LoadStopsAsync()
+    {
+        if (!File.Exists(PATH))
         {
-            PATH = Path.Combine(basePath, "stops.json");
+            await UpdateStopsAsync();
         }
 
-        public static async Task<List<StopLocation>> LoadStopsAsync()
-        {
-            if (!File.Exists(PATH))
-            {
-                await UpdateStopsAsync();
-            }
+        string json = File.ReadAllText(PATH);
+        Stops = JsonConvert.DeserializeObject<List<StopLocation>>(json);
 
-            string json = File.ReadAllText(PATH); 
-            Stops = JsonConvert.DeserializeObject<List<StopLocation>>(json);
+        return Stops;
+    }
 
-            return Stops;
-        }
+    public static List<StopLocation> LoadStops(Stream stream)
+    {
+        string json = String.Empty;
+        using StreamReader reader = new StreamReader(stream);
+        json = reader.ReadToEnd();
 
-        public static List<StopLocation> LoadStops(Stream stream)
-        {
-            string json = String.Empty;
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                json = reader.ReadToEnd();
-            }
+        Stops = JsonConvert.DeserializeObject<List<StopLocation>>(json);
+        return Stops;
+    }
 
-            Stops = JsonConvert.DeserializeObject<List<StopLocation>>(json);
-            return Stops;
-        }
+    public static async Task UpdateStopsAsync()
+    {
+        using HttpClient client = new HttpClient();
 
-        public static async Task UpdateStopsAsync()
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                byte[] stops = await client.GetByteArrayAsync(URL);
-                File.WriteAllBytes(PATH, stops);
+        byte[] stops = await client.GetByteArrayAsync(URL);
+        File.WriteAllBytes(PATH, stops);
 
-                OnStopsUpdated?.Invoke(null, new EventArgs());
-            }
-        }
+        OnStopsUpdated?.Invoke(null, new EventArgs());
     }
 }
