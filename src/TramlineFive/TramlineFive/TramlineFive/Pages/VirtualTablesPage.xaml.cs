@@ -14,7 +14,6 @@ using Xamarin.Forms.Xaml;
 
 namespace TramlineFive.Pages
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class VirtualTablesPage : Grid
 	{
         public VirtualTablesPage()

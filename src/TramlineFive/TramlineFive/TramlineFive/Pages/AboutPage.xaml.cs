@@ -9,7 +9,6 @@ using Xamarin.Forms.Xaml;
 
 namespace TramlineFive.Pages
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class AboutPage : ContentPage
 	{
 		public AboutPage ()

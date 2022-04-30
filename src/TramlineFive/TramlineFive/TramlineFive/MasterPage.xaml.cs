@@ -16,7 +16,6 @@ using static Xamarin.Forms.Grid;
 
 namespace TramlineFive
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MasterPage : ContentPage
     {
         private bool appeared;

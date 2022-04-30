@@ -16,7 +16,6 @@ using Xamarin.Forms.Xaml;
 
 namespace TramlineFive.Pages
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MapPage : Grid
     {
         private bool initialized;
@@ -151,6 +150,11 @@ namespace TramlineFive.Pages
         private void OnSearchUnfocused(object sender, FocusEventArgs e)
         {
             Messenger.Default.Send(new SearchFocusedMessage(false));
+        }
+
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            (BindingContext as MapViewModel).MyLocationCommand.Execute(null);
         }
     }
 }
