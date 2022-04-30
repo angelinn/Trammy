@@ -30,7 +30,7 @@ namespace TramlineFive.Common.ViewModels
         public ICommand ShowMapCommand { get; private set; }
         public ICommand ShowSearchCommand { get; private set; }
 
-        private MapService mapService;
+        private readonly MapService mapService;
 
         private List<ArrivalStopModel> topFavourites = new List<ArrivalStopModel>();
         private List<ArrivalStopModel> nearbyStops = new List<ArrivalStopModel>();
@@ -63,14 +63,14 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-        public MapViewModel(MapService mapService)
+        public MapViewModel(MapService mapServiceOther)
         {
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
             OpenHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
             ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage(false)));
             ShowSearchCommand = new RelayCommand(() => IsSearchVisible = !isSearchVisible);
 
-            this.mapService = mapService;
+            mapService = mapServiceOther;
             int maxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             int maxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
 
