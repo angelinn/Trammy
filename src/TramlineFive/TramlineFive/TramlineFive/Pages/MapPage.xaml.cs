@@ -151,10 +151,5 @@ namespace TramlineFive.Pages
         {
             Messenger.Default.Send(new SearchFocusedMessage(false));
         }
-
-        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
-        {
-            (BindingContext as MapViewModel).MyLocationCommand.Execute(null);
-        }
     }
 }

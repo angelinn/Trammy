@@ -46,7 +46,7 @@ public class MapService
     {
         this.locationService = locationService;
     }
-
+    
     public async Task Initialize(Map map, INavigator navigator, string tileServer)
     {
         this.map = map;
