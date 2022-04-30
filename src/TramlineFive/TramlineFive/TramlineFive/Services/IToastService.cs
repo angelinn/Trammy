@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TramlineFive.Services
+namespace TramlineFive.Services;
+
+public interface IToastService
 {
-    public interface IToastService
-    {
-        void ShowToast(string message);
-    }
+    void ShowToast(string message);
 }

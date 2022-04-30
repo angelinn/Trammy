@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TramlineFive.Common.Services
+namespace TramlineFive.Common.Services;
+
+public interface INavigationService
 {
-    public interface INavigationService
-    {
-        void ChangePage(string pageName);
-    }
+    void ChangePage(string pageName);
 }

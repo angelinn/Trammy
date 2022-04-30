@@ -87,16 +87,16 @@ namespace TramlineFive.Common.ViewModels
                 if (m.Name == Settings.MaxTextZoom && m.Value > 0)
                 {
                     mapService.MaxTextZoom = m.Value;
-                    await mapService.LoadMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+                    await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
                 }
                 else if (m.Name == Settings.MaxPinsZoom && m.Value > 0)
                 {
                     mapService.MaxPinsZoom = m.Value;
-                    await mapService.LoadMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+                    await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
                 }
             });
 
-            MessengerInstance.Register<SettingChanged<string>>(this, async (m) => { if (m.Name == Settings.SelectedTileServer) await mapService.LoadMapAsync(m.Value); });
+            MessengerInstance.Register<SettingChanged<string>>(this, async (m) => { if (m.Name == Settings.SelectedTileServer) await mapService.SetupMapAsync(m.Value); });
             MessengerInstance.Register<SearchFocusedMessage>(this, m =>
             {
                 if (!m.Focused)

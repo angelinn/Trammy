@@ -4,11 +4,10 @@ using System.IO;
 using System.Text;
 using Xamarin.Forms.PlatformConfiguration;
 
-namespace TramlineFive.Services
+namespace TramlineFive.Services;
+
+public interface IPathService
 {
-    public interface IPathService
-    {
-        string DBPath { get; }
-        string BaseFilePath { get; }
-    }
+    string DBPath { get; }
+    string BaseFilePath { get; }
 }

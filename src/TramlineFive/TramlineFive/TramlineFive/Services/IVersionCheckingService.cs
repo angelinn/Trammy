@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TramlineFive.Services
+namespace TramlineFive.Services;
+
+public interface IVersionCheckingService
 {
-    public interface IVersionCheckingService
-    {
-        void CreateTask();
-    }
+    void CreateTask();
 }

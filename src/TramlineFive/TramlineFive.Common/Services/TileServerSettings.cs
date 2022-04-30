@@ -11,7 +11,7 @@ public static class TileServerSettings
 {
     private const string TILE_SERVERS_FILE = "TramlineFive.Common.tileservers.json";
 
-    public static Dictionary<string, string> TileServers;
+    public static Dictionary<string, string> TileServers { get; private set; }
 
     public static async Task LoadTileServersAsync()
     {

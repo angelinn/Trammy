@@ -4,28 +4,27 @@ using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Common.Models;
 
-namespace TramlineFive.Common.Services
+namespace TramlineFive.Common.Services;
+
+public interface IApplicationService
 {
-    public interface IApplicationService
-    {
-        string GetStringSetting(string key, string defaultValue);
-        bool GetBoolSetting(string key, bool defaultValue);
-        int GetIntSetting(string key, int defaultValue);
-        void SetStringSetting(string key, string value);
-        void SetBoolSetting(string key, bool value);
-        void SetIntSetting(string key, int value);
+    string GetStringSetting(string key, string defaultValue);
+    bool GetBoolSetting(string key, bool defaultValue);
+    int GetIntSetting(string key, int defaultValue);
+    void SetStringSetting(string key, string value);
+    void SetBoolSetting(string key, bool value);
+    void SetIntSetting(string key, int value);
 
-        string GetVersion();
-        void OpenUri(string uri);
-        void RunOnUIThread(Action action);
-        Task<Position> GetCurrentPositionAsync();
-        Task<bool> HasLocationPermissions();
+    string GetVersion();
+    Task OpenUri(string uri);
+    void RunOnUIThread(Action action);
+    Task<Position> GetCurrentPositionAsync();
+    Task<bool> HasLocationPermissions();
 
-        Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel = "");
-        void DisplayToast(string message);
-        void DisplayNotification(string title, string message);
-        void VibrateShort();
-        void OpenLocationUI();
-        Task<bool> RequestLocationPermissions();
-    }
+    Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel = "");
+    void DisplayToast(string message);
+    void DisplayNotification(string title, string message);
+    void VibrateShort();
+    void OpenLocationUI();
+    Task<bool> RequestLocationPermissions();
 }

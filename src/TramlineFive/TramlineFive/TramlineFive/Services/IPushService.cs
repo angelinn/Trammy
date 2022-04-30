@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TramlineFive.Services
+namespace TramlineFive.Services;
+
+public interface IPushService
 {
-    public interface IPushService
-    {
-        void PushNotification(string title, string message);
-    }
+    void PushNotification(string title, string message);
 }
