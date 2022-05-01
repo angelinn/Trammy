@@ -45,24 +45,11 @@ namespace TramlineFive.Common.ViewModels
         public MapViewModel(MapService mapServiceOther)
         {
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
-            OpenHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
-            ShowMapCommand = new RelayCommand(() =>
-            {
-                IsVirtualTablesUp = false;
-                MessengerInstance.Send(new ShowMapMessage(false));
-            });
+            OpenHamburgerCommand = new RelayCommand(OnOpenHamburger);
+            ShowMapCommand = new RelayCommand(OnShowMap);
 
-            ShowSearchCommand = new RelayCommand(() => IsSearchVisible = !isSearchVisible);
-            SearchByCodeCommand = new RelayCommand<string>((i) =>
-            {
-                IsVirtualTablesUp = true;
-                MessengerInstance.Send(new StopSelectedMessage(i, true));
-            });
-            SearchCommand = new RelayCommand(() =>
-            {
-                IsVirtualTablesUp = true;
-                MessengerInstance.Send(new StopSelectedMessage(stopCode, true));
-            });
+            SearchByCodeCommand = new RelayCommand<string>(OnSearchByCode);
+            SearchCommand = new RelayCommand(() => OnSearchByCode(stopCode));
             SearchFocusedCommand = new RelayCommand(OnSearchFocused);
             SearchUnfocusedCommand = new RelayCommand(OnSearchUnfocused);
 
@@ -115,68 +102,6 @@ namespace TramlineFive.Common.ViewModels
             }
             else
                 mapService.OnMapInfo(e);
-        }
-
-        private string stopCode;
-        public string StopCode
-        {
-            get 
-            {
-                return stopCode; 
-            }
-            set
-            {
-                stopCode = value;
-                if (isFocused && !String.IsNullOrEmpty(stopCode))
-                {
-                    IsSearching = true;
-                    FilterStops();
-                }
-
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool isMapVisible;
-        public bool IsMapVisible
-        {
-            get
-            {
-                return isMapVisible;
-            }
-            set
-            {
-                isMapVisible = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool isMyLocationVisible;
-        public bool IsMyLocationVisible
-        {
-            get
-            {
-                return isMyLocationVisible;
-            }
-            set
-            {
-                isMyLocationVisible = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private string myLocationColor = "White";
-        public string MyLocationColor
-        {
-            get
-            {
-                return myLocationColor;
-            }
-            set
-            {
-                myLocationColor = value;
-                RaisePropertyChanged();
-            }
         }
 
         public async Task LoadAsync()
@@ -320,6 +245,23 @@ namespace TramlineFive.Common.ViewModels
             IsSearching = false;
         }
 
+        private void OnSearchByCode(string i)
+        {
+            IsVirtualTablesUp = true;
+            MessengerInstance.Send(new StopSelectedMessage(i, true));
+        }
+
+        private void OnShowMap()
+        {
+            IsVirtualTablesUp = false;
+            MessengerInstance.Send(new ShowMapMessage(false));
+        }
+
+        private void OnOpenHamburger()
+        {
+            MessengerInstance.Send(new SlideHamburgerMessage());
+        }
+
         private string selectedSuggestion;
         public string SelectedSuggestion
         {
@@ -425,5 +367,68 @@ namespace TramlineFive.Common.ViewModels
                 RaisePropertyChanged();
             }
         }
+
+        private string stopCode;
+        public string StopCode
+        {
+            get
+            {
+                return stopCode;
+            }
+            set
+            {
+                stopCode = value;
+                if (isFocused && !String.IsNullOrEmpty(stopCode))
+                {
+                    IsSearching = true;
+                    FilterStops();
+                }
+
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool isMapVisible;
+        public bool IsMapVisible
+        {
+            get
+            {
+                return isMapVisible;
+            }
+            set
+            {
+                isMapVisible = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool isMyLocationVisible;
+        public bool IsMyLocationVisible
+        {
+            get
+            {
+                return isMyLocationVisible;
+            }
+            set
+            {
+                isMyLocationVisible = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string myLocationColor = "White";
+        public string MyLocationColor
+        {
+            get
+            {
+                return myLocationColor;
+            }
+            set
+            {
+                myLocationColor = value;
+                RaisePropertyChanged();
+            }
+        }
+
     }
 }
