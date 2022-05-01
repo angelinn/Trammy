@@ -65,27 +65,8 @@ namespace TramlineFive.Common.ViewModels
             MessengerInstance.Register<StopSelectedMessage>(this, OnStopSelectedMessageReceived);
             MessengerInstance.Register<FavouritesChangedMessage>(this, OnFavouritesChanged);
             MessengerInstance.Register<NearbyStopsMessage>(this, OnNearbyStops);
-            MessengerInstance.Register<SettingChanged<int>>(this, async (m) =>
-            {
-                if (m.Name == Settings.MaxTextZoom && m.Value > 0)
-                {
-                    mapService.MaxTextZoom = m.Value;
-                    await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
-                }
-                else if (m.Name == Settings.MaxPinsZoom && m.Value > 0)
-                {
-                    mapService.MaxPinsZoom = m.Value;
-                    await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
-                }
-            });
-
-            MessengerInstance.Register<SettingChanged<string>>(this, async (m) => { if (m.Name == Settings.SelectedTileServer) await mapService.SetupMapAsync(m.Value); });
-            MessengerInstance.Register<SearchFocusedMessage>(this, m =>
-            {
-                if (!m.Focused)
-                    IsSearchVisible = false;
-            });
-            //MessengerInstance.Register<SearchFocusedMessage>(this, (m) => { IsFocused = m.Focused; RaisePropertyChanged("IsSearching"); });
+            MessengerInstance.Register<SettingChanged<int>>(this, async (m) => await OnIntSettingChangedAsync(m));
+            MessengerInstance.Register<SettingChanged<string>>(this, async (m) => await OnStringSettingChangedAsync(m));
         }
 
         public async Task Initialize(Map nativeMap, INavigator navigator)
@@ -213,7 +194,7 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-        public void FilterStops()
+        private void FilterStops()
         {
             if (String.IsNullOrEmpty(stopCode))
                 return;
@@ -226,6 +207,26 @@ namespace TramlineFive.Common.ViewModels
             RaisePropertyChanged("FilteredStops");
 
             SuggestionsHeight = FilteredStops.Count * 50;
+        }
+
+        private async Task OnIntSettingChangedAsync(SettingChanged<int> m)
+        {
+            if (m.Name == Settings.MaxTextZoom && m.Value > 0)
+            {
+                mapService.MaxTextZoom = m.Value;
+                await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+            }
+            else if (m.Name == Settings.MaxPinsZoom && m.Value > 0)
+            {
+                mapService.MaxPinsZoom = m.Value;
+                await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+            }
+        }
+
+        private async Task OnStringSettingChangedAsync(SettingChanged<string> m)
+        {
+            if (m.Name == Settings.SelectedTileServer)
+                await mapService.SetupMapAsync(m.Value);
         }
 
         private void OnStopSelectedMessageReceived(StopSelectedMessage message)
@@ -308,20 +309,6 @@ namespace TramlineFive.Common.ViewModels
             set
             {
                 hasLocation = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool isSearchVisible;
-        public bool IsSearchVisible
-        {
-            get
-            {
-                return isSearchVisible;
-            }
-            set
-            {
-                isSearchVisible = value;
                 RaisePropertyChanged();
             }
         }
@@ -412,20 +399,6 @@ namespace TramlineFive.Common.ViewModels
             set
             {
                 isMyLocationVisible = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private string myLocationColor = "White";
-        public string MyLocationColor
-        {
-            get
-            {
-                return myLocationColor;
-            }
-            set
-            {
-                myLocationColor = value;
                 RaisePropertyChanged();
             }
         }
