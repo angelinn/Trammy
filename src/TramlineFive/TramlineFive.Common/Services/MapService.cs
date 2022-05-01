@@ -267,7 +267,7 @@ public class MapService
         }
     }
 
-    public void OnMapInfo(object sender, MapInfoEventArgs e)
+    public void OnMapInfo(MapInfoEventArgs e)
     {
         Messenger.Default.Send(new MapClickedMessage());
 

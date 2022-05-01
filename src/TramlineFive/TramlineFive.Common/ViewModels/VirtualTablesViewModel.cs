@@ -22,16 +22,15 @@ namespace TramlineFive.Common.ViewModels
     public class VirtualTablesViewModel : BaseViewModel
     {
         public ICommand FavouriteCommand { get; private set; }
-        public ICommand SearchCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
-        public ICommand SearchByCodeCommand { get; private set; } 
         
         public ICommand AnimateFavouriteCommand { get; set; }
 
-        public List<string> FilteredStops { get; private set; }
 
         private readonly ArrivalsService arrivalsService;
         private readonly VersionService versionService;
+
+        private string stopCode;
 
         public VirtualTablesViewModel(ArrivalsService arrivalsService, VersionService versionService)
         {
@@ -39,15 +38,12 @@ namespace TramlineFive.Common.ViewModels
             this.versionService = versionService;
 
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
-            SearchCommand = new RelayCommand(() => MessengerInstance.Send(new StopSelectedMessage(stopCode, true)));
-            SearchByCodeCommand = new RelayCommand<string>((i) => MessengerInstance.Send(new StopSelectedMessage(i, true)));
             RefreshCommand = new RelayCommand(async () => {
-                await SearchByStopCodeAsync();
+                await SearchByStopCodeAsync(stopCode);
                 IsRefreshing = false;
             }); 
 
-            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
-            MessengerInstance.Register<SearchFocusedMessage>(this, (m) => { IsFocused = m.Focused; RaisePropertyChanged("IsSearching"); });
+            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await CheckStopAsync(sc.Selected));
             MessengerInstance.Register<FavouritesChangedMessage>(this, (m) =>
             { 
                 if (StopInfo != null)
@@ -56,51 +52,6 @@ namespace TramlineFive.Common.ViewModels
                     RaisePropertyChanged("StopInfo");
                 }
             });
-        }
-
-        public bool IsFocused { get; set; }
-
-        public bool IsSearching => IsFocused && !String.IsNullOrEmpty(stopCode);
-
-        private string selectedSuggestion;
-        public string SelectedSuggestion
-        {
-            get
-            {
-                return selectedSuggestion;
-            }
-            set
-            {
-                selectedSuggestion = value;
-
-                if (!String.IsNullOrEmpty(selectedSuggestion))
-                {
-                    string code = selectedSuggestion.Substring(0, 4);
-                    CheckStopAsync(code);
-                    MessengerInstance.Send(new StopSelectedMessage(code, true));
-                }
-
-                RaisePropertyChanged();
-            }
-        }
-
-        private int suggestionsHeight;
-        public int SuggestionsHeight
-        {
-            get
-            {
-                return suggestionsHeight;
-            }
-            set
-            {
-                suggestionsHeight = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private async Task OnStopSelected(string stopCode)
-        {
-            await CheckStopAsync(stopCode);
         }
 
         private async Task AddFavouriteAsync()
@@ -121,8 +72,8 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task CheckStopAsync(string selected)
         {
-            StopCode = selected;
-            await SearchByStopCodeAsync();
+            stopCode = selected;
+            await SearchByStopCodeAsync(stopCode);
         }
 
         public async Task CheckForUpdatesAsync()
@@ -137,7 +88,7 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-        public async Task SearchByStopCodeAsync()
+        public async Task SearchByStopCodeAsync(string stopCode)
         {
             IsLoading = true;
 
@@ -165,21 +116,6 @@ namespace TramlineFive.Common.ViewModels
                 await ApplicationService.DisplayAlertAsync("Грешка", e.Message, "OK");
             }
         } 
-
-        public void FilterStops()
-        {
-            if (String.IsNullOrEmpty(stopCode))
-                return;
-
-            if (Char.IsDigit(stopCode[0]))
-                FilteredStops = StopsLoader.Stops.Where(s => s.Code.Contains(stopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
-            else
-                FilteredStops = StopsLoader.Stops.Where(s => s.PublicName.ToLower().Contains(stopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
-
-            RaisePropertyChanged("FilteredStops");
-
-            SuggestionsHeight = FilteredStops.Count * 50;
-        }
 
         private Line selected;
         public Line Selected
@@ -279,21 +215,21 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-        private string stopCode;
-        public string StopCode
-        {
-            get
-            {
-                return stopCode;
-            }
-            set
-            {
-                stopCode = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged("IsSearching");
+        //private string stopCode;
+        //public string StopCode
+        //{
+        //    get
+        //    {
+        //        return stopCode;
+        //    }
+        //    set
+        //    {
+        //        stopCode = value;
+        //        RaisePropertyChanged();
+        //        RaisePropertyChanged("IsSearching");
 
-                FilterStops();
-            }
-        }
+        //        FilterStops();
+        //    }
+        //}
     }
 }

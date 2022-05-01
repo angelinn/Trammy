@@ -17,7 +17,8 @@
         <ResourceDictionary>
             <cv:ColorConverter x:Key="ColorConverter" />
             <cv:LocationConverter x:Key="LocationConverter" />
-        </ResourceDictionary>
+            <cv:InverseBoolConverter x:Key="InverseBool" />
+        </ResourceDictionary> 
     </Grid.Resources>
 
     <AbsoluteLayout>
@@ -35,7 +36,7 @@
                                 IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False" />
             </StackLayout>
 
-            <Frame Grid.Row="3" x:Name="searchBar" Margin="15,0,15,0" BackgroundColor="White" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" >
+            <Frame Grid.Row="3" x:Name="searchBar" Margin="15,0,15,0" BackgroundColor="White" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
@@ -48,11 +49,12 @@
 
                         <Label FontFamily="mio" Text="&#xe5d2;" Margin="5,0,0,0" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center" TextColor="DodgerBlue" />
                     </Grid>
-                    <views:CustomEntry BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}"
-                                           Grid.Column="1" TextColor="Gray" Placeholder="Код/име на спирка..." FontSize="16" VerticalOptions="Center"
-                                           Text="{Binding StopCode}" Focused="OnSearchFocused" Unfocused="OnSearchUnfocused">
+                    <views:CustomEntry Grid.Column="1" TextColor="Gray" Placeholder="Код/име на спирка..." 
+                                       FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
                         <views:CustomEntry.Behaviors>
                             <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
+                            <d:EventToCommandBehavior EventName="Focused" Command="{Binding SearchFocusedCommand}" />
+                            <d:EventToCommandBehavior EventName="Unfocused" Command="{Binding SearchUnfocusedCommand}" />
                         </views:CustomEntry.Behaviors>
                     </views:CustomEntry>
                     <ActivityIndicator Grid.Column="1" HorizontalOptions="End" Scale=".5"
@@ -62,7 +64,7 @@
                                            IsEnabled="{Binding IsLoading}"/>
                 </Grid>
             </Frame>
-            <CollectionView Grid.Row="2" Margin="17,5,17,0" ItemsSource="{Binding RecommendedStops}">
+            <CollectionView Grid.Row="2" Margin="17,5,17,0" ItemsSource="{Binding RecommendedStops}" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
                 </CollectionView.ItemsLayout>
@@ -71,7 +73,7 @@
                         <Grid Padding="0,2,0,2">
                             <Frame CornerRadius="30" BackgroundColor="White" WidthRequest="130" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True">
                                 <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Frame}, AncestorLevel=1}}" />
+                                    <TapGestureRecognizer BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Frame}, AncestorLevel=1}}" />
                                 </Frame.GestureRecognizers>
 
                                 <Grid ColumnSpacing="0">
@@ -91,8 +93,8 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Frame Grid.Row="1" Grid.RowSpan="2" Margin="15,-5,15,0" VerticalOptions="Start" Padding="0" CornerRadius="30" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
-                <ListView SeparatorColor="Transparent" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >
+            <Frame Grid.Row="1" Grid.RowSpan="2" Margin="15,-5,15,0" VerticalOptions="End" Padding="0" CornerRadius="30" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
+                <ListView SeparatorColor="Transparent" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -114,7 +116,7 @@
                 </ListView>
             </Frame>
 
-            <Frame Grid.Row="1" Margin="0,0,10,0" CornerRadius="50" Padding="0" xct:TouchEffect.NativeAnimation="True" HorizontalOptions="End" VerticalOptions="End" Background="white" HeightRequest="58" WidthRequest="58">
+            <Frame Grid.Row="1" Margin="0,0,10,0" CornerRadius="50" Padding="0" xct:TouchEffect.NativeAnimation="True" HorizontalOptions="End" VerticalOptions="End" Background="white" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
                 </Frame.GestureRecognizers>
@@ -138,9 +140,9 @@
             </views:FloatingActionButton>-->
         </Grid>
         <Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" Opacity="0">
-            <Grid.GestureRecognizers>
+            <!--<Grid.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding ShowMapCommand}" />
-            </Grid.GestureRecognizers>
+            </Grid.GestureRecognizers>-->
         </Grid>
 
         <food:PancakeView x:Name="slideMenu" Padding="0" CornerRadius="30,30,0,0" VerticalOptions="End" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">

@@ -5,6 +5,8 @@ using Mapsui;
 using Mapsui.Layers;
 using Mapsui.Projections;
 using Mapsui.Styles;
+using Mapsui.UI;
+using SkgtService;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,52 +25,46 @@ namespace TramlineFive.Common.ViewModels
 {
     public class MapViewModel : BaseViewModel
     {
-        public ObservableCollection<ArrivalStopModel> RecommendedStops { get; private set; } = new ObservableCollection<ArrivalStopModel>();
+        public ObservableCollection<ArrivalStopModel> RecommendedStops { get; } = new();
+        public List<string> FilteredStops { get; private set; }
 
-        public ICommand MyLocationCommand { get; private set; }
-        public ICommand OpenHamburgerCommand { get; private set; }
-        public ICommand ShowMapCommand { get; private set; }
-        public ICommand ShowSearchCommand { get; private set; }
+        public ICommand MyLocationCommand { get; }
+        public ICommand OpenHamburgerCommand { get; }
+        public ICommand ShowMapCommand { get; }
+        public ICommand ShowSearchCommand { get; }
+        public ICommand SearchByCodeCommand { get; }
+        public ICommand SearchCommand { get; }
+        public ICommand SearchFocusedCommand { get; }
+        public ICommand SearchUnfocusedCommand { get; }
 
         private readonly MapService mapService;
 
         private List<ArrivalStopModel> topFavourites = new List<ArrivalStopModel>();
         private List<ArrivalStopModel> nearbyStops = new List<ArrivalStopModel>();
 
-        private bool hasLocation = true;
-        public bool HasLocation
-        {
-            get
-            {
-                return hasLocation;
-            }
-            set
-            {
-                hasLocation = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private bool isSearchVisible;
-        public bool IsSearchVisible
-        {
-            get
-            {
-                return isSearchVisible;
-            }
-            set
-            {
-                isSearchVisible = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public MapViewModel(MapService mapServiceOther)
         {
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
             OpenHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
-            ShowMapCommand = new RelayCommand(() => MessengerInstance.Send(new ShowMapMessage(false)));
+            ShowMapCommand = new RelayCommand(() =>
+            {
+                IsVirtualTablesUp = false;
+                MessengerInstance.Send(new ShowMapMessage(false));
+            });
+
             ShowSearchCommand = new RelayCommand(() => IsSearchVisible = !isSearchVisible);
+            SearchByCodeCommand = new RelayCommand<string>((i) =>
+            {
+                IsVirtualTablesUp = true;
+                MessengerInstance.Send(new StopSelectedMessage(i, true));
+            });
+            SearchCommand = new RelayCommand(() =>
+            {
+                IsVirtualTablesUp = true;
+                MessengerInstance.Send(new StopSelectedMessage(stopCode, true));
+            });
+            SearchFocusedCommand = new RelayCommand(OnSearchFocused);
+            SearchUnfocusedCommand = new RelayCommand(OnSearchUnfocused);
 
             mapService = mapServiceOther;
             int maxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
@@ -102,11 +98,43 @@ namespace TramlineFive.Common.ViewModels
                 if (!m.Focused)
                     IsSearchVisible = false;
             });
+            //MessengerInstance.Register<SearchFocusedMessage>(this, (m) => { IsFocused = m.Focused; RaisePropertyChanged("IsSearching"); });
         }
 
         public async Task Initialize(Map nativeMap, INavigator navigator)
         {
             await mapService.Initialize(nativeMap, navigator, ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+        }
+
+        public void OnMapInfo(MapInfoEventArgs e)
+        {
+            if (isVirtualTablesUp)
+            {
+                IsVirtualTablesUp = false;
+                MessengerInstance.Send(new ShowMapMessage(false));
+            }
+            else
+                mapService.OnMapInfo(e);
+        }
+
+        private string stopCode;
+        public string StopCode
+        {
+            get 
+            {
+                return stopCode; 
+            }
+            set
+            {
+                stopCode = value;
+                if (isFocused && !String.IsNullOrEmpty(stopCode))
+                {
+                    IsSearching = true;
+                    FilterStops();
+                }
+
+                RaisePropertyChanged();
+            }
         }
 
         private bool isMapVisible;
@@ -260,10 +288,142 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
+        public void FilterStops()
+        {
+            if (String.IsNullOrEmpty(stopCode))
+                return;
+
+            if (Char.IsDigit(stopCode[0]))
+                FilteredStops = StopsLoader.Stops.Where(s => s.Code.Contains(stopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+            else
+                FilteredStops = StopsLoader.Stops.Where(s => s.PublicName.ToLower().Contains(stopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+
+            RaisePropertyChanged("FilteredStops");
+
+            SuggestionsHeight = FilteredStops.Count * 50;
+        }
+
         private void OnStopSelectedMessageReceived(StopSelectedMessage message)
         {
             if (message.Clicked)
                 mapService.MoveToStop(message.Selected);
+        }
+
+        private void OnSearchFocused()
+        {
+            IsFocused = true;
+        }
+
+        private void OnSearchUnfocused()
+        {
+            IsFocused = false;
+            IsSearching = false;
+        }
+
+        private string selectedSuggestion;
+        public string SelectedSuggestion
+        {
+            get
+            {
+                return selectedSuggestion;
+            }
+            set
+            {
+                selectedSuggestion = value;
+
+                if (!String.IsNullOrEmpty(selectedSuggestion))
+                {
+                    string code = selectedSuggestion.Substring(0, 4);
+                    MessengerInstance.Send(new StopSelectedMessage(code, true));
+                }
+
+                RaisePropertyChanged();
+            }
+        }
+
+        private int suggestionsHeight;
+        public int SuggestionsHeight
+        {
+            get
+            {
+                return suggestionsHeight;
+            }
+            set
+            {
+                suggestionsHeight = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private bool hasLocation = true;
+        public bool HasLocation
+        {
+            get
+            {
+                return hasLocation;
+            }
+            set
+            {
+                hasLocation = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool isSearchVisible;
+        public bool IsSearchVisible
+        {
+            get
+            {
+                return isSearchVisible;
+            }
+            set
+            {
+                isSearchVisible = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool isVirtualTablesUp;
+        public bool IsVirtualTablesUp
+        {
+            get
+            {
+                return isVirtualTablesUp;
+            }
+            set
+            {
+                isVirtualTablesUp = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool isSearching;
+        public bool IsSearching
+        {
+            get
+            {
+                return isSearching;
+            }
+            set
+            {
+                isSearching = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private bool isFocused;
+        public bool IsFocused
+        {
+            get
+            {
+                return isFocused;
+            }
+            set
+            {
+                isFocused = value;
+                RaisePropertyChanged();
+            }
         }
     }
 }
