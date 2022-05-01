@@ -36,11 +36,12 @@ namespace TramlineFive.Common.ViewModels
         public ICommand SearchCommand { get; }
         public ICommand SearchFocusedCommand { get; }
         public ICommand SearchUnfocusedCommand { get; }
+        public ICommand MapInfoCommand { get; }
+
+        private List<ArrivalStopModel> topFavourites = new();
+        private List<ArrivalStopModel> nearbyStops = new();
 
         private readonly MapService mapService;
-
-        private List<ArrivalStopModel> topFavourites = new List<ArrivalStopModel>();
-        private List<ArrivalStopModel> nearbyStops = new List<ArrivalStopModel>();
 
         public MapViewModel(MapService mapServiceOther)
         {
@@ -52,8 +53,10 @@ namespace TramlineFive.Common.ViewModels
             SearchCommand = new RelayCommand(() => OnSearchByCode(stopCode));
             SearchFocusedCommand = new RelayCommand(OnSearchFocused);
             SearchUnfocusedCommand = new RelayCommand(OnSearchUnfocused);
+            MapInfoCommand = new RelayCommand<MapInfoEventArgs>(OnMapInfo);
 
             mapService = mapServiceOther;
+
             int maxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             int maxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
 
@@ -71,19 +74,9 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task Initialize(Map nativeMap, INavigator navigator)
         {
-            await mapService.Initialize(nativeMap, navigator, ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
-        }
-
-        public void OnMapInfo(MapInfoEventArgs e)
-        {
-            if (isVirtualTablesUp)
-            {
-                IsVirtualTablesUp = false;
-                MessengerInstance.Send(new ShowMapMessage(false));
-            }
-            else
-                mapService.OnMapInfo(e);
-        }
+            await mapService.Initialize(nativeMap, navigator, 
+                ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+        } 
 
         public async Task LoadAsync()
         {
@@ -207,6 +200,17 @@ namespace TramlineFive.Common.ViewModels
             RaisePropertyChanged("FilteredStops");
 
             SuggestionsHeight = FilteredStops.Count * 50;
+        }
+
+        private void OnMapInfo(MapInfoEventArgs e)
+        {
+            if (isVirtualTablesUp)
+            {
+                IsVirtualTablesUp = false;
+                MessengerInstance.Send(new ShowMapMessage(false));
+            }
+            else
+                mapService.OnMapInfo(e);
         }
 
         private async Task OnIntSettingChangedAsync(SettingChanged<int> m)

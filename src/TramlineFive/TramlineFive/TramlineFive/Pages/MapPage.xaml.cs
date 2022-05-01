@@ -40,8 +40,6 @@ namespace TramlineFive.Pages
             mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
             Task _ = (BindingContext as MapViewModel).Initialize(nativeMap, map.Navigator);
 
-            map.Info += OnMapInfo;
-
             map.Map = nativeMap;
             map.TouchAction += OnMapTouchAction;
         }
@@ -57,11 +55,6 @@ namespace TramlineFive.Pages
             }
 
             System.Diagnostics.Debug.WriteLine($"Touch: {e.ActionType} {map.Viewport.CenterX} {map.Viewport.CenterY}");
-        }
-
-        private void OnMapInfo(object sender, Mapsui.UI.MapInfoEventArgs e)
-        {
-            (BindingContext as MapViewModel).OnMapInfo(e);
         }
 
         private void ShowVirtualTables(int linesCount)
