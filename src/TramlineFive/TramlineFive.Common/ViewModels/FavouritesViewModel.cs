@@ -64,7 +64,7 @@ namespace TramlineFive.Common.ViewModels
             }
 
             if (minDistanceFavourite != null)
-                MessengerInstance.Send(new StopSelectedMessage(minDistanceFavourite.StopCode, false));
+                MessengerInstance.Send(new StopSelectedMessage(minDistanceFavourite.StopCode, true));
         }
 
         private async Task OnStopSelected(string stopCode)

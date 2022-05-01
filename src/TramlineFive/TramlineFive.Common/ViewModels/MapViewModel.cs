@@ -210,7 +210,10 @@ namespace TramlineFive.Common.ViewModels
                 MessengerInstance.Send(new ShowMapMessage(false));
             }
             else
+            {
+                IsVirtualTablesUp = true;
                 mapService.OnMapInfo(e);
+            }
         }
 
         private async Task OnIntSettingChangedAsync(SettingChanged<int> m)
@@ -236,7 +239,10 @@ namespace TramlineFive.Common.ViewModels
         private void OnStopSelectedMessageReceived(StopSelectedMessage message)
         {
             if (message.Clicked)
+            {
+                IsVirtualTablesUp = true;
                 mapService.MoveToStop(message.Selected);
+            }
         }
 
         private void OnSearchFocused()

@@ -36,7 +36,6 @@
                                 IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False">
                     <mapsui:MapView.Behaviors>
                         <d:EventToCommandBehavior EventName="Info" Command="{Binding MapInfoCommand}" />
-                        <d:EventToCommandBehavior EventName="TouchAction" Command="{Binding MapTouchActionCommand}" />
                     </mapsui:MapView.Behaviors>
                 </mapsui:MapView>
             </StackLayout>
