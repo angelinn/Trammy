@@ -16,12 +16,13 @@ namespace TramlineFive.Common.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
-        public ICommand CleanHistoryCommand { get; init; } 
+        public ICommand CleanHistoryCommand { get; init; }
         public ICommand UpdateStopsCommand { get; init; }
 
         public string UpdatedMessage => ApplicationService.GetStringSetting(Settings.StopsUpdated, null) ?? "Не е обновявано";
 
         public List<string> TileServers => TileServerSettings.TileServers.Keys.ToList();
+        public List<Theme> Themes => new() { new Theme() { Name = "Светла", Value = "Light" }, new Theme() { Name = "Тъмна", Value = "Dark" } };
 
         public SettingsViewModel()
         {
@@ -32,14 +33,17 @@ namespace TramlineFive.Common.ViewModels
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
             SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, TileServerSettings.TileServers.Keys.First());
+
+            string theme = ApplicationService.GetStringSetting("Theme", "Light");
+            SelectedTheme = theme == "Light" ? Themes[0] : Themes[1];
         }
 
         private int maxTextZoom;
         public int MaxTextZoom
         {
-            get 
-            { 
-                return maxTextZoom; 
+            get
+            {
+                return maxTextZoom;
             }
             set
             {
@@ -47,24 +51,24 @@ namespace TramlineFive.Common.ViewModels
 
                 ApplicationService.SetIntSetting(Settings.MaxTextZoom, maxTextZoom);
                 MessengerInstance.Send(new SettingChanged<int>(Settings.MaxTextZoom, maxTextZoom));
-                RaisePropertyChanged(); 
+                RaisePropertyChanged();
             }
         }
 
-        private int maxPinsZoom; 
+        private int maxPinsZoom;
         public int MaxPinsZoom
         {
-            get 
-            { 
+            get
+            {
                 return maxPinsZoom;
             }
-            set 
+            set
             {
                 maxPinsZoom = value;
 
                 ApplicationService.SetIntSetting(Settings.MaxPinsZoom, maxPinsZoom);
                 MessengerInstance.Send(new SettingChanged<int>(Settings.MaxPinsZoom, maxPinsZoom));
-                RaisePropertyChanged(); 
+                RaisePropertyChanged();
             }
         }
 
@@ -93,7 +97,7 @@ namespace TramlineFive.Common.ViewModels
 
             MessengerInstance.Send(new HistoryClearedMessage());
             ApplicationService.DisplayToast("Историята е изчистена");
-        } 
+        }
 
         private async Task ReloadStopsAsync()
         {
@@ -148,5 +152,31 @@ namespace TramlineFive.Common.ViewModels
                 RaisePropertyChanged();
             }
         }
+
+        private Theme selectedTheme;
+        public Theme SelectedTheme
+        {
+            get
+            {
+                return selectedTheme;
+            }
+            set
+            {
+                if (selectedTheme != null && selectedTheme.Value != value.Value)
+                {
+                    ApplicationService.SetStringSetting("Theme", value.Value);
+                    MessengerInstance.Send(new ChangeThemeMessage(value.Value));
+                }
+
+                selectedTheme = value;
+                RaisePropertyChanged();
+            }
+        }
+    }
+
+    public class Theme
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using SkgtService;
 using System;
@@ -6,11 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TramlineFive.Common;
+using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.DataAccess;
 using TramlineFive.Services;
 using TramlineFive.Services.Main;
+using TramlineFive.Themes;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -27,12 +30,23 @@ namespace TramlineFive
             IPathService dbPathService = DependencyService.Get<IPathService>();
             StopsLoader.Initialize(dbPathService.BaseFilePath);
 
+            var dict = Current.Resources.MergedDictionaries;
+
             //IPermissionService permissionService = DependencyService.Get<IPermissionService>();
 
             //if (!permissionService.HasLocationPermissions())
             //    MainPage = new Pages.LocationPromptPage();
             //else
             //    MainPage = new NavigationPage(new MasterPage());
+
+            Messenger.Default.Register<ChangeThemeMessage>(this, m =>
+            {
+                Current.Resources.MergedDictionaries.Clear();
+                if (m.Name == "Light")
+                    Current.Resources.MergedDictionaries.Add(new LightTheme());
+                else
+                    Current.Resources.MergedDictionaries.Add(new DarkTheme());
+            });
 
             DependencyService.Get<IVersionCheckingService>().CreateTask();
         }

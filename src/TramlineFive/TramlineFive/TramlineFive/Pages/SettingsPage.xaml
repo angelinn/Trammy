@@ -57,6 +57,14 @@
                 </StackLayout>
                 <Picker ItemsSource="{Binding TileServers}" SelectedItem="{Binding SelectedTileServer}" HorizontalOptions="End" WidthRequest="150" Margin="0,10,0,0" />
             </Grid>
+            <Grid>
+                <StackLayout Orientation="Horizontal" Margin="0,15,0,0">
+                    <Label FontFamily="mio" Text="brightness_6" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" />
+                    <Label Text="Тема" FontSize="Default" VerticalTextAlignment="Center" />
+                </StackLayout>
+                <Picker ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}" ItemDisplayBinding="{Binding Name}" HorizontalOptions="End" WidthRequest="150" Margin="0,10,0,0" />
+            </Grid>
+            
 
             <!--<Label Text="Max zoom for text" Margin="0,20,0,0" FontSize="Medium" />
             <Entry Text="{Binding MaxTextZoom}" />
