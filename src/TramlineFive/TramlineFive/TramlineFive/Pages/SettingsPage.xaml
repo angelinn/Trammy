@@ -20,8 +20,8 @@
                     <TapGestureRecognizer Command="{Binding CleanHistoryCommand}" />
                 </StackLayout.GestureRecognizers>
                 
-                <Label FontFamily="mio" Text="delete" FontSize="24" TextColor="DodgerBlue" />
-                <Label Text="Изчистване на историята на търсенията" FontSize="Default" VerticalTextAlignment="Center" TextColor="Black" />
+                <Label FontFamily="mio" Text="delete" FontSize="24" TextColor="{DynamicResource PrimaryColor}" />
+                <Label Text="Изчистване на историята на търсенията" FontSize="Default" VerticalTextAlignment="Center" />
                 <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HeightRequest="10">
                     <ActivityIndicator.HorizontalOptions>
                         <OnPlatform x:TypeArguments="LayoutOptions" Android="StartAndExpand" WinPhone="FillAndExpand" />
@@ -33,8 +33,8 @@
                     <TapGestureRecognizer Command="{Binding UpdateStopsCommand}" />
                 </StackLayout.GestureRecognizers>
 
-                <Label FontFamily="mio" Text="refresh" FontSize="24" TextColor="DodgerBlue" />
-                <Label Text="Презареди спирки" FontSize="Default" VerticalTextAlignment="Center" TextColor="Black" />
+                <Label FontFamily="mio" Text="refresh" FontSize="24" TextColor="{DynamicResource PrimaryColor}" />
+                <Label Text="Презареди спирки" FontSize="Default" VerticalTextAlignment="Center" />
                 <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}" HeightRequest="10">
                     <ActivityIndicator.HorizontalOptions>
                         <OnPlatform x:TypeArguments="LayoutOptions" Android="StartAndExpand" WinPhone="FillAndExpand" />
@@ -44,15 +44,15 @@
             <Label Text="{Binding UpdatedMessage, StringFormat='Последно обновено: {0}'}" FontSize="Small" Margin="0,5,0,0" />
 
             <StackLayout Orientation="Horizontal" Margin="0,15,0,0">
-                <Label FontFamily="mio" Text="history" FontSize="24" TextColor="DodgerBlue" VerticalTextAlignment="Center"  />
-                <Label Text="Покажи най-близка спирка при стартиране"  FontSize="Default" VerticalTextAlignment="Center" TextColor="Black"  />
-                <Switch IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" OnColor="DodgerBlue" ThumbColor="DodgerBlue" VerticalOptions="Center" />
+                <Label FontFamily="mio" Text="history" FontSize="24" TextColor="{DynamicResource PrimaryColor}" VerticalTextAlignment="Center"  />
+                <Label Text="Покажи най-близка спирка при стартиране"  FontSize="Default" VerticalTextAlignment="Center" />
+                <Switch IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" OnColor="{DynamicResource PrimaryColor}" ThumbColor="{DynamicResource PrimaryColor}" VerticalOptions="Center" />
             </StackLayout>
 
             <Grid>
                 <StackLayout Orientation="Horizontal" Margin="0,15,0,0">
                     <Label FontFamily="mio" Text="map" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" />
-                    <Label Text="Tile сървър" FontSize="Default" VerticalTextAlignment="Center" TextColor="Black" />
+                    <Label Text="Tile сървър" FontSize="Default" VerticalTextAlignment="Center" />
 
                 </StackLayout>
                 <Picker ItemsSource="{Binding TileServers}" SelectedItem="{Binding SelectedTileServer}" HorizontalOptions="End" WidthRequest="150" Margin="0,10,0,0" />

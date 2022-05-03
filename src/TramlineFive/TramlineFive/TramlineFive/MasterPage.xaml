@@ -70,7 +70,7 @@
                 </pages:HistoryPage>
             </Grid>
 
-            <Grid Grid.Row="2" BackgroundColor="White">
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -162,7 +162,6 @@
                         <Style TargetType="Label" x:Key="MenuText">
                             <Setter Property="FontSize" Value="14" />
                             <Setter Property="VerticalOptions" Value="Center" />
-                            <Setter Property="TextColor" Value="Black" />
                             <Setter Property="Grid.Column" Value="1" />
                         </Style>
 

@@ -4,15 +4,35 @@
              x:Class="TramlineFive.App"
               xmlns:vm="clr-namespace:TramlineFive.Common.ViewModels.Locator;assembly=TramlineFive.Common" >
     <Application.Resources>
+        <ResourceDictionary Source="Themes/LightTheme.xaml" />
+
         <ResourceDictionary>
             <!-- Application resource dictionary -->
             <Style TargetType="NavigationPage">
-                <Setter Property="BarBackgroundColor" Value="DodgerBlue"/>
-                <Setter Property="BarTextColor" Value="White"/>
+                <Setter Property="BarBackgroundColor" Value="{DynamicResource BarBackgroundColor}"/>
+                <Setter Property="BarTextColor" Value="{DynamicResource BarTextColor}"/>
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource LabelTextColor}" />
+            </Style>
+
+            <Style TargetType="Grid">
+                <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}" />
+            </Style>
+            
+            <Style TargetType="StackLayout">
+                <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}" />
+            </Style>
+
+            <Style TargetType="Picker">
+                <Setter Property="TextColor" Value="{DynamicResource LabelTextColor}" />
             </Style>
 
             <vm:ViewModelLocator x:Key="Locator" />
         </ResourceDictionary>
+        
+
     </Application.Resources>
 </Application>
     

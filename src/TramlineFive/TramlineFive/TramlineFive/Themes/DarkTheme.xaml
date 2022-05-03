@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="TramlineFive.Themes.DarkTheme">
+
+    <Color x:Key="BarBackgroundColor">#1f1f1f</Color>
+    <Color x:Key="BarTextColor">White</Color>
+    <Color x:Key="LabelTextColor">White</Color>
+    <Color x:Key="DetailsTextColor">#737373</Color>
+    <Color x:Key="PrimaryColor">#1873cc</Color>
+    <Color x:Key="BackgroundColor">#121212</Color>
+
+</ResourceDictionary>
+    
