@@ -19,13 +19,13 @@
 
     <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" RefreshColor="DodgerBlue">
         <ScrollView>
-            <Grid>
+            <Grid BackgroundColor="{DynamicResource BackgroundColor}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="80" />
                     <RowDefinition Height="330" />
                 </Grid.RowDefinitions>
 
-                <Grid>
+                <Grid BackgroundColor="{DynamicResource BarBackgroundColor}" >
                     <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -33,7 +33,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Label FontFamily="mio" Text="&#xe570;" FontSize="40" TextColor="DodgerBlue" HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Label FontFamily="mio" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center" />
                             <StackLayout x:Name="txtStopName" Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
                                 <Label Text="{Binding StopInfo.Name}" FontSize="Default" />
                                 <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="DodgerBlue" FontSize="Small" />
@@ -53,17 +53,17 @@
                                 <Label FontFamily="mio" Text="&#xe838;" Margin="10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
                             </Grid>
 
-                            <BoxView Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                            <BoxView Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="{DynamicResource BackgroundColor}" VerticalOptions="End" />
                         </Grid>
                     </Grid>
                 </Grid>
 
-                <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="White" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
+                <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="{DynamicResource BackgroundColor}" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <ViewCell.View>
-                                    <Frame Margin="0,0,0,5" Padding="0" HasShadow="True">
+                                    <Frame Margin="0,0,0,5" Padding="0" HasShadow="True" >
                                         <Grid BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />

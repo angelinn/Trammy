@@ -70,7 +70,7 @@
                 </pages:HistoryPage>
             </Grid>
 
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="2" BackgroundColor="{DynamicResource BackgroundColor}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -147,7 +147,7 @@
             </Grid.GestureRecognizers>
         </Grid>
 
-        <Grid x:Name="slideMenu" HorizontalOptions="Start" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" WidthRequest="250" BackgroundColor="White">
+        <Grid x:Name="slideMenu" HorizontalOptions="Start" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" WidthRequest="250" BackgroundColor="{DynamicResource BackgroundColor}">
             <StackLayout Spacing="0">
                 <StackLayout.Resources>
                     <ResourceDictionary>

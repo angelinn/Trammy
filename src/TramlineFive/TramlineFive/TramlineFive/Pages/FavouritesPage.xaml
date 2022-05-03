@@ -7,7 +7,7 @@
       
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
-    <Grid>
+    <Grid BackgroundColor="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="3*" />
@@ -32,7 +32,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <SwipeView Margin="5,0,0,0" >
+                                <SwipeView Margin="5,0,0,0" BackgroundColor="{DynamicResource BackgroundColor}">
                                     <SwipeView.RightItems>
                                         <SwipeItems> 
                                             <SwipeItemView WidthRequest="100" Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}">

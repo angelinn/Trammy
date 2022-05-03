@@ -40,7 +40,7 @@
                 </mapsui:MapView>
             </StackLayout>
 
-            <Frame Grid.Row="3" x:Name="searchBar" Opacity="0.9" Margin="15,0,15,0" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
+            <Frame Grid.Row="3" x:Name="searchBar" BackgroundColor="{DynamicResource BackgroundColor}" Opacity="0.9" Margin="15,0,15,0" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
@@ -75,7 +75,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="0,2,0,2" BackgroundColor="Transparent">
-                            <Frame CornerRadius="50" WidthRequest="130" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True" Opacity="0.9">
+                            <Frame CornerRadius="50" WidthRequest="130" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True" Opacity="0.9" BackgroundColor="{DynamicResource BackgroundColor}"  >
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Frame}, AncestorLevel=1}}" />
                                 </Frame.GestureRecognizers>
@@ -97,7 +97,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Frame Grid.Row="1" Grid.RowSpan="2" Margin="15,-5,15,0" Opacity="0.9" VerticalOptions="End" Padding="0" CornerRadius="30" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
+            <Frame Grid.Row="1" Grid.RowSpan="2" BackgroundColor="{DynamicResource BackgroundColor}" Margin="15,-5,15,0" Opacity="0.9" VerticalOptions="End" Padding="0" CornerRadius="30" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
                 <ListView SeparatorColor="Transparent" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -120,7 +120,7 @@
                 </ListView>
             </Frame>
 
-            <Frame Grid.Row="1" Margin="0,0,10,0" CornerRadius="50" Opacity="0.9" Padding="0" xct:TouchEffect.NativeAnimation="True" HorizontalOptions="End" VerticalOptions="End" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
+            <Frame Grid.Row="1" Margin="0,0,10,0" BackgroundColor="{DynamicResource BackgroundColor}"  CornerRadius="50" Opacity="0.9" Padding="0" xct:TouchEffect.NativeAnimation="True" HorizontalOptions="End" VerticalOptions="End" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
                 </Frame.GestureRecognizers>

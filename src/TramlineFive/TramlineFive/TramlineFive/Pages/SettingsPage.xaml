@@ -13,7 +13,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView>
+    <ScrollView BackgroundColor="{DynamicResource BackgroundColor}" >
         <StackLayout Padding="10">
             <StackLayout Orientation="Horizontal" Padding="0,10,0,10" xct:TouchEffect.NativeAnimation="True">
                 <StackLayout.GestureRecognizers>

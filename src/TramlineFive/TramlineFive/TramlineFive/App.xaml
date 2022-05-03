@@ -4,7 +4,7 @@
              x:Class="TramlineFive.App"
               xmlns:vm="clr-namespace:TramlineFive.Common.ViewModels.Locator;assembly=TramlineFive.Common" >
     <Application.Resources>
-        <ResourceDictionary Source="Themes/LightTheme.xaml" />
+        <ResourceDictionary Source="Themes/DarkTheme.xaml" />
 
         <ResourceDictionary>
             <!-- Application resource dictionary -->
@@ -17,20 +17,8 @@
                 <Setter Property="TextColor" Value="{DynamicResource LabelTextColor}" />
             </Style>
 
-            <Style TargetType="Grid">
-                <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}" />
-            </Style>
-            
-            <Style TargetType="StackLayout">
-                <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}" />
-            </Style>
-
             <Style TargetType="Picker">
                 <Setter Property="TextColor" Value="{DynamicResource LabelTextColor}" />
-            </Style>
-
-            <Style TargetType="Frame">
-                <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}" />
             </Style>
 
             <vm:ViewModelLocator x:Key="Locator" />

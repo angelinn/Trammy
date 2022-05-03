@@ -4,9 +4,9 @@
              x:Class="TramlineFive.Pages.HistoryPage"
              xmlns:food="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}"> 
+             BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
-    <Grid>
+    <Grid BackgroundColor="{DynamicResource BackgroundColor}" >
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="3*" />
