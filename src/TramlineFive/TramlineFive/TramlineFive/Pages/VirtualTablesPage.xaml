@@ -34,7 +34,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Label FontFamily="mio" Text="&#xe570;" FontSize="40" TextColor="DodgerBlue" HorizontalOptions="Center" VerticalOptions="Center" />
-                            <StackLayout Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
+                            <StackLayout x:Name="txtStopName" Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
                                 <Label Text="{Binding StopInfo.Name}" FontSize="Default" />
                                 <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="DodgerBlue" FontSize="Small" />
                             </StackLayout>

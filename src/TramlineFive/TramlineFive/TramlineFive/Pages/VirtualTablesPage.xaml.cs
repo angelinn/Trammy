@@ -19,6 +19,19 @@ namespace TramlineFive.Pages
         public VirtualTablesPage()
         {
             InitializeComponent();
+            Task _ = AnimateText();
+        }
+
+        private async Task AnimateText()
+        {
+            while (true)
+            {
+                await txtStopName.TranslateTo(0, 0, 5000);
+                txtStopName.TranslationX = Width;
+                await txtStopName.TranslateTo(0, 0, 5000);
+
+                await Task.Delay(5000);
+            }
         }
     }
 }
