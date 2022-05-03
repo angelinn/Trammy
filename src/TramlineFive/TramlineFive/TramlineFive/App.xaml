@@ -29,6 +29,10 @@
                 <Setter Property="TextColor" Value="{DynamicResource LabelTextColor}" />
             </Style>
 
+            <Style TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}" />
+            </Style>
+
             <vm:ViewModelLocator x:Key="Locator" />
         </ResourceDictionary>
         

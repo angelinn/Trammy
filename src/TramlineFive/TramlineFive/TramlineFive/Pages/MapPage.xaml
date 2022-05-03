@@ -40,7 +40,7 @@
                 </mapsui:MapView>
             </StackLayout>
 
-            <Frame Grid.Row="3" x:Name="searchBar" Margin="15,0,15,0" BackgroundColor="White" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
+            <Frame Grid.Row="3" x:Name="searchBar" Opacity="0.9" Margin="15,0,15,0" VerticalOptions="Start" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
@@ -53,7 +53,7 @@
 
                         <Label FontFamily="mio" Text="&#xe5d2;" Margin="5,0,0,0" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center" TextColor="DodgerBlue" />
                     </Grid>
-                    <views:CustomEntry Grid.Column="1" TextColor="Gray" Placeholder="Код/име на спирка..." 
+                    <views:CustomEntry Grid.Column="1" TextColor="{DynamicResource LabelTextColor}" Placeholder="Код/име на спирка..." PlaceholderColor="{DynamicResource PlaceholderTextColor}"
                                        FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
                         <views:CustomEntry.Behaviors>
                             <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
@@ -74,8 +74,8 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="0,2,0,2">
-                            <Frame CornerRadius="30" BackgroundColor="White" WidthRequest="130" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True">
+                        <Grid Padding="0,2,0,2" BackgroundColor="Transparent">
+                            <Frame CornerRadius="50" WidthRequest="130" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True" Opacity="0.9">
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Frame}, AncestorLevel=1}}" />
                                 </Frame.GestureRecognizers>
@@ -88,8 +88,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label FontFamily="mir" Text="&#xe530;" FontSize="17" VerticalOptions="Center" Margin="0,1,0,0" TextColor="Crimson" />
-                                    <Label Grid.Column="1" Text="{Binding StopCode, StringFormat='({0})'}" TextColor="Black" FontSize="12"  HorizontalOptions="Start" />
-                                    <Label Grid.Column="2" Text="{Binding Name}" TextColor="Black" LineBreakMode="TailTruncation" FontSize="12" HorizontalOptions="Start" />
+                                    <Label Grid.Column="1" Text="{Binding StopCode, StringFormat='({0})'}" FontSize="12"  HorizontalOptions="Start" />
+                                    <Label Grid.Column="2" Text="{Binding Name}" LineBreakMode="TailTruncation" FontSize="12" HorizontalOptions="Start" />
                                 </Grid>
                             </Frame>
                         </Grid>
@@ -97,13 +97,13 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Frame Grid.Row="1" Grid.RowSpan="2" Margin="15,-5,15,0" VerticalOptions="End" Padding="0" CornerRadius="30" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
+            <Frame Grid.Row="1" Grid.RowSpan="2" Margin="15,-5,15,0" Opacity="0.9" VerticalOptions="End" Padding="0" CornerRadius="30" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
                 <ListView SeparatorColor="Transparent" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <ViewCell.View>
-                                    <Grid BackgroundColor="White" ColumnSpacing="0">
+                                    <Grid ColumnSpacing="0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="50" />
                                             <ColumnDefinition Width="Auto" />
@@ -111,7 +111,7 @@
 
                                         <Label FontFamily="mio" Text="&#xe8b6;" FontSize="23" VerticalOptions="Center" Margin="5,7,0,0" HorizontalOptions="Center" TextColor="#9aa0a6" />
 
-                                        <Label Grid.Column="1" Text="{Binding}" TextColor="Black" VerticalOptions="Center" Margin="0,5,0,0" FontSize="15" />
+                                        <Label Grid.Column="1" Text="{Binding}" VerticalOptions="Center" Margin="0,5,0,0" FontSize="15" />
                                     </Grid>
                                 </ViewCell.View>
                             </ViewCell>
@@ -120,7 +120,7 @@
                 </ListView>
             </Frame>
 
-            <Frame Grid.Row="1" Margin="0,0,10,0" CornerRadius="50" Padding="0" xct:TouchEffect.NativeAnimation="True" HorizontalOptions="End" VerticalOptions="End" Background="white" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
+            <Frame Grid.Row="1" Margin="0,0,10,0" CornerRadius="50" Opacity="0.9" Padding="0" xct:TouchEffect.NativeAnimation="True" HorizontalOptions="End" VerticalOptions="End" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
                 </Frame.GestureRecognizers>

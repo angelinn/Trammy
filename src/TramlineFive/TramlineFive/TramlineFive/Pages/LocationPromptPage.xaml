@@ -8,7 +8,7 @@
             <RowDefinition Height="2*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackLayout VerticalOptions="End" HorizontalOptions="Center">
+        <StackLayout VerticalOptions="End" HorizontalOptions="Center" BackgroundColor="Transparent">
             <Label FontFamily="mio" Text="fmd_good" TextColor="White"  FontSize="186" HorizontalOptions="Center" VerticalOptions="Center"/>
             <Label TextColor="White" FontSize="21" HorizontalTextAlignment="Center" Margin="15,10,15,10" Text="Приложението работи най-добре с използване на местоположение." />
             <Label TextColor="White" FontSize="15" HorizontalTextAlignment="Center" Text="Местоположението ви са лични данни, които не се съхраняват от нас и се използват само на вашето устройство." />

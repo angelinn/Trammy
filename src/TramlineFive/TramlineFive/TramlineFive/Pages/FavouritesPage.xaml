@@ -13,8 +13,8 @@
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
 
-        <Grid BackgroundColor="DodgerBlue" >
-            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
+        <Grid BackgroundColor="{DynamicResource BarBackgroundColor}" >
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal" BackgroundColor="Transparent">
                 <Label Text="favorite" FontFamily="mio" TextColor="White" FontSize="30" VerticalTextAlignment="End"  />
                 <Label Text="Любими" HorizontalTextAlignment="Center" Margin="5,40,0,0" TextColor="White" FontSize="24" />
             </StackLayout>

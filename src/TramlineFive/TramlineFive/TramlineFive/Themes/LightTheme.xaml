@@ -9,6 +9,7 @@
     <Color x:Key="DetailsTextColor">#737373</Color>
     <Color x:Key="PrimaryColor">DodgerBlue</Color>
     <Color x:Key="BackgroundColor">White</Color>
+    <Color x:Key="PlaceholderTextColor">#C7C7CD</Color>
 
 </ResourceDictionary>
     
