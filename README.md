@@ -1,5 +1,6 @@
 # Трамвай №5 - Xamarin
 [![Build status](https://ci.appveyor.com/api/projects/status/pop7yhvoqu5r9xoe?svg=true)](https://ci.appveyor.com/project/betrakiss/tramlinefive-xamarin)
+[![Made in Bulgaria](https://img.shields.io/static/v1?label=made%20in&message=Bulgaria&color=success)]()
 
 Трамвай №5 е приложение за проверка на времената на пристигане на градския транспорт в София в реално време.
 
