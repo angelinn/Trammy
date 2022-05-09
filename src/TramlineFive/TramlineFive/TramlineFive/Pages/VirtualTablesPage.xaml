@@ -25,7 +25,7 @@
                     <RowDefinition Height="330" />
                 </Grid.RowDefinitions>
 
-                <Grid BackgroundColor="{DynamicResource VirtualTablesBackgroundColor}" >
+                <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}" >
                     <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
                         <Grid>
                             <Grid.ColumnDefinitions>

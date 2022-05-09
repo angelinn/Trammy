@@ -57,35 +57,37 @@ namespace TramlineFive.Pages
             System.Diagnostics.Debug.WriteLine($"Touch: {e.ActionType} {map.Viewport.CenterX} {map.Viewport.CenterY}");
         }
 
-        private void ShowVirtualTables(int linesCount)
+        private async Task ShowVirtualTables(int linesCount)
         {
             int coef = linesCount > 2 ? 2 : linesCount;
             slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
 
-            Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height - slideMenu.HeightRequest);
+            //Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height - slideMenu.HeightRequest + 30);
 
-            Task _ = slideMenu.TranslateTo(0, 0, 400);
-            animation.Commit(map, "ShowMap", 60, 400);
+            await slideMenu.TranslateTo(0, 0, 400);
+            map.HeightRequest = Height - slideMenu.HeightRequest + 30;
+            //animation.Commit(map, "ShowMap", 256, 400);
         }
 
-        private void HideVirtualTables()
+        private async Task HideVirtualTables()
         {
-            Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height);
+            //Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height);
 
-            Task _ = slideMenu.TranslateTo(0, Height, 400);
-            animation.Commit(map, "Expand", 60, 400);
+            map.HeightRequest = Height;
+            await slideMenu.TranslateTo(0, Height, 400);
+            //animation.Commit(map, "Expand", 16, 400);
         }
 
         private void ToggleMap(ShowMapMessage message)
         {
-            Device.BeginInvokeOnMainThread(() =>
+            Device.BeginInvokeOnMainThread(async () =>
             {
                 isOpened = message.Show;
 
                 if (!message.Show)
-                    HideVirtualTables();
+                    await HideVirtualTables();
                 else if (message.Show)
-                    ShowVirtualTables(message.ArrivalsCount);
+                    await ShowVirtualTables(message.ArrivalsCount);
             });
         }
 

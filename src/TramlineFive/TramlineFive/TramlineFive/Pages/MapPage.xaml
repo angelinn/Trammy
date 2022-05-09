@@ -10,10 +10,9 @@
              xmlns:mapsui="clr-namespace:Mapsui.UI.Forms;assembly=Mapsui.UI.Forms"
              xmlns:food="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}">
 
-    <Grid.Resources>
+    <Grid.Resources> 
         <ResourceDictionary>
             <cv:ColorConverter x:Key="ColorConverter" />
             <cv:LocationConverter x:Key="LocationConverter" />
@@ -149,7 +148,7 @@
             </Grid.GestureRecognizers>-->
         </Grid>
 
-        <food:PancakeView x:Name="slideMenu" Padding="0" CornerRadius="30,30,0,0" VerticalOptions="End" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
+        <food:PancakeView x:Name="slideMenu" Padding="0" CornerRadius="30,30,0,0" VerticalOptions="End" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
             <pages:VirtualTablesPage />
         </food:PancakeView>
     </AbsoluteLayout>
