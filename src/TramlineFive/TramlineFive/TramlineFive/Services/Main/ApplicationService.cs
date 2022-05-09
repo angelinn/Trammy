@@ -61,7 +61,14 @@ public class ApplicationService : IApplicationService
 
     public void VibrateShort()
     {
-        Vibration.Vibrate(TimeSpan.FromMilliseconds(30));
+        try
+        {
+            Vibration.Vibrate(TimeSpan.FromMilliseconds(30));
+        }
+        catch (FeatureNotSupportedException ex)
+        {
+
+        }
     }
 
     public async Task OpenUri(string uri)
