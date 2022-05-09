@@ -27,7 +27,7 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
-            Messenger.Default.Register<ShowMapMessage>(this, (m) => ToggleMap(m));
+            Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
             Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
             Messenger.Default.Register<UpdateLocationMessage>(this, m => map.MyLocationLayer.UpdateMyLocation(new Position(m.Position.Latitude, m.Position.Longitude)));
 
@@ -78,8 +78,15 @@ namespace TramlineFive.Pages
             //animation.Commit(map, "Expand", 16, 400);
         }
 
-        private void ToggleMap(ShowMapMessage message)
+        private async Task ToggleMap(ShowMapMessage message)
         {
+            if (message.ElapsedMilliseconds > 0)
+            {
+                long difference = 400 - message.ElapsedMilliseconds;
+                if (difference > 0)
+                    await Task.Delay((int)difference);
+            }
+
             Device.BeginInvokeOnMainThread(async () =>
             {
                 isOpened = message.Show;

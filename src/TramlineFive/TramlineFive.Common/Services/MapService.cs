@@ -27,6 +27,7 @@ namespace TramlineFive.Common.Services;
 public class MapService
 {
     private readonly MPoint CENTER_OF_SOFIA = new(23.3196994, 42.6969899);
+    private const int ANIMATION_MS = 600;
     private Map map;
     private SymbolStyle pinStyle;
     private SymbolStyle userStyle;
@@ -78,7 +79,7 @@ public class MapService
         if (home)
             map.Home = n => n.CenterOn(point);
 
-        navigator.NavigateTo(point, map.Resolutions[zoom], 1000, Easing.CubicOut);
+        navigator.NavigateTo(point, map.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
     }
 
     public void MoveToUser(Position position, bool home = false)
@@ -87,7 +88,7 @@ public class MapService
 
         MPoint userLocationMap = new MPoint(x, y);
 
-        navigator.NavigateTo(userLocationMap, map.Resolutions[17], 1000, home ? null : Easing.Linear);
+        navigator.NavigateTo(userLocationMap, map.Resolutions[17], ANIMATION_MS, home ? null : Easing.Linear);
 
         ShowNearbyStops(userLocationMap);
     }

@@ -8,6 +8,7 @@ using SkgtService.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace TramlineFive.Common.ViewModels
     {
         public ICommand FavouriteCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
-        
+
         public ICommand AnimateFavouriteCommand { get; set; }
 
 
@@ -38,14 +39,18 @@ namespace TramlineFive.Common.ViewModels
             this.versionService = versionService;
 
             FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
-            RefreshCommand = new RelayCommand(async () => {
+            RefreshCommand = new RelayCommand(async () =>
+            {
                 await SearchByStopCodeAsync(stopCode);
                 IsRefreshing = false;
-            }); 
+            });
 
-            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await CheckStopAsync(sc.Selected));
+            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) =>
+            {
+                await CheckStopAsync(sc.Selected);
+            });
             MessengerInstance.Register<FavouritesChangedMessage>(this, (m) =>
-            { 
+            {
                 if (StopInfo != null)
                 {
                     StopInfo.IsFavourite = m.Favourites.Any(f => f.StopCode == StopInfo.Code);
@@ -94,6 +99,9 @@ namespace TramlineFive.Common.ViewModels
 
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
                 StopInfo info = await arrivalsService.GetByStopCodeAsync(stopCode);
 
                 IsLoading = false;
@@ -104,7 +112,9 @@ namespace TramlineFive.Common.ViewModels
                 StopInfo = info;
                 Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
 
-                MessengerInstance.Send(new ShowMapMessage(true, StopInfo.Lines.Count));
+                sw.Stop();
+
+                MessengerInstance.Send(new ShowMapMessage(true, StopInfo.Lines.Count, sw.ElapsedMilliseconds));
                 await HistoryDomain.AddAsync(stopCode, stopInfo.Name);
             }
             catch (StopNotFoundException)
@@ -115,7 +125,7 @@ namespace TramlineFive.Common.ViewModels
             {
                 await ApplicationService.DisplayAlertAsync("Грешка", e.Message, "OK");
             }
-        } 
+        }
 
         private Line selected;
         public Line Selected
@@ -203,7 +213,7 @@ namespace TramlineFive.Common.ViewModels
 
         private bool isRefreshing;
         public bool IsRefreshing
-        { 
+        {
             get
             {
                 return isRefreshing;
