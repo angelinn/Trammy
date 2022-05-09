@@ -162,10 +162,15 @@ namespace TramlineFive.Common.ViewModels
             }
             set
             {
-                if (selectedTheme != null && selectedTheme.Value != value.Value)
+                if (selectedTheme != null && value != null && selectedTheme.Value != value.Value)
                 {
                     ApplicationService.SetStringSetting("Theme", value.Value);
                     MessengerInstance.Send(new ChangeThemeMessage(value.Value));
+
+                    if (value.Value == "Light")
+                        SelectedTileServer = "carto-light";
+                    else
+                        SelectedTileServer = "carto-dark";
                 }
 
                 selectedTheme = value;

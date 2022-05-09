@@ -4,8 +4,6 @@
              x:Class="TramlineFive.App"
               xmlns:vm="clr-namespace:TramlineFive.Common.ViewModels.Locator;assembly=TramlineFive.Common" >
     <Application.Resources>
-        <ResourceDictionary Source="Themes/DarkTheme.xaml" />
-
         <ResourceDictionary>
             <!-- Application resource dictionary -->
             <Style TargetType="NavigationPage">
@@ -23,8 +21,6 @@
 
             <vm:ViewModelLocator x:Key="Locator" />
         </ResourceDictionary>
-        
-
     </Application.Resources>
 </Application>
     

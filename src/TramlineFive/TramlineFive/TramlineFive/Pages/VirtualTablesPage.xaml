@@ -5,7 +5,7 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
-             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" BackgroundColor="#FAFAFA">
+             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
 
     <Grid.Resources>
         <ResourceDictionary>
@@ -17,7 +17,7 @@
         </ResourceDictionary>
     </Grid.Resources>
 
-    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" RefreshColor="DodgerBlue">
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" RefreshColor="DodgerBlue" >
         <ScrollView>
             <Grid BackgroundColor="{DynamicResource BackgroundColor}">
                 <Grid.RowDefinitions>
@@ -25,7 +25,7 @@
                     <RowDefinition Height="330" />
                 </Grid.RowDefinitions>
 
-                <Grid BackgroundColor="{DynamicResource BarBackgroundColor}" >
+                <Grid BackgroundColor="{DynamicResource VirtualTablesBackgroundColor}" >
                     <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
                         <Grid>
                             <Grid.ColumnDefinitions>

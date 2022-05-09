@@ -15,6 +15,9 @@ using TramlineFive.Services;
 using Android.Content;
 using System.Reflection;
 using Android.Util;
+using TramlineFive.Common.Messages;
+
+using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 
 namespace TramlineFive.Droid
 {
@@ -41,6 +44,7 @@ namespace TramlineFive.Droid
             PushService.SetContext(this);
 
             InitFontScale();
+            Messenger.Default.Register<ChangeThemeMessage>(this, OnThemeChanged);
 
             LoadApplication(new App());
 
@@ -52,6 +56,7 @@ namespace TramlineFive.Droid
                     .SetValue(args.Exception, null);
                 throw args.Exception;
             };
+
         }
 
         private void InitFontScale()
@@ -62,6 +67,13 @@ namespace TramlineFive.Droid
             WindowManager.DefaultDisplay.GetMetrics(metrics);
             metrics.ScaledDensity = Resources.Configuration.FontScale * metrics.Density;
             BaseContext.Resources.UpdateConfiguration(Resources.Configuration, metrics);
+        }
+
+        private void OnThemeChanged(ChangeThemeMessage message)
+        {
+            Android.Graphics.Color color = message.Name == "Light" ? Android.Graphics.Color.White : Android.Graphics.Color.ParseColor("#2d333b");
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+                Window.SetNavigationBarColor(color);
         }
 
         protected override void OnResume()

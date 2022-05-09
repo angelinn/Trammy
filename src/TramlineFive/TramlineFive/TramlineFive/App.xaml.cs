@@ -37,17 +37,29 @@ namespace TramlineFive
             //if (!permissionService.HasLocationPermissions())
             //    MainPage = new Pages.LocationPromptPage();
             //else
-            //    MainPage = new NavigationPage(new MasterPage());
+            //    MainPage = new NavigationPage(new MasterPage()); 
+
+            string theme = Preferences.Get("Theme", "Light");
 
             Messenger.Default.Register<ChangeThemeMessage>(this, m =>
             {
-                Current.Resources.MergedDictionaries.Clear();
+                ResourceDictionary themeDictionary = Current.Resources.MergedDictionaries.FirstOrDefault(d => d.ContainsKey("PrimaryColor"));
+                if (themeDictionary != null)
+                    Current.Resources.MergedDictionaries.Remove(themeDictionary);
+
                 if (m.Name == "Light")
+                {
+                    Current.UserAppTheme = OSAppTheme.Light;
                     Current.Resources.MergedDictionaries.Add(new LightTheme());
+                }
                 else
+                {
+                    Current.UserAppTheme = OSAppTheme.Dark;
                     Current.Resources.MergedDictionaries.Add(new DarkTheme());
+                }
             });
 
+            Messenger.Default.Send(new ChangeThemeMessage(theme));
             DependencyService.Get<IVersionCheckingService>().CreateTask();
         }
 
