@@ -41,6 +41,9 @@ namespace TramlineFive.Common.ViewModels
             ToggleHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
             OpenSettingsCommand = new RelayCommand(() => NavigationService.ChangePage("Settings"));
             OpenAboutCommand = new RelayCommand(() => NavigationService.ChangePage("About"));
+
+
+            MessengerInstance.Register<ChangeThemeMessage>(this, (m) => RefreshView());
         }
 
         private void ChangeView(string view)
@@ -59,6 +62,11 @@ namespace TramlineFive.Common.ViewModels
                 pages[key].IsVisible = key == view;
             }
 
+            RefreshView();
+        }
+
+        private void RefreshView()
+        {
             RaisePropertyChanged("IsMapVisible");
             RaisePropertyChanged("IsFavouritesVisible");
             RaisePropertyChanged("IsHistoryVisible");

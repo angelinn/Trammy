@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using Xamarin.Forms;
 
@@ -13,10 +14,25 @@ namespace TramlineFive.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            ResourceDictionary theme = Application.Current.Resources.MergedDictionaries.FirstOrDefault(i => i.ContainsKey("MenuTextColor"));
+
+            Color notSelected = Color.FromHex(notSelectedColor);
+            if (theme != null)
+                notSelected = (Color)theme["MenuTextColor"];
+
+            if (Application.Current.UserAppTheme == OSAppTheme.Light)
+            {
+
+            }
+            else if (Application.Current.UserAppTheme == OSAppTheme.Dark)
+            {
+
+            }
+
             if ((bool)value)
                 return Color.FromHex(selectedColor);
 
-            return Color.FromHex(notSelectedColor);
+            return notSelected;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -25,4 +41,3 @@ namespace TramlineFive.Converters
         }
     }
 }
- 

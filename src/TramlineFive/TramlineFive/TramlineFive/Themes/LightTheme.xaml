@@ -11,6 +11,7 @@
     <Color x:Key="BackgroundColor">White</Color>
     <Color x:Key="PlaceholderTextColor">#C7C7CD</Color>
     <Color x:Key="VirtualTablesBackgroundColor">White</Color>
+    <Color x:Key="MenuTextColor">#717578</Color>
 
 </ResourceDictionary>
     
