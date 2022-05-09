@@ -30,6 +30,5 @@
 * [SQLite 3](https://www.sqlite.org/index.html)
 
 ## License
-* Кодът на приложението е лицензиран с MIT лиценз.
 * Данните за пристиганията в реално време са собственост на Център за градска мобилност.
 * Картите, които се използват са безплатни, open source и предоставени от [OpenStreetMap](https://www.openstreetmap.org/copyright)
