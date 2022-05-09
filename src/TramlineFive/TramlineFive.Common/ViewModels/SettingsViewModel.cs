@@ -22,7 +22,7 @@ namespace TramlineFive.Common.ViewModels
         public string UpdatedMessage => ApplicationService.GetStringSetting(Settings.StopsUpdated, null) ?? "Не е обновявано";
 
         public List<string> TileServers => TileServerSettings.TileServers.Keys.ToList();
-        public List<Theme> Themes => new() { new Theme() { Name = "Светла", Value = "Light" }, new Theme() { Name = "Тъмна", Value = "Dark" } };
+        public List<Theme> Themes => new() { new Theme("Светла", "Light"), new Theme("Тъмна", "Dark") };
 
         public SettingsViewModel()
         {
@@ -166,11 +166,6 @@ namespace TramlineFive.Common.ViewModels
                 {
                     ApplicationService.SetStringSetting("Theme", value.Value);
                     MessengerInstance.Send(new ChangeThemeMessage(value.Value));
-
-                    if (value.Value == "Light")
-                        SelectedTileServer = "carto-light";
-                    else
-                        SelectedTileServer = "carto-dark";
                 }
 
                 selectedTheme = value;
@@ -179,9 +174,5 @@ namespace TramlineFive.Common.ViewModels
         }
     }
 
-    public class Theme
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-    }
+    public record Theme(string Name, string Value);
 }
