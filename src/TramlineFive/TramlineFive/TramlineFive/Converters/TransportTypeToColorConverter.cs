@@ -10,18 +10,14 @@ namespace TramlineFive.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch (value as string)
+            bool isLightTheme = Application.Current.UserAppTheme == OSAppTheme.Light;
+            return (value as string) switch
             {
-                case "Автобус":
-                    return Color.Red;
-                case "Трамвай":
-                    return Color.Orange;
-                case "Тролей":
-                    return Color.Blue;
-
-                default:
-                    return Color.White;
-            }
+                "Автобус" => isLightTheme ? Color.Red : Color.Crimson,
+                "Трамвай" => isLightTheme ? Color.Orange : Color.DarkOrange,
+                "Тролей" => isLightTheme ? Color.Blue : Color.DarkBlue,
+                _ => Color.White,
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

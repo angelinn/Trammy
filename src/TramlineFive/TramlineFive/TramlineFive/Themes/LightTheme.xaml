@@ -12,6 +12,7 @@
     <Color x:Key="PlaceholderTextColor">#C7C7CD</Color>
     <Color x:Key="VirtualTablesTopBarColor">White</Color>
     <Color x:Key="MenuTextColor">#717578</Color>
-
+    <Color x:Key="RedAccentColor">Red</Color>
+    
 </ResourceDictionary>
     
