@@ -179,13 +179,13 @@
                         </Style>
                     </ResourceDictionary>
                 </StackLayout.Resources>
-                <Grid HeightRequest="180" BackgroundColor="DodgerBlue">
+                <Grid HeightRequest="180" BackgroundColor="{DynamicResource BlueAccentColor}">
                     <StackLayout VerticalOptions="End">
                         <Image HorizontalOptions="Start" HeightRequest="128" WidthRequest="128">
                             <Image.Source>
                                 <OnPlatform x:TypeArguments="ImageSource">
                                     <OnPlatform.Android>
-                                        <FileImageSource File="Resources/drawable/icon.png" />
+                                        <FileImageSource File="Resources/mimap/tramline.png" />
                                     </OnPlatform.Android>
 
                                     <OnPlatform.WinPhone>

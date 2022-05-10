@@ -13,6 +13,7 @@
     <Color x:Key="VirtualTablesTopBarColor">#2d333b</Color>
     <Color x:Key="MenuTextColor">White</Color>
     <Color x:Key="RedAccentColor">Crimson</Color>
+    <Color x:Key="BlueAccentColor">#175acc</Color>
 
 </ResourceDictionary>
     

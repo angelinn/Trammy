@@ -16,9 +16,13 @@ namespace TramlineFive.Converters
         {
             ResourceDictionary theme = Application.Current.Resources.MergedDictionaries.FirstOrDefault(i => i.ContainsKey("MenuTextColor"));
 
-            Color notSelected = Color.FromHex(notSelectedColor);
+            Color notSelected = Color.FromHex(notSelectedColor); 
+            Color selected = Color.FromHex(selectedColor);
             if (theme != null)
+            {
                 notSelected = (Color)theme["MenuTextColor"];
+                selected = (Color)theme["BlueAccentColor"];
+            }
 
             if (Application.Current.UserAppTheme == OSAppTheme.Light)
             {
@@ -30,7 +34,7 @@ namespace TramlineFive.Converters
             }
 
             if ((bool)value)
-                return Color.FromHex(selectedColor);
+                return selected;
 
             return notSelected;
         }

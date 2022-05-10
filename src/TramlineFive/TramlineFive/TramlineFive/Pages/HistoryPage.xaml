@@ -36,7 +36,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label FontFamily="mio" Text="history" TextColor="DodgerBlue" FontSize="26" VerticalOptions="Center" HorizontalOptions="Center"  />
+                                        <Label FontFamily="mio" Text="history" TextColor="{DynamicResource BlueAccentColor}" FontSize="26" VerticalOptions="Center" HorizontalOptions="Center"  />
 
                                         <StackLayout Spacing="0" VerticalOptions="Center" Grid.Column="1">
                                             <StackLayout Orientation="Horizontal">
@@ -44,7 +44,7 @@
                                                 <Label Text="{Binding StopCode, StringFormat='({0})'}" />
                                             </StackLayout>
 
-                                            <Label Text="{Binding TimeStamp}" FontSize="Small" TextColor="DodgerBlue" />
+                                            <Label Text="{Binding TimeStamp}" FontSize="Small" TextColor="{DynamicResource BlueAccentColor}" />
                                         </StackLayout>
                                     </Grid>
                                 </food:PancakeView>

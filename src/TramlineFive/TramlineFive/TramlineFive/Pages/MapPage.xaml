@@ -50,7 +50,7 @@
                             <TapGestureRecognizer Command="{Binding OpenHamburgerCommand}" />
                         </Grid.GestureRecognizers>
 
-                        <Label FontFamily="mio" Text="&#xe5d2;" Margin="5,0,0,0" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center" TextColor="DodgerBlue" />
+                        <Label FontFamily="mio" Text="&#xe5d2;" Margin="5,0,0,0" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{DynamicResource BlueAccentColor}" />
                     </Grid>
                     <views:CustomEntry Grid.Column="1" TextColor="{DynamicResource LabelTextColor}" Placeholder="Код/име на спирка..." PlaceholderColor="{DynamicResource PlaceholderTextColor}"
                                        FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
@@ -124,7 +124,7 @@
                     <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
                 </Frame.GestureRecognizers>
 
-                <Label FontFamily="mio" Text="{Binding HasLocation, Converter={StaticResource LocationConverter}}" TextColor="DodgerBlue" HorizontalOptions="Center" VerticalOptions="Center" FontSize="25" />
+                <Label FontFamily="mio" Text="{Binding HasLocation, Converter={StaticResource LocationConverter}}" TextColor="{DynamicResource BlueAccentColor}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="25" />
             </Frame>
             <!--<views:FloatingActionButton Grid.RowSpan="5" Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="End" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,0,0,20">
                 <views:FloatingActionButton.Image>

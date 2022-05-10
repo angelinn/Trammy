@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using Xamarin.Forms;
 
@@ -13,10 +14,19 @@ public class BoolToFavouriteColorConverter : IValueConverter
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if ((bool)value)
-            return Color.FromHex(selectedColor);
+        ResourceDictionary theme = Application.Current.Resources.MergedDictionaries.FirstOrDefault(i => i.ContainsKey("MenuTextColor"));
 
-        return Color.FromHex(notSelectedColor);
+        Color notSelected = Color.FromHex(notSelectedColor);
+        Color selected = Color.FromHex(selectedColor);
+        if (theme != null)
+        {
+            selected = (Color)theme["BlueAccentColor"];
+        }
+
+        if ((bool)value)
+            return selected;
+
+        return notSelected;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
