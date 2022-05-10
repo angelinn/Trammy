@@ -71,7 +71,7 @@ namespace TramlineFive.Droid
 
         private void OnThemeChanged(ChangeThemeMessage message)
         {
-            Android.Graphics.Color color = message.Name == "Light" ? Android.Graphics.Color.White : Android.Graphics.Color.ParseColor("#22272e");
+            Android.Graphics.Color color = message.Name == Common.Names.LightTheme ? Android.Graphics.Color.White : Android.Graphics.Color.ParseColor("#22272e");
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
                 Window.SetNavigationBarColor(color);
         }

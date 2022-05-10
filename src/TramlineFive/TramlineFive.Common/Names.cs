@@ -6,7 +6,9 @@ namespace TramlineFive.Common;
 
 public static class Names
 {
-    public static string Map = "Map";
-    public static string Favourites = "Favourites";
-    public static string History = "History";
+    public const string Map = "Map";
+    public const string Favourites = "Favourites";
+    public const string History = "History";
+    public const string LightTheme = "Light";
+    public const string DarkTheme = "Dark";
 }

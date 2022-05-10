@@ -22,7 +22,7 @@ namespace TramlineFive.Common.ViewModels
         public string UpdatedMessage => ApplicationService.GetStringSetting(Settings.StopsUpdated, null) ?? "Не е обновявано";
 
         public List<string> TileServers => TileServerSettings.TileServers.Keys.ToList();
-        public List<Theme> Themes => new() { new Theme("Светла", "Light"), new Theme("Тъмна", "Dark") };
+        public List<Theme> Themes => new() { new Theme("Светла", Names.LightTheme), new Theme("Тъмна", Names.DarkTheme) };
 
         public SettingsViewModel()
         {
@@ -34,8 +34,8 @@ namespace TramlineFive.Common.ViewModels
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
             SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, TileServerSettings.TileServers.Keys.First());
 
-            string theme = ApplicationService.GetStringSetting("Theme", "Light");
-            SelectedTheme = theme == "Light" ? Themes[0] : Themes[1];
+            string theme = ApplicationService.GetStringSetting(Settings.Theme, Names.LightTheme);
+            SelectedTheme = theme == Names.LightTheme ? Themes[0] : Themes[1];
         }
 
         private int maxTextZoom;
@@ -148,7 +148,7 @@ namespace TramlineFive.Common.ViewModels
             set
             {
                 showNearestStop = value;
-                ApplicationService.SetBoolSetting("ShowNearestStop", showNearestStop);
+                ApplicationService.SetBoolSetting(Settings.ShowStopOnLaunch, showNearestStop);
                 RaisePropertyChanged();
             }
         }
@@ -164,7 +164,7 @@ namespace TramlineFive.Common.ViewModels
             {
                 if (selectedTheme != null && value != null && selectedTheme.Value != value.Value)
                 {
-                    ApplicationService.SetStringSetting("Theme", value.Value);
+                    ApplicationService.SetStringSetting(Settings.Theme, value.Value);
                     MessengerInstance.Send(new ChangeThemeMessage(value.Value));
                 }
 

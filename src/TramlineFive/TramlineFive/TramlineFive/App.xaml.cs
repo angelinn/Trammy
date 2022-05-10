@@ -39,7 +39,7 @@ namespace TramlineFive
             //else
             //    MainPage = new NavigationPage(new MasterPage()); 
 
-            string theme = Preferences.Get("Theme", "Light");
+            string theme = Preferences.Get(Settings.Theme, Names.LightTheme);
 
             Messenger.Default.Register<ChangeThemeMessage>(this, m =>
             {
@@ -47,7 +47,7 @@ namespace TramlineFive
                 if (themeDictionary != null)
                     Current.Resources.MergedDictionaries.Remove(themeDictionary);
 
-                if (m.Name == "Light")
+                if (m.Name == Names.LightTheme)
                 {
                     Current.UserAppTheme = OSAppTheme.Light;
                     Current.Resources.MergedDictionaries.Add(new LightTheme());
