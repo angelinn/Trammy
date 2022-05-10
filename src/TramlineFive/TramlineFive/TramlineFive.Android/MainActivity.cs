@@ -6,7 +6,6 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
-using HockeyApp.Android;
 using TramlineFive.Droid.Services;
 using Android;
 using GalaSoft.MvvmLight.Ioc;
@@ -48,12 +47,9 @@ namespace TramlineFive.Droid
 
             LoadApplication(new App());
 
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-
             AndroidEnvironment.UnhandledExceptionRaiser += delegate (object sender, RaiseThrowableEventArgs args) {
-                typeof(System.Exception).GetField("stack_trace", BindingFlags.NonPublic | BindingFlags.Instance)
-                    .SetValue(args.Exception, null);
+                //typeof(System.Exception).GetField("stack_trace", BindingFlags.NonPublic | BindingFlags.Instance)
+                //    .SetValue(args.Exception, null);
                 throw args.Exception;
             };
 
@@ -74,22 +70,6 @@ namespace TramlineFive.Droid
             Android.Graphics.Color color = message.Name == Common.Names.LightTheme ? Android.Graphics.Color.White : Android.Graphics.Color.ParseColor("#22272e");
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
                 Window.SetNavigationBarColor(color);
-        }
-
-        protected override void OnResume()
-        {
-            base.OnResume();
-            CrashManager.Register(this, "b4327f88594740d8a58720734a080901");
-        }
-
-        private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)

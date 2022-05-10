@@ -1,5 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using SkgtService;
 using System;
@@ -58,6 +61,9 @@ namespace TramlineFive
 
         protected override async void OnStart()
         {
+            AppCenter.Start("android=e3e6e5fc-9b54-46ae-ad7d-8fe6b80e9471", 
+                typeof(Analytics), typeof(Crashes));
+
             if (VersionTracking.IsFirstLaunchEver && await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>() != PermissionStatus.Granted)
                 MainPage = new Pages.LocationPromptPage();
             else
