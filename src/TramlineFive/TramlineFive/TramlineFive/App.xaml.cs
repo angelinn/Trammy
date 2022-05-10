@@ -30,37 +30,30 @@ namespace TramlineFive
             IPathService dbPathService = DependencyService.Get<IPathService>();
             StopsLoader.Initialize(dbPathService.BaseFilePath);
 
-            var dict = Current.Resources.MergedDictionaries;
-
-            //IPermissionService permissionService = DependencyService.Get<IPermissionService>();
-
-            //if (!permissionService.HasLocationPermissions())
-            //    MainPage = new Pages.LocationPromptPage();
-            //else
-            //    MainPage = new NavigationPage(new MasterPage()); 
-
             string theme = Preferences.Get(Settings.Theme, Names.LightTheme);
 
-            Messenger.Default.Register<ChangeThemeMessage>(this, m =>
-            {
-                ResourceDictionary themeDictionary = Current.Resources.MergedDictionaries.FirstOrDefault(d => d.ContainsKey("PrimaryColor"));
-                if (themeDictionary != null)
-                    Current.Resources.MergedDictionaries.Remove(themeDictionary);
-
-                if (m.Name == Names.LightTheme)
-                {
-                    Current.UserAppTheme = OSAppTheme.Light;
-                    Current.Resources.MergedDictionaries.Add(new LightTheme());
-                }
-                else
-                {
-                    Current.UserAppTheme = OSAppTheme.Dark;
-                    Current.Resources.MergedDictionaries.Add(new DarkTheme());
-                }
-            });
+            Messenger.Default.Register<ChangeThemeMessage>(this, m => OnThemeChanged(m));
 
             Messenger.Default.Send(new ChangeThemeMessage(theme));
             DependencyService.Get<IVersionCheckingService>().CreateTask();
+        }
+
+        private void OnThemeChanged(ChangeThemeMessage m)
+        {
+            ResourceDictionary themeDictionary = Current.Resources.MergedDictionaries.FirstOrDefault(d => d.ContainsKey("PrimaryColor"));
+            if (themeDictionary != null)
+                Current.Resources.MergedDictionaries.Remove(themeDictionary);
+
+            if (m.Name == Names.LightTheme)
+            {
+                Current.UserAppTheme = OSAppTheme.Light;
+                Current.Resources.MergedDictionaries.Add(new LightTheme());
+            }
+            else
+            {
+                Current.UserAppTheme = OSAppTheme.Dark;
+                Current.Resources.MergedDictionaries.Add(new DarkTheme());
+            }
         }
 
         protected override async void OnStart()
