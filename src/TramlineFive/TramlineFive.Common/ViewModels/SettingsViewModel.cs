@@ -18,16 +18,34 @@ namespace TramlineFive.Common.ViewModels
     {
         public ICommand CleanHistoryCommand { get; init; }
         public ICommand UpdateStopsCommand { get; init; }
+        public ICommand ChooseTileServerCommand { get; }
+        public ICommand ChooseThemeCommand { get; } 
 
         public string UpdatedMessage => ApplicationService.GetStringSetting(Settings.StopsUpdated, null) ?? "Не е обновявано";
 
         public List<string> TileServers => TileServerSettings.TileServers.Keys.ToList();
         public List<Theme> Themes => new() { new Theme("Светла", Names.LightTheme), new Theme("Тъмна", Names.DarkTheme) };
 
+        private Func<string, string, string, string[], Task<string>> displayActionSheet;
+
         public SettingsViewModel()
         {
             CleanHistoryCommand = new RelayCommand(async () => await CleanHistoryAsync());
             UpdateStopsCommand = new RelayCommand(async () => await ReloadStopsAsync());
+
+            ChooseTileServerCommand = new RelayCommand(async () =>
+            {
+                string result = await displayActionSheet("Избор на tile сървър", String.Empty, String.Empty, TileServers.ToArray());
+                if (!String.IsNullOrEmpty(result))
+                    SelectedTileServer = result;
+            });
+
+            ChooseThemeCommand = new RelayCommand(async () =>
+            {
+                string result = await displayActionSheet("Избор на тема", String.Empty, String.Empty, Themes.Select(theme => theme.Name).ToArray());
+                if (!String.IsNullOrEmpty(result))
+                    SelectedTheme = Themes.FirstOrDefault(theme => theme.Name == result);
+            });
 
             ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, true);
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
@@ -36,6 +54,11 @@ namespace TramlineFive.Common.ViewModels
 
             string theme = ApplicationService.GetStringSetting(Settings.Theme, Names.LightTheme);
             SelectedTheme = theme == Names.LightTheme ? Themes[0] : Themes[1];
+        }
+
+        public void Initialize(Func<string, string, string, string[], Task<string>> displayActionSheet)
+        {
+            this.displayActionSheet = displayActionSheet;
         }
 
         private int maxTextZoom;
@@ -84,6 +107,8 @@ namespace TramlineFive.Common.ViewModels
                 selectedTileServer = value;
                 ApplicationService.SetStringSetting(Settings.SelectedTileServer, selectedTileServer);
                 MessengerInstance.Send(new SettingChanged<string>(Settings.SelectedTileServer, selectedTileServer));
+
+                RaisePropertyChanged();
             }
         }
 
