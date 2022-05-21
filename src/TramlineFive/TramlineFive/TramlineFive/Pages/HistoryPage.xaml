@@ -24,7 +24,7 @@
 
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
 
-            <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="70" SeparatorVisibility="None">
+            <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="70" SeparatorVisibility="Default" CachingStrategy="RecycleElement">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell> 
@@ -32,7 +32,7 @@
                                 <food:PancakeView Margin="5,0,0,0" >
                                     <Grid> 
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="68" />
+                                            <ColumnDefinition Width="60" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
@@ -44,7 +44,7 @@
                                                 <Label Text="{Binding StopCode, StringFormat='({0})'}" />
                                             </StackLayout>
 
-                                            <Label Text="{Binding TimeStamp}" FontSize="Small" TextColor="{DynamicResource BlueAccentColor}" />
+                                            <Label Text="{Binding TimeStamp, StringFormat='{0:dd MMM, hh:mm}'}" FontSize="Small" TextColor="{DynamicResource BlueAccentColor}" Margin="0,5,0,0" />
                                         </StackLayout>
                                     </Grid>
                                 </food:PancakeView>

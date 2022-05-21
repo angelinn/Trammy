@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?> 
 <Grid xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.FavouritesPage"
@@ -15,8 +15,8 @@
 
         <Grid BackgroundColor="{DynamicResource BarBackgroundColor}" >
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal" BackgroundColor="Transparent">
-                <Label Text="favorite" FontFamily="mio" TextColor="White" FontSize="30" VerticalTextAlignment="End"  />
-                <Label Text="Любими" HorizontalTextAlignment="Center" Margin="5,40,0,0" TextColor="White" FontSize="24" />
+                <!--<Label Text="favorite" FontFamily="mio" TextColor="White" FontSize="30" VerticalTextAlignment="End"  />-->
+                <Label Text="Любими" HorizontalTextAlignment="Center" Margin="5,40,0,0" TextColor="White" FontSize="30" />
             </StackLayout>
         </Grid>
 
@@ -27,7 +27,7 @@
                 <Label Text="tram" FontFamily="mio" FontSize="105" TextColor="{DynamicResource BlueAccentColor}" HorizontalOptions="Center" Margin="0,10,0,0" Opacity="0.7" />
             </StackLayout>
 
-            <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="70" SeparatorVisibility="None" VerticalOptions="Fill" >
+            <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="70" SeparatorVisibility="Default" VerticalOptions="Fill" CachingStrategy="RecycleElement" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -49,7 +49,7 @@
                                     <food:PancakeView Padding="0" VerticalOptions="FillAndExpand" xct:TouchEffect.NativeAnimation="True" xct:TouchEffect.LongPressCommand="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" xct:TouchEffect.LongPressCommandParameter="{Binding}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="68" />
+                                                <ColumnDefinition Width="60" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="48" />
                                             </Grid.ColumnDefinitions>
@@ -59,10 +59,14 @@
                                             <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
                                                 <Label Text="{Binding Name}" />
 
-                                                <StackLayout Orientation="Horizontal">
+                                                <StackLayout Orientation="Horizontal" Margin="0,5,0,0">
                                                     <Label Text="{Binding StopCode}" FontSize="Small" TextColor="{DynamicResource BlueAccentColor}" />
-                                                    <Label Text="{Binding TimesClicked, StringFormat='({0})'}" FontSize="Small"  />
                                                 </StackLayout>
+                                            </StackLayout>
+
+                                            <StackLayout Orientation="Horizontal" Grid.Column="2" Spacing="0" Margin="0,0,5,0">
+                                                <Label Text="{Binding TimesClicked, StringFormat='{0}'}" FontSize="Small" VerticalOptions="Center" />
+                                                <Label FontFamily="mio" Text="search" FontSize="20" Margin="5,0,0,0" TextColor="{DynamicResource BlueAccentColor}" VerticalOptions="Center" />
                                             </StackLayout>
                                         </Grid>
                                     </food:PancakeView>
