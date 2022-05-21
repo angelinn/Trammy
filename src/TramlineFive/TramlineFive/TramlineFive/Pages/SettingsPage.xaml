@@ -15,7 +15,7 @@
 
     <ScrollView BackgroundColor="{DynamicResource BackgroundColor}" >
         <StackLayout Padding="10">
-            <Grid Padding="0,10,0,10" HeightRequest="40" xct:TouchEffect.NativeAnimation="True">
+            <Grid Margin="0,10,0,0" HeightRequest="40" xct:TouchEffect.NativeAnimation="True">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />
@@ -32,7 +32,7 @@
                     </ActivityIndicator.HorizontalOptions>
                 </ActivityIndicator>
             </Grid>
-            <Grid Padding="0,10,0,10" xct:TouchEffect.NativeAnimation="True" HeightRequest="40">
+            <Grid Margin="0,20,0,0" xct:TouchEffect.NativeAnimation="True" HeightRequest="40">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />
@@ -42,9 +42,9 @@
                 </Grid.GestureRecognizers>
 
                 <Label FontFamily="mio" Text="refresh" FontSize="26" TextColor="DodgerBlue" VerticalOptions="Center" Margin="5,0,0,0"/>
-                <StackLayout Grid.Column="1">
+                <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="Презареди спирки" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="{Binding UpdatedMessage, StringFormat='Последно обновено: {0}'}" FontSize="Small" TextColor="Gray" />
+                    <Label Text="{Binding Updated, StringFormat='Последно обновено: {0:MM/dd/yyyy hh:mm}'}" FontSize="Small" TextColor="Gray" />
                 </StackLayout>
                 <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}" HeightRequest="10">
                     <ActivityIndicator.HorizontalOptions>
@@ -53,7 +53,7 @@
                 </ActivityIndicator>
             </Grid>
 
-            <Grid Margin="0,15,0,0">
+            <Grid Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />
@@ -65,7 +65,7 @@
                 <Switch Grid.Column="2" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" OnColor="DodgerBlue" ThumbColor="DodgerBlue" VerticalOptions="Center" />
             </Grid>
 
-            <Grid Margin="0,15,0,0">
+            <Grid Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />
@@ -76,13 +76,13 @@
                 </Grid.GestureRecognizers>
 
                 <Label FontFamily="mio" Text="map" TextColor="DodgerBlue" FontSize="26" VerticalOptions="Center" Margin="5,0,0,0" />
-                <StackLayout Grid.Column="1">
+                <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="Tile сървър" FontSize="16" VerticalTextAlignment="Center" />
                     <Label Text="{Binding SelectedTileServer}" FontSize="Small" VerticalTextAlignment="Center" TextColor="Gray"/>
                 </StackLayout>
             </Grid>
             
-            <Grid Margin="0,15,0,0">
+            <Grid Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />
@@ -93,7 +93,7 @@
 
                 <Label FontFamily="mio" Text="brightness_6" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" Margin="5,0,0,0" />
 
-                <StackLayout Grid.Column="1">
+                <StackLayout Grid.Column="1" Spacing="3">
                     <Label Grid.Column="1" Text="Тема" FontSize="16" VerticalTextAlignment="Center" />
                     <Label Grid.Column="1" Text="{Binding SelectedTheme.Name}" FontSize="Small" TextColor="Gray" VerticalTextAlignment="Center" />
                 </StackLayout>

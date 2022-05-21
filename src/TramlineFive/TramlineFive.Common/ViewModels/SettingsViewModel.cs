@@ -21,7 +21,7 @@ namespace TramlineFive.Common.ViewModels
         public ICommand ChooseTileServerCommand { get; }
         public ICommand ChooseThemeCommand { get; } 
 
-        public string UpdatedMessage => ApplicationService.GetStringSetting(Settings.StopsUpdated, null) ?? "Не е обновявано";
+        public DateTime Updated { get; }
 
         public List<string> TileServers => TileServerSettings.TileServers.Keys.ToList();
         public List<Theme> Themes => new() { new Theme("Светла", Names.LightTheme), new Theme("Тъмна", Names.DarkTheme) };
@@ -47,10 +47,13 @@ namespace TramlineFive.Common.ViewModels
                     SelectedTheme = Themes.FirstOrDefault(theme => theme.Name == result);
             });
 
+            if (DateTime.TryParse(ApplicationService.GetStringSetting(Settings.StopsUpdated, null), out DateTime updated))
+                Updated = updated;
+
             ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, true);
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
-            SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, TileServerSettings.TileServers.Keys.First());
+            SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, TileServers.First());
 
             string theme = ApplicationService.GetStringSetting(Settings.Theme, Names.LightTheme);
             SelectedTheme = theme == Names.LightTheme ? Themes[0] : Themes[1];
