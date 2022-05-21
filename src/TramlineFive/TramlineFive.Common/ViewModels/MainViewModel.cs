@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Ioc;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,7 @@ namespace TramlineFive.Common.ViewModels
 
 
             MessengerInstance.Register<ChangeThemeMessage>(this, (m) => RefreshView());
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("bg");
         }
 
         private void ChangeView(string view)
