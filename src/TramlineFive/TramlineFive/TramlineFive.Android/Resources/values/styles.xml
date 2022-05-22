@@ -32,11 +32,14 @@
   </style>
 
   <style name="splashscreen" parent="Theme.AppCompat.Light.Dialog">
-    <item name="android:windowBackground">@drawable/screen</item>
+    <item name="android:windowBackground">@drawable/splash</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:windowIsTranslucent">false</item>
     <item name="android:windowIsFloating">false</item>
     <item name="android:backgroundDimEnabled">true</item>
     <item name="colorPrimaryDark">#1976D2</item>
+    <item name="android:navigationBarColor">#1e90ff</item>
+    <item name="android:statusBarColor">#1e90ff</item>
+
   </style>
 </resources>

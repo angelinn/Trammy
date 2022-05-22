@@ -28,6 +28,7 @@ namespace TramlineFive.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            Window.SetNavigationBarColor(Android.Graphics.Color.ParseColor("#1e90ff"));
             base.Window.RequestFeature(WindowFeatures.ActionBar);
             // Name of the MainActivity theme you had there before.
             // Or you can use global::Android.Resource.Style.ThemeHoloLight
@@ -50,7 +51,8 @@ namespace TramlineFive.Droid
             AndroidEnvironment.UnhandledExceptionRaiser += delegate (object sender, RaiseThrowableEventArgs args) {
                 //typeof(System.Exception).GetField("stack_trace", BindingFlags.NonPublic | BindingFlags.Instance)
                 //    .SetValue(args.Exception, null);
-                throw args.Exception;
+
+                new AlertDialog.Builder(this).SetMessage(args.Exception.Message).Create().Show();
             };
 
         }
