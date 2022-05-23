@@ -62,7 +62,7 @@
 
                 <Label FontFamily="mio" Text="history" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalTextAlignment="Center" Margin="5,0,0,0" />
                 <Label Grid.Column="1" Text="Покажи най-близка спирка при стартиране" FontSize="16" VerticalTextAlignment="Center" />
-                <Switch Grid.Column="2" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" OnColor="{DynamicResource DetailsTextColor}" ThumbColor="{DynamicResource IconsColor}" VerticalOptions="Center" />
+                <Switch Grid.Column="2" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" OnColor="{DynamicResource IconsColor}" ThumbColor="{DynamicResource IconsColor}" VerticalOptions="Center" />
             </Grid>
 
             <Grid Margin="0,20,0,0">

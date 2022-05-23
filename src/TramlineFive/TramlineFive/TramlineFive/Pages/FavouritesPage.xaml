@@ -51,7 +51,7 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="60" />
                                                 <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="48" />
+                                                <ColumnDefinition Width="60" />
                                             </Grid.ColumnDefinitions>
 
                                             <Label FontFamily="mir" Text="tram" TextColor="{DynamicResource IconsColor}" FontSize="31" VerticalOptions="Center" HorizontalOptions="Center" />
