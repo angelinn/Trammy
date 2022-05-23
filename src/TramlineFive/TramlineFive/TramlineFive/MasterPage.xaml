@@ -22,7 +22,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="0" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="50" />
+                <RowDefinition Height="45" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="1" x:Name="content">
@@ -90,13 +90,9 @@
                         </d:AnimationBehavior>
                     </Grid.Behaviors>
 
-                    <StackLayout Spacing="0">
-                        <Label FontFamily="mio" Text="fmd_good" FontSize="25" 
+                    <Label FontFamily="mio" Text="fmd_good" FontSize="28" 
                                    TextColor="{Binding IsMapVisible, Converter={StaticResource BoolToColor}}"
                                    VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
-
-                        <Label Text="Карта" FontAttributes="Bold"  FontSize="12"  HorizontalOptions="Center" TextColor="{Binding IsMapVisible, Converter={StaticResource BoolToColor}}"  />
-                    </StackLayout>
                 </Grid>
                 <Grid Grid.Column="1">
                     <Grid.GestureRecognizers>
@@ -110,13 +106,9 @@
                         </d:AnimationBehavior>
                     </Grid.Behaviors>
 
-                    <StackLayout Spacing="0">
-                        <Label FontFamily="mio" Text="star_border" FontSize="25" 
-                                   TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"
-                                   VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
-
-                        <Label Text="Любими" FontAttributes="Bold" FontSize="12" HorizontalOptions="Center" TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"  />
-                    </StackLayout>
+                    <Label FontFamily="mio" Text="star_border" FontSize="30" 
+                                TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"
+                                VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
                 </Grid>
                 <Grid Grid.Column="2">
                     <Grid.GestureRecognizers>
@@ -128,15 +120,12 @@
                                 <xct:FlipHorizontalAnimation />
                             </d:AnimationBehavior.AnimationType>
                         </d:AnimationBehavior>
-                    </Grid.Behaviors>
+                    </Grid.Behaviors> 
                     
-                    <StackLayout Spacing="0">
-                        <Label FontFamily="mio" Text="history" FontSize="25" 
-                                   TextColor="{Binding IsHistoryVisible, Converter={StaticResource BoolToColor}}"
-                                   VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
+                    <Label FontFamily="mio" Text="history" FontSize="28" 
+                                TextColor="{Binding IsHistoryVisible, Converter={StaticResource BoolToColor}}"
+                                VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
 
-                        <Label Text="История" FontAttributes="Bold"  FontSize="12" HorizontalOptions="Center" TextColor="{Binding IsHistoryVisible, Converter={StaticResource BoolToColor}}"  />
-                    </StackLayout >
                 </Grid>
             </Grid>
         </Grid> 
