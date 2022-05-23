@@ -28,7 +28,6 @@ namespace TramlineFive.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-            Window.SetNavigationBarColor(Android.Graphics.Color.ParseColor("#1e90ff"));
             base.Window.RequestFeature(WindowFeatures.ActionBar);
             // Name of the MainActivity theme you had there before.
             // Or you can use global::Android.Resource.Style.ThemeHoloLight

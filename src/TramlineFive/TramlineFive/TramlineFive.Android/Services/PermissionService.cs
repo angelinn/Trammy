@@ -13,6 +13,7 @@ using TramlineFive.Droid.Services;
 using TramlineFive.Services;
 using Android;
 using Android.Content.PM;
+using Android.Graphics;
 
 [assembly: Xamarin.Forms.Dependency(typeof(PermissionService))]
 namespace TramlineFive.Droid.Services
@@ -50,6 +51,30 @@ namespace TramlineFive.Droid.Services
             intent.AddFlags(ActivityFlags.NewTask);
             Application.Context.StartActivity(intent);
             return true;
+        } 
+
+        public void ChangeNavigationBarColor(string color)
+        {
+            Color androidColor = String.IsNullOrEmpty(color) ? Color.Transparent : Color.ParseColor(color);
+
+            context.Window.SetNavigationBarColor(androidColor);
+        }
+
+        private int? originalColor;
+
+        public void ChangeStatusBarColor(string color)
+        {
+            context.Window.ClearFlags(WindowManagerFlags.TranslucentStatus);
+            context.Window.AddFlags(WindowManagerFlags.DrawsSystemBarBackgrounds);
+
+            if (!originalColor.HasValue)
+                originalColor = context.Window.StatusBarColor;
+
+            Color androidColor = String.IsNullOrEmpty(color) ? new Color(originalColor.Value) : Color.ParseColor(color);
+
+            //context.Window.StatusBarColor = color;
+
+            context.Window.SetStatusBarColor(androidColor);
         }
     }
 }

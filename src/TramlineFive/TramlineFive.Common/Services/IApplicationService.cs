@@ -27,4 +27,6 @@ public interface IApplicationService
     void VibrateShort();
     void OpenLocationUI();
     Task<bool> RequestLocationPermissions();
+    void ChangeNavigationBarColor(string color);
+    void ChangeStatusBarColor(string color);
 }

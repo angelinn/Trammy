@@ -9,4 +9,6 @@ public interface IPermissionService
     bool HasLocationPermissions();
     void RequestLocationPermissions();
     bool OpenLocationSettingsPage();
+    void ChangeNavigationBarColor(string color);
+    void ChangeStatusBarColor(string color);
 }

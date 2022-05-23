@@ -114,4 +114,14 @@ public class ApplicationService : IApplicationService
     {
         Preferences.Set(key, value);
     }
+
+    public void ChangeNavigationBarColor(string color)
+    {
+        DependencyService.Get<IPermissionService>().ChangeNavigationBarColor(color);
+    }
+
+    public void ChangeStatusBarColor(string color)
+    {
+        DependencyService.Get<IPermissionService>().ChangeStatusBarColor(color);
+    }
 }

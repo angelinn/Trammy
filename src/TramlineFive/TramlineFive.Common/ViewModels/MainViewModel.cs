@@ -64,6 +64,11 @@ namespace TramlineFive.Common.ViewModels
                 pages[key].IsVisible = key == view;
             }
 
+            //if (view == Names.Map)
+            //    ApplicationService.ChangeStatusBarColor(String.Empty);
+            //else
+            //    ApplicationService.ChangeStatusBarColor("#1e90ff");
+
             RefreshView();
         }
 
