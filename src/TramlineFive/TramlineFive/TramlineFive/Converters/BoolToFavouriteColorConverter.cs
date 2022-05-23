@@ -20,7 +20,7 @@ public class BoolToFavouriteColorConverter : IValueConverter
         Color selected = Color.FromHex(selectedColor);
         if (theme != null)
         {
-            selected = (Color)theme["BlueAccentColor"];
+            selected = (Color)theme["IconsColor"];
         }
 
         if ((bool)value)

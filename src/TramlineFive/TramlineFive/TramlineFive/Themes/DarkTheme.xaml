@@ -6,14 +6,15 @@
     <Color x:Key="BarBackgroundColor">#2d333b</Color>
     <Color x:Key="BarTextColor">White</Color>
     <Color x:Key="LabelTextColor">White</Color>
-    <Color x:Key="DetailsTextColor">#737373</Color>
-    <Color x:Key="PrimaryColor">#1873cc</Color>
+    <Color x:Key="DetailsTextColor">#bfbfbf</Color>
+    <Color x:Key="PrimaryColor">#1e90ff</Color>
     <Color x:Key="BackgroundColor">#22272e</Color>
     <Color x:Key="PlaceholderTextColor">White</Color>
     <Color x:Key="VirtualTablesTopBarColor">#2d333b</Color>
-    <Color x:Key="MenuTextColor">White</Color>
+    <Color x:Key="MenuTextColor">#bfbfbf</Color>
     <Color x:Key="RedAccentColor">Crimson</Color>
-    <Color x:Key="BlueAccentColor">#175acc</Color>
+    <Color x:Key="BlueAccentColor">#1e90ff</Color>
+    <Color x:Key="IconsColor">White</Color>
 
 </ResourceDictionary>
     

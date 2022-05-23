@@ -33,10 +33,10 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Label FontFamily="mio" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource BlueAccentColor}" HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Label FontFamily="mio" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" />
                             <StackLayout x:Name="txtStopName" Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
                                 <Label Text="{Binding StopInfo.Name}" FontSize="Default" />
-                                <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="{DynamicResource BlueAccentColor}" FontSize="Small" />
+                                <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="{DynamicResource IconsColor}" FontSize="Small" />
                             </StackLayout>
                             <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,5,0">
                                 <Grid.GestureRecognizers>

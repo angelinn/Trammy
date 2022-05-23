@@ -24,13 +24,13 @@
                     <TapGestureRecognizer Command="{Binding CleanHistoryCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="mio" Text="delete" FontSize="24" TextColor="DodgerBlue" VerticalOptions="Center" Margin="5,0,0,0"/>
+                <Label FontFamily="mio" Text="delete" FontSize="24" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="5,0,0,0"/>
                 <Label Grid.Column="1" Text="Изчистване на историята на търсенията" FontSize="16" VerticalTextAlignment="Center" />
                 <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HeightRequest="10">
                     <ActivityIndicator.HorizontalOptions>
                         <OnPlatform x:TypeArguments="LayoutOptions" Android="StartAndExpand" WinPhone="FillAndExpand" />
                     </ActivityIndicator.HorizontalOptions>
-                </ActivityIndicator>
+                </ActivityIndicator> 
             </Grid>
             <Grid Margin="0,20,0,0" xct:TouchEffect.NativeAnimation="True" HeightRequest="40">
                 <Grid.ColumnDefinitions>
@@ -41,10 +41,10 @@
                     <TapGestureRecognizer Command="{Binding UpdateStopsCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="mio" Text="refresh" FontSize="26" TextColor="DodgerBlue" VerticalOptions="Center" Margin="5,0,0,0"/>
+                <Label FontFamily="mio" Text="refresh" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="5,0,0,0"/>
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="Презареди спирки" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="{Binding Updated, StringFormat='Последно обновено: {0:MM/dd/yyyy hh:mm}'}" FontSize="Small" TextColor="Gray" />
+                    <Label Text="{Binding Updated, StringFormat='Последно обновено: {0:MM/dd/yyyy hh:mm}'}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" />
                 </StackLayout>
                 <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}" HeightRequest="10">
                     <ActivityIndicator.HorizontalOptions>
@@ -57,12 +57,12 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
 
-                <Label FontFamily="mio" Text="history" FontSize="26" TextColor="DodgerBlue" VerticalTextAlignment="Center" Margin="5,0,0,0" />
+                <Label FontFamily="mio" Text="history" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalTextAlignment="Center" Margin="5,0,0,0" />
                 <Label Grid.Column="1" Text="Покажи най-близка спирка при стартиране" FontSize="16" VerticalTextAlignment="Center" />
-                <Switch Grid.Column="2" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" OnColor="DodgerBlue" ThumbColor="DodgerBlue" VerticalOptions="Center" />
+                <Switch Grid.Column="2" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" OnColor="{DynamicResource DetailsTextColor}" ThumbColor="{DynamicResource IconsColor}" VerticalOptions="Center" />
             </Grid>
 
             <Grid Margin="0,20,0,0">
@@ -75,10 +75,10 @@
                     <TapGestureRecognizer Command="{Binding ChooseTileServerCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="mio" Text="map" TextColor="DodgerBlue" FontSize="26" VerticalOptions="Center" Margin="5,0,0,0" />
+                <Label FontFamily="mio" Text="map" TextColor="{DynamicResource IconsColor}" FontSize="26" VerticalOptions="Center" Margin="5,0,0,0" />
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="Tile сървър" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="{Binding SelectedTileServer}" FontSize="Small" VerticalTextAlignment="Center" TextColor="Gray"/>
+                    <Label Text="{Binding SelectedTileServer}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{DynamicResource DetailsTextColor}"/>
                 </StackLayout>
             </Grid>
             
@@ -91,11 +91,11 @@
                     <TapGestureRecognizer Command="{Binding ChooseThemeCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="mio" Text="brightness_6" TextColor="DodgerBlue" FontSize="24" VerticalOptions="Center" Margin="5,0,0,0" />
+                <Label FontFamily="mio" Text="brightness_6" TextColor="{DynamicResource IconsColor}" FontSize="24" VerticalOptions="Center" Margin="5,0,0,0" />
 
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Grid.Column="1" Text="Тема" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Grid.Column="1" Text="{Binding SelectedTheme.Name}" FontSize="Small" TextColor="Gray" VerticalTextAlignment="Center" />
+                    <Label Grid.Column="1" Text="{Binding SelectedTheme.Name}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" VerticalTextAlignment="Center" />
                 </StackLayout>
             </Grid>
 

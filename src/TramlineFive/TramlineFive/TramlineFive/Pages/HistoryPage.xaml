@@ -14,8 +14,7 @@
 
         <Grid BackgroundColor="{DynamicResource BarBackgroundColor}">
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal" BackgroundColor="Transparent">
-                <Label Text="history" FontFamily="mio" TextColor="White" FontSize="30" VerticalTextAlignment="End"  />
-                <Label Text="История" HorizontalTextAlignment="Center" TextColor="White" FontSize="24" Margin="5,40,0,0" />
+                <Label Text="История" HorizontalTextAlignment="Center" TextColor="White" FontSize="30" Margin="5,40,0,0" />
             </StackLayout>
         </Grid>
 
@@ -36,7 +35,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label FontFamily="mio" Text="history" TextColor="{DynamicResource BlueAccentColor}" FontSize="26" VerticalOptions="Center" HorizontalOptions="Center"  />
+                                        <Label FontFamily="mio" Text="history" TextColor="{DynamicResource IconsColor}" FontSize="26" VerticalOptions="Center" HorizontalOptions="Center"  />
 
                                         <StackLayout Spacing="0" VerticalOptions="Center" Grid.Column="1">
                                             <StackLayout Orientation="Horizontal">
@@ -44,7 +43,7 @@
                                                 <Label Text="{Binding StopCode, StringFormat='({0})'}" />
                                             </StackLayout>
 
-                                            <Label Text="{Binding TimeStamp, StringFormat='{0:dd MMM, hh:mm}'}" FontSize="Small" TextColor="{DynamicResource BlueAccentColor}" Margin="0,5,0,0" />
+                                            <Label Text="{Binding TimeStamp, StringFormat='{0:dd MMM, hh:mm}'}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" Margin="0,5,0,0" />
                                         </StackLayout>
                                     </Grid>
                                 </food:PancakeView>

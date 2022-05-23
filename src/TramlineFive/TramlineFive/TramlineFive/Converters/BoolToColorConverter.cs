@@ -21,7 +21,7 @@ namespace TramlineFive.Converters
             if (theme != null)
             {
                 notSelected = (Color)theme["MenuTextColor"];
-                selected = (Color)theme["BlueAccentColor"];
+                selected = (Color)theme["IconsColor"];
             }
 
             if (Application.Current.UserAppTheme == OSAppTheme.Light)

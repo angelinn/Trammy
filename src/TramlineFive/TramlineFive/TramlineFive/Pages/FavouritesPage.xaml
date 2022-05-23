@@ -54,19 +54,19 @@
                                                 <ColumnDefinition Width="48" />
                                             </Grid.ColumnDefinitions>
 
-                                            <Label FontFamily="mir" Text="tram" TextColor="{DynamicResource BlueAccentColor}" FontSize="31" VerticalOptions="Center" HorizontalOptions="Center" />
+                                            <Label FontFamily="mir" Text="tram" TextColor="{DynamicResource IconsColor}" FontSize="31" VerticalOptions="Center" HorizontalOptions="Center" />
 
                                             <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
                                                 <Label Text="{Binding Name}" />
 
                                                 <StackLayout Orientation="Horizontal" Margin="0,5,0,0">
-                                                    <Label Text="{Binding StopCode}" FontSize="Small" TextColor="{DynamicResource BlueAccentColor}" />
+                                                    <Label Text="{Binding StopCode}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" />
                                                 </StackLayout>
                                             </StackLayout>
 
                                             <StackLayout Orientation="Horizontal" Grid.Column="2" Spacing="0" Margin="0,0,5,0">
                                                 <Label Text="{Binding TimesClicked, StringFormat='{0}'}" FontSize="Small" VerticalOptions="Center" />
-                                                <Label FontFamily="mio" Text="search" FontSize="20" Margin="5,0,0,0" TextColor="{DynamicResource BlueAccentColor}" VerticalOptions="Center" />
+                                                <Label FontFamily="mio" Text="search" FontSize="20" Margin="5,0,0,0" TextColor="{DynamicResource DetailsTextColor}" VerticalOptions="Center" />
                                             </StackLayout>
                                         </Grid>
                                     </food:PancakeView>
