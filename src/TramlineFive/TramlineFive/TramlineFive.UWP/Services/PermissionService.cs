@@ -12,6 +12,16 @@ namespace TramlineFive.UWP.Services
 
     public class PermissionService : IPermissionService
     {
+        public void ChangeNavigationBarColor(string color)
+        {
+
+        }
+
+        public void ChangeStatusBarColor(string color)
+        {
+
+        }
+
         public bool HasLocationPermissions()
         {
             return true;

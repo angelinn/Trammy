@@ -18,7 +18,7 @@ public interface IApplicationService
     string GetVersion();
     Task OpenUri(string uri);
     void RunOnUIThread(Action action);
-    Task<Position> GetCurrentPositionAsync();
+    Task<Position?> GetCurrentPositionAsync();
     Task<bool> HasLocationPermissions();
 
     Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel = "");

@@ -150,13 +150,13 @@ public class MapService
             features.Add(feature);
 
             stopsTree.Add(new float[] { (float)location.Lat, (float)location.Lon }, feature);
-            stopsDictionary.Add(location.Code, feature);
+            stopsDictionary[location.Code] = feature;
         }
 
         return new Layer
         {
             Name = "Stops layer",
-            DataSource = new MemoryProvider<IFeature>(features),
+            DataSource = new MemoryProvider(features),
             Style = null,
             IsMapInfoLayer = true
         };

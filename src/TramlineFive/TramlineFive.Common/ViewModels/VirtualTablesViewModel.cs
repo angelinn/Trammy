@@ -110,6 +110,7 @@ namespace TramlineFive.Common.ViewModels
                 info.IsFavourite = favourite != null;
 
                 StopInfo = info;
+
                 Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
 
                 sw.Stop();
@@ -155,7 +156,7 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-        private StopInfo stopInfo;
+        private StopInfo stopInfo = new StopInfo();
         public StopInfo StopInfo
         {
             get

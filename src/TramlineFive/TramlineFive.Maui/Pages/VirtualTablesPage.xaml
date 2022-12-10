@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:TramlineFive.Converters" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:d="clr-namespace:TramlineFive.Behaviors"
+             x:Class="TramlineFive.Pages.VirtualTablesPage"
+             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
+
+    <Grid.Resources>
+        <ResourceDictionary>
+            <cv:InverseBoolConverter x:Key="InverseBool" />
+            <cv:ReferenceToBoolConverter x:Key="ReferenceToBool" />
+            <cv:ImageSourceConverter x:Key="ImageSource" />
+            <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
+            <cv:BoolToFavouriteColorConverter x:Key="BoolToFavourite" />
+        </ResourceDictionary>
+    </Grid.Resources>
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" RefreshColor="{DynamicResource BlueAccentColor}" >
+        <ScrollView>
+            <Grid BackgroundColor="{DynamicResource BackgroundColor}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80" />
+                    <RowDefinition Height="330" />
+                </Grid.RowDefinitions>
+
+                <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}" >
+                    <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="68" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackLayout x:Name="txtStopName" Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
+                                <Label Text="{Binding StopInfo.Name}" FontSize="Default" />
+                                <Label Text="{Binding StopInfo.Code, StringFormat='({0})'}" TextColor="{DynamicResource IconsColor}" FontSize="Small" />
+                            </StackLayout>
+                            
+                            <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" />
+
+                            <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,5,0">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
+                                </Grid.GestureRecognizers>
+                                <Grid.Behaviors>
+                                    <d:AnimationBehavior AnimateCommand="{Binding AnimateFavouriteCommand}">
+                                        <d:AnimationBehavior.AnimationType>
+                                            <xct:FlipHorizontalAnimation Rotation="360" />
+                                        </d:AnimationBehavior.AnimationType>
+                                    </d:AnimationBehavior>
+                                </Grid.Behaviors>
+
+                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe838;" Margin="10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Grid>
+
+                            <BoxView Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="{DynamicResource BackgroundColor}" VerticalOptions="End" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <ListView Grid.Row="1" SeparatorVisibility="None" BackgroundColor="{DynamicResource BackgroundColor}" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <ViewCell.View>
+                                    <Grid Margin="0,0,0,5" Padding="0" >
+                                        <Grid BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="100" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
+                                                <Label Text="{Binding Name}" TextColor="White" FontSize="40" />
+                                                <Label Text="{Binding TransportType}" TextColor="White"  />
+                                                <Label Text="{Binding LastCalculated}" TextColor="White"  />
+                                            </StackLayout>
+                                            <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0,0,0,0">
+                                                <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>
+                                                <Label Text="минути" TextColor="White" HorizontalOptions="Center"  />
+                                            </StackLayout>
+                                        </Grid>
+                                    </Grid>
+                                </ViewCell.View>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            </Grid>
+        </ScrollView>
+    </RefreshView>
+</Grid>
+    

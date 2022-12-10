@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Configurations>Debug;Release;GorillaPlayer</Configurations>
+    <TargetFramework>net7.0</TargetFramework>
+    <Configurations>Debug;Release</Configurations>
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
@@ -38,8 +38,8 @@
 
   <ItemGroup>
     <PackageReference Include="KdTree" Version="1.4.1" />
-    <PackageReference Include="Mapsui" Version="4.0.0-beta.3" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Mapsui.Maui" Version="4.0.0-beta.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.0.1-alpha" />
     <PackageReference Include="Octokit" Version="0.28.0" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />

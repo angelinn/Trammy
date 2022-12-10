@@ -25,7 +25,7 @@ namespace TramlineFive.Common.ViewModels
 {
     public class MapViewModel : BaseViewModel
     {
-        public ObservableCollection<ArrivalStopModel> RecommendedStops { get; } = new();
+        public ObservableCollection<ArrivalStopModel> RecommendedStops { get; private set; } = new();
         public List<string> FilteredStops { get; private set; }
 
         public ICommand MyLocationCommand { get; }
@@ -126,18 +126,24 @@ namespace TramlineFive.Common.ViewModels
                     }
                 }
 
-                Position position = await ApplicationService.GetCurrentPositionAsync();
-
-                ApplicationService.RunOnUIThread(() =>
+                Position? position = await ApplicationService.GetCurrentPositionAsync();
+                if (position != null)
                 {
-                    mapService.MoveToUser(position, true);
-                });
+                    ApplicationService.RunOnUIThread(() =>
+                    {
+                        mapService.MoveToUser(position.Value, true);
+                    });
 
-                MessengerInstance.Send(new UpdateLocationMessage(position));
+                    MessengerInstance.Send(new UpdateLocationMessage(position.Value));
+
+                    isAnimating = false;
+                    HasLocation = true;
+                    return LocationStatus.Allowed;
+                }
 
                 isAnimating = false;
-                HasLocation = true;
-                return LocationStatus.Allowed;
+                HasLocation = false; 
+                return LocationStatus.TurnedOff;
             }
             catch (Exception ex)
             {

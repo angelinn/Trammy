@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TramlineFive.Maui.MainPage"
+             xmlns:pages="clr-namespace:TramlineFive.Pages"
+             xmlns:d="clr-namespace:TramlineFive.Behaviors"
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             NavigationPage.HasNavigationBar="False"
+             BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:InverseBoolConverter x:Key="InverseBool" />
+            <cv:BoolToColorConverter x:Key="BoolToColor" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout>
+        <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="45" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1" x:Name="content">
+                <pages:MapPage x:Name="mapPage" IsVisible="{Binding BindingContext.IsMapVisible, Source={x:Reference Name=content}}" >
+                    <pages:MapPage.Behaviors>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding HideMapCommand}" >
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="0" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding ShowMapCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="1" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </pages:MapPage.Behaviors>
+                </pages:MapPage>
+                <pages:FavouritesPage Opacity="0" IsVisible="{Binding BindingContext.IsFavouritesVisible, Source={x:Reference Name=content}}" >
+                    <pages:FavouritesPage.Behaviors>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding HideFavouriteCommand}" >
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="0" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding ShowFavouriteCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="1" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </pages:FavouritesPage.Behaviors>
+                </pages:FavouritesPage>
+                <pages:HistoryPage Opacity="0" IsVisible="{Binding BindingContext.IsHistoryVisible, Source={x:Reference Name=content}}" >
+                    <pages:HistoryPage.Behaviors>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding HideHistoryCommand}" >
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="0" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                        <d:AnimationBehavior BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}" AnimateCommand="{Binding ShowHistoryCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <d:FadeAnimation Fade="1" />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </pages:HistoryPage.Behaviors>
+                </pages:HistoryPage>
+            </Grid>
+
+            <Grid Grid.Row="2" BackgroundColor="{DynamicResource BackgroundColor}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <BoxView Grid.ColumnSpan="3" Opacity="0.8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                <Grid>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Map" />
+                    </Grid.GestureRecognizers>
+                    <Grid.Behaviors>
+                        <d:AnimationBehavior AnimateCommand="{Binding AnimateMapTouchCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <xct:FadeAnimation />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </Grid.Behaviors>
+
+                    <Image  VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0">
+                        <Image.Source>
+                            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="fmd_good" Size="28" 
+                                           Color="{Binding IsMapVisible, Converter={StaticResource BoolToColor}}"
+                                        />
+                        </Image.Source>
+                    </Image>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="Favourites" />
+                    </Grid.GestureRecognizers>
+                    <Grid.Behaviors>
+                        <d:AnimationBehavior AnimateCommand="{Binding AnimateFavouritesTouchCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <xct:FlipHorizontalAnimation />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </Grid.Behaviors>
+
+                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="star_border" FontSize="30" 
+                                TextColor="{Binding IsFavouritesVisible, Converter={StaticResource BoolToColor}}"
+                                VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangeViewCommand}" CommandParameter="History" />
+                    </Grid.GestureRecognizers>
+                    <Grid.Behaviors>
+                        <d:AnimationBehavior AnimateCommand="{Binding AnimateHistoryTouchCommand}">
+                            <d:AnimationBehavior.AnimationType>
+                                <xct:FlipHorizontalAnimation />
+                            </d:AnimationBehavior.AnimationType>
+                        </d:AnimationBehavior>
+                    </Grid.Behaviors>
+
+                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="history" FontSize="28" 
+                                TextColor="{Binding IsHistoryVisible, Converter={StaticResource BoolToColor}}"
+                                VerticalOptions="Center" HorizontalOptions="Center" Margin="0,6,0,0" />
+
+                </Grid>
+            </Grid>
+        </Grid>
+
+          </AbsoluteLayout>
+</ContentPage>

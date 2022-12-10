@@ -167,9 +167,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TramlineFive\TramlineFive.csproj">
-      <Project>{966d7296-0364-44d6-b6c9-3d2c297fb104}</Project>
-      <Name>TramlineFive</Name>
+    <ProjectReference Include="..\TramlineFive\TramlineFive.Xamarin.csproj">
+      <Project>{094AAB09-DC5F-4886-BAAF-A58BF3DD5D84}</Project>
+      <Name>TramlineFive.Xamarin</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
