@@ -9,7 +9,7 @@ using TramlineFive.Common.ViewModels;
 
 namespace TramlineFive.Pages
 {
-	public partial class HistoryPage : Grid
+	public partial class HistoryPage : ContentPage
 	{
 		public HistoryPage ()
 		{

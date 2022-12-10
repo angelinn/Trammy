@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.MapPage"
              xmlns:v="clr-namespace:TramlineFive.Views"
@@ -11,13 +11,13 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}">
 
-    <Grid.Resources> 
+    <ContentPage.Resources> 
         <ResourceDictionary>
             <cv:ColorConverter x:Key="ColorConverter" />
             <cv:LocationConverter x:Key="LocationConverter" />
             <cv:InverseBoolConverter x:Key="InverseBool" />
         </ResourceDictionary> 
-    </Grid.Resources>
+    </ContentPage.Resources>
 
     <AbsoluteLayout>
         <mapsui:MapView x:Name="map" VerticalOptions="FillAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"
@@ -160,5 +160,5 @@
             <pages:VirtualTablesPage />
         </Grid>
     </AbsoluteLayout>
-</Grid>
+</ContentPage>
     

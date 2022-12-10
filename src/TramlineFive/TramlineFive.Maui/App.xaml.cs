@@ -30,7 +30,8 @@ namespace TramlineFive.Maui
             Messenger.Default.Send(new ChangeThemeMessage(theme));
             versionCheckingService.CreateTask();
 
-            MainPage = new NavigationPage(new MainPage());// new AppShell();
+            //  new NavigationPage(new MainPage());//
+            MainPage = new AppShell();
         }
 
 

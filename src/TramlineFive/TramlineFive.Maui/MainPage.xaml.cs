@@ -38,26 +38,26 @@ namespace TramlineFive.Maui
             Task translation = null;
             Task fading = null;
 
-            //if (!isOpened)
-            //{
-            //    translation = slideMenu.TranslateTo(0, 0);
-            //    fading = overlay.FadeTo(0.5);
-            //}
-            //else
-            //{
-            //    translation = slideMenu.TranslateTo(-Width, 0);
-            //    fading = overlay.FadeTo(0);
-            //}
+            if (!isOpened)
+            {
+                translation = slideMenu.TranslateTo(0, 0);
+                fading = overlay.FadeTo(0.5);
+            }
+            else
+            {
+                translation = slideMenu.TranslateTo(-Width, 0);
+                fading = overlay.FadeTo(0);
+            }
 
             await Task.WhenAll(translation, fading);
-            //overlay.InputTransparent = !overlay.InputTransparent;
+            overlay.InputTransparent = !overlay.InputTransparent;
             isOpened = !isOpened;
         }
 
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
-            //slideMenu.TranslationX = -Width;
+            slideMenu.TranslationX = -Width;
         }
 
         protected override async void OnAppearing()

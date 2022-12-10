@@ -16,7 +16,7 @@ using Map = Mapsui.Map;
 
 namespace TramlineFive.Pages
 {
-    public partial class MapPage : Grid
+    public partial class MapPage : ContentPage
     {
         private bool initialized;
         private bool isOpened;

@@ -132,5 +132,69 @@
             </Grid>
         </Grid>
 
-          </AbsoluteLayout>
+        <Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" BackgroundColor="Black" Opacity="0">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ToggleHamburgerCommand}" />
+            </Grid.GestureRecognizers>
+        </Grid>
+
+        <Grid x:Name="slideMenu" HorizontalOptions="Start" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" WidthRequest="250" BackgroundColor="{DynamicResource BackgroundColor}">
+            <StackLayout Spacing="0">
+                <StackLayout.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Label" x:Key="MenuIcon">
+                            <Setter Property="Margin" Value="15,3,5,0" />
+                            <Setter Property="FontSize" Value="25" />
+                            <Setter Property="VerticalOptions" Value="Center" />
+                            <Setter Property="HorizontalOptions" Value="Center" />
+                            <Setter Property="TextColor" Value="#9aa0a6" />
+                        </Style>
+
+                        <Style TargetType="Label" x:Key="MenuText">
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="VerticalOptions" Value="Center" />
+                            <Setter Property="Grid.Column" Value="1" />
+                        </Style>
+
+                        <Style TargetType="Grid" x:Key="MenuItemContainer">
+                            <Setter Property="HeightRequest" Value="50" />
+                            <Setter Property="VerticalOptions" Value="Center" />
+                            <Setter Property="ColumnDefinitions">
+                                <Setter.Value>
+                                    <ColumnDefinitionCollection>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </ColumnDefinitionCollection>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ResourceDictionary>
+                </StackLayout.Resources>
+                <Grid HeightRequest="180" BackgroundColor="{DynamicResource BlueAccentColor}">
+                    <StackLayout VerticalOptions="End">
+                        <Image HorizontalOptions="Start" HeightRequest="128" WidthRequest="128">
+                        </Image>
+                        <Label Text="Tramline Five v3.3.0" TextColor="White" Margin="5,-10,5,05"/>
+                    </StackLayout>
+                </Grid>
+                <Grid Style="{StaticResource MenuItemContainer}" xct:TouchEffect.NativeAnimation="True">
+                    <Label FontFamily="mio" Text="settings" Style="{StaticResource MenuIcon}" />
+                    <Label Text="Настройки" Style="{StaticResource MenuText}" />
+
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenSettingsCommand}" />
+                    </Grid.GestureRecognizers>
+                </Grid>
+
+                <Grid Style="{StaticResource MenuItemContainer}" xct:TouchEffect.NativeAnimation="True">
+                    <Label FontFamily="mio" Text="info" Style="{StaticResource MenuIcon}" />
+                    <Label Text="Информация" Style="{StaticResource MenuText}" />
+
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenAboutCommand}" />
+                    </Grid.GestureRecognizers>
+                </Grid>
+            </StackLayout>
+        </Grid>
+    </AbsoluteLayout>
 </ContentPage>

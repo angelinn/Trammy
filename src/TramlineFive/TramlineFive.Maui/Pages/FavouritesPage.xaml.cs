@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TramlineFive.Pages
 {
-	public partial class FavouritesPage : Grid
+	public partial class FavouritesPage : ContentPage
 	{
 		public FavouritesPage ()
 		{
