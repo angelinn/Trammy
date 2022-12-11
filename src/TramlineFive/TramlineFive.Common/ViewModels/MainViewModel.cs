@@ -50,6 +50,9 @@ namespace TramlineFive.Common.ViewModels
 
         private void ChangeView(string view)
         {
+            MessengerInstance.Send(new ChangePageMessage(view));
+            return;
+
             foreach (string key in pages.Keys.ToList())
             {
                 if (pages[key].IsVisible)
