@@ -5,14 +5,32 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:TramlineFive.Maui"
     xmlns:pages="clr-namespace:TramlineFive.Pages"
-    FlyoutBehavior="Flyout"
     Shell.NavBarIsVisible="False">
 
-    <FlyoutItem Route="Main" Title="Home" FlyoutDisplayOptions="AsSingleItem">
-        <ShellContent Route="Map" ContentTemplate="{DataTemplate pages:MapPage}" />
-        <ShellContent Route="Favourites" ContentTemplate="{DataTemplate pages:FavouritesPage}" />
-        <ShellContent Route="History" ContentTemplate="{DataTemplate pages:HistoryPage}" />
+    <Shell.Resources>
+        <Style x:Key="TabStyle" TargetType="Element">
+            <Setter Property="Shell.BackgroundColor"
+                        Value="#039BE6" />
+        </Style>
+    </Shell.Resources>
+    
+    <FlyoutItem Route="Main" Title="Начало" FlyoutDisplayOptions="AsSingleItem">
+        <ShellContent Style="{StaticResource TabStyle}" Route="Map" Title="Карта" ContentTemplate="{DataTemplate pages:MapPage}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="fmd_good" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Route="Favourites" Title="Любими" ContentTemplate="{DataTemplate pages:FavouritesPage}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="star_border" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Route="History" Title="История" ContentTemplate="{DataTemplate pages:HistoryPage}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="history" />
+            </ShellContent.Icon>
+        </ShellContent>
     </FlyoutItem>
 
-    <ShellContent Route="Settings" Title="Settings" ContentTemplate="{DataTemplate pages:AboutPage}" />
+    <ShellContent Route="Settings" Title="Настройки" ContentTemplate="{DataTemplate pages:AboutPage}" />
 </Shell>
