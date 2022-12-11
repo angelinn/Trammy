@@ -55,14 +55,14 @@
                             </Image.Source>
                         </Image>
                     </Grid>
-                    <views:CustomEntry Grid.Column="1" TextColor="{DynamicResource LabelTextColor}" Placeholder="Код/име на спирка..." PlaceholderColor="{DynamicResource PlaceholderTextColor}"
+                    <Entry Grid.Column="1" TextColor="{DynamicResource LabelTextColor}" Placeholder="Код/име на спирка..." PlaceholderColor="{DynamicResource PlaceholderTextColor}"
                                        FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
-                        <views:CustomEntry.Behaviors>
+                        <Entry.Behaviors>
                             <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
                             <d:EventToCommandBehavior EventName="Focused" Command="{Binding SearchFocusedCommand}" />
                             <d:EventToCommandBehavior EventName="Unfocused" Command="{Binding SearchUnfocusedCommand}" />
-                        </views:CustomEntry.Behaviors>
-                    </views:CustomEntry>
+                        </Entry.Behaviors>
+                    </Entry>
                     <ActivityIndicator Grid.Column="1" HorizontalOptions="End" Scale=".5"
                                            BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}"
                                            IsVisible="{Binding IsLoading}"

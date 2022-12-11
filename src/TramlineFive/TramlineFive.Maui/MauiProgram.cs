@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Android.Graphics.Drawables;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
 using SkgtService.Parsers;
 using SkiaSharp.Views.Maui.Controls.Hosting;
@@ -45,10 +46,17 @@ namespace TramlineFive.Maui
                     effects.AddCompatibilityEffects(typeof(Xamarin.CommunityToolkit.Effects.TouchEffect).Assembly);
                 });
 
+            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
+            {
+                GradientDrawable gd = new GradientDrawable();
+                gd.SetColor(global::Android.Graphics.Color.Transparent);
+                handler.PlatformView.SetBackgroundDrawable(gd);
+            });
+
             ConfigureServices(builder.Services);
 
 #if DEBUG
-		builder.Logging.AddDebug();
+		    builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
