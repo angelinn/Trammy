@@ -16,5 +16,11 @@ namespace TramlineFive.Pages
 			InitializeComponent (); 
 			(BindingContext as SettingsViewModel).Initialize(DisplayActionSheet);
 		}
-	}
+
+        protected override bool OnBackButtonPressed()
+        {
+			Shell.Current.GoToAsync("//Main");
+			return true;
+        }
+    }
 } 
