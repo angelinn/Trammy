@@ -8,30 +8,58 @@
     Shell.NavBarIsVisible="False">
 
     <Shell.Resources>
-        <Style x:Key="TabStyle" TargetType="Element">
-            <Setter Property="Shell.BackgroundColor"
-                        Value="#039BE6" />
+        <Style x:Key="TabStyle" TargetType="ShellContent">
+            <Setter Property="Shell.TitleColor"
+                        Value="Blue" />
+            <Setter Property="Shell.TabBarTitleColor"
+              Value="DodgerBlue" />
+        </Style>
+
+        <Style Class="FlyoutItemLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="Black" />
         </Style>
     </Shell.Resources>
+
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="DodgerBlue" HeightRequest="200">
+            
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <Shell.FlyoutFooter>
+        <Label Padding="15,0,0,0" Text="TramlineFive 1.0.0" />
+    </Shell.FlyoutFooter>
     
     <FlyoutItem Route="Main" Title="Начало" FlyoutDisplayOptions="AsSingleItem">
+        <FlyoutItem.Icon>
+            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="home" Color="DodgerBlue" />
+        </FlyoutItem.Icon>
+        
         <ShellContent Style="{StaticResource TabStyle}" Route="Map" Title="Карта" ContentTemplate="{DataTemplate pages:MapPage}">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="fmd_good" />
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent Route="Favourites" Title="Любими" ContentTemplate="{DataTemplate pages:FavouritesPage}">
+        <ShellContent Style="{StaticResource TabStyle}"  Route="Favourites" Title="Любими" ContentTemplate="{DataTemplate pages:FavouritesPage}">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="star_border" />
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent Route="History" Title="История" ContentTemplate="{DataTemplate pages:HistoryPage}">
+        <ShellContent Style="{StaticResource TabStyle}" Route="History" Title="История" ContentTemplate="{DataTemplate pages:HistoryPage}">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="history" />
             </ShellContent.Icon>
         </ShellContent>
     </FlyoutItem>
 
-    <ShellContent Route="Settings" Title="Настройки" ContentTemplate="{DataTemplate pages:SettingsPage}" />
-    <ShellContent Route="About" Title="Информация" ContentTemplate="{DataTemplate pages:AboutPage}" />
+    <ShellContent Style="{StaticResource TabStyle}" Route="Settings" Title="Настройки" ContentTemplate="{DataTemplate pages:SettingsPage}">
+        <ShellContent.Icon>
+            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="settings" />
+        </ShellContent.Icon>
+    </ShellContent>
+    <ShellContent Route="About" Title="Информация" ContentTemplate="{DataTemplate pages:AboutPage}">
+        <ShellContent.Icon>
+            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="info" />
+        </ShellContent.Icon>
+    </ShellContent>
 </Shell>
