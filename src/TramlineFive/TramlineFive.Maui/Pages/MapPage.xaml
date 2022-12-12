@@ -38,7 +38,14 @@
         </Grid>
 
         <StackLayout AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.95,1,47">
-            <Frame x:Name="searchBar"  BackgroundColor="{DynamicResource BackgroundColor}" Opacity="0.9" Margin="15,0,15,0" Padding="5,0,5,0" CornerRadius="30" HeightRequest="47" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
+            <Border x:Name="searchBar" Stroke="Transparent"  BackgroundColor="{DynamicResource BackgroundColor}" Opacity="0.9" Margin="15,0,15,0" Padding="5,0,5,0" HeightRequest="50" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="30" />
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="gray" Radius="30" Opacity="0.6" Offset="0,5" />
+                </Border.Shadow>
+                 
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
@@ -69,7 +76,7 @@
                                            IsRunning="{Binding IsLoading}"
                                            IsEnabled="{Binding IsLoading}"/>
                 </Grid>
-            </Frame>
+            </Border>
         </StackLayout>
         <CollectionView EmptyView="No items" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,45" Grid.Row="2" Margin="17,5,17,0" ItemsSource="{Binding RecommendedStops}" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
         <!--<CollectionView AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,50" ItemsSource="{Binding RecommendedStops}">-->
@@ -78,17 +85,21 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="0,2,0,2">
-                            <Border WidthRequest="130" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True" Opacity="0.9" Background="white">
+                        <Grid Padding="0,2,0,2" WidthRequest="155" HeightRequest="42">
+                            <Border Stroke="Transparent" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True" Opacity="0.9" Background="white">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20" />
                                 </Border.StrokeShape>
                                 
+                                <Border.Shadow>
+                                    <Shadow Radius="20" Brush="gray" Offset="0,5" Opacity="0.6" />
+                                </Border.Shadow>
+
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Border}, AncestorLevel=1}}" />
                                 </Border.GestureRecognizers>
 
-                                <Grid ColumnSpacing="0" Background="{DynamicResource BackgroundColor}">
+                                <Grid ColumnSpacing="0" Background="{DynamicResource BackgroundColor}" VerticalOptions="CenterAndExpand">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="20" />
                                         <ColumnDefinition Width="40" />

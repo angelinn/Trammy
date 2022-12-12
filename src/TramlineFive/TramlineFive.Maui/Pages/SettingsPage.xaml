@@ -15,7 +15,7 @@
 
     <ScrollView BackgroundColor="{DynamicResource BackgroundColor}" >
         <StackLayout Padding="10">
-            <Grid Margin="0,10,0,0" HeightRequest="40" xct:TouchEffect.NativeAnimation="True">
+            <Grid Margin="0,10,0,0" HeightRequest="40">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />
@@ -29,7 +29,7 @@
                 <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HeightRequest="10"
                                    HorizontalOptions="{OnPlatform Android=StartAndExpand, WinUI=FillAndExpand}" />
             </Grid>
-            <Grid Margin="0,20,0,0" xct:TouchEffect.NativeAnimation="True" HeightRequest="40">
+            <Grid Margin="0,20,0,0" HeightRequest="40">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />

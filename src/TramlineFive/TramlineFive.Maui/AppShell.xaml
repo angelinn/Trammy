@@ -57,9 +57,11 @@
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="settings" />
         </ShellContent.Icon>
     </ShellContent>
-    <ShellContent Route="About" Title="Информация" ContentTemplate="{DataTemplate pages:AboutPage}">
+    <ShellContent Route="About" Title="Информация">
         <ShellContent.Icon>
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="info" />
         </ShellContent.Icon>
+
+        <pages:AboutPage />
     </ShellContent>
 </Shell>
