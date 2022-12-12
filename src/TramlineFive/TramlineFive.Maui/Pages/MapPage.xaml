@@ -85,7 +85,7 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="0,2,0,2" WidthRequest="155" HeightRequest="42">
+                        <Grid Padding="0,2,0,2" WidthRequest="145" HeightRequest="42">
                             <Border Stroke="Transparent" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True" Opacity="0.9" Background="white">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20" />

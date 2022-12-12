@@ -9,6 +9,7 @@ using TramlineFive.Common.Services;
 using TramlineFive.Themes;
 using GalaSoft.MvvmLight.Messaging;
 using TramlineFive.Maui.Services;
+using TramlineFive.Pages;
 
 namespace TramlineFive.Maui
 {
@@ -30,7 +31,6 @@ namespace TramlineFive.Maui
             Messenger.Default.Send(new ChangeThemeMessage(theme));
             versionCheckingService.CreateTask();
 
-            //  new NavigationPage(new MainPage());//
             MainPage = new AppShell();
         }
 

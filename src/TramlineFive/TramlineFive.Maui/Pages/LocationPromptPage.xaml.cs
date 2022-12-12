@@ -10,16 +10,9 @@ namespace TramlineFive.Pages
 {
     public partial class LocationPromptPage : ContentPage
     {
-        private MainPage masterPage;
-
         public LocationPromptPage()
         {
             InitializeComponent();
-        }
-
-        protected override void OnAppearing()
-        {
-            masterPage = new MainPage();
         }
 
         private async void LocationPromptClicked(object sender, EventArgs e)
@@ -32,7 +25,7 @@ namespace TramlineFive.Pages
             //if (!permissionService.HasLocationPermissions())
             //    permissionService.RequestLocationPermissions();
 
-            Application.Current.MainPage = new NavigationPage(masterPage);
+            await Shell.Current.GoToAsync("//Main");
         }
     }
 }

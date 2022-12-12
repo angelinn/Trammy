@@ -64,4 +64,6 @@
 
         <pages:AboutPage />
     </ShellContent>
+
+    <ShellContent FlyoutItemIsVisible="False" Route="Location" ContentTemplate="{DataTemplate pages:LocationPromptPage}" />
 </Shell>

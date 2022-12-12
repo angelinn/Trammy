@@ -42,6 +42,9 @@ namespace TramlineFive.Pages
 
             map.Map = nativeMap;
             map.TouchAction += OnMapTouchAction;
+
+            if (VersionTracking.IsFirstLaunchEver)
+                Messenger.Default.Send(new ChangePageMessage("Location"));
         }
 
         private void OnMapTouchAction(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)
