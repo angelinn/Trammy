@@ -52,6 +52,11 @@ public class Line
     {
         get
         {
+            if (Name[0] == 'E')
+                return "Електробус";
+            if (Name.Length == 3 && Name[0] == '8' && VehicleType == "bus")
+                return "Допълнителна";
+
             switch (VehicleType)
             {
                 case "bus":
