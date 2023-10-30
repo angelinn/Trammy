@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-android</TargetFrameworks>
+		<TargetFrameworks>net7.0-android33.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
 		<OutputType>Exe</OutputType>
@@ -34,12 +34,16 @@
 	  <RunAOTCompilation>False</RunAOTCompilation>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'" />
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'" />
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<EmbeddedResource Include="Resources\Splash\splash.png" Color="#1e90ff" BaseSize="242,222" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -116,10 +120,16 @@
 	  <None Remove="Resources\MaterialIconsRoundRegular.otf" />
 	  <None Remove="Resources\MaterialIconsSharpRegular.otf" />
 	  <None Remove="Resources\MaterialIconsTwoToneRegular.otf" />
+	  <None Remove="Resources\Splash\splash.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Mapsui.Maui" Version="4.0.0-beta.5" />
+	  <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="DodgerBlue" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="3.1.0" />
+		<PackageReference Include="Mapsui.Maui" Version="4.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Xamarin.CommunityToolkit.MauiCompat" Version="2.0.2-preview1013" />
 	</ItemGroup>
@@ -214,6 +224,10 @@
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Resources\Splash\tramsplash.png" Color="Blue" />
 	</ItemGroup>
 
 </Project>

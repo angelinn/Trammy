@@ -20,23 +20,28 @@ namespace TramlineFive.Maui
         {
             InitializeComponent();
 
+            System.Diagnostics.Debug.WriteLine("Initialized");
             this.dbPathService = dbPathService;
 
             StopsLoader.Initialize(dbPathService.GetBaseFilePath());
 
+            System.Diagnostics.Debug.WriteLine("Initialized stops loader");
             string theme = Preferences.Get(Settings.Theme, Names.LightTheme);
 
             Messenger.Default.Register<ChangeThemeMessage>(this, m => OnThemeChanged(m));
 
             Messenger.Default.Send(new ChangeThemeMessage(theme));
+            System.Diagnostics.Debug.WriteLine("creating task");
             versionCheckingService.CreateTask();
 
+            System.Diagnostics.Debug.WriteLine("created");
             MainPage = new AppShell();
         }
 
 
         private void OnThemeChanged(ChangeThemeMessage m)
         {
+            System.Diagnostics.Debug.WriteLine("setting theme");
             ResourceDictionary themeDictionary = Current.Resources.MergedDictionaries.FirstOrDefault(d => d.ContainsKey("PrimaryColor"));
             if (themeDictionary != null)
                 Current.Resources.MergedDictionaries.Remove(themeDictionary);
@@ -51,6 +56,7 @@ namespace TramlineFive.Maui
                 Current.UserAppTheme = AppTheme.Dark;
                 Current.Resources.MergedDictionaries.Add(new DarkTheme());
             }
+            System.Diagnostics.Debug.WriteLine("theme set");
         }
 
         protected override async void OnStart()
@@ -61,13 +67,22 @@ namespace TramlineFive.Maui
             //if (VersionTracking.IsFirstLaunchEver && await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>() != PermissionStatus.Granted)
             //    MainPage = new Pages.LocationPromptPage();
             //else
-                //MainPage = new NavigationPage(new MainPage());
+            //MainPage = new NavigationPage(new MainPage());
 
+            System.Diagnostics.Debug.WriteLine("loading db");
             TramlineFiveContext.DatabasePath = dbPathService.GetDBPath();
             await TramlineFiveContext.EnsureCreatedAsync();
 
+            //System.Diagnostics.Debug.WriteLine("loaded db");
+
+            //System.Diagnostics.Debug.WriteLine("loading history");
             await ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync();
+
+            //System.Diagnostics.Debug.WriteLine("loaded history");
+
+            //System.Diagnostics.Debug.WriteLine("loading favourites");
             await ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync();
+            //System.Diagnostics.Debug.WriteLine("loaded favourites");
 
             StopsLoader.OnStopsUpdated += OnStopsUpdated;
         }

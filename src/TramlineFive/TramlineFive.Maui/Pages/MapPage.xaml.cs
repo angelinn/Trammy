@@ -21,43 +21,31 @@ namespace TramlineFive.Pages
         private bool initialized;
         private bool isOpened;
 
-        private readonly MapService mapService;
+        private MapService mapService;
+        private Map nativeMap;
+        //MapView map;
+        //View slideMenu;
 
         public MapPage()
         {
             InitializeComponent();
 
             Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
-            Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
+            //Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
             Messenger.Default.Register<UpdateLocationMessage>(this, m => map.MyLocationLayer.UpdateMyLocation(new Position(m.Position.Latitude, m.Position.Longitude)));
-
-            Map nativeMap = new Map
-            {
-                BackColor = Mapsui.Styles.Color.White,
-                CRS = "EPSG:3857"
-            };
-
-            mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
-            Task _ = (BindingContext as MapViewModel).Initialize(nativeMap, map.Navigator);
-
-            map.Map = nativeMap;
-            map.TouchAction += OnMapTouchAction;
-
-            if (VersionTracking.IsFirstLaunchEver)
-                Messenger.Default.Send(new ChangePageMessage("Location"));
         }
 
-        private void OnMapTouchAction(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)
+        private async void OnMapTouchAction(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)
         {
             if (e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Released)
             {
-                mapService.ShowNearbyStops(new MPoint(map.Viewport.CenterX, map.Viewport.CenterY), true);
-                map.Refresh();
+                await mapService.ShowNearbyStops(new MPoint(nativeMap.Navigator.Viewport.CenterX, nativeMap.Navigator.Viewport.CenterY), true);
+                //map.Refresh();
 
                 System.Diagnostics.Debug.WriteLine($"Show stops");
             }
 
-            System.Diagnostics.Debug.WriteLine($"Touch: {e.ActionType} {map.Viewport.CenterX} {map.Viewport.CenterY}");
+            System.Diagnostics.Debug.WriteLine($"Touch: {e.ActionType} {nativeMap.Navigator.Viewport.CenterX} {nativeMap.Navigator.Viewport.CenterY}");
         }
 
         private async Task ShowVirtualTables(int linesCount)
@@ -110,20 +98,35 @@ namespace TramlineFive.Pages
             });
         }
 
-        public void OnAppearing()
+        protected override void OnAppearing()
         {
             if (initialized)
                 return;
 
             initialized = true;
             Task task = (BindingContext as MapViewModel).LoadAsync();
+
+            nativeMap = new Map
+            {
+                BackColor = Mapsui.Styles.Color.White,
+                CRS = "EPSG:3857"
+            };
+
+            mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
+            Task _ = (BindingContext as MapViewModel).Initialize(nativeMap, nativeMap.Navigator);
+
+            map.Map = nativeMap;
+            map.TouchAction += OnMapTouchAction;
+
+            if (VersionTracking.IsFirstLaunchEver)
+                Messenger.Default.Send(new ChangePageMessage("Location"));
         }
 
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
             slideMenu.TranslationY = isOpened ? 0 : Height;
-            //map.HeightRequest = Height;
+            map.HeightRequest = Height;
         }   
     }
 }

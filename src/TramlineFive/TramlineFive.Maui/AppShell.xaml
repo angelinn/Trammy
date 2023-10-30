@@ -5,8 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:TramlineFive.Maui"
     xmlns:pages="clr-namespace:TramlineFive.Pages"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     Shell.NavBarIsVisible="False">
-
+    
     <Shell.Resources>
         <Style x:Key="TabStyle" TargetType="ShellContent">
             <Setter Property="Shell.TitleColor"
@@ -34,7 +35,6 @@
         <FlyoutItem.Icon>
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="home" Color="DodgerBlue" />
         </FlyoutItem.Icon>
-        
         <ShellContent Style="{StaticResource TabStyle}" Route="Map" Title="Карта" ContentTemplate="{DataTemplate pages:MapPage}">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="fmd_good" />
@@ -49,6 +49,13 @@
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="history" />
             </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Route="About" Title="Информация">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="info" />
+            </ShellContent.Icon>
+
+            <pages:AboutPage />
         </ShellContent>
     </FlyoutItem>
 

@@ -72,7 +72,7 @@ namespace TramlineFive.Common.ViewModels
             MessengerInstance.Register<SettingChanged<string>>(this, async (m) => await OnStringSettingChangedAsync(m));
         }
 
-        public async Task Initialize(Map nativeMap, INavigator navigator)
+        public async Task Initialize(Map nativeMap, Navigator navigator)
         {
             await mapService.Initialize(nativeMap, navigator, 
                 ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
@@ -178,19 +178,24 @@ namespace TramlineFive.Common.ViewModels
 
             List<ArrivalStopModel> nearbyWithoutFavourites = nearbyStops.Where(n => !topFavourites.Any(f => f.StopCode == n.StopCode)).ToList();
 
-            if (nearbyWithoutFavourites.Count == 0)
-            {
-                foreach (ArrivalStopModel stop in topFavourites)
-                    RecommendedStops.Add(stop);
-            }
-            else
-            {
-                if (topFavourites.Count > 0)
-                    RecommendedStops.Add(topFavourites[0]);
+            //// this causes lag if the stops are added one by one on maui, property raised event lag?
+            //List<ArrivalStopModel> newstops = new List<ArrivalStopModel>();
+            //if (nearbyWithoutFavourites.Count == 0)
+            //{
+            //    foreach (ArrivalStopModel stop in topFavourites)
+            //        newstops.Add(stop);
+            //}
+            //else
+            //{
+            //    if (topFavourites.Count > 0)
+            //        newstops.Add(topFavourites[0]);
 
-                foreach (ArrivalStopModel stop in nearbyWithoutFavourites.Take(4 - RecommendedStops.Count))
-                    RecommendedStops.Add(stop);
-            }
+            //    foreach (ArrivalStopModel stop in nearbyWithoutFavourites.Take(4 - RecommendedStops.Count))
+            //        newstops.Add(stop);
+            //}
+
+            //RecommendedStops = new ObservableCollection<ArrivalStopModel>(newstops);
+            //RaisePropertyChanged(nameof(RecommendedStops));
         }
 
         private void FilterStops()
@@ -242,11 +247,12 @@ namespace TramlineFive.Common.ViewModels
                 await mapService.SetupMapAsync(m.Value);
         }
 
-        private void OnStopSelectedMessageReceived(StopSelectedMessage message)
+        private async void OnStopSelectedMessageReceived(StopSelectedMessage message)
         {
             if (message.Clicked)
             {
                 IsVirtualTablesUp = true;
+
                 mapService.MoveToStop(message.Selected);
             }
         }

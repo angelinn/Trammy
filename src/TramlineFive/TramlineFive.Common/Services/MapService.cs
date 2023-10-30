@@ -21,6 +21,7 @@ using TramlineFive.Common.Models;
 using Mapsui.Projections;
 using KdTree;
 using GalaSoft.MvvmLight.Ioc;
+using Mapsui.Animations;
 
 namespace TramlineFive.Common.Services;
 
@@ -36,7 +37,7 @@ public class MapService
     private KdTree<float, IFeature> stopsTree;
     private Dictionary<string, IFeature> stopsDictionary;
     private readonly List<Style> activeStyles = new List<Style>();
-    private INavigator navigator;
+    private Navigator navigator;
 
     private readonly LocationService locationService;
 
@@ -48,7 +49,7 @@ public class MapService
         this.locationService = locationService;
     }
     
-    public async Task Initialize(Map map, INavigator navigator, string tileServer)
+    public async Task Initialize(Map map, Navigator navigator, string tileServer)
     {
         this.map = map;
         this.navigator = navigator;
@@ -61,15 +62,16 @@ public class MapService
     public async Task SetupMapAsync(string tileServer)
     {
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
-        map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Resolutions[17]); ShowNearbyStops(point); };
+        map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Navigator.Resolutions[17]); ShowNearbyStops(point); };
 
         map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
+
         LoadPinStyles();
 
         ILayer stopsLayer = await LoadStops();
         map.Layers.Add(stopsLayer);
 
-        navigator.Navigated = (sender, args) => SendMapRefreshMessage();
+        navigator.ViewportChanged += (sender, args) => SendMapRefreshMessage();
     }
 
     public void MoveTo(MPoint position, int zoom, bool home = false)
@@ -79,7 +81,7 @@ public class MapService
         if (home)
             map.Home = n => n.CenterOn(point);
 
-        navigator.NavigateTo(point, map.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
+        navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
     }
 
     public void MoveToUser(Position position, bool home = false)
@@ -88,7 +90,7 @@ public class MapService
 
         MPoint userLocationMap = new MPoint(x, y);
 
-        navigator.NavigateTo(userLocationMap, map.Resolutions[17], ANIMATION_MS, home ? null : Easing.Linear);
+        navigator.CenterOnAndZoomTo(userLocationMap, map.Navigator.Resolutions[17], ANIMATION_MS, home ? null : Easing.Linear);
 
         ShowNearbyStops(userLocationMap);
     }
@@ -132,12 +134,12 @@ public class MapService
                         BitmapId = pinStyle.BitmapId,
                         SymbolOffset = new Offset(0, 30),
                         SymbolScale = pinStyle.SymbolScale,
-                        MaxVisible = map.Resolutions[MaxPinsZoom]
+                        MaxVisible = map.Navigator.Resolutions[MaxPinsZoom]
                     },
                     new LabelStyle
                     {
                         Enabled = pinStyle.Enabled,
-                        MaxVisible = map.Resolutions[MaxTextZoom],
+                        MaxVisible = map.Navigator.Resolutions[MaxTextZoom],
                         Text = $"{location.PublicName} ({location.Code})",
                         Offset = new Offset(0, -45),
                         
@@ -183,34 +185,37 @@ public class MapService
         MoveTo(point, 17);
     }
 
-    public void ShowNearbyStops(MPoint position, bool hideOthers = false)
+    public async Task ShowNearbyStops(MPoint position, bool hideOthers = false)
     {
-        List<KeyValuePair<double, StopLocation>> nearbyStops = new List<KeyValuePair<double, StopLocation>>();
-
-        MPoint pointLan = SphericalMercator.ToLonLat(position);
-        var neighbours = stopsTree.GetNearestNeighbours(new float[] { (float)pointLan.Y, (float)pointLan.X }, 10).Select(n => n.Value).ToList();
-
-        foreach (Style style in activeStyles)
-            style.Enabled = false;
-
-        activeStyles.Clear();
-
-        int i = 0;
-        foreach (var neighbour in neighbours)
+        await Task.Run(() =>
         {
-            StopLocation location = neighbour["stopObject"] as StopLocation;
-            nearbyStops.Add(new KeyValuePair<double, StopLocation>(i++, location));
+            List<KeyValuePair<double, StopLocation>> nearbyStops = new List<KeyValuePair<double, StopLocation>>();
 
-            foreach (Style style in neighbour.Styles)
+            MPoint pointLan = SphericalMercator.ToLonLat(position);
+            var neighbours = stopsTree.GetNearestNeighbours(new float[] { (float)pointLan.Y, (float)pointLan.X }, 10).Select(n => n.Value).ToList();
+
+            foreach (Style style in activeStyles)
+                style.Enabled = false;
+
+            activeStyles.Clear();
+
+            int i = 0;
+            foreach (var neighbour in neighbours)
             {
-                activeStyles.Add(style);
-                style.Enabled = true;
+                StopLocation location = neighbour["stopObject"] as StopLocation;
+                nearbyStops.Add(new KeyValuePair<double, StopLocation>(i++, location));
+
+                foreach (Style style in neighbour.Styles)
+                {
+                    activeStyles.Add(style);
+                    style.Enabled = true;
+                }
             }
-        }
 
-        //FilterStops(neighbours);
+            //FilterStops(neighbours);
 
-        Messenger.Default.Send(new NearbyStopsMessage(nearbyStops.Select(p => p.Value).ToList()));
+            Messenger.Default.Send(new NearbyStopsMessage(nearbyStops.Select(p => p.Value).ToList()));
+        });
     }
 
     private void FilterStops(List<IFeature> features)

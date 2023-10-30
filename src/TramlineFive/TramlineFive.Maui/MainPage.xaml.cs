@@ -65,7 +65,7 @@ namespace TramlineFive.Maui
             base.OnAppearing();
             if (!appeared)
             {
-                mapPage.OnAppearing();
+                //mapPage.OnAppearing();
                 Task task = ServiceContainer.ServiceProvider.GetService<VirtualTablesViewModel>().CheckForUpdatesAsync();
 
                 appeared = true;

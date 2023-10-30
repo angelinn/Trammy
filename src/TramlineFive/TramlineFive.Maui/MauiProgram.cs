@@ -1,6 +1,8 @@
 ﻿using Android.Graphics.Drawables;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
+using Microsoft.Maui.LifecycleEvents;
 using SkgtService.Parsers;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using TramlineFive.Common.Services;
@@ -8,6 +10,7 @@ using TramlineFive.Common.ViewModels.Locator;
 using TramlineFive.Maui.Services;
 using TramlineFive.Services.Main;
 using Xamarin.CommunityToolkit.Effects;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace TramlineFive.Maui
 {
@@ -20,6 +23,7 @@ namespace TramlineFive.Maui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseSkiaSharp(true)
                 .ConfigureFonts(fonts =>
                 {
                     //fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -33,8 +37,7 @@ namespace TramlineFive.Maui
                     fonts.AddFont("MaterialIconsSharpRegular.otf", "mis");
                     fonts.AddFont("MaterialIconsTwoToneRegular.otf", "mit");
                 })
-                //.UseMauiCommunityToolkit()
-                .UseSkiaSharp()
+                .UseMauiCommunityToolkit()
                 .UseMauiCompatibility()
                 //.ConfigureMauiHandlers(handlers =>
                 //{

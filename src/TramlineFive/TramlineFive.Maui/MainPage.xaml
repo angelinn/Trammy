@@ -9,12 +9,14 @@
              NavigationPage.HasNavigationBar="False"
              BindingContext="{Binding MainViewModel, Source={StaticResource Locator}}">
 
+   
     <ContentPage.Resources>
         <ResourceDictionary>
             <cv:InverseBoolConverter x:Key="InverseBool" />
             <cv:BoolToColorConverter x:Key="BoolToColor" />
         </ResourceDictionary>
     </ContentPage.Resources>
+
 
     <AbsoluteLayout>
         <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">

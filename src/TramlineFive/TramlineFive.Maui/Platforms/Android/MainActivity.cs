@@ -22,7 +22,7 @@ using TramlineFive.Maui.Services;
 
 namespace TramlineFive.Maui
 {
-    [Activity(Label = "Tramline Five", Icon = "@mipmap/tramline", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Tramline Five", Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : MauiAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
@@ -30,23 +30,32 @@ namespace TramlineFive.Maui
             //TabLayoutResource = Resource.Layout.Tabbar;
             //ToolbarResource = Resource.Layout.Toolbar;
 
-            base.Window.RequestFeature(WindowFeatures.ActionBar);
+            //base.Window.RequestFeature(WindowFeatures.ActionBar);
+            //base.Window.RequestFeature(WindowFeatures.ActionModeOverlay);
             // Name of the MainActivity theme you had there before.
             // Or you can use global::Android.Resource.Style.ThemeHoloLight
-            base.SetTheme(Resource.Style.MainTheme);
+            //base.SetTheme(Resource.Style.TramTheme);
+            //ActionBar.Hide();
+            //base.Window.RequestFeature(WindowFeatures./*ActionBarOverlay*/);
 
             base.OnCreate(bundle);
+            //base.SetTheme(Resource.Style.TramTheme);
+            //Window.SetFlags(WindowManagerFlags.TranslucentStatus, WindowManagerFlags.TranslucentStatus);
+            Window.SetStatusBarColor(Android.Graphics.Color.Transparent); 
+            var s = SystemUiFlags.LayoutFullscreen | SystemUiFlags.LayoutStable;
+            FindViewById(Android.Resource.Id.Content).SystemUiVisibility = (StatusBarVisibility)s;
 
-            //global::Xamarin.Forms.Forms.Init(this, bundle);
-            //Xamarin.Essentials.Platform.Init(this, bundle); // add this line to your code, it may also be called: bundle
+        //global::Xamarin.Forms.Forms.Init(this, bundle);
+        //Xamarin.Essentials.Platform.Init(this, bundle); // add this line to your code, it may also be called: bundle
 
-            ToastService.Init(this);
+        ToastService.Init(this);
             PermissionService.Init(this);
             PushService.SetContext(this);
 
             InitFontScale();
             Messenger.Default.Register<ChangeThemeMessage>(this, OnThemeChanged);
 
+           
             //LoadApplication(new App());
 
             AndroidEnvironment.UnhandledExceptionRaiser += delegate (object sender, RaiseThrowableEventArgs args) {
