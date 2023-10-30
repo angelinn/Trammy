@@ -10,12 +10,13 @@
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}">
+             BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}"
+             Padding="0">
 
-        <!--<ContentPage.Behaviors>
-            <mct:StatusBarBehavior StatusBarColor="Transparent" StatusBarStyle="LightContent" />
-        </ContentPage.Behaviors>-->
-
+        <ContentPage.Behaviors>
+            <mct:StatusBarBehavior StatusBarColor="DodgerBlue" StatusBarStyle="LightContent" />
+        </ContentPage.Behaviors>
+    
     <ContentPage.Resources> 
         <ResourceDictionary>
             <cv:ColorConverter x:Key="ColorConverter" />
@@ -25,7 +26,7 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout>
-        <mapsui:MapView x:Name="map" VerticalOptions="FillAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"
+        <mapsui:MapView x:Name="map" VerticalOptions="FillAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"
                             IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False">
             <mapsui:MapView.Behaviors>
                 <d:EventToCommandBehavior EventName="Info" Command="{Binding MapInfoCommand}" />
