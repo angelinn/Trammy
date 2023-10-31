@@ -39,7 +39,7 @@
                                         <StackLayout Spacing="0" VerticalOptions="Center" Grid.Column="1">
                                             <StackLayout Orientation="Horizontal">
                                                 <Label Text="{Binding Name}" />
-                                                <Label Text="{Binding StopCode, StringFormat='({0})'}" />
+                                                <Label Text="{Binding StopCode, StringFormat=' ({0})'}" />
                                             </StackLayout>
 
                                             <Label Text="{Binding TimeStamp, StringFormat='{0:dd MMM, hh:mm}'}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" Margin="0,5,0,0" />
