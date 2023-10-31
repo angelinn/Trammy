@@ -57,8 +57,8 @@ namespace TramlineFive.Pages
             //Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height - slideMenu.HeightRequest + 30);
 
             await slideMenu.TranslateTo(0, 0, 400);
-            await map.LayoutTo(new Rect(0, 0, Width, Height - slideMenu.HeightRequest + 30));
-            //map.HeightRequest = Height - slideMenu.HeightRequest + 30;
+            //await map.LayoutTo(new Rect(0, 0, Width, Height - slideMenu.HeightRequest + 30));
+            map.HeightRequest = Height - slideMenu.HeightRequest + 30;
             //AbsoluteLayout.SetLayoutFlags(map, AbsoluteLayoutFlags.PositionProportional | AbsoluteLayoutFlagks.WidthProportional);
             //AbsoluteLayout.SetLayoutBounds(map, new Rect(1, 1, 1, Height - slideMenu.HeightRequest + 30));
             //animation.Commit(map, "ShowMap", 256, 400);
@@ -68,11 +68,11 @@ namespace TramlineFive.Pages
         {
             //Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height);
 
-            //map.HeightRequest = Height;
+            map.HeightRequest = Height;
 
             //AbsoluteLayout.SetLayoutFlags(map, AbsoluteLayoutFlags.All);
             //AbsoluteLayout.SetLayoutBounds(map, new Rect(1, 1, 1, 1));
-            await map.LayoutTo(new Rect(0, 0, Width, Height));
+            //await map.LayoutTo(new Rect(0, 0, Width, Height));
             await slideMenu.TranslateTo(0, Height, 400);
             //animation.Commit(map, "Expand", 16, 400);
         }

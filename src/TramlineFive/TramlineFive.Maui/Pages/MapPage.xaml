@@ -26,7 +26,7 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout>
-        <mapsui:MapView x:Name="map" VerticalOptions="FillAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"
+        <mapsui:MapView x:Name="map" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"
                             IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False">
             <mapsui:MapView.Behaviors>
                 <d:EventToCommandBehavior EventName="Info" Command="{Binding MapInfoCommand}" />
