@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" package="com.TramlineFive.maui" android:versionName="3.5" android:versionCode="35">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" package="com.TramlineFive.maui" android:versionName="3.9" android:versionCode="39">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="31" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -10,6 +10,5 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.VIBRATE" />
-
 	<application android:label="Tramline Five" android:icon="@mipmap/tramline" />
 </manifest>
