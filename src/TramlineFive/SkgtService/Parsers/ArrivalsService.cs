@@ -3,6 +3,7 @@ using SkgtService.Exceptions;
 using SkgtService.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ public class ArrivalsService
     private const string OPERA_USER_AGENT = @"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36 OPR/48.0.2685.35";
 
     private readonly HttpClient client = new HttpClient();
-    
+
     public ArrivalsService()
     {
         client.DefaultRequestHeaders.Add("User-Agent", OPERA_USER_AGENT);
@@ -33,6 +34,28 @@ public class ArrivalsService
         }
 
         string json = await response.Content.ReadAsStringAsync();
-        return JsonConvert.DeserializeObject<StopInfo>(json);
+        StopInfo info = JsonConvert.DeserializeObject<StopInfo>(json);
+        List<Route> routes = await StopsLoader.LoadRoutesAsync();
+
+        foreach (Line line in info.Lines)
+        {
+            foreach (Route route in routes.Where(r => r.Name.Replace("Е", "E") == line.Name))
+            {
+                // If stop is present in both ways it would mean it's a last stop, get the route whose first stop it is
+                List<Way> ways = route.Routes.Where(w => w.Codes.Contains(stopCode)).ToList();
+                if (ways.Count == 0)
+                    continue;
+
+                Way way = ways.Count > 1 ? ways.FirstOrDefault(w => w.Codes[0] == stopCode) : ways[0];
+                
+                if (way != null)
+                {
+                    line.Direction = $"{StopsLoader.StopsHash[way.Codes[0]].PublicName} -> {StopsLoader.StopsHash[way.Codes[^1]].PublicName}";
+                    break;
+                }
+            }
+        }
+
+        return info;
     }
 }

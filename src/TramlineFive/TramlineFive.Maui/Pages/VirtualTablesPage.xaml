@@ -66,7 +66,7 @@
                         </Grid>
                     </Grid>
 
-                    <ListView Margin="5,0,5,0" Grid.Row="1" SeparatorVisibility="None" BackgroundColor="{DynamicResource BackgroundColor}" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="110" SelectedItem="{Binding Selected, Mode=TwoWay}">
+                    <ListView Margin="5,0,5,0" Grid.Row="1" SeparatorVisibility="None" BackgroundColor="{DynamicResource BackgroundColor}" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="115" SelectedItem="{Binding Selected, Mode=TwoWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
@@ -82,9 +82,15 @@
                                                     <ColumnDefinition Width="100" />
                                                 </Grid.ColumnDefinitions>
                                                 <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
-                                                    <Label Text="{Binding Name}" TextColor="White" FontSize="40" Margin="0,-5,0,0" />
-                                                    <Label Text="{Binding TransportType}" TextColor="White" />
-                                                    <Label Text="{Binding LastCalculated}" TextColor="White" />
+                                                    <Label Text="{Binding Name}" TextColor="White" FontSize="40" Margin="0,0,0,0" />
+                                                    <StackLayout Orientation="Horizontal">
+                                                        <Label Text="{Binding Direction}" TextColor="White" Margin="0,0,0,0" />
+                                                    </StackLayout>
+
+                                                    <StackLayout Orientation="Horizontal">
+                                                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="20" Margin="0,0,5,0" TextColor="YellowGreen" />
+                                                        <Label Text="{Binding LastCalculated}" TextColor="White" />
+                                                    </StackLayout>
                                                 </StackLayout>
                                                 <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0">
                                                     <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>

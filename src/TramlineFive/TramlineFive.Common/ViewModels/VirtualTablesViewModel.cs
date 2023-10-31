@@ -128,6 +128,7 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
+
         private Line selected;
         public Line Selected
         {
