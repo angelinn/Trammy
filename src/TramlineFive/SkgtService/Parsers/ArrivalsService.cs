@@ -35,23 +35,21 @@ public class ArrivalsService
 
         string json = await response.Content.ReadAsStringAsync();
         StopInfo info = JsonConvert.DeserializeObject<StopInfo>(json);
-        List<Route> routes = await StopsLoader.LoadRoutesAsync();
+        var routes = await StopsLoader.LoadRoutesAsync();
 
         foreach (Line line in info.Lines)
         {
-            foreach (Route route in routes.Where(r => r.Name.Replace("Е", "E") == line.Name))
+            // routes.json comes with cyrilic E
+            List<Way> ways = routes[line.VehicleType][line.Name.Replace("E", "Е")];
+            if (ways.Count > 0)
             {
-                // If stop is present in both ways it would mean it's a last stop, get the route whose first stop it is
-                List<Way> ways = route.Routes.Where(w => w.Codes.Contains(stopCode)).ToList();
-                if (ways.Count == 0)
-                    continue;
+                List<Way> waysWithStop = ways.Where(w => w.Codes.FirstOrDefault(code => code == stopCode) != null).ToList();
+                Way way = waysWithStop.Count > 1 ? waysWithStop.FirstOrDefault(w => w.Codes[0] == stopCode) : waysWithStop[0];
 
-                Way way = ways.Count > 1 ? ways.FirstOrDefault(w => w.Codes[0] == stopCode) : ways[0];
-                
                 if (way != null)
                 {
-                    line.Direction = $"{StopsLoader.StopsHash[way.Codes[0]].PublicName} -> {StopsLoader.StopsHash[way.Codes[^1]].PublicName}";
-                    break;
+                    line.Start = StopsLoader.StopsHash[way.Codes[0]].PublicName;
+                    line.Direction = StopsLoader.StopsHash[way.Codes[^1]].PublicName;
                 }
             }
         }

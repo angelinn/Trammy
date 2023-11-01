@@ -9,6 +9,7 @@ namespace SkgtService.Models;
 public class Line
 {
     public string Name { get; set; }
+    public string Start { get; set; }
     public string Direction { get; set; }
     [JsonProperty("vehicle_type")]
     public string VehicleType { get; set; }

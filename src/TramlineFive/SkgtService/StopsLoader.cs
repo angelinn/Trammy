@@ -21,7 +21,8 @@ public static class StopsLoader
     public static event EventHandler OnStopsUpdated;
     public static List<StopLocation> Stops { get; private set; }
     public static Dictionary<string, StopLocation> StopsHash { get; private set; }
-    public static List<Route> Routes { get; private set; }
+
+    public static Dictionary<string, Dictionary<string, List<Way>>> Routes { get; private set; }
 
     public static void Initialize(string basePath)
     {
@@ -36,8 +37,11 @@ public static class StopsLoader
             await UpdateStopsAsync();
         }
 
-        string json = File.ReadAllText(PATH);
-        Stops = JsonConvert.DeserializeObject<List<StopLocation>>(json);
+        if (Stops == null)
+        {
+            string json = File.ReadAllText(PATH);
+            Stops = JsonConvert.DeserializeObject<List<StopLocation>>(json);
+        }
 
         if (StopsHash == null)
         {
@@ -51,15 +55,30 @@ public static class StopsLoader
         return Stops;
     }
 
-    public static async Task<List<Route>> LoadRoutesAsync()
+    public static async Task<Dictionary<string, Dictionary<string, List<Way>>>> LoadRoutesAsync()
     {
         if (!File.Exists(ROUTES_PATH))
         {
             await UpdateRoutesAsync();
         }
- 
-        string json = File.ReadAllText(ROUTES_PATH);
-        Routes = JsonConvert.DeserializeObject<List<MainRouteObject>>(json).SelectMany(r => r.Lines).ToList();
+
+        if (Routes == null)
+        {
+             string json = File.ReadAllText(ROUTES_PATH);
+            List<Routes> routes = JsonConvert.DeserializeObject<List<Routes>>(json);
+
+            Routes = new Dictionary<string, Dictionary<string, List<Way>>>();
+            foreach (Routes route in routes)
+            {
+                Dictionary<string, List<Way>> singleLineRoutes = new Dictionary<string, List<Way>>();
+                foreach (Route line in route.Lines)
+                {
+                    singleLineRoutes.Add(line.Name, line.Routes);
+                }
+
+                Routes.Add(route.Type, singleLineRoutes);
+            }
+        }
 
         return Routes;
     }

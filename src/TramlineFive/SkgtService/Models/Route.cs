@@ -17,8 +17,9 @@ namespace SkgtService.Models
         public List<Way> Routes { get; set; }
     }
 
-    public class MainRouteObject
+    public class Routes
     {
+        public string Type{ get; set; }
         public List<Route> Lines { get; set; }
     }
 }
