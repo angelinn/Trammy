@@ -1,4 +1,4 @@
-name: TramlineFive Build
+name: Build
 
 on:
   push:
