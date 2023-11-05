@@ -46,4 +46,4 @@ jobs:
         run: dotnet restore src/TramlineFive/TramlineFive.Maui/TramlineFive.Maui.csproj
 
       - name: Build MAUI Android
-        run: dotnet build src/TramlineFive/TramlineFive.Maui/TramlineFive.Maui.csproj -c Release -f net7.0-android --no-restore
+        run: dotnet build src/TramlineFive/TramlineFive.Maui/TramlineFive.Maui.csproj -c Debug --no-restore
