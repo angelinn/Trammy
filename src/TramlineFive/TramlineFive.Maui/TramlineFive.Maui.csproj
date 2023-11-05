@@ -142,6 +142,12 @@
 	  <Compile Update="Pages\AboutPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
+	  <Compile Update="Pages\TrolleysTab.xaml.cs">
+	    <DependentUpon>TrolleysTab.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\TramsTab.xaml.cs">
+	    <DependentUpon>TramsTab.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Pages\FavouritesPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
@@ -150,6 +156,9 @@
 	  </Compile>
 	  <Compile Update="Pages\LicensesPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\BusesTab.xaml.cs">
+	    <DependentUpon>BusesTab.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Pages\LocationPromptPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
@@ -188,6 +197,12 @@
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\TrolleysTab.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\TramsTab.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\FavouritesPage.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -199,6 +214,9 @@
 	  <MauiXaml Update="Pages\LicensesPage.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\BusesTab.xaml">
+	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\LocationPromptPage.xaml">
 	    <SubType>Designer</SubType>

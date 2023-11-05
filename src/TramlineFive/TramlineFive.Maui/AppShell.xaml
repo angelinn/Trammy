@@ -50,6 +50,15 @@
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="history" />
             </ShellContent.Icon>
         </ShellContent>
+        <Tab Route="Lines" Title="Линии" >
+            <Tab.Icon>
+                <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="departure_board" />
+            </Tab.Icon>
+
+            <ShellContent Route="Bus" Title="Автобуси" ContentTemplate="{DataTemplate pages:BusesTab}" />
+            <ShellContent Route="Tram" Title="Трамваи" ContentTemplate="{DataTemplate pages:TramsTab}" />
+            <ShellContent Route="Trolley" Title="Тролеи" ContentTemplate="{DataTemplate pages:TrolleysTab}" />
+        </Tab>
         <ShellContent Route="About" Title="Информация">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="info" />

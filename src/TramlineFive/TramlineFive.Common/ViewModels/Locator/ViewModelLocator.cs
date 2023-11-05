@@ -27,6 +27,7 @@ namespace TramlineFive.Common.ViewModels.Locator
         public LicensesViewModel LicensesViewModel => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // SimpleIoc.Default.GetInstance<LicensesViewModel>();
         public MapViewModel MapViewModel => ServiceContainer.ServiceProvider.GetService<MapViewModel>();
         public MainViewModel MainViewModel => ServiceContainer.ServiceProvider.GetService<MainViewModel>();// => ServiceContainer.ServiceProvider.GetService<MainViewModel>(); // SimpleIoc.Default.GetInstance<MainViewModel>();
+        public LinesViewModel LinesViewModel => ServiceContainer.ServiceProvider.GetService<LinesViewModel>();
     }
 
     public static class ViewModelExtensions
@@ -42,6 +43,7 @@ namespace TramlineFive.Common.ViewModels.Locator
             services.AddSingleton<FavouritesViewModel>();
             services.AddSingleton<LicensesViewModel>();
             services.AddSingleton<MainViewModel>();
+            services.AddSingleton<LinesViewModel>();
         }
     }
 }
