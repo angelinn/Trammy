@@ -41,8 +41,9 @@ public class ArrivalsService
 
         foreach (Line line in info.Lines)
         {
+            DateTime firstArrival = DateTime.Parse(line.Arrivals[0].Time);
             // some lines come with negative arrival times
-            if (DateTime.Parse(line.Arrivals[0].Time) < DateTime.Now)
+            if (firstArrival < DateTime.Now || firstArrival > DateTime.Now.AddHours(5))
             {
                 pendingDelete.Add(line);
                 continue;
