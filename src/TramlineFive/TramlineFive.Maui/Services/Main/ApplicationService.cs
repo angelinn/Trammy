@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -115,7 +117,25 @@ public class ApplicationService : IApplicationService
 
     public void DisplayToast(string message)
     {
-        Device.BeginInvokeOnMainThread(() => toastService.ShowToast(message));
+        IToast toast = Toast.Make(message);
+        toast.Show();
+    }
+
+    public void MakeSnack(string message)
+    {
+        SnackbarOptions options = new SnackbarOptions
+        {
+            BackgroundColor = Colors.DodgerBlue,
+            TextColor = Colors.White,
+            ActionButtonTextColor = Colors.White,
+            CornerRadius = new CornerRadius(10),
+            Font = Microsoft.Maui.Font.SystemFontOfSize(16),
+            ActionButtonFont = Microsoft.Maui.Font.OfSize(null, 18, enableScaling: false),
+        };
+
+        ISnackbar snack = Snackbar.Make(message, visualOptions: options);
+
+        snack.Show();
     }
 
     public void DisplayNotification(string title, string message)

@@ -120,7 +120,8 @@ namespace TramlineFive.Common.ViewModels
             }
             catch (StopNotFoundException)
             {
-                await ApplicationService.DisplayAlertAsync("Няма данни", $"Няма данни за спирка {stopCode}.", "OK");
+                ApplicationService.MakeSnack($"\nНяма данни за спирка {stopCode}.\n");
+                IsLoading = false;
             }
             catch (Exception e)
             {
