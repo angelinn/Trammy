@@ -48,7 +48,6 @@ namespace TramlineFive.Maui
         //global::Xamarin.Forms.Forms.Init(this, bundle);
         //Xamarin.Essentials.Platform.Init(this, bundle); // add this line to your code, it may also be called: bundle
 
-        ToastService.Init(this);
             PermissionService.Init(this);
             PushService.SetContext(this);
 

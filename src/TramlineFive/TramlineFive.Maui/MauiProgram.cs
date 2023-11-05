@@ -80,7 +80,6 @@ namespace TramlineFive.Maui
             services.AddSingleton<VersionCheckingService>();
             services.AddSingleton<PermissionService>();
             services.AddSingleton<PushService>();
-            services.AddSingleton<ToastService>();
 
             ServiceProvider = services.BuildServiceProvider();
             ServiceContainer.ServiceProvider = ServiceProvider;

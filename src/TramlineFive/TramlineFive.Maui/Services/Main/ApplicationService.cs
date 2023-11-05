@@ -13,13 +13,11 @@ namespace TramlineFive.Services.Main;
 public class ApplicationService : IApplicationService
 {
     private readonly PermissionService permissionService;
-    private readonly ToastService toastService;
     private readonly PushService pushService;
 
-    public ApplicationService(PermissionService permissionService, ToastService toastService, PushService pushService)
+    public ApplicationService(PermissionService permissionService, PushService pushService)
     {
         this.permissionService = permissionService;
-        this.toastService = toastService;
         this.pushService = pushService;
     }
 
