@@ -37,8 +37,17 @@ public class ArrivalsService
         StopInfo info = JsonConvert.DeserializeObject<StopInfo>(json);
         var routes = await StopsLoader.LoadRoutesAsync();
 
+        List<Line> pendingDelete = new();
+
         foreach (Line line in info.Lines)
         {
+            // some lines come with negative arrival times
+            if (DateTime.Parse(line.Arrivals[0].Time) < DateTime.Now)
+            {
+                pendingDelete.Add(line);
+                continue;
+            }
+
             if (!routes.ContainsKey(line.VehicleType) || !routes[line.VehicleType].ContainsKey(line.Name.Replace("E", "Е")))
                 continue;
 
@@ -47,6 +56,12 @@ public class ArrivalsService
             if (ways.Count > 0)
             {
                 List<Way> waysWithStop = ways.Where(w => w.Codes.FirstOrDefault(code => code == stopCode) != null).ToList();
+                if (waysWithStop.Count == 0)
+                {
+                    pendingDelete.Add(line);
+                    continue;
+                }
+
                 Way way = waysWithStop.Count > 1 ? waysWithStop.FirstOrDefault(w => w.Codes[0] == stopCode) : waysWithStop[0];
 
                 if (way != null)
@@ -56,6 +71,9 @@ public class ArrivalsService
                 }
             }
         }
+
+        foreach (Line line in pendingDelete)
+            info.Lines.Remove(line);
 
         return info;
     }
