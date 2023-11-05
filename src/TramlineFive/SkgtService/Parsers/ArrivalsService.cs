@@ -39,6 +39,9 @@ public class ArrivalsService
 
         foreach (Line line in info.Lines)
         {
+            if (!routes.ContainsKey(line.VehicleType) || !routes[line.VehicleType].ContainsKey(line.Name.Replace("E", "Е")))
+                continue;
+
             // routes.json comes with cyrilic E
             List<Way> ways = routes[line.VehicleType][line.Name.Replace("E", "Е")];
             if (ways.Count > 0)
