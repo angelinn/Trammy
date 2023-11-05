@@ -1,4 +1,4 @@
-# Трамвай №5 - Xamarin
+# Трамвай №5 - приложение за лесна проверка на градския транспорт
 [![Build status](https://github.com/angelinn/TramlineFive/actions/workflows/main.yml/badge.svg)](https://github.com/angelinn/TramlineFive/actions/workflows/main.yml/badge.svg)
 ![Made in Bulgaria](https://img.shields.io/static/v1?label=made%20in&message=Bulgaria&color=success)
 
@@ -18,7 +18,12 @@
 * Търсене на спирка по име/номер
 * Показване на спирки около потребителя при включено местоположение
 * Запазване на спирка в любими
-* История на търсенията 
+* История на търсенията
+
+## Идея и вдъхновение на проекта
+През далечната 2012 година нямаше приложение за Windows Mobile, което да прави проверки за градския транспорт. Това роди вдъхновението за направата на подобно приложение. 
+
+След приключването на Windows Mobile, приложението бе прехвърлено към Android, като идеята му е да използва само ресурси с отворен код, за да бъде максимално прозрачно и без реклами.
 
 ## Технологии
 * [.NET MAUI](https://github.com/dotnet/mauis)
