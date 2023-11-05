@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TramlineFive.Maui.Views.VirtualTablesViewCell"
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             Margin="0,0,0,5">
+
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="20" />
+        </Border.StrokeShape>
+        <Border.Resources>
+            <ResourceDictionary>
+                <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
+            </ResourceDictionary>
+        </Border.Resources>
+
+        <Grid Padding="5" BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
+                <Label Text="{Binding Name}" TextColor="White" FontSize="40" Margin="0,0,0,0" />
+                <StackLayout Orientation="Horizontal">
+                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe52e;" FontSize="21" Margin="0,0,5,0" TextColor="White" />
+                    <Label Text="{Binding Direction}" TextColor="White" Margin="0,0,0,0" />
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal">
+                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="21" Margin="0,0,5,0" TextColor="LightGoldenrodYellow" />
+                    <Label Text="{Binding LastCalculated}" TextColor="White" />
+                </StackLayout>
+            </StackLayout>
+            <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0">
+                <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>
+                <Label Text="минути" TextColor="White" HorizontalOptions="Center"  />
+            </StackLayout>
+        </Grid>
+    </Border>
+    

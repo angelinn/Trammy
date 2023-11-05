@@ -5,6 +5,7 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
+             xmlns:views="clr-namespace:TramlineFive.Maui.Views"
              BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
 
     <Grid.Resources>
@@ -66,39 +67,11 @@
                         </Grid>
                     </Grid>
 
-                    <ListView Margin="5,0,5,0" Grid.Row="1" SeparatorVisibility="None" BackgroundColor="{DynamicResource BackgroundColor}" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="115" SelectedItem="{Binding Selected, Mode=TwoWay}">
+                    <ListView Margin="5,0,5,0" Grid.Row="1" SeparatorVisibility="None" BackgroundColor="{DynamicResource BackgroundColor}" ItemsSource="{Binding StopInfo.Lines}" HorizontalOptions="FillAndExpand" RowHeight="120" SelectedItem="{Binding Selected, Mode=TwoWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <ViewCell.View>
-                                        <Border Margin="0,0,0,5" >
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="20" />
-                                            </Border.StrokeShape>
-
-                                            <Grid Padding="5" BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="100" />
-                                                </Grid.ColumnDefinitions>
-                                                <StackLayout Padding="10,0,0,0" Spacing="0" HorizontalOptions="Start">
-                                                    <Label Text="{Binding Name}" TextColor="White" FontSize="40" Margin="0,0,0,0" />
-                                                    <StackLayout Orientation="Horizontal">
-                                                        <Label Text="{Binding Direction}" TextColor="White" Margin="0,0,0,0" />
-                                                    </StackLayout>
-
-                                                    <StackLayout Orientation="Horizontal">
-                                                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="20" Margin="0,0,5,0" TextColor="YellowGreen" />
-                                                        <Label Text="{Binding LastCalculated}" TextColor="White" />
-                                                    </StackLayout>
-                                                </StackLayout>
-                                                <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0">
-                                                    <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>
-                                                    <Label Text="минути" TextColor="White" HorizontalOptions="Center"  />
-                                                </StackLayout>
-                                            </Grid>
-                                        </Border>
-                                    </ViewCell.View>
+                                    <views:VirtualTablesViewCell BindingContext="{Binding}" />
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
