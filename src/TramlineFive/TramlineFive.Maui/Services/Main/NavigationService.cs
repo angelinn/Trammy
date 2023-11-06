@@ -20,7 +20,7 @@ public class NavigationService : INavigationService
         //await (main.RootPage as MainPage).ToggleHamburgerAsync();
     }
 
-    public async void GoToDetails(LineViewModel line)
+    public async void GoToDetails(Common.Models.LineViewModel line)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>()
         {

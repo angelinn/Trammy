@@ -2,16 +2,17 @@ using TramlineFive.Common.ViewModels;
 
 namespace TramlineFive.Pages;
 
-public partial class TramsTab : ContentPage
+public partial class LinesTab : ContentPage
 {
-	public TramsTab()
+	public LinesTab()
 	{
 		InitializeComponent();
         search.WidthRequest = DeviceDisplay.Current.MainDisplayInfo.Width / DeviceDisplay.Current.MainDisplayInfo.Density;
     }
 
-    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
 	{
 		(BindingContext as LinesViewModel).SearchText = string.Empty;
+		await (BindingContext as LinesViewModel).LoadAsync();
 	}
 }

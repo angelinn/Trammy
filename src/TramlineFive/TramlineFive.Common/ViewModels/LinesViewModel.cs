@@ -14,18 +14,23 @@ using TramlineFive.Common.Models;
 
 namespace TramlineFive.Common.ViewModels
 {
-    public class LinesViewModel : BaseViewModel
+    public abstract class LinesViewModel : BaseViewModel
     {
-        public ObservableCollection<LineViewModel> Bus { get; set; } = new();
-        public ObservableCollection<LineViewModel> Tram { get; set; } = new();
-        public ObservableCollection<LineViewModel> Trolley { get; set; } = new();
+        private ObservableCollection<LineViewModel> lines;
+        public ObservableCollection<LineViewModel> Lines
+        {
+            get => lines;
+            set
+            {
+                lines = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        private Dictionary<string, List<LineViewModel>> lines = new Dictionary<string, List<LineViewModel>>();
+        private List<LineViewModel> allLines;
 
         public ICommand ItemSelectedCommand { get; private set; }
-        public ICommand FilterTrolleyCommand { get; private set; }
-        public ICommand FilterTramsCommand { get; private set; }
-        public ICommand FilterBusesCommand { get; private set; }
+        public ICommand FilterLinesCommand { get; private set; }
 
         public string SearchText { get; set; }
 
@@ -35,52 +40,34 @@ namespace TramlineFive.Common.ViewModels
         public LinesViewModel()
         {
             ItemSelectedCommand = new RelayCommand(OpenDetails);
-            FilterTrolleyCommand = new RelayCommand(FilterTrolleys);
-            FilterTramsCommand = new RelayCommand(FilterTrams);
-            FilterBusesCommand = new RelayCommand(FilterBuses);
+            FilterLinesCommand = new RelayCommand(FilterLines);
+        }
 
-            StopsLoader.LoadRoutesAsync().Wait();
-            lines = new(StopsLoader.Routes.Select(p => 
-                        new KeyValuePair<string, List<LineViewModel>>(p.Key, p.Value.Select(i => 
-                            new LineViewModel { Type = p.Key, Routes = i.Value, Name = i.Key }
-                        ).ToList())));
+        public abstract Task LoadAsync();
 
-            foreach (var item in lines)
-            {
-                if (item.Key == "bus")
-                    Bus = new(item.Value);
-                else if (item.Key == "tram")
-                    Tram = new(item.Value);
-                else if (item.Key == "trolley")
-                    Trolley = new(item.Value);
-            }
+        protected async Task LoadTypeAsync(string type)
+        {
+            if (allLines != null)
+                return;
 
+            await StopsLoader.LoadRoutesAsync();
+
+            allLines = new(StopsLoader.Routes.First(r => r.Key == type).Value.Select(p => new LineViewModel { Type = type, Routes = p.Value, Name = p.Key }));
+            Lines = new(allLines);
         }
 
         private void OpenDetails()
         {
             NavigationService.GoToDetails(SelectedLine);
+
+            SelectedLine = null;
+            RaisePropertyChanged(nameof(SelectedLine));
         }
 
-        private void FilterTrolleys()
+        private void FilterLines()
         {
-            Trolley = new ObservableCollection<LineViewModel>(lines["trolley"].Where(t => t.Name.Contains(SearchText)));
-
-            RaisePropertyChanged(nameof(Trolley));
+            Lines = new ObservableCollection<LineViewModel>(allLines.Where(t => t.Name.Contains(SearchText)));
         }
 
-        private void FilterTrams()
-        {
-            Tram = new ObservableCollection<LineViewModel>(lines["tram"].Where(t => t.Name.Contains(SearchText)));
-
-            RaisePropertyChanged(nameof(Tram));
-        }
-
-        private void FilterBuses()
-        {
-            Bus = new ObservableCollection<LineViewModel>(lines["bus"].Where(t => t.Name.Contains(SearchText)));
-
-            RaisePropertyChanged(nameof(Bus));
-        }
     }
 }

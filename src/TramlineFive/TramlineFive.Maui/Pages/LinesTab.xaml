@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TramlineFive.Pages.BusesTab"
+             x:Class="TramlineFive.Pages.LinesTab"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
-             BindingContext="{Binding LinesViewModel, Source={StaticResource Locator}}">
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             x:Name="Page">
+
+    <Shell.TitleView>
+        <HorizontalStackLayout VerticalOptions="Center">
+            <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="tram" TextColor="White" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" />
+            <Label Text="Линии на градски транспорт" TextColor="White" VerticalOptions="Center" Margin="10,0,0,0" FontSize="Medium" FontAttributes="Bold" />
+        </HorizontalStackLayout>
+    </Shell.TitleView>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:ColorConverter x:Key="Color" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
+        
         <SearchBar x:Name="search" Placeholder="Търси линия..." Margin="0" Text="{Binding SearchText}">
             <SearchBar.Behaviors>
-                <d:EventToCommandBehavior EventName="TextChanged" Command="{Binding FilterBusesCommand}" />
+                <d:EventToCommandBehavior EventName="TextChanged" Command="{Binding FilterLinesCommand}" />
             </SearchBar.Behaviors>
         </SearchBar>
-
-        <ListView Grid.Row="1" ItemsSource="{Binding Bus}" SelectedItem="{Binding SelectedLine}" RowHeight="60" SeparatorVisibility="None">
+        
+        <ListView Grid.Row="1" ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" RowHeight="60" SeparatorVisibility="None">
             <ListView.Behaviors>
                 <d:EventToCommandBehavior EventName="ItemSelected" Command="{Binding ItemSelectedCommand}" />
             </ListView.Behaviors>
@@ -32,13 +46,17 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="directions_bus" TextColor="Crimson" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="{Binding BindingContext.Icon, Source={x:Reference Page}}" 
+                                       TextColor="{Binding BindingContext.IconColor, Source={x:Reference Page}, Converter={StaticResource Color}}}" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" />   
+                                
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-
-                                    <Label Text="{Binding Name, StringFormat='Автобус {0}'}" VerticalOptions="Center" />
+                                    <HorizontalStackLayout>
+                                        <Label Text="{Binding BindingContext.Type, Source={x:Reference Page}}" />
+                                        <Label Text="{Binding Name, StringFormat=' {0}'}" VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
                                     <HorizontalStackLayout Margin="0,5,0,0">
                                         <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="arrow_right_alt" TextColor="Gray" HorizontalOptions="Center" VerticalOptions="Center" />
-                                        
+
                                         <Label Text="{Binding Routes[0].First}" VerticalOptions="Center" FontSize="11" Margin="5,0,0,0" />
                                         <Label Text=" - " FontSize="11" />
                                         <Label Text="{Binding Routes[0].Last}" VerticalOptions="Center" FontSize="11"  />
@@ -51,6 +69,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-    </Grid> 
+
+    </Grid>
 </ContentPage>
     

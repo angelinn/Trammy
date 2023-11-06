@@ -142,11 +142,8 @@
 	  <Compile Update="Pages\AboutPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\TrolleysTab.xaml.cs">
-	    <DependentUpon>TrolleysTab.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\TramsTab.xaml.cs">
-	    <DependentUpon>TramsTab.xaml</DependentUpon>
+	  <Compile Update="Pages\LinesTab.xaml.cs">
+	    <DependentUpon>LinesTab.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Pages\FavouritesPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
@@ -156,9 +153,6 @@
 	  </Compile>
 	  <Compile Update="Pages\LicensesPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\BusesTab.xaml.cs">
-	    <DependentUpon>BusesTab.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Pages\LocationPromptPage.xaml.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
@@ -200,10 +194,7 @@
 	  <MauiXaml Update="Pages\LineDetails.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\TrolleysTab.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\TramsTab.xaml">
+	  <MauiXaml Update="Pages\LinesTab.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\FavouritesPage.xaml">
@@ -217,9 +208,6 @@
 	  <MauiXaml Update="Pages\LicensesPage.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\BusesTab.xaml">
-	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\LocationPromptPage.xaml">
 	    <SubType>Designer</SubType>
@@ -244,6 +232,9 @@
 	  <MauiXaml Update="Themes\LightTheme.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\StopsList.xaml">
+	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\VirtualTablesViewCell.xaml">
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>

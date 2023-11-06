@@ -6,6 +6,7 @@ using System.Text;
 using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using TramlineFive.Common.Services;
+using TramlineFive.Common.Models;
 
 namespace System.Runtime.CompilerServices
 {
@@ -27,8 +28,13 @@ namespace TramlineFive.Common.ViewModels.Locator
         public LicensesViewModel LicensesViewModel => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // SimpleIoc.Default.GetInstance<LicensesViewModel>();
         public MapViewModel MapViewModel => ServiceContainer.ServiceProvider.GetService<MapViewModel>();
         public MainViewModel MainViewModel => ServiceContainer.ServiceProvider.GetService<MainViewModel>();// => ServiceContainer.ServiceProvider.GetService<MainViewModel>(); // SimpleIoc.Default.GetInstance<MainViewModel>();
-        public LinesViewModel LinesViewModel => ServiceContainer.ServiceProvider.GetService<LinesViewModel>();
-        public LineDetailsViewModel LineDetailsViewModel => ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>();
+        public LineViewModel LinesViewModel => ServiceContainer.ServiceProvider.GetService<LineViewModel>();
+        public LineDetailsViewModel LineDetailsViewModel => ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>(); 
+        public BusLinesViewModel BusLinesViewModel => ServiceContainer.ServiceProvider.GetService<BusLinesViewModel>();
+        public TramLinesViewModel TramLinesViewModel => ServiceContainer.ServiceProvider.GetService<TramLinesViewModel>();
+        public TrolleyLinesViewModel TrolleyLinesViewModel => ServiceContainer.ServiceProvider.GetService<TrolleyLinesViewModel>();
+
+
     }
 
     public static class ViewModelExtensions
@@ -44,7 +50,9 @@ namespace TramlineFive.Common.ViewModels.Locator
             services.AddSingleton<FavouritesViewModel>();
             services.AddSingleton<LicensesViewModel>();
             services.AddSingleton<MainViewModel>();
-            services.AddSingleton<LinesViewModel>();
+            services.AddSingleton<BusLinesViewModel>();
+            services.AddSingleton<TramLinesViewModel>();
+            services.AddSingleton<TrolleyLinesViewModel>();
             services.AddSingleton<LineDetailsViewModel>();
         }
     }

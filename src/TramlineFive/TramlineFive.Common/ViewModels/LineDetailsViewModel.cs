@@ -12,8 +12,8 @@ namespace TramlineFive.Common.ViewModels;
 
 public class LineDetailsViewModel : BaseViewModel
 {
-    private LineViewModel line;
-    public LineViewModel Line
+    private Models.LineViewModel line;
+    public Models.LineViewModel Line
     {
         get => line;
         set

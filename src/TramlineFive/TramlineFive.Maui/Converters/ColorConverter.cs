@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AndroidX.AppCompat.View.Menu;
+using Microsoft.Maui.Graphics.Converters;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,9 +13,8 @@ namespace TramlineFive.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Type type = typeof(Color);
-            FieldInfo info = type.GetRuntimeField(value as string);
-            return info.GetValue(null);
+            ColorTypeConverter converter = new ColorTypeConverter();
+            return converter.ConvertFromInvariantString(value as string);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
