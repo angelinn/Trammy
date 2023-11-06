@@ -28,6 +28,7 @@ namespace TramlineFive.Common.ViewModels.Locator
         public MapViewModel MapViewModel => ServiceContainer.ServiceProvider.GetService<MapViewModel>();
         public MainViewModel MainViewModel => ServiceContainer.ServiceProvider.GetService<MainViewModel>();// => ServiceContainer.ServiceProvider.GetService<MainViewModel>(); // SimpleIoc.Default.GetInstance<MainViewModel>();
         public LinesViewModel LinesViewModel => ServiceContainer.ServiceProvider.GetService<LinesViewModel>();
+        public LineDetailsViewModel LineDetailsViewModel => ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>();
     }
 
     public static class ViewModelExtensions
@@ -44,6 +45,7 @@ namespace TramlineFive.Common.ViewModels.Locator
             services.AddSingleton<LicensesViewModel>();
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<LinesViewModel>();
+            services.AddSingleton<LineDetailsViewModel>();
         }
     }
 }

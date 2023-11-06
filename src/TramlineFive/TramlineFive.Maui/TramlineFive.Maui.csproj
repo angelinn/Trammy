@@ -197,6 +197,9 @@
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\LineDetails.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\TrolleysTab.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -9,6 +9,8 @@ namespace SkgtService.Models
     public class Way
     {
         public List<string> Codes { get; set; }
+        public string Last => StopsLoader.StopsHash[Codes[^1]].PublicName;
+        public string First => StopsLoader.StopsHash[Codes[0]].PublicName;
     }
 
     public class Route
