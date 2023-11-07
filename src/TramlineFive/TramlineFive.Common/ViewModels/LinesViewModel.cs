@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using NetTopologySuite.Index.HPRtree;
+using Octokit;
 using SkgtService;
 using SkgtService.Models;
 using System;

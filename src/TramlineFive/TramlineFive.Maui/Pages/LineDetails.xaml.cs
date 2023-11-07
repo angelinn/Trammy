@@ -1,21 +1,18 @@
 using TramlineFive.Common.Models;
 using TramlineFive.Common.ViewModels;
 
-namespace TramlineFive.Maui.Pages;
+namespace TramlineFive.Pages;
 
-public partial class LineDetails : ContentPage, IQueryAttributable
+public partial class LineDetails : ContentPage
 {
-    public Common.Models.LineViewModel Line { get; set; } 
-
     public LineDetails()
 	{
 		InitializeComponent();
 	}
 
-    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    protected override bool OnBackButtonPressed()
     {
-        Line = query["Line"] as Common.Models.LineViewModel;
-
-        BindingContext = Line;
+        Shell.Current.GoToAsync("//Lines");
+        return true;
     }
 }

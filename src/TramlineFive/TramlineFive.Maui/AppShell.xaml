@@ -50,7 +50,7 @@
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="history" />
             </ShellContent.Icon>
         </ShellContent>
-        <Tab Route="Lines" Title="Линии" Shell.BackgroundColor="DodgerBlue" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True">
+        <Tab Route="Lines" Shell.TabBarTitleColor="DodgerBlue" Title="Линии" Shell.BackgroundColor="DodgerBlue" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="departure_board" />
             </Tab.Icon>
@@ -72,6 +72,16 @@
 
             <pages:AboutPage />
         </ShellContent>
+
+        <Tab Route="LineDetails" Shell.BackgroundColor="DodgerBlue" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False">
+            <ShellContent Route="Forward" BindingContext="{Binding LineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
+                <pages:LineDetails BindingContext="{Binding}"  />
+            </ShellContent>
+
+            <ShellContent Route="Backward" BindingContext="{Binding ForwardLineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
+                <pages:LineDetails BindingContext="{Binding}" />
+            </ShellContent>
+        </Tab>
 
     </FlyoutItem>
 

@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using TramlineFive.Common.Messages;
-using TramlineFive.Maui.Pages;
+using TramlineFive.Pages;
 
 namespace TramlineFive.Maui
 {
@@ -27,7 +27,6 @@ namespace TramlineFive.Maui
             });
 
             Messenger.Default.Register<ChangePageMessage>(this, (m) => GoToAsync($"//{m.Page}"));
-            Routing.RegisterRoute("linedetails", typeof(LineDetails));
         }
     }
 }

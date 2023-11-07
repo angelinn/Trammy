@@ -19,6 +19,9 @@ namespace TramlineFive.Converters
                 "Тролей" => isLightTheme ? Colors.Blue : Colors.DarkBlue,
                 "Електробус" =>  isLightTheme ? Colors.Green : Colors.DarkGreen,
                 "Допълнителна" => isLightTheme ? Color.FromArgb("13b79d") : Color.FromArgb("13b79d"),
+                "bus" => Colors.Crimson,
+                "tram" => Colors.DarkOrange,
+                "trolley" => Colors.RoyalBlue,
                 _ => Colors.White,
             };
         }

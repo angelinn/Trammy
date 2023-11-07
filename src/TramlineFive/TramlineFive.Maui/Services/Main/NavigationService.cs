@@ -1,11 +1,11 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.Maui;
-using TramlineFive.Maui.Pages;
 using YamlDotNet.Core;
 
 namespace TramlineFive.Services.Main;
@@ -20,17 +20,13 @@ public class NavigationService : INavigationService
         //await (main.RootPage as MainPage).ToggleHamburgerAsync();
     }
 
-    public async void GoToDetails(Common.Models.LineViewModel line)
+    public async void GoToDetails(LineViewModel line)
     {
-        Dictionary<string, object> parameters = new Dictionary<string, object>()
-        {
-             { "Line",  line }
-        };
+        ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().Line = line;
+        ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().Route = line.Routes[0];
+        ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().Line = line;
+        ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().Route = line.Routes[^1];
 
-        await Shell.Current.GoToAsync("linedetails", parameters);
-
-        //Page main = Application.Current.MainPage;
-
-        //await main.PushAsync(new LineDetails(line));
+        await Shell.Current.GoToAsync("//LineDetails");
     }
 }
