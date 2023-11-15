@@ -1,4 +1,7 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Maui.Alerts;
+using GalaSoft.MvvmLight.Messaging;
+using SkgtService;
+using SkgtService.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,13 +23,46 @@ public class NavigationService : INavigationService
         //await (main.RootPage as MainPage).ToggleHamburgerAsync();
     }
 
-    public async void GoToDetails(LineViewModel line)
+    public void GoToDetails(Line line, string stop)
+    {
+        if (StopsLoader.Routes.ContainsKey(line.VehicleType) && StopsLoader.Routes[line.VehicleType].ContainsKey(line.Name))
+        {
+            LineViewModel lineViewModel = new LineViewModel
+            {
+                Name = line.Name,
+                Routes = StopsLoader.Routes[line.VehicleType][line.Name],
+                Type = line.VehicleType
+            };
+
+            GoToDetails(lineViewModel, stop);
+        }
+        else
+            Toast.Make($"Не може да се отиде на спирка {stop} за {line.Name}").Show();
+    }
+
+    public async void GoToDetails(LineViewModel line, string stop)
     {
         ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().Line = line;
-        ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().Route = line.Routes[0];
+        ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().Route = new RouteViewModel(line.Routes[0]);
         ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().Line = line;
-        ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().Route = line.Routes[^1];
+        ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().Route = new RouteViewModel(line.Routes[^1]);
 
-        await Shell.Current.GoToAsync("//LineDetails");
+        string tab = string.Empty;
+
+        if (!String.IsNullOrEmpty(stop))
+        {
+            if (line.Routes[0].Codes.Contains(stop))
+            {
+                tab = "Forward";
+                ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().SetHighlightedStop(stop);
+            }
+            else if (line.Routes[^1].Codes.Contains(stop))
+            {
+                tab = "Backward";
+                ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().SetHighlightedStop(stop);
+            }
+        }
+
+        await Shell.Current.GoToAsync($"//LineDetails/{tab}");
     }
 }

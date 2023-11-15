@@ -30,17 +30,27 @@ namespace TramlineFive.Common.ViewModels
 
         private List<LineViewModel> allLines;
 
-        public ICommand ItemSelectedCommand { get; private set; }
         public ICommand FilterLinesCommand { get; private set; }
 
         public string SearchText { get; set; }
 
-        public LineViewModel SelectedLine { get; set; }
+        private LineViewModel selectedLine;
+        public LineViewModel SelectedLine
+        {
+            get => selectedLine;
+            set
+            {
+                if (value != null)
+                    OpenDetails(value);
+
+                selectedLine = null;
+                RaisePropertyChanged();
+            }
+        }
 
 
         public LinesViewModel()
         {
-            ItemSelectedCommand = new RelayCommand(OpenDetails);
             FilterLinesCommand = new RelayCommand(FilterLines);
         }
 
@@ -57,12 +67,9 @@ namespace TramlineFive.Common.ViewModels
             Lines = new(allLines);
         }
 
-        private void OpenDetails()
+        private void OpenDetails(LineViewModel selected)
         {
-            NavigationService.GoToDetails(SelectedLine);
-
-            SelectedLine = null;
-            RaisePropertyChanged(nameof(SelectedLine));
+            NavigationService.GoToDetails(selected);
         }
 
         private void FilterLines()

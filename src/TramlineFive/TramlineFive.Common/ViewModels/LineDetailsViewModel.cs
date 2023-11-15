@@ -14,6 +14,31 @@ using TramlineFive.Common.ViewModels;
 
 namespace TramlineFive.Common.ViewModels;
 
+public class CodeViewModel
+{
+    public string Code { get; set; }
+    public bool IsHighlighted { get; set; }
+}
+
+public class RouteViewModel
+{
+    public RouteViewModel(Way route)
+    {
+        First = route.First;
+        Last = route.Last;
+        Codes = route.Codes.Select(code => new CodeViewModel { Code = code }).ToList();
+    }
+
+    public string First { get; set; }
+    public string Last { get; set; }
+    public List<CodeViewModel> Codes { get; set; }
+}
+
+public class ScrollToHighlightedStopMessage
+{
+    public CodeViewModel Item { get; set; }
+}
+
 public abstract class BaseLineDetailsViewModel : BaseViewModel
 {
     private LineViewModel line;
@@ -27,8 +52,18 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
         }
     }
 
-    private string selectedStop;
-    public string SelectedStop
+    public void SetHighlightedStop(string stop)
+    {
+        CodeViewModel code = route.Codes.FirstOrDefault(code => code.Code == stop);
+        if (code != null)
+        {
+            code.IsHighlighted = true;
+            MessengerInstance.Send(new ScrollToHighlightedStopMessage { Item = code });
+        }
+    }
+
+    private CodeViewModel selectedStop;
+    public CodeViewModel SelectedStop
     {
         get => selectedStop;
         set
@@ -39,15 +74,15 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
             if (value != null)
             {
                 MessengerInstance.Send(new ChangePageMessage("Map"));
-                MessengerInstance.Send(new StopSelectedMessage(value, true));
+                MessengerInstance.Send(new StopSelectedMessage(value.Code, true));
             }
         }
     }
 
     public string TargetStop => Route?.Last;
 
-    private Way route;
-    public Way Route
+    private RouteViewModel route;
+    public RouteViewModel Route
     {
         get => route;
         set

@@ -141,6 +141,9 @@ namespace TramlineFive.Common.ViewModels
             {
                 selected = null;
                 RaisePropertyChanged();
+
+                if (value != null)
+                    NavigationService.GoToDetails(value, stopCode);
             }
         }
 

@@ -22,12 +22,18 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ListView ItemsSource="{Binding Route.Codes}" RowHeight="60" SeparatorVisibility="None" SelectedItem="{Binding SelectedStop}">
+    <ListView x:Name="stopsList" ItemsSource="{Binding Route.Codes}" RowHeight="60" SeparatorVisibility="None" SelectedItem="{Binding SelectedStop}">
         <ListView.ItemTemplate>
             <DataTemplate>
                 <ViewCell>
                     <ViewCell.View>
-                        <Grid VerticalOptions="Center">
+                        <Grid VerticalOptions="Center" >
+                            <Grid.Triggers>
+                                <DataTrigger Binding="{Binding IsHighlighted}" TargetType="Grid" Value="True">
+                                    <Setter Property="Background" Value="LightGreen" />
+                                </DataTrigger>
+                            </Grid.Triggers>
+
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="55" />
                                 <ColumnDefinition Width="*" />
@@ -37,8 +43,8 @@
                             <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="#6057ff" Text="share_location" FontSize="32" VerticalOptions="Center" Margin="10,0,0,0" />
 
                             <VerticalStackLayout  Grid.Column="1">
-                                <Label Text="{Binding ., Converter={StaticResource CodeToText}}" FontSize="18" VerticalOptions="Center" />
-                                <Label Text="{Binding}" FontSize="14" VerticalOptions="Center" TextColor="Gray" />
+                                <Label Text="{Binding Code, Converter={StaticResource CodeToText}}" FontSize="18" VerticalOptions="Center" />
+                                <Label Text="{Binding Code}" FontSize="14" VerticalOptions="Center" TextColor="Gray" />
                             </VerticalStackLayout>
 
                             <Label Grid.Column="2" FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="#6057ff" Text="chevron_right" FontSize="32" Margin="0,0,0,0" VerticalOptions="Center" />

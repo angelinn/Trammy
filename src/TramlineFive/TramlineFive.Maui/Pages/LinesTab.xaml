@@ -30,11 +30,8 @@
                 <d:EventToCommandBehavior EventName="TextChanged" Command="{Binding FilterLinesCommand}" />
             </SearchBar.Behaviors>
         </SearchBar>
-        
-        <ListView Grid.Row="1" ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine}" RowHeight="60" SeparatorVisibility="None">
-            <ListView.Behaviors>
-                <d:EventToCommandBehavior EventName="ItemSelected" Command="{Binding ItemSelectedCommand}" />
-            </ListView.Behaviors>
+
+        <ListView Grid.Row="1" ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine, Mode=TwoWay}" RowHeight="60" SeparatorVisibility="None">
 
             <ListView.ItemTemplate>
                 <DataTemplate>
