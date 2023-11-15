@@ -43,17 +43,17 @@ public class ArrivalsService
         {
             DateTime firstArrival = DateTime.Parse(line.Arrivals[0].Time);
             // some lines come with negative arrival times
-            if (firstArrival < DateTime.Now || firstArrival > DateTime.Now.AddHours(5))
+            if ((DateTime.Now - firstArrival) > TimeSpan.FromMinutes(5) || firstArrival > DateTime.Now.AddHours(5))
             {
                 pendingDelete.Add(line);
                 continue;
             }
 
-            if (!routes.ContainsKey(line.VehicleType) || !routes[line.VehicleType].ContainsKey(line.Name.Replace("E", "Е")))
+            if (!routes.ContainsKey(line.VehicleType) || !routes[line.VehicleType].ContainsKey(line.Name.Replace("E", "Е").Replace("TM", "-ТМ")))
                 continue;
 
             // routes.json comes with cyrilic E
-            List<Way> ways = routes[line.VehicleType][line.Name.Replace("E", "Е")];
+            List<Way> ways = routes[line.VehicleType][line.Name.Replace("E", "Е").Replace("TM", "-ТМ")];
             if (ways.Count > 0)
             {
                 List<Way> waysWithStop = ways.Where(w => w.Codes.FirstOrDefault(code => code == stopCode) != null).ToList();
