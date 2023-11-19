@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
+using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
 
 namespace TramlineFive.Common.ViewModels;
@@ -41,6 +42,9 @@ public class ScrollToHighlightedStopMessage
 
 public abstract class BaseLineDetailsViewModel : BaseViewModel
 {
+    private readonly LineMapService lineMapService = new LineMapService();
+    public LineMapService LineMapService => lineMapService;
+
     private LineViewModel line;
     public LineViewModel Line
     {
@@ -60,6 +64,14 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
             code.IsHighlighted = true;
             MessengerInstance.Send(new ScrollToHighlightedStopMessage { Item = code });
         }
+    }
+
+    public void Load(LineViewModel line, Way route)
+    {
+        Line = line;
+        Route = new RouteViewModel(route);
+
+        lineMapService.SetupMapAsync(line.Name, line.Type, route);
     }
 
     private CodeViewModel selectedStop;

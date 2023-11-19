@@ -17,6 +17,9 @@
 
   <ItemGroup>
     <None Remove="licenses.yaml" />
+    <None Remove="MTS_Bus_icon.svg" />
+    <None Remove="MTS_Bus_icon_finish.svg" />
+    <None Remove="MTS_Bus_icon_start.svg" />
     <None Remove="person.png" />
     <None Remove="pin.png" />
     <None Remove="pin.svg" />
@@ -27,6 +30,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="licenses.yaml" />
+    <EmbeddedResource Include="MTS_Bus_icon_finish.svg" />
+    <EmbeddedResource Include="MTS_Bus_icon_start.svg" />
+    <EmbeddedResource Include="MTS_Bus_icon.svg" />
     <EmbeddedResource Include="person.png" />
     <EmbeddedResource Include="pin.png" />
     <EmbeddedResource Include="location.svg" />

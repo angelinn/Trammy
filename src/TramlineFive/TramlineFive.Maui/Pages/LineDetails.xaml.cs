@@ -13,7 +13,15 @@ public partial class LineDetails : ContentPage
         {
             stopsList.ScrollTo(m.Item, ScrollToPosition.Center, true);
         });
-	}
+
+        BindingContextChanged += LineDetails_BindingContextChanged;
+    }
+
+    private void LineDetails_BindingContextChanged(object sender, EventArgs e)
+    {
+        if (BindingContext != null)
+            (BindingContext as BaseLineDetailsViewModel).LineMapService.Map = map.Map;
+    }
 
     protected override bool OnBackButtonPressed()
     {

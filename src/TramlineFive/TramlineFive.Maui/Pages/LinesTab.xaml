@@ -44,7 +44,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="{Binding BindingContext.Icon, Source={x:Reference Page}}" 
-                                       TextColor="{Binding BindingContext.IconColor, Source={x:Reference Page}, Converter={StaticResource Color}}}" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" />   
+                                       TextColor="{Binding BindingContext.IconColor, Source={x:Reference Page}, Converter={StaticResource Color}}" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" />   
                                 
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                                     <HorizontalStackLayout>

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SkgtService.Exceptions;
 using SkgtService.Models;
 using SkgtService.Models.Locations;
 using System;
@@ -64,7 +65,7 @@ public static class StopsLoader
 
         if (Routes == null)
         {
-             string json = File.ReadAllText(ROUTES_PATH);
+            string json = File.ReadAllText(ROUTES_PATH);
             List<Routes> routes = JsonConvert.DeserializeObject<List<Routes>>(json);
 
             Routes = new Dictionary<string, Dictionary<string, List<Way>>>();
@@ -112,5 +113,20 @@ public static class StopsLoader
         File.WriteAllBytes(ROUTES_PATH, stops);
 
         //OnStopsUpdated?.Invoke(null, new EventArgs());
+    }
+
+    public static List<Way> FindStopsByLine(string line, string type)
+    {
+        if (Routes.TryGetValue(type, out Dictionary<string, List<Way>> route))
+        {
+            if (route.TryGetValue(line, out List<Way> routes))
+            {
+                return routes;
+            }
+
+            throw new TramlineFiveException($"Could not find line with id {line} and type {type}");
+        }
+
+        throw new TramlineFiveException($"Could not find type {type}");
     }
 }
