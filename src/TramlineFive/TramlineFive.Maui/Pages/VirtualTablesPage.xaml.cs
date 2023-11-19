@@ -18,6 +18,12 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
             Loaded += OnLoaded;
+
+            Messenger.Default.Register<StopSelectedMessage>(this, m =>
+            {
+                txtStopName.CancelAnimations();
+                txtStopName.TranslationX = 0;
+            });
         }
 
         private void OnLoaded(object sender, EventArgs e)

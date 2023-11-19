@@ -44,9 +44,11 @@
                                     <Label Text="{Binding StopInfo.Code, StringFormat=' ({0})'}" TextColor="{DynamicResource IconsColor}" FontSize="Small" />
                                 </StackLayout>
 
-                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Grid BackgroundColor="{DynamicResource BackgroundColor}">
+                                  <Label Background="{DynamicResource BackgroundColor}"   FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Grid>
 
-                                <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,5,0">
+                                <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource BackgroundColor}">
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
                                     </Grid.GestureRecognizers>
@@ -59,7 +61,7 @@
                                         </d:AnimationBehavior>
                                     </Grid.Behaviors>
 
-                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe838;" Margin="10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe838;" Margin="10,10,15,10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Grid>
 
                                 <BoxView Grid.ColumnSpan="2" HeightRequest="1" Color="{DynamicResource BackgroundColor}" VerticalOptions="End" />
