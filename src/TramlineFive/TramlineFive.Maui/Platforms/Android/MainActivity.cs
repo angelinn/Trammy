@@ -54,7 +54,6 @@ namespace TramlineFive.Maui
             InitFontScale();
             Messenger.Default.Register<ChangeThemeMessage>(this, OnThemeChanged);
 
-           
             //LoadApplication(new App());
 
             AndroidEnvironment.UnhandledExceptionRaiser += delegate (object sender, RaiseThrowableEventArgs args) {

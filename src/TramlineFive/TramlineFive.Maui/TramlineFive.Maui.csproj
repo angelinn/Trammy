@@ -95,8 +95,10 @@
 	  <None Remove="Platforms\Android\Resources\drawable\splash.xml" />
 	  <None Remove="Platforms\Android\Resources\drawable\Tram64.png" />
 	  <None Remove="Platforms\Android\Resources\drawable\Trolley64.png" />
+	  <None Remove="Platforms\Android\Resources\layout\appwidgetprovider.xml" />
 	  <None Remove="Platforms\Android\Resources\layout\Tabbar.axml" />
 	  <None Remove="Platforms\Android\Resources\layout\Toolbar.axml" />
+	  <None Remove="Platforms\Android\Resources\layout\Widget.axml" />
 	  <None Remove="Platforms\Android\Resources\mipmap-anydpi-v26\tramline.xml" />
 	  <None Remove="Platforms\Android\Resources\mipmap-anydpi-v26\tramline_round.xml" />
 	  <None Remove="Platforms\Android\Resources\mipmap-hdpi\tramline.png" />

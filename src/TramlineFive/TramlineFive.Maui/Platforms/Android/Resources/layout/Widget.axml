@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetBackground"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@android:color/white">
+    <RelativeLayout android:layout_width="72dip" android:layout_height="wrap_content">
+        <ImageView
+            android:contentDescription="image"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/widgetAnnouncementIcon"
+            android:src="@drawable/bus64" />
+    </RelativeLayout>
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/widgetSmall"
+            android:text="Last refresh: 00:00" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnRefresh"
+            android:text="Refresh"/>
+    </LinearLayout>
+</LinearLayout>
