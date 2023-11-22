@@ -39,7 +39,7 @@
                         <ViewCell.View>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="60" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
