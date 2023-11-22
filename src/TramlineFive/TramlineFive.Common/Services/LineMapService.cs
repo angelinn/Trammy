@@ -145,7 +145,12 @@ public class LineMapService
         if (stops.TryGetValue(code, out IFeature value))
         {
             PointFeature feature = value as PointFeature;
-            Map.Navigator.CenterOnAndZoomTo(feature.Point, Map.Navigator.Resolutions[14], 600, Easing.Linear);
+            Map.Navigator.CenterOnAndZoomTo(feature.Point, Map.Navigator.Resolutions[16], 600, Easing.Linear);
         }
+    }
+
+    public void ResetView()
+    {
+        ZoomToBox(Map.Navigator, routeBox);
     }
 }

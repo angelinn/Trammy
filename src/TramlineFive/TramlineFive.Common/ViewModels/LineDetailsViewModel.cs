@@ -1,5 +1,7 @@
 ﻿using Fizzler;
 using GalaSoft.MvvmLight.Command;
+using Mapsui;
+using Newtonsoft.Json.Linq;
 using SkgtService;
 using SkgtService.Models;
 using System;
@@ -92,6 +94,8 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
         {
             code.IsHighlighted = true;
             MessengerInstance.Send(new ScrollToHighlightedStopMessage { Item = code });
+
+            lineMapService.ZoomTo(stop);
         }
     }
 
@@ -115,7 +119,17 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
             if (value != null)
             {
                 foreach (CodeViewModel codeVm in route.Codes)
+                {
+                    if (codeVm.Code == value.Code && codeVm.IsHighlighted)
+                    {
+                        lineMapService.ResetView();
+                        codeVm.IsHighlighted = false;
+
+                        return;
+                    } 
+
                     codeVm.IsHighlighted = false;
+                }
 
                 value.IsHighlighted = true;
                 lineMapService.ZoomTo(value.Code);
