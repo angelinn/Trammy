@@ -80,6 +80,8 @@ namespace TramlineFive.Common.ViewModels
         private void OnFavouriteAdded(FavouriteDomain favourite)
         {
             Favourites.Add(favourite);
+            favourite.LoadLines();
+
             RaisePropertyChanged("HasFavourites");
 
             ApplicationService.VibrateShort();
@@ -107,6 +109,8 @@ namespace TramlineFive.Common.ViewModels
             IsLoading = true;
 
             Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).OrderByDescending(f => f.TimesClicked));
+            foreach (FavouriteDomain favourite in Favourites)
+                favourite.LoadLines();
 
             IsLoading = false;
 

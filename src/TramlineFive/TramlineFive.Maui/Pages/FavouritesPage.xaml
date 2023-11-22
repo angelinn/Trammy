@@ -1,10 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.FavouritesPage"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
       
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid BackgroundColor="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -56,11 +63,32 @@
                                             <Label FontFamily="mir" Text="tram" TextColor="{DynamicResource IconsColor}" FontSize="31" VerticalOptions="Center" HorizontalOptions="Center" />
 
                                             <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
-                                                <Label Text="{Binding Name}" />
 
-                                                <StackLayout Orientation="Horizontal" Margin="0,5,0,0">
-                                                    <Label Text="{Binding StopCode}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" />
+                                                <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
+                                                    <Label Text="{Binding Name}" />
+                                                    <Label Text="{Binding StopCode, StringFormat=' ({0})'}" FontSize="Small" />
                                                 </StackLayout>
+
+                                                <CollectionView ItemsSource="{Binding Lines}" Margin="0,5,0,0">
+                                                    <CollectionView.ItemsLayout>
+                                                        <LinearItemsLayout Orientation="Horizontal" />
+                                                    </CollectionView.ItemsLayout>
+
+                                                    <CollectionView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid Padding="0,0,3,0">
+                                                                <Border StrokeThickness="0" WidthRequest="35" Background="{Binding VehicleType, Converter={StaticResource TransportToColor}}">
+                                                                    <Border.StrokeShape>
+                                                                        <RoundRectangle CornerRadius="15" />
+                                                                    </Border.StrokeShape>
+
+                                                                    <Label FontSize="12" HorizontalOptions="Center" Text="{Binding Name}" Padding="2" TextColor="White" />
+                                                                </Border>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </CollectionView.ItemTemplate>
+
+                                                </CollectionView>
                                             </StackLayout>
 
                                             <StackLayout Orientation="Horizontal" Grid.Column="2" Spacing="0" Margin="0,0,5,0">

@@ -153,10 +153,10 @@ public class MapService
 
             SymbolStyle symbolStyle = pinStyle;
             Offset offset = new Offset(0, -32);
-            if (lines.Any(line => line.StartsWith("trolley")))
+            if (lines.Any(line => line.VehicleType ==  "trolley"))
                 symbolStyle = trolleyPinStyle;
-            else if (lines.Any(line => line.StartsWith("tram")))
-            {
+            else if (lines.Any(line => line.VehicleType == "tram"))
+            { 
                 symbolStyle = tramPinStyle;
                 offset = new Offset(0, -40);
             }

@@ -25,18 +25,20 @@ public static class StopsLoader
 
     public static Dictionary<string, Dictionary<string, List<Way>>> Routes { get; private set; }
 
+    private static Dictionary<string, List<Line>> stopLines = new();
+
     public static void Initialize(string basePath)
     {
         PATH = Path.Combine(basePath, "stops.json");
         ROUTES_PATH = Path.Combine(basePath, "routes.json");
     }
 
-    public static List<string> GetLinesForStop(string stopCode)
+    public static List<Line> GetLinesForStop(string stopCode)
     {
         if (stopLines.ContainsKey(stopCode))
             return stopLines[stopCode];
 
-        return new List<string>();
+        return new List<Line>();
     }           
 
     public static async Task<List<StopLocation>> LoadStopsAsync()
@@ -64,8 +66,6 @@ public static class StopsLoader
         return Stops;
     }
 
-    private static Dictionary<string, List<string>> stopLines = new Dictionary<string, List<string>>();
-
     public static async Task<Dictionary<string, Dictionary<string, List<Way>>>> LoadRoutesAsync()
     {
         if (!File.Exists(ROUTES_PATH))
@@ -90,13 +90,14 @@ public static class StopsLoader
                         foreach (string code in way.Codes)
                         {
                             if (!stopLines.ContainsKey(code))
-                                stopLines[code] = new List<string>();
+                                stopLines[code] = new List<Line>();
 
-                            stopLines[code].Add(route.Type + " " + line.Name);
+                            stopLines[code].Add(new Line {  Name = line.Name, VehicleType = route.Type });
+                            stopLines[code] = stopLines[code].DistinctBy(line => line.Name).ToList();
                         }
                     }
                 }
-
+                                
                 Routes.Add(route.Type, singleLineRoutes);
             }
         }

@@ -13,10 +13,10 @@ public class TransportTypeToTransportIconConverter : IValueConverter
     {
         return (value as string) switch
         {
-            "bus" => "directions_bus",
-            "tram" => "tram",
-            "trolley" => "directions_bus",
-            _ => "tram",
+            "bus" => "MTS_Bus_icon.svg",
+            "tram" => "MTS_Tram_icon.svg",
+            "trolley" => "MTS_Bus_icon_trolley.svg",
+            _ => "MTS_Tram_icon.svg",
         };
     }
 

@@ -1,4 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
+using SkgtService;
+using SkgtService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace TramlineFive.DataAccess.Domain
     {
         public string Name { get; set; }
         public string StopCode { get; set; }
+        public List<Line> Lines { get; set; }
 
         private int timesClicked;
         public int TimesClicked
@@ -32,6 +35,11 @@ namespace TramlineFive.DataAccess.Domain
             Name = entity.Name;
             StopCode = entity.StopCode;
             TimesClicked = entity.TimesClicked;
+        }
+
+        public void LoadLines()
+        {
+            Lines = StopsLoader.GetLinesForStop(StopCode);
         }
 
         public static async Task<FavouriteDomain> AddAsync(string name, string stopCode)
