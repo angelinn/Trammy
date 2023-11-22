@@ -31,6 +31,14 @@ public static class StopsLoader
         ROUTES_PATH = Path.Combine(basePath, "routes.json");
     }
 
+    public static List<string> GetLinesForStop(string stopCode)
+    {
+        if (stopLines.ContainsKey(stopCode))
+            return stopLines[stopCode];
+
+        return new List<string>();
+    }           
+
     public static async Task<List<StopLocation>> LoadStopsAsync()
     {
         if (!File.Exists(PATH))
@@ -56,6 +64,8 @@ public static class StopsLoader
         return Stops;
     }
 
+    private static Dictionary<string, List<string>> stopLines = new Dictionary<string, List<string>>();
+
     public static async Task<Dictionary<string, Dictionary<string, List<Way>>>> LoadRoutesAsync()
     {
         if (!File.Exists(ROUTES_PATH))
@@ -75,6 +85,16 @@ public static class StopsLoader
                 foreach (Route line in route.Lines)
                 {
                     singleLineRoutes.Add(line.Name, line.Routes);
+                    foreach (Way way in line.Routes)
+                    {
+                        foreach (string code in way.Codes)
+                        {
+                            if (!stopLines.ContainsKey(code))
+                                stopLines[code] = new List<string>();
+
+                            stopLines[code].Add(route.Type + " " + line.Name);
+                        }
+                    }
                 }
 
                 Routes.Add(route.Type, singleLineRoutes);

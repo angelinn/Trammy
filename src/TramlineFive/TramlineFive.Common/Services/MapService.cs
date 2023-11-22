@@ -100,15 +100,36 @@ public class MapService
         Messenger.Default.Send(new RefreshMapMessage());
     }
 
+    private SymbolStyle trolleyPinStyle;
+    private SymbolStyle tramPinStyle;
+
     private void LoadPinStyles()
     {
-        int bitmapId = typeof(MapService).LoadSvgId("pin.svg");
+        int bitmapId = typeof(MapService).LoadSvgId("MTS_Bus_icon.svg");
 
         pinStyle = new SymbolStyle
         {
             BitmapId = bitmapId,
             Enabled = false,
-            SymbolScale = 0.3f
+            SymbolScale = 0.14f
+        };
+
+        int trolleyId = typeof(MapService).LoadSvgId("MTS_Bus_icon_trolley.svg");
+
+        trolleyPinStyle = new SymbolStyle
+        {
+            BitmapId = trolleyId,
+            Enabled = false,
+            SymbolScale = 0.14f
+        };
+
+        int tramId = typeof(MapService).LoadSvgId("MTS_Tram_icon.svg");
+
+        tramPinStyle = new SymbolStyle
+        {
+            BitmapId = tramId,
+            Enabled = false,
+            SymbolScale = 0.4f
         };
     }
 
@@ -119,10 +140,26 @@ public class MapService
         stopsDictionary = new Dictionary<string, IFeature>();
 
         Stops = await StopsLoader.LoadStopsAsync();
+        await StopsLoader.LoadRoutesAsync();
+
         foreach (var location in Stops)
         {
+            var lines = StopsLoader.GetLinesForStop(location.Code);
+            if (lines.Count == 0)
+                continue;
+
             MPoint stopLocation = new MPoint(location.Lon, location.Lat);
             MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(stopLocation.X, stopLocation.Y));
+
+            SymbolStyle symbolStyle = pinStyle;
+            Offset offset = new Offset(0, -32);
+            if (lines.Any(line => line.StartsWith("trolley")))
+                symbolStyle = trolleyPinStyle;
+            else if (lines.Any(line => line.StartsWith("tram")))
+            {
+                symbolStyle = tramPinStyle;
+                offset = new Offset(0, -40);
+            }
 
             IFeature feature = new PointFeature(stopMapLocation)
             {
@@ -130,18 +167,19 @@ public class MapService
                 {
                     new SymbolStyle
                     {
-                        Enabled = pinStyle.Enabled,
-                        BitmapId = pinStyle.BitmapId,
+                        Enabled = symbolStyle.Enabled,
+                        BitmapId = symbolStyle.BitmapId,
                         SymbolOffset = new Offset(0, 30),
-                        SymbolScale = pinStyle.SymbolScale,
+                        SymbolScale = symbolStyle.SymbolScale,
                         MaxVisible = map.Navigator.Resolutions[MaxPinsZoom]
                     },
                     new LabelStyle
                     {
-                        Enabled = pinStyle.Enabled,
+                        Enabled = symbolStyle.Enabled,
                         MaxVisible = map.Navigator.Resolutions[MaxTextZoom],
                         Text = $"{location.PublicName} ({location.Code})",
-                        Offset = new Offset(0, -45),
+                        Offset = offset,
+                        Font = new Font { Size = 11 }
                         
                         //Opacity = 0.7f,
                     }
@@ -192,7 +230,7 @@ public class MapService
             List<KeyValuePair<double, StopLocation>> nearbyStops = new List<KeyValuePair<double, StopLocation>>();
 
             MPoint pointLan = SphericalMercator.ToLonLat(position);
-            var neighbours = stopsTree.GetNearestNeighbours(new float[] { (float)pointLan.Y, (float)pointLan.X }, 10).Select(n => n.Value).ToList();
+            var neighbours = stopsTree.GetNearestNeighbours(new float[] { (float)pointLan.Y, (float)pointLan.X }, 10).Where(n => n != null).Select(n => n.Value).ToList();
 
             foreach (Style style in activeStyles)
                 style.Enabled = false;
