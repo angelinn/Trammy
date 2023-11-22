@@ -16,6 +16,7 @@ using static System.Formats.Asn1.AsnWriter;
 using SkgtService.Models.Locations;
 using Mapsui.Utilities;
 using ExCSS;
+using Mapsui.Animations;
 
 namespace TramlineFive.Common.Services;
 
@@ -25,6 +26,7 @@ public class LineMapService
     private SymbolStyle startStyle;
     private SymbolStyle finishStyle;
 
+    private Dictionary<string, IFeature> stops = new();
     public Map Map { get; set; }
     private MRect routeBox;
 
@@ -34,7 +36,7 @@ public class LineMapService
         Map.Home = (h) => ZoomToBox(h, routeBox);
         LoadPinStyles();
 
-        ILayer stopsLayer = await LoadStops(line, type, route);
+        ILayer stopsLayer = LoadStops(line, type, route);
         Map.Layers.Add(stopsLayer);
     }
 
@@ -68,7 +70,7 @@ public class LineMapService
         };
     }
 
-    private async Task<ILayer> LoadStops(string line, string type, Way route)
+    private ILayer LoadStops(string line, string type, Way route)
     {
         List<IFeature> features = new List<IFeature>();
 
@@ -114,6 +116,7 @@ public class LineMapService
             };
 
             features.Add(feature);
+            stops[location.Code] = feature;
         }
 
         routeBox = new MRect(minLat, minLon, maxLat, maxLon);
@@ -135,5 +138,14 @@ public class LineMapService
     private void ZoomToBox(Navigator navigator, MRect box)
     {
         navigator.ZoomToBox(box.Grow(box.Width * 0.1, box.Height * 0.1));
+    }
+
+    public void ZoomTo(string code)
+    {
+        if (stops.TryGetValue(code, out IFeature value))
+        {
+            PointFeature feature = value as PointFeature;
+            Map.Navigator.CenterOnAndZoomTo(feature.Point, Map.Navigator.Resolutions[14], 600, Easing.Linear);
+        }
     }
 }

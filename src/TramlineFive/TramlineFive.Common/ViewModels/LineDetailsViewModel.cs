@@ -1,4 +1,5 @@
 ﻿using Fizzler;
+using GalaSoft.MvvmLight.Command;
 using SkgtService;
 using SkgtService.Models;
 using System;
@@ -8,17 +9,34 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
+using YamlDotNet.Core.Tokens;
 
 namespace TramlineFive.Common.ViewModels;
 
-public class CodeViewModel
+public class ZoomToLineStopMessage
 {
     public string Code { get; set; }
-    public bool IsHighlighted { get; set; }
+}
+
+public class CodeViewModel : BaseViewModel
+{
+    public string Code { get; set; }
+
+    private bool isHighlighted;
+    public bool IsHighlighted
+    {
+        get => isHighlighted;
+        set
+        {
+            isHighlighted = value;
+            RaisePropertyChanged();
+        }
+    }
 }
 
 public class RouteViewModel
@@ -56,6 +74,17 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
         }
     }
 
+    public ICommand CheckStopCommand { get; private set; }
+
+    public BaseLineDetailsViewModel()
+    {
+        CheckStopCommand = new RelayCommand<CodeViewModel>((code) =>
+        {
+            MessengerInstance.Send(new ChangePageMessage("Map"));
+            MessengerInstance.Send(new StopSelectedMessage(code.Code, true));
+        });
+    }
+
     public void SetHighlightedStop(string stop)
     {
         CodeViewModel code = route.Codes.FirstOrDefault(code => code.Code == stop);
@@ -80,13 +109,16 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
         get => selectedStop;
         set
         {
-            selectedStop = value;
+            selectedStop = null;
             RaisePropertyChanged();
 
             if (value != null)
             {
-                MessengerInstance.Send(new ChangePageMessage("Map"));
-                MessengerInstance.Send(new StopSelectedMessage(value.Code, true));
+                foreach (CodeViewModel codeVm in route.Codes)
+                    codeVm.IsHighlighted = false;
+
+                value.IsHighlighted = true;
+                lineMapService.ZoomTo(value.Code);
             }
         }
     }

@@ -10,7 +10,7 @@
         <HorizontalStackLayout BindingContext="{Binding Line}">
             <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="{Binding Type, Converter={StaticResource TransportToIcon}}" TextColor="White" FontSize="32" VerticalOptions="Center" />
 
-            <Label Text="{Binding Type}" FontSize="Medium" FontAttributes="Bold" VerticalOptions="Center" TextColor="White" Margin="10,0,0,0" />
+            <Label Text="{Binding Type, Converter={StaticResource TransportToText}}" FontSize="Medium" FontAttributes="Bold" VerticalOptions="Center" TextColor="White" Margin="10,0,0,0" />
             <Label Text="{Binding Name}" FontSize="Medium" FontAttributes="Bold" Margin="5,0,0,0" VerticalOptions="Center" TextColor="White" />
         </HorizontalStackLayout>
     </Shell.TitleView>
@@ -20,6 +20,7 @@
             <cv:CodeToTextConverter x:Key="CodeToText" />
             <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
             <cv:TransportTypeToTransportIconConverter x:Key="TransportToIcon" />
+            <cv:TransportTypeToTextConverter x:Key="TransportToText" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -31,38 +32,49 @@
 
         <mapsui:MapView x:Name="map" IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False" />
 
-        <ListView x:Name="stopsList" ItemsSource="{Binding Route.Codes}" RowHeight="60" SeparatorVisibility="None" SelectedItem="{Binding SelectedStop}" Grid.Row="1">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.View>
-                                <Grid VerticalOptions="Center" HeightRequest="60" >
-                                    <Grid.Triggers>
-                                        <DataTrigger Binding="{Binding IsHighlighted}" TargetType="Grid" Value="True">
-                                            <Setter Property="Background" Value="LightGreen" />
-                                        </DataTrigger>
-                                    </Grid.Triggers>
+        <ListView x:Name="stopsList" ItemsSource="{Binding Route.Codes}" RowHeight="60" SeparatorVisibility="None" SelectedItem="{Binding SelectedStop, Mode=TwoWay}" Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <Border StrokeThickness="0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="15" />
+                                </Border.StrokeShape>
 
+                                <Border.Triggers>
+                                    <DataTrigger Binding="{Binding IsHighlighted}" TargetType="Border" Value="True">
+                                        <Setter Property="Stroke" Value="LightGreen" />
+                                        <Setter Property="StrokeThickness" Value="2" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                
+                                <Grid VerticalOptions="Center" HeightRequest="60" Background="{DynamicResource BackgroundColor}" >
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="55" />
+                                        <ColumnDefinition Width="60" />
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="45" />
+                                        <ColumnDefinition Width="100" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="#6057ff" Text="share_location" FontSize="32" VerticalOptions="Center" Margin="10,0,0,0" />
+                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="DodgerBlue" Text="share_location" FontSize="32" VerticalOptions="Center" HorizontalOptions="Center" />
 
                                     <VerticalStackLayout  Grid.Column="1" VerticalOptions="Center">
-                                        <Label Text="{Binding Code, Converter={StaticResource CodeToText}}" FontSize="18" VerticalOptions="Center" />
-                                        <Label Text="{Binding Code}" FontSize="14" VerticalOptions="Center" TextColor="Gray" />
+                                        <Label Text="{Binding Code, Converter={StaticResource CodeToText}}" FontSize="14" VerticalOptions="Center" />
+                                        <Label Text="{Binding Code}" FontSize="12" VerticalOptions="Center" TextColor="Gray" />
                                     </VerticalStackLayout>
 
-                                    <Label Grid.Column="2" FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="#6057ff" Text="chevron_right" FontSize="32" Margin="0,0,0,0" VerticalOptions="Center" />
+                                    <ImageButton Grid.Column="2" Aspect="Center" Command="{Binding BindingContext.CheckStopCommand, Source={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding}">
+                                        <ImageButton.Source>
+                                            <FontImageSource  FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="chevron_right" Color="DodgerBlue" Size="32" />
+                                        </ImageButton.Source>
+                                    </ImageButton>
                                 </Grid>
-                            </ViewCell.View>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            </Grid>
+                            </Border>
+                        </ViewCell.View>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
 </ContentPage>
     
