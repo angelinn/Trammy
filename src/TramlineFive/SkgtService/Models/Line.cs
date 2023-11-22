@@ -16,7 +16,7 @@ public class Line
     public List<Arrival> Arrivals { get; set; } 
 
     public string LastTimings => "Следващи: " + String.Join(", ", Arrivals.Take(3).Select(t => t.Time));
-    public string LastCalculated => "Следващи: " + String.Join(", ", Arrivals.Skip(1).Take(3).Select(t =>
+    public string LastCalculated => Arrivals.Skip(1).Count() > 0 ? "Следващи: " + String.Join(", ", Arrivals.Skip(1).Take(3).Select(t =>
     {
         TimeSpan arrival = DateTime.Parse(t.Time) - DateTime.Now;
         int minutes = arrival.Minutes;
@@ -25,7 +25,7 @@ public class Line
             minutes += arrival.Hours * 60;
 
         return minutes + " мин";
-    }));
+    })) : "Последен";
 
     public int Minutes
     {
