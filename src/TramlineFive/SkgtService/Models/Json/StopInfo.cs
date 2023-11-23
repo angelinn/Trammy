@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace SkgtService.Models;
+namespace SkgtService.Models.Json;
 
 public class StopInfo
 {

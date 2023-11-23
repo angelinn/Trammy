@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SkgtService.Models.Locations
+namespace SkgtService.Models.Json
 {
     public class StopLocation
     {

@@ -14,7 +14,7 @@ namespace TramlineFive.DataAccess.Domain
     {
         public string Name { get; set; }
         public string StopCode { get; set; }
-        public List<Line> Lines { get; set; }
+        public List<LineInformation> Lines { get; set; }
 
         private int timesClicked;
         public int TimesClicked
@@ -35,11 +35,6 @@ namespace TramlineFive.DataAccess.Domain
             Name = entity.Name;
             StopCode = entity.StopCode;
             TimesClicked = entity.TimesClicked;
-        }
-
-        public void LoadLines()
-        {
-            Lines = StopsLoader.GetLinesForStop(StopCode);
         }
 
         public static async Task<FavouriteDomain> AddAsync(string name, string stopCode)

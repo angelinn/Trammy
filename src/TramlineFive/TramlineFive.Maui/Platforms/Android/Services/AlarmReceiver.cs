@@ -14,6 +14,7 @@ using Android.Widget;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Extensions.DependencyInjection;
 using SkgtService.Models;
+using SkgtService.Models.Json;
 using TramlineFive.Common;
 using TramlineFive.Common.Services;
 using TramlineFive.Services.Main;

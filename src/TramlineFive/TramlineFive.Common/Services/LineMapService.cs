@@ -13,10 +13,10 @@ using KdTree;
 using Mapsui.Providers;
 using Mapsui.Styles;
 using static System.Formats.Asn1.AsnWriter;
-using SkgtService.Models.Locations;
 using Mapsui.Utilities;
 using ExCSS;
 using Mapsui.Animations;
+using SkgtService.Models.Json;
 
 namespace TramlineFive.Common.Services;
 
@@ -29,8 +29,14 @@ public class LineMapService
     private Dictionary<string, IFeature> stops = new();
     public Map Map { get; set; }
     private MRect routeBox;
+    private readonly PublicTransport publicTransport;
 
-    public async Task SetupMapAsync(string line, string type, Way route, string tileServer = null)
+    public LineMapService(PublicTransport publicTransport)
+    {
+        this.publicTransport = publicTransport;
+    }
+
+    public async Task SetupMapAsync(string line, string type, LineRoute route, string tileServer = null)
     {
         Map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
         Map.Home = (h) => ZoomToBox(h, routeBox);
@@ -70,7 +76,7 @@ public class LineMapService
         };
     }
 
-    private ILayer LoadStops(string line, string type, Way route)
+    private ILayer LoadStops(string line, string type, LineRoute route)
     {
         List<IFeature> features = new List<IFeature>();
 
@@ -81,7 +87,7 @@ public class LineMapService
 
         for (int i = 0; i < route.Codes.Count; ++i)
         {
-            StopLocation location = StopsLoader.StopsHash[route.Codes[i]];
+            StopInformation location = publicTransport.FindStop(route.Codes[i]);
 
             MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(location.Lon, location.Lat));
 

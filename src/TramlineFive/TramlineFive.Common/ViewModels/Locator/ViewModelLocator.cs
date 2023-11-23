@@ -7,6 +7,7 @@ using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.Models;
+using SkgtService;
 
 namespace System.Runtime.CompilerServices
 {

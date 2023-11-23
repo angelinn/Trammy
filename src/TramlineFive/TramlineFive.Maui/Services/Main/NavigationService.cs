@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Messaging;
 using SkgtService;
 using SkgtService.Models;
+using SkgtService.Models.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,12 +26,14 @@ public class NavigationService : INavigationService
 
     public void GoToDetails(Line line, string stop)
     {
-        if (StopsLoader.Routes.ContainsKey(line.VehicleType) && StopsLoader.Routes[line.VehicleType].ContainsKey(line.Name))
+        PublicTransport publicTransport = ServiceContainer.ServiceProvider.GetService<PublicTransport>();
+        RouteInformation routeInformation = publicTransport.FindByTypeAndLine(line.VehicleType, line.Name);
+        if (routeInformation != null)
         {
             LineViewModel lineViewModel = new LineViewModel
             {
                 Name = line.Name,
-                Routes = StopsLoader.Routes[line.VehicleType][line.Name],
+                Routes = routeInformation,
                 Type = line.VehicleType
             };
 
@@ -42,19 +45,19 @@ public class NavigationService : INavigationService
 
     public async void GoToDetails(LineViewModel line, string stop)
     {
-        ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().Load(line, line.Routes[0]);
-        ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().Load(line, line.Routes[^1]);
+        ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().Load(line, line.Routes.Routes[0]);
+        ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().Load(line, line.Routes.Routes[^1]);
 
         string tab = string.Empty;
 
         if (!String.IsNullOrEmpty(stop))
         {
-            if (line.Routes[0].Codes.Contains(stop))
+            if (line.Routes.Routes[0].Codes.Contains(stop))
             {
                 tab = "Forward";
                 ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().SetHighlightedStop(stop);
             }
-            else if (line.Routes[^1].Codes.Contains(stop))
+            else if (line.Routes.Routes[^1].Codes.Contains(stop))
             {
                 tab = "Backward";
                 ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().SetHighlightedStop(stop);

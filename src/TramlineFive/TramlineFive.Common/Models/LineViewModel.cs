@@ -11,5 +11,5 @@ public class LineViewModel
 {
     public string Type { get; set; }
     public string Name { get; set; }
-    public List<Way> Routes { get; set; }
+    public RouteInformation Routes { get; set; }
 }

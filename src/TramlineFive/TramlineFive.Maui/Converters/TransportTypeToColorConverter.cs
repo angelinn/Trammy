@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.ApplicationModel;
+using SkgtService.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +13,22 @@ namespace TramlineFive.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool isLightTheme = Application.Current.UserAppTheme == AppTheme.Light;
-            return (value as string) switch
+
+            string textValue = string.Empty;
+            if (value is TransportType type)
+            {
+                textValue = type switch
+                {
+                    TransportType.Tram => "tram",
+                    TransportType.Trolley => "trolley",
+                    _ => "bus"
+                }; ;
+            }
+
+            if (value is string)
+                textValue = value as string;
+
+            return (textValue as string) switch
             {
                 "Автобус" => isLightTheme ? Colors.Red : Colors.Crimson,
                 "Трамвай" => isLightTheme ? Colors.Orange : Colors.DarkOrange,
@@ -24,6 +40,7 @@ namespace TramlineFive.Converters
                 "trolley" => Colors.RoyalBlue,
                 _ => Colors.White,
             };
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

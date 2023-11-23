@@ -2,7 +2,9 @@
 using GalaSoft.MvvmLight.Ioc;
 using Mapsui;
 using Microsoft.Extensions.DependencyInjection;
-using SkgtService.Models.Locations;
+using SkgtService;
+using SkgtService.Models;
+using SkgtService.Models.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +15,7 @@ using System.Windows.Input;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
-using TramlineFive.DataAccess.Domain; 
+using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels
 {
@@ -26,7 +28,9 @@ namespace TramlineFive.Common.ViewModels
         private readonly LocationService locationService;
         private bool firstLocalization = true;
 
-        public FavouritesViewModel(LocationService locationService)
+        private readonly PublicTransport publicTransport;
+
+        public FavouritesViewModel(LocationService locationService, PublicTransport publicTransport)
         {
             MessengerInstance.Register<FavouriteAddedMessage>(this, (f) => OnFavouriteAdded(f.Added));
             RemoveCommand = new RelayCommand<FavouriteDomain>(async (f) => await RemoveFavouriteAsync(f));
@@ -42,6 +46,7 @@ namespace TramlineFive.Common.ViewModels
             });
 
             this.locationService = locationService;
+            this.publicTransport = publicTransport;
         }
 
         private async Task OnNearestFavouriteRequested(Position location)
@@ -54,7 +59,7 @@ namespace TramlineFive.Common.ViewModels
 
             foreach (FavouriteDomain favourite in Favourites)
             { 
-                StopLocation stop = MapService.Stops.FirstOrDefault(s => s.Code == favourite.StopCode);
+                StopInformation stop = MapService.Stops.FirstOrDefault(s => s.Code == favourite.StopCode);
                 double distance = locationService.GetDistance(location.Latitude, location.Longitude, stop.Lat, stop.Lon);
                 if (distance < minDistance)
                 {
@@ -79,8 +84,8 @@ namespace TramlineFive.Common.ViewModels
 
         private void OnFavouriteAdded(FavouriteDomain favourite)
         {
+            favourite.Lines = publicTransport.FindStop(favourite.StopCode).Lines;
             Favourites.Add(favourite);
-            favourite.LoadLines();
 
             RaisePropertyChanged("HasFavourites");
 
@@ -110,7 +115,7 @@ namespace TramlineFive.Common.ViewModels
 
             Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).OrderByDescending(f => f.TimesClicked));
             foreach (FavouriteDomain favourite in Favourites)
-                favourite.LoadLines();
+                favourite.Lines = publicTransport.FindStop(favourite.StopCode).Lines;
 
             IsLoading = false;
 

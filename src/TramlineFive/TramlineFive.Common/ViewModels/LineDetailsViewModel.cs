@@ -43,10 +43,10 @@ public class CodeViewModel : BaseViewModel
 
 public class RouteViewModel
 {
-    public RouteViewModel(Way route)
+    public RouteViewModel(LineRoute route, string first, string last)
     {
-        First = route.First;
-        Last = route.Last;
+        First = first;
+        Last = last;
         Codes = route.Codes.Select(code => new CodeViewModel { Code = code }).ToList();
     }
 
@@ -62,7 +62,9 @@ public class ScrollToHighlightedStopMessage
 
 public abstract class BaseLineDetailsViewModel : BaseViewModel
 {
-    private readonly LineMapService lineMapService = new LineMapService();
+    private readonly LineMapService lineMapService;
+    private readonly PublicTransport publicTransport;
+
     public LineMapService LineMapService => lineMapService;
 
     private LineViewModel line;
@@ -78,13 +80,16 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
 
     public ICommand CheckStopCommand { get; private set; }
 
-    public BaseLineDetailsViewModel()
+    public BaseLineDetailsViewModel(PublicTransport publicTransport)
     {
+        lineMapService = new LineMapService(publicTransport);
+
         CheckStopCommand = new RelayCommand<CodeViewModel>((code) =>
         {
             MessengerInstance.Send(new ChangePageMessage("Map"));
             MessengerInstance.Send(new StopSelectedMessage(code.Code, true));
         });
+        this.publicTransport = publicTransport;
     }
 
     public void SetHighlightedStop(string stop)
@@ -99,10 +104,10 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
         }
     }
 
-    public void Load(LineViewModel line, Way route)
+    public void Load(LineViewModel line, LineRoute route)
     {
         Line = line;
-        Route = new RouteViewModel(route);
+        Route = new RouteViewModel(route, publicTransport.FindStop(route.Codes[0]).PublicName, publicTransport.FindStop(route.Codes[^1]).PublicName);
 
         lineMapService.SetupMapAsync(line.Name, line.Type, route);
     }
@@ -154,10 +159,12 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
 
 public class ForwardLineDetailsViewModel : BaseLineDetailsViewModel
 {
-
+    public ForwardLineDetailsViewModel(PublicTransport publicTransport) : base(publicTransport)
+    {   }
 }
 
 public class LineDetailsViewModel : BaseLineDetailsViewModel
 {
-
+    public LineDetailsViewModel(PublicTransport publicTransport) : base(publicTransport)
+    {   }
 }

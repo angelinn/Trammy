@@ -35,6 +35,8 @@ namespace TramlineFive.Common.ViewModels
         public string SearchText { get; set; }
 
         private LineViewModel selectedLine;
+        private readonly PublicTransport publicTransport;
+
         public LineViewModel SelectedLine
         {
             get => selectedLine;
@@ -49,9 +51,10 @@ namespace TramlineFive.Common.ViewModels
         }
 
 
-        public LinesViewModel()
+        public LinesViewModel(PublicTransport publicTransport)
         {
             FilterLinesCommand = new RelayCommand(FilterLines);
+            this.publicTransport = publicTransport;
         }
 
         public abstract Task LoadAsync();
@@ -63,7 +66,7 @@ namespace TramlineFive.Common.ViewModels
 
             await StopsLoader.LoadRoutesAsync();
 
-            allLines = new(StopsLoader.Routes.First(r => r.Key == type).Value.Select(p => new LineViewModel { Type = type, Routes = p.Value, Name = p.Key }));
+            allLines = new(publicTransport.FindByType(type).Select(p => new LineViewModel { Type = type, Routes = p, Name = p.LineName }));
             Lines = new(allLines);
         }
 

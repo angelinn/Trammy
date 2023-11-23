@@ -47,11 +47,11 @@ public class AppWidget : AppWidgetProvider
 
         if (intent.Action == "com.TramlineFive.Maui.action.BTN_PRESS")
         {
-            ArrivalsService arrivals = new ArrivalsService();
-            var res = await arrivals.GetByStopCodeAsync("0095");
+            //ArrivalsService arrivals = new ArrivalsService();
+            //var res = await arrivals.GetByStopCodeAsync("0095");
 
             var widgetView = new RemoteViews(context.PackageName, Resource.Layout.Widget);
-            SetTextViewText(widgetView, res.Lines[0].Name + " " + res.Lines[0].Minutes);
+            SetTextViewText(widgetView, "test");
 
             var me = new ComponentName(context, Java.Lang.Class.FromType(typeof(AppWidget)).Name);
             AppWidgetManager.GetInstance(context).UpdateAppWidget(me, widgetView);

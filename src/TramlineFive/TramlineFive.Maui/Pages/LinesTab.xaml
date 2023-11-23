@@ -16,6 +16,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <cv:ColorConverter x:Key="Color" />
+            <cv:CodeToTextConverter x:Key="CodeToText" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -54,9 +55,9 @@
                                     <HorizontalStackLayout Margin="0,5,0,0">
                                         <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="arrow_right_alt" TextColor="Gray" HorizontalOptions="Center" VerticalOptions="Center" />
 
-                                        <Label Text="{Binding Routes[0].First}" VerticalOptions="Center" FontSize="11" Margin="5,0,0,0" />
+                                        <Label Text="{Binding Routes.Routes[0].Codes[0], Converter={StaticResource CodeToText}}" VerticalOptions="Center" FontSize="11" Margin="5,0,0,0" />
                                         <Label Text=" - " FontSize="11" />
-                                        <Label Text="{Binding Routes[0].Last}" VerticalOptions="Center" FontSize="11"  />
+                                        <Label Text="{Binding Routes.Routes[0].Codes, Converter={StaticResource CodeToText}, ConverterParameter='last'}" VerticalOptions="Center" FontSize="11"  />
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
 

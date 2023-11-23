@@ -3,7 +3,7 @@ using GalaSoft.MvvmLight.Ioc;
 using SkgtService;
 using SkgtService.Exceptions;
 using SkgtService.Models;
-using SkgtService.Models.Locations;
+using SkgtService.Models.Json;
 using SkgtService.Parsers;
 using System;
 using System.Collections.Generic;

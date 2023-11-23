@@ -16,6 +16,9 @@ namespace TramlineFive.Common.ViewModels;
 
 public class TramLinesViewModel : LinesViewModel
 {
+    public TramLinesViewModel(PublicTransport publicTransport) : base(publicTransport)
+    {   }
+
     public string Type => "Трамвай";
     public string Icon => "tram";
     public string IconColor => "darkorange";

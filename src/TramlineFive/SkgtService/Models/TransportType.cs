@@ -9,5 +9,7 @@ public enum TransportType
     MissingNo = -1,
     Tram,
     Bus,
-    Trolley
+    Trolley,
+    Electrobus,
+    Additional
 }

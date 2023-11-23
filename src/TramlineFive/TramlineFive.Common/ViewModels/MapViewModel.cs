@@ -203,10 +203,10 @@ namespace TramlineFive.Common.ViewModels
             if (String.IsNullOrEmpty(stopCode))
                 return;
 
-            if (Char.IsDigit(stopCode[0]))
-                FilteredStops = StopsLoader.Stops.Where(s => s.Code.Contains(stopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
-            else
-                FilteredStops = StopsLoader.Stops.Where(s => s.PublicName.ToLower().Contains(stopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+            //if (Char.IsDigit(stopCode[0]))
+            //    FilteredStops = StopsLoader.Stops.Where(s => s.Code.Contains(stopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+            //else
+            //    FilteredStops = StopsLoader.Stops.Where(s => s.PublicName.ToLower().Contains(stopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
 
             RaisePropertyChanged("FilteredStops");
 

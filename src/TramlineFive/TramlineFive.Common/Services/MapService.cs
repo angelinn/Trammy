@@ -6,7 +6,6 @@ using Mapsui.Styles;
 using Mapsui.UI;
 using Mapsui.Utilities;
 using SkgtService;
-using SkgtService.Models.Locations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +21,8 @@ using Mapsui.Projections;
 using KdTree;
 using GalaSoft.MvvmLight.Ioc;
 using Mapsui.Animations;
+using SkgtService.Models.Json;
+using SkgtService.Models;
 
 namespace TramlineFive.Common.Services;
 
@@ -32,7 +33,7 @@ public class MapService
     private Map map;
     private SymbolStyle pinStyle;
     private SymbolStyle userStyle;
-    public static List<StopLocation> Stops;
+    public static List<StopInformation> Stops;
 
     private KdTree<float, IFeature> stopsTree;
     private Dictionary<string, IFeature> stopsDictionary;
@@ -40,13 +41,15 @@ public class MapService
     private Navigator navigator;
 
     private readonly LocationService locationService;
+    private readonly PublicTransport publicTransport;
 
     public int MaxPinsZoom { get; set; } = 15;
     public int MaxTextZoom { get; set; } = 17; 
 
-    public MapService(LocationService locationService)
+    public MapService(LocationService locationService, PublicTransport publicTransport)
     {
         this.locationService = locationService;
+        this.publicTransport = publicTransport;
     }
     
     public async Task Initialize(Map map, Navigator navigator, string tileServer)
@@ -139,23 +142,19 @@ public class MapService
         stopsTree = new KdTree<float, IFeature>(2, new KdTree.Math.GeoMath());
         stopsDictionary = new Dictionary<string, IFeature>();
 
-        Stops = await StopsLoader.LoadStopsAsync();
-        await StopsLoader.LoadRoutesAsync();
+        await publicTransport.LoadData();
+        Stops = publicTransport.Stops;
 
         foreach (var location in Stops)
         {
-            var lines = StopsLoader.GetLinesForStop(location.Code);
-            if (lines.Count == 0)
-                continue;
-
             MPoint stopLocation = new MPoint(location.Lon, location.Lat);
             MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(stopLocation.X, stopLocation.Y));
 
             SymbolStyle symbolStyle = pinStyle;
             Offset offset = new Offset(0, -32);
-            if (lines.Any(line => line.VehicleType ==  "trolley"))
+            if (location.Lines.Any(line => line.VehicleType == TransportType.Trolley))
                 symbolStyle = trolleyPinStyle;
-            else if (lines.Any(line => line.VehicleType == "tram"))
+            else if (location.Lines.Any(line => line.VehicleType == TransportType.Tram))
             { 
                 symbolStyle = tramPinStyle;
                 offset = new Offset(0, -40);
@@ -211,7 +210,7 @@ public class MapService
 
         IFeature feature = stopsDictionary[code];
 
-        StopLocation location = feature["stopObject"] as StopLocation;
+        StopInformation location = feature["stopObject"] as StopInformation;
         MPoint point = new MPoint(location.Lon, location.Lat);
 
         foreach (Style style in feature.Styles)
@@ -227,7 +226,7 @@ public class MapService
     {
         await Task.Run(() =>
         {
-            List<KeyValuePair<double, StopLocation>> nearbyStops = new List<KeyValuePair<double, StopLocation>>();
+            List<KeyValuePair<double, StopInformation>> nearbyStops = new();
 
             MPoint pointLan = SphericalMercator.ToLonLat(position);
             var neighbours = stopsTree.GetNearestNeighbours(new float[] { (float)pointLan.Y, (float)pointLan.X }, 10).Where(n => n != null).Select(n => n.Value).ToList();
@@ -240,8 +239,8 @@ public class MapService
             int i = 0;
             foreach (var neighbour in neighbours)
             {
-                StopLocation location = neighbour["stopObject"] as StopLocation;
-                nearbyStops.Add(new KeyValuePair<double, StopLocation>(i++, location));
+                StopInformation location = neighbour["stopObject"] as StopInformation;
+                nearbyStops.Add(new KeyValuePair<double, StopInformation>(i++, location));
 
                 foreach (Style style in neighbour.Styles)
                 {
@@ -266,7 +265,7 @@ public class MapService
             if (!processed[i])
             {
                 processed[i] = true;
-                StopLocation location = feature["stopObject"] as StopLocation;
+                StopInformation location = feature["stopObject"] as StopInformation;
 
                 foreach (Style style in feature.Styles)
                 {
@@ -279,7 +278,7 @@ public class MapService
                 int j = 0;
                 foreach (IFeature otherFeature in features)
                 {
-                    StopLocation otherLocation = otherFeature["stopObject"] as StopLocation;
+                    StopInformation otherLocation = otherFeature["stopObject"] as StopInformation;
                     double distance = locationService.GetDistance(location.Lat, location.Lon, otherLocation.Lat, otherLocation.Lon);
 
                     if (distance < 10 && !processed[j])
@@ -317,7 +316,7 @@ public class MapService
 
         if (e.MapInfo.Feature != null && e.MapInfo.Feature.Styles.First().Enabled)
         {
-            StopLocation location = e.MapInfo.Feature["stopObject"] as StopLocation;
+            StopInformation location = e.MapInfo.Feature["stopObject"] as StopInformation;
 
             Messenger.Default.Send(new StopSelectedMessage(location.Code, true));
             return;
