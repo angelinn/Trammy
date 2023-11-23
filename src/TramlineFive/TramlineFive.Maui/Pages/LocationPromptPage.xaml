@@ -4,17 +4,18 @@
              x:Class="TramlineFive.Pages.LocationPromptPage"
              Shell.FlyoutBehavior="Disabled">
 
-    <Grid BackgroundColor="DodgerBlue">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackLayout VerticalOptions="End" HorizontalOptions="Center" BackgroundColor="Transparent">
-            <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="fmd_good" TextColor="White"  FontSize="170" HorizontalOptions="Center" VerticalOptions="Center"/>
-            <Label TextColor="White" FontSize="21" HorizontalTextAlignment="Center" Margin="15,10,15,10" Text="Използвайки местоложение ще могат да бъдат намерени спирки близо до Вас." />
-            <Label TextColor="White" FontSize="15" HorizontalTextAlignment="Center" Text="Местоположението ви са лични данни, които не се съхраняват или споделят." />
-        </StackLayout>
+            <Label Grid.Row="1" FontFamily="MaterialIconsOutlinedRegular.otf" Text="fmd_good" TextColor="DodgerBlue"  FontSize="70" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Label TextColor="Black" Grid.Row="2" FontSize="21" HorizontalTextAlignment="Center" Margin="15,10,15,10" Text="Използвайки местоложение ще могат да бъдат намерени спирки близо до Вас." />
+            <Label TextColor="Black" Grid.Row="3" FontSize="15" HorizontalTextAlignment="Center" Text="Местоположението не се съхранява или споделя." />
 
-        <Button Grid.Row="1" VerticalOptions="Start" Clicked="LocationPromptClicked" Text="ОК" BackgroundColor="White" TextColor="DodgerBlue" Margin="30,20,30,0" CornerRadius="11" />
+        <Button Grid.Row="4" VerticalOptions="Start" Clicked="LocationPromptClicked" Text="ОК" Background="DodgerBlue" TextColor="White" Margin="30,20,30,0" CornerRadius="11" />
     </Grid>
 </ContentPage>
