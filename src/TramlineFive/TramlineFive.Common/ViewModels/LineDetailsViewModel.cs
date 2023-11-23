@@ -92,7 +92,7 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
         this.publicTransport = publicTransport;
     }
 
-    public void SetHighlightedStop(string stop)
+    public async void SetHighlightedStop(string stop)
     {
         CodeViewModel code = route.Codes.FirstOrDefault(code => code.Code == stop);
         if (code != null)
@@ -100,6 +100,7 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
             code.IsHighlighted = true;
             MessengerInstance.Send(new ScrollToHighlightedStopMessage { Item = code });
 
+            await Task.Delay(1000);
             lineMapService.ZoomTo(stop);
         }
     }

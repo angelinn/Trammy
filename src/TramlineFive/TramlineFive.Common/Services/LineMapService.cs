@@ -53,7 +53,6 @@ public class LineMapService
         pinStyle = new SymbolStyle
         {
             BitmapId = bitmapId,
-            Enabled = false,
             SymbolScale = 0.1f
         };
 
@@ -62,7 +61,6 @@ public class LineMapService
         startStyle = new SymbolStyle
         {
             BitmapId = startId,
-            Enabled = false,
             SymbolScale = 0.1f
         };
 
@@ -71,7 +69,6 @@ public class LineMapService
         finishStyle = new SymbolStyle
         {
             BitmapId = finishId,
-            Enabled = false,
             SymbolScale = 0.1f
         };
     }
@@ -84,6 +81,22 @@ public class LineMapService
         double minLon = double.MaxValue;
         double maxLon = double.MinValue;
         double maxLat = double.MinValue;
+
+        int trolleyId = typeof(MapService).LoadSvgId("MTS_TrolleyBus_icon.svg");
+
+        var trolleyPinStyle = new SymbolStyle
+        {
+            BitmapId = trolleyId,
+            SymbolScale = 0.1f
+        };
+
+        int tramId = typeof(MapService).LoadSvgId("MTS_Tram_icon.svg");
+
+        var tramPinStyle = new SymbolStyle
+        {
+            BitmapId = tramId,
+            SymbolScale = 0.3f
+        };
 
         for (int i = 0; i < route.Codes.Count; ++i)
         {
@@ -101,23 +114,23 @@ public class LineMapService
             if (stopMapLocation.X < minLat)
                 minLat = stopMapLocation.X;
 
-            int styleId = pinStyle.BitmapId;
+            SymbolStyle style = pinStyle;
+
+            if (location.Lines.Any(l => l.VehicleType == TransportType.Tram))
+                style = tramPinStyle;
+            else if (location.Lines.Any(l => l.VehicleType == TransportType.Trolley)) 
+                style = trolleyPinStyle;
+
             if (i == 0)
-                styleId = startStyle.BitmapId;
+                style = startStyle;
             else if (i == route.Codes.Count - 1)
-                styleId = finishStyle.BitmapId;
+                style = finishStyle;
 
             IFeature feature = new PointFeature(stopMapLocation)
             {
                 Styles = new List<IStyle>
                 {
-                    new SymbolStyle
-                    {
-                        BitmapId = styleId,
-                        //SymbolOffset = new Offset(0, 30),
-                        SymbolScale = 0.1f,
-                        //MaxVisible = map.Navigator.Resolutions[10]
-                    }
+                    style
                 }
             };
 
