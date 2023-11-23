@@ -114,7 +114,7 @@ public class MapService
             SymbolScale = 0.14f
         };
 
-        int trolleyId = typeof(MapService).LoadSvgId("MTS_Bus_icon_trolley.svg");
+        int trolleyId = typeof(MapService).LoadSvgId("MTS_TrolleyBus_icon.svg");
 
         trolleyPinStyle = new SymbolStyle
         {
