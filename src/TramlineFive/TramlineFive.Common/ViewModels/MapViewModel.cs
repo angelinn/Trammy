@@ -224,7 +224,6 @@ namespace TramlineFive.Common.ViewModels
             }
             else
             {
-                IsVirtualTablesUp = true;
                 mapService.OnMapInfo(e);
             }
         }
