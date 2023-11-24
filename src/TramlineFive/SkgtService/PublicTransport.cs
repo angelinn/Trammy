@@ -13,9 +13,19 @@ namespace SkgtService;
 public class PublicTransport
 {
     private Dictionary<string, StopInformation> stopsHash = new();
-    private Dictionary<string, Dictionary<string, RouteInformation>> routes = new();
+    private Dictionary<string, Dictionary<string, LineInformation>> lines = new();
 
-    public List<StopInformation> Stops => stopsHash.Values.ToList();
+    private List<StopInformation> stops;
+    public List<StopInformation> Stops
+    {
+        get
+        {
+            if (stops == null)
+                stops = stopsHash.Values.ToList();
+
+            return stops;
+        }
+    }
 
     public async Task LoadData()
     {
@@ -32,21 +42,22 @@ public class PublicTransport
         var loadedRoutes = await StopsLoader.LoadRoutesAsync();
         foreach (Routes route in loadedRoutes)
         {
-            Dictionary<string, RouteInformation> singleLineRoutes = new();
+            Dictionary<string, LineInformation> singleLineRoutes = new();
             foreach (Route line in route.Lines)
             {
-                singleLineRoutes.Add(line.Name, new RouteInformation(route.Type, line.Name, line.Routes));
+                LineInformation lineInformation = new LineInformation(line.Name, route.Type, line.Routes);
+                singleLineRoutes.Add(line.Name, lineInformation);
                 foreach (Way way in line.Routes)
                 {
                     foreach (string code in way.Codes)
                     {
-                        stopsHash[code].Lines.Add(new LineInformation(line.Name, route.Type));
+                        stopsHash[code].Lines.Add(lineInformation);
                         stopsHash[code].Lines = stopsHash[code].Lines.DistinctBy(line => line.Name).ToList();
                     }
                 }
             }
 
-            routes.Add(route.Type, singleLineRoutes);
+            lines.Add(route.Type, singleLineRoutes);
         }
     }
 
@@ -57,21 +68,40 @@ public class PublicTransport
 
         return null;
     }
-
-    public RouteInformation FindByTypeAndLine(string type, string line)
+    public LineInformation FindByTypeAndLine(TransportType type, string line)
     {
-        if (routes.TryGetValue(type, out var linesInfo))
+        return FindByTypeAndLine(EnumToType(type), line);
+    }
+
+    public LineInformation FindByTypeAndLine(string type, string line)
+    {
+        if (lines.TryGetValue(type, out var linesInfo))
         {
-            if (linesInfo.TryGetValue(line, out RouteInformation routeInformation))
+            if (linesInfo.TryGetValue(line, out LineInformation routeInformation))
                 return routeInformation;
         }
 
         return null;
     }
 
-    public List<RouteInformation> FindByType(string type)
+    private string EnumToType(TransportType type)
     {
-        if (routes.TryGetValue(type, out var linesInfo))
+        return type switch
+        {
+            TransportType.Tram => "tram",
+            TransportType.Trolley => "trolley",
+            _ => "bus"
+        };
+    }
+
+    public List<LineInformation> FindByType(TransportType type)
+    {
+        return FindByType(EnumToType(type));
+    }
+
+    public List<LineInformation> FindByType(string type)
+    {
+        if (lines.TryGetValue(type, out var linesInfo))
         {
             return linesInfo.Values.ToList();
         }
@@ -80,11 +110,11 @@ public class PublicTransport
     }
 
 
-    public RouteInformation FindStopsByLine(string line, string type)
+    public LineInformation FindStopsByLine(string line, string type)
     {
-        if (routes.TryGetValue(type, out Dictionary<string, RouteInformation> route))
+        if (lines.TryGetValue(type, out Dictionary<string, LineInformation> route))
         {
-            if (route.TryGetValue(line, out RouteInformation routes))
+            if (route.TryGetValue(line, out LineInformation routes))
             {
                 return routes;
             }

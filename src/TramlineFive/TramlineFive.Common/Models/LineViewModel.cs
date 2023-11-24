@@ -9,7 +9,7 @@ namespace TramlineFive.Common.Models;
 
 public class LineViewModel
 {
-    public string Type { get; set; }
+    public TransportType Type { get; set; }
     public string Name { get; set; }
-    public RouteInformation Routes { get; set; }
+    public LineInformation Routes { get; set; }
 }

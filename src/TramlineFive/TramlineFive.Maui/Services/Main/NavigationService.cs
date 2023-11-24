@@ -24,23 +24,23 @@ public class NavigationService : INavigationService
         //await (main.RootPage as MainPage).ToggleHamburgerAsync();
     }
 
-    public void GoToDetails(Line line, string stop)
+    public void GoToDetails(ArrivalInformation line, string stop)
     {
         PublicTransport publicTransport = ServiceContainer.ServiceProvider.GetService<PublicTransport>();
-        RouteInformation routeInformation = publicTransport.FindByTypeAndLine(line.VehicleType, line.Name);
-        if (routeInformation != null)
+        LineInformation lineInformation = publicTransport.FindByTypeAndLine(line.VehicleType, line.LineName);
+        if (lineInformation != null)
         {
             LineViewModel lineViewModel = new LineViewModel
             {
-                Name = line.Name,
-                Routes = routeInformation,
+                Name = line.LineName,
+                Routes = lineInformation,
                 Type = line.VehicleType
             };
 
             GoToDetails(lineViewModel, stop);
         }
         else
-            Toast.Make($"Не може да се отиде на спирка {stop} за {line.Name}").Show();
+            Toast.Make($"Не може да се отиде на спирка {stop} за {line.LineName}").Show();
     }
 
     public async void GoToDetails(LineViewModel line, string stop)

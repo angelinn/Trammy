@@ -25,7 +25,7 @@ public class ArrivalsService
         this.publicTransport = publicTransport;
     }
 
-    public async Task<StopInfo> GetByStopCodeAsync(string stopCode)
+    public async Task<StopResponse> GetByStopCodeAsync(string stopCode)
     {
         HttpResponseMessage response = await client.GetAsync($"{ARRIVALS_API_URL}/{stopCode}/");
         if (!response.IsSuccessStatusCode)
@@ -39,7 +39,7 @@ public class ArrivalsService
         string json = await response.Content.ReadAsStringAsync();
         StopInfo info = JsonConvert.DeserializeObject<StopInfo>(json);
 
-        List<Line> pendingDelete = new();
+        StopResponse stopResponse = new StopResponse(info);
 
         foreach (Line line in info.Lines)
         {
@@ -52,17 +52,16 @@ public class ArrivalsService
                 //continue;
             }
 
-            RouteInformation routeInformation = publicTransport.FindByTypeAndLine(line.VehicleType, line.Name);
-            if (routeInformation == null)
+            LineInformation lineInformation = publicTransport.FindByTypeAndLine(line.VehicleType, line.Name);
+            if (lineInformation == null)
                 continue;
 
             // routes.json comes with cyrilic E
-            if (routeInformation.Routes.Count > 0)
+            if (lineInformation.Routes.Count > 0)
             {
-                List<LineRoute> waysWithStop = routeInformation.Routes.Where(w => w.Codes.FirstOrDefault(code => code == stopCode) != null).ToList();
+                List<LineRoute> waysWithStop = lineInformation.Routes.Where(w => w.Codes.FirstOrDefault(code => code == stopCode) != null).ToList();
                 if (waysWithStop.Count == 0)
                 {
-                    pendingDelete.Add(line);
                     continue;
                 }
 
@@ -74,11 +73,10 @@ public class ArrivalsService
                     line.Direction = publicTransport.FindStop(way.Codes[^1]).PublicName;
                 }
             }
+
+            stopResponse.Arrivals.Add(new ArrivalInformation(line));
         }
 
-        foreach (Line line in pendingDelete)
-            info.Lines.Remove(line);
-
-        return info;
+        return stopResponse;
     }
 }

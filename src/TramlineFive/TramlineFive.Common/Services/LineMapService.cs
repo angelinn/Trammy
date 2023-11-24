@@ -36,13 +36,13 @@ public class LineMapService
         this.publicTransport = publicTransport;
     }
 
-    public async Task SetupMapAsync(string line, string type, LineRoute route, string tileServer = null)
+    public async Task SetupMapAsync(LineRoute route, string tileServer = null)
     {
         Map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
         Map.Home = (h) => ZoomToBox(h, routeBox);
         LoadPinStyles();
 
-        ILayer stopsLayer = LoadStops(line, type, route);
+        ILayer stopsLayer = LoadStops(route);
         Map.Layers.Add(stopsLayer);
     }
 
@@ -73,7 +73,7 @@ public class LineMapService
         };
     }
 
-    private ILayer LoadStops(string line, string type, LineRoute route)
+    private ILayer LoadStops(LineRoute route)
     {
         List<IFeature> features = new List<IFeature>();
 

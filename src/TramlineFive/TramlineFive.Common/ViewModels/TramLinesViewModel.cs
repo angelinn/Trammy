@@ -25,6 +25,6 @@ public class TramLinesViewModel : LinesViewModel
 
     public override async Task LoadAsync()
     {
-        await LoadTypeAsync("tram");
+        await LoadTypeAsync(TransportType.Tram);
     }
 }

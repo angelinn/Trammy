@@ -23,3 +23,17 @@ public class StopInformation
         PublicName = stop.PublicName;
     }
 }
+
+public class StopResponse
+{
+    public string Code { get; set; }
+    public string PublicName { get; set; }
+    public List<ArrivalInformation> Arrivals { get; set; } = new();
+    public bool IsFavourite { get; set; }
+
+    public StopResponse(StopInfo stop)
+    {
+        Code = stop.Code;
+        PublicName = stop.Name;
+    }
+}

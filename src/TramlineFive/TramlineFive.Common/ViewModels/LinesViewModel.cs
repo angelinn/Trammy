@@ -59,14 +59,14 @@ namespace TramlineFive.Common.ViewModels
 
         public abstract Task LoadAsync();
 
-        protected async Task LoadTypeAsync(string type)
+        protected async Task LoadTypeAsync(TransportType type)
         {
             if (allLines != null)
                 return;
 
             await StopsLoader.LoadRoutesAsync();
 
-            allLines = new(publicTransport.FindByType(type).Select(p => new LineViewModel { Type = type, Routes = p, Name = p.LineName }));
+            allLines = new(publicTransport.FindByType(type).Select(p => new LineViewModel { Type = type, Routes = p, Name = p.Name }));
             Lines = new(allLines);
         }
 

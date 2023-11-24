@@ -7,6 +7,7 @@ using Mapsui.Projections;
 using Mapsui.Styles;
 using Mapsui.UI;
 using SkgtService;
+using SkgtService.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,8 +43,9 @@ namespace TramlineFive.Common.ViewModels
         private List<ArrivalStopModel> nearbyStops = new();
 
         private readonly MapService mapService;
+        private readonly PublicTransport publicTransport;
 
-        public MapViewModel(MapService mapServiceOther)
+        public MapViewModel(MapService mapServiceOther, PublicTransport publicTransport)
         {
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
             OpenHamburgerCommand = new RelayCommand(OnOpenHamburger);
@@ -56,7 +58,7 @@ namespace TramlineFive.Common.ViewModels
             MapInfoCommand = new RelayCommand<MapInfoEventArgs>(OnMapInfo);
 
             mapService = mapServiceOther;
-
+            this.publicTransport = publicTransport;
             int maxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             int maxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
 
@@ -203,10 +205,10 @@ namespace TramlineFive.Common.ViewModels
             if (String.IsNullOrEmpty(stopCode))
                 return;
 
-            //if (Char.IsDigit(stopCode[0]))
-            //    FilteredStops = StopsLoader.Stops.Where(s => s.Code.Contains(stopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
-            //else
-            //    FilteredStops = StopsLoader.Stops.Where(s => s.PublicName.ToLower().Contains(stopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+            if (Char.IsDigit(stopCode[0]))
+                FilteredStops = publicTransport.Stops.Where(s => s.Code.Contains(stopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+            else
+                FilteredStops = publicTransport.Stops.Where(s => s.PublicName.ToLower().Contains(stopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
 
             RaisePropertyChanged("FilteredStops");
 

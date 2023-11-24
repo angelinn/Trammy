@@ -61,7 +61,7 @@ namespace TramlineFive.Common.ViewModels
 
         private async Task AddFavouriteAsync()
         {
-            FavouriteDomain added = await FavouriteDomain.AddAsync(stopInfo.Name, stopInfo.Code);
+            FavouriteDomain added = await FavouriteDomain.AddAsync(stopInfo.PublicName, stopInfo.Code);
             if (added != null)
             {
                 MessengerInstance.Send(new FavouriteAddedMessage(added));
@@ -102,7 +102,7 @@ namespace TramlineFive.Common.ViewModels
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
 
-                StopInfo info = await arrivalsService.GetByStopCodeAsync(stopCode);
+                StopResponse info = await arrivalsService.GetByStopCodeAsync(stopCode);
 
                 IsLoading = false;
 
@@ -111,12 +111,12 @@ namespace TramlineFive.Common.ViewModels
 
                 StopInfo = info;
 
-                Direction = stopInfo.Lines.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
+                Direction = stopInfo.Arrivals.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
 
                 sw.Stop();
 
-                MessengerInstance.Send(new ShowMapMessage(true, StopInfo.Lines.Count, sw.ElapsedMilliseconds));
-                await HistoryDomain.AddAsync(stopCode, stopInfo.Name);
+                MessengerInstance.Send(new ShowMapMessage(true, StopInfo.Arrivals.Count, sw.ElapsedMilliseconds));
+                await HistoryDomain.AddAsync(stopCode, stopInfo.PublicName);
             }
             catch (StopNotFoundException)
             {
@@ -130,8 +130,8 @@ namespace TramlineFive.Common.ViewModels
         }
 
 
-        private Line selected;
-        public Line Selected
+        private ArrivalInformation selected;
+        public ArrivalInformation Selected
         {
             get
             {
@@ -161,8 +161,8 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-        private StopInfo stopInfo = new StopInfo();
-        public StopInfo StopInfo
+        private StopResponse stopInfo;
+        public StopResponse StopInfo
         {
             get
             {

@@ -25,6 +25,6 @@ public class TrolleyLinesViewModel : LinesViewModel
 
     public override async Task LoadAsync()
     {
-        await LoadTypeAsync("trolley");
+        await LoadTypeAsync(TransportType.Trolley);
     }
 }

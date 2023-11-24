@@ -9,6 +9,5 @@ public class StopInfo
 {
     public string Name { get; set; }
     public string Code { get; set; }
-    public ObservableCollection<Line> Lines { get; set; }
-    public bool IsFavourite { get; set; }
+    public List<Line> Lines { get; set; }
 }
