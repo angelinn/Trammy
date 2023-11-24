@@ -208,7 +208,8 @@ public class MapService
 
         activeStyles.Clear();
 
-        IFeature feature = stopsDictionary[code];
+        if (!stopsDictionary.TryGetValue(code, out IFeature feature))
+            return;
 
         StopInformation location = feature["stopObject"] as StopInformation;
         MPoint point = new MPoint(location.Lon, location.Lat);
