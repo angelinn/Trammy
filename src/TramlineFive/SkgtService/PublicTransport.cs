@@ -75,6 +75,7 @@ public class PublicTransport
 
     public LineInformation FindByTypeAndLine(string type, string line)
     {
+        line = line.Replace('E', 'Е');
         if (lines.TryGetValue(type, out var linesInfo))
         {
             if (linesInfo.TryGetValue(line, out LineInformation routeInformation))
