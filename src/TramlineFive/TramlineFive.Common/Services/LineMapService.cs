@@ -154,9 +154,9 @@ public class LineMapService
         };
     }
 
-    private void ZoomToBox(Navigator navigator, MRect box)
-    {
-        navigator.ZoomToBox(box.Grow(box.Width * 0.1, box.Height * 0.1));
+    private void ZoomToBox(Navigator navigator, MRect box, long duration = -1, Easing easing = null)
+    { 
+        navigator.ZoomToBox(box.Grow(box.Width * 0.1, box.Height * 0.1), MBoxFit.Fit, duration, easing);
     }
 
     public void ZoomTo(string code)
@@ -170,6 +170,6 @@ public class LineMapService
 
     public void ResetView()
     {
-        ZoomToBox(Map.Navigator, routeBox);
+        ZoomToBox(Map.Navigator, routeBox, 600, Easing.Linear);
     }
 }
