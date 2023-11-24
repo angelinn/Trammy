@@ -53,7 +53,10 @@ namespace TramlineFive.DataAccess.Domain
         {
             List<History> histories = await TramlineFiveContext.TakeForLastDays(10);
             var groups = histories.GroupBy(h => h.TimeStamp.Hour);
-            var group = groups.FirstOrDefault(g => new int[] { DateTime.Now.Hour, DateTime.Now.Hour + 1, DateTime.Now.Hour - 1 }.Contains(g.Key));
+            var group = groups.FirstOrDefault(g => g.Key == DateTime.Now.Hour);
+
+            if (group == null)
+                group = groups.FirstOrDefault(g => new int[] { DateTime.Now.Hour + 1, DateTime.Now.Hour - 1 }.Contains(g.Key));
 
             if (group != null)
             {
