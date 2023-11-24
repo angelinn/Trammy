@@ -44,14 +44,14 @@ public class MapService
     private readonly PublicTransport publicTransport;
 
     public int MaxPinsZoom { get; set; } = 15;
-    public int MaxTextZoom { get; set; } = 17; 
+    public int MaxTextZoom { get; set; } = 17;
 
     public MapService(LocationService locationService, PublicTransport publicTransport)
     {
         this.locationService = locationService;
         this.publicTransport = publicTransport;
     }
-    
+
     public async Task Initialize(Map map, Navigator navigator, string tileServer)
     {
         this.map = map;
@@ -65,7 +65,14 @@ public class MapService
     public async Task SetupMapAsync(string tileServer)
     {
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
-        map.Home = n => { n.CenterOn(point); n.ZoomTo(map.Navigator.Resolutions[17]); ShowNearbyStops(point); };
+        map.Home = n =>
+        {
+            n.CenterOn(point);
+            n.ZoomTo(map.Navigator.Resolutions[17]);
+            ShowNearbyStops(point);
+
+            Messenger.Default.Send(new MapLoadedMessage());
+        };
 
         map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
 
@@ -155,7 +162,7 @@ public class MapService
             if (location.Lines.Any(line => line.VehicleType == TransportType.Trolley))
                 symbolStyle = trolleyPinStyle;
             else if (location.Lines.Any(line => line.VehicleType == TransportType.Tram))
-            { 
+            {
                 symbolStyle = tramPinStyle;
                 offset = new Offset(0, -40);
             }
@@ -200,7 +207,20 @@ public class MapService
             IsMapInfoLayer = true
         };
     }
-    
+
+    public void MoveAroundStop(string code)
+    {
+        if (!stopsDictionary.TryGetValue(code, out IFeature feature))
+            return;
+        StopInformation location = feature["stopObject"] as StopInformation;
+        MPoint point = new MPoint(location.Lon, location.Lat);
+        MoveTo(point, 17);
+
+        MPoint localPoint = SphericalMercator.FromLonLat(point);
+
+        ShowNearbyStops(localPoint);
+    }
+
     public void MoveToStop(string code)
     {
         foreach (Style style in activeStyles)

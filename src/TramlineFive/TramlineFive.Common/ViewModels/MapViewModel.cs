@@ -45,6 +45,8 @@ namespace TramlineFive.Common.ViewModels
         private readonly MapService mapService;
         private readonly PublicTransport publicTransport;
 
+        private LocationStatus locationStatus;
+
         public MapViewModel(MapService mapServiceOther, PublicTransport publicTransport)
         {
             MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
@@ -71,7 +73,8 @@ namespace TramlineFive.Common.ViewModels
             MessengerInstance.Register<FavouritesChangedMessage>(this, OnFavouritesChanged);
             MessengerInstance.Register<NearbyStopsMessage>(this, OnNearbyStops);
             MessengerInstance.Register<SettingChanged<int>>(this, async (m) => await OnIntSettingChangedAsync(m));
-            MessengerInstance.Register<SettingChanged<string>>(this, async (m) => await OnStringSettingChangedAsync(m));
+            MessengerInstance.Register<SettingChanged<string>>(this, async (m) => await OnStringSettingChangedAsync(m)); 
+            MessengerInstance.Register<MapLoadedMessage>(this, async (m) => await CheckForHistory());
         }
 
         public async Task Initialize(Map nativeMap, Navigator navigator)
@@ -82,7 +85,7 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task LoadAsync()
         {
-            await LocalizeAsync(true);
+            locationStatus = await LocalizeAsync(true);
 
             IsMapVisible = true;
             IsMyLocationVisible = true;
@@ -172,6 +175,18 @@ namespace TramlineFive.Common.ViewModels
             nearbyStops.AddRange(message.NearbyStops.Take(4).Select(f => new ArrivalStopModel(f.Code, f.PublicName)));
 
             BuildRecommendedStops();
+        } 
+
+        private async Task CheckForHistory()
+        {
+            if (locationStatus != LocationStatus.Allowed)
+            {
+                HistoryDomain history = await HistoryDomain.GetMostFrequentStopForCurrentHour();
+                if (history != null)
+                {
+                    mapService.MoveAroundStop(history.StopCode);
+                }
+            }
         }
 
         private void BuildRecommendedStops()

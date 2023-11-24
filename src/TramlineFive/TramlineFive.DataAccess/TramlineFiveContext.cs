@@ -69,6 +69,14 @@ namespace TramlineFive.DataAccess
             return await db.Table<T>().OrderByDescending(func).Take(10).ToListAsync();
         }
 
+        public static async Task<List<History>> TakeForLastDays(int days)
+        {
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+
+            DateTime limit = DateTime.Now.Subtract(TimeSpan.FromDays(days));
+            return await db.Table<History>().Where(h => h.TimeStamp > limit).ToListAsync();
+        }
+
         public static async Task CleanHistoryAsync()
         {
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);

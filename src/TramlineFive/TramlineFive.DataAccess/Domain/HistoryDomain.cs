@@ -49,6 +49,21 @@ namespace TramlineFive.DataAccess.Domain
             return (await TramlineFiveContext.TakeByDescending<History, DateTime>(h => h.TimeStamp, count)).Select(h => new HistoryDomain(h));
         }
 
+        public static async Task<HistoryDomain> GetMostFrequentStopForCurrentHour()
+        {
+            List<History> histories = await TramlineFiveContext.TakeForLastDays(10);
+            var groups = histories.GroupBy(h => h.TimeStamp.Hour);
+            var group = groups.FirstOrDefault(g => new int[] { DateTime.Now.Hour, DateTime.Now.Hour + 1, DateTime.Now.Hour - 1 }.Contains(g.Key));
+
+            if (group != null)
+            {
+                History most = group.GroupBy(i => i.StopCode).OrderByDescending(grp => grp.Count()).Select(grp => grp.First()).First();
+                return new HistoryDomain(most);
+            }
+
+            return null;
+        }
+
         public static async Task CleanHistoryAsync()
         {
             await TramlineFiveContext.CleanHistoryAsync();
