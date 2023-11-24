@@ -36,13 +36,13 @@ public class LineMapService
         this.publicTransport = publicTransport;
     }
 
-    public async Task SetupMapAsync(LineRoute route, string tileServer = null)
+    public async Task SetupMapAsync(LineRoute route, TransportType transportType, string tileServer = null)
     {
         Map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
         Map.Home = (h) => ZoomToBox(h, routeBox);
         LoadPinStyles();
 
-        ILayer stopsLayer = LoadStops(route);
+        ILayer stopsLayer = LoadStops(route, transportType);
         Map.Layers.Add(stopsLayer);
     }
 
@@ -73,7 +73,7 @@ public class LineMapService
         };
     }
 
-    private ILayer LoadStops(LineRoute route)
+    private ILayer LoadStops(LineRoute route, TransportType transportType)
     {
         List<IFeature> features = new List<IFeature>();
 
@@ -101,7 +101,6 @@ public class LineMapService
         for (int i = 0; i < route.Codes.Count; ++i)
         {
             StopInformation location = publicTransport.FindStop(route.Codes[i]);
-
             MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(location.Lon, location.Lat));
 
             if (stopMapLocation.Y > maxLon)
@@ -116,9 +115,9 @@ public class LineMapService
 
             SymbolStyle style = pinStyle;
 
-            if (location.Lines.Any(l => l.VehicleType == TransportType.Tram))
+            if (transportType == TransportType.Tram)
                 style = tramPinStyle;
-            else if (location.Lines.Any(l => l.VehicleType == TransportType.Trolley)) 
+            else if (transportType == TransportType.Trolley)
                 style = trolleyPinStyle;
 
             if (i == 0)

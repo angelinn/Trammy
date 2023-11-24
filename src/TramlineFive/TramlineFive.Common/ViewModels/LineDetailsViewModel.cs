@@ -110,7 +110,7 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
         Line = line;
         Route = new RouteViewModel(route, publicTransport.FindStop(route.Codes[0]).PublicName, publicTransport.FindStop(route.Codes[^1]).PublicName);
 
-        lineMapService.SetupMapAsync(route);
+        lineMapService.SetupMapAsync(route, line.Type);
     }
 
     private CodeViewModel selectedStop;
