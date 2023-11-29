@@ -30,4 +30,5 @@ public interface IApplicationService
     Task<bool> RequestLocationPermissions();
     void ChangeNavigationBarColor(string color);
     void ChangeStatusBarColor(string color);
+    string GetAppDataDirectory();
 }

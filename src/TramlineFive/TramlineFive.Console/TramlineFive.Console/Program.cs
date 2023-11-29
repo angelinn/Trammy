@@ -1,18 +1,94 @@
-﻿using SkgtService.Parsers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
+using SkgtService;
+using SkgtService.Models;
+using System.Diagnostics;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
+using TramlineFive.Common.Services;
 
-namespace TramlineFive.Console
+StopsLoader.Initialize(".");
+
+PublicTransport pb = new PublicTransport();
+
+Console.WriteLine("Loading data...");
+pb.LoadData().Wait();
+
+DirectionsService directions = new DirectionsService(pb);
+
+Stopwatch sw = new Stopwatch();
+sw.Start();
+
+Console.WriteLine("Building...");
+directions.Build();
+
+sw.Stop();
+
+Console.WriteLine($"Build took {sw.Elapsed} time");
+
+sw.Reset();
+sw.Start();
+
+Console.WriteLine("Finding path...");
+Console.OutputEncoding = Encoding.UTF8;
+var path = directions.GetShortestPath(pb.FindStop("1567"), pb.FindStop("1994")).ToList();
+
+List<LineInformation> previousBuses = null;
+LineInformation singleActive = null;
+float walkingDistance = 0;
+string previousStop = "";
+
+foreach (var line in path)
 {
-    class Program
+    List<LineInformation> currentLine = pb.FindLineByTwoStops(line.Source.Stop.Code, line.Target.Stop.Code);
+    List<LineInformation> sameLines = new List<LineInformation>();
+    if (previousBuses != null)
     {
-        static void Main(string[] args)
+        if (currentLine != null)
         {
-            ArrivalsService service = new ArrivalsService();
-            service.GetByStopCodeAsync("2327").Wait();
+            sameLines = currentLine.Where(l => previousBuses.Contains(l)).ToList();
         }
+        else
+            sameLines = previousBuses;
     }
+
+    string lineNames = "";
+    if (sameLines.Count == 0)
+    {
+        if (previousStop == line.Source.Stop.Code && currentLine.Count > 0)
+            lineNames = string.Join(", ", currentLine.Select(s => s.VehicleType + " " + s.Name));
+        else
+            lineNames = $"Пеша {walkingDistance / 2} км";
+    }
+
+    else
+    {
+        if (sameLines.Count > 1 && singleActive != null && sameLines.Contains(singleActive))
+        {
+            sameLines.Clear();
+            sameLines.Add(singleActive);
+        }
+        else if (sameLines.Count == 1)
+            singleActive = sameLines[0];
+
+        lineNames = string.Join(", ", sameLines.Select(s => s.VehicleType + " " + s.Name));
+    }
+
+    previousBuses = currentLine;
+    previousStop = line.Target.Stop.Code;
+
+    //Console.WriteLine(costs[line]);
+
+    //Console.Write($" [{lineNames}]");
+    //Console.WriteLine();
+
+    string realLine = line.Source.Line == null ? "Пеша" : line.Source.Line.Name;
+    Console.WriteLine($"[{realLine}] {pb.FindStop(line.Source.Stop.Code).PublicName} - {line.Source.Stop.Code} to {pb.FindStop(line.Target.Stop.Code).PublicName} - {line.Target.Stop.Code}");
+
 }
+//foreach (var shortestPath in res)
+//Console.WriteLine($"{pb.FindStop(shortestPath.Source.Code).PublicName} - {shortestPath.Source.Code} to {pb.FindStop(shortestPath.Target.Code).PublicName} - {shortestPath.Target.Code}");
+
+sw.Stop();
+
+Console.WriteLine($"Search took {sw.Elapsed} time");
+

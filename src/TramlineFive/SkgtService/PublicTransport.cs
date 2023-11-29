@@ -1,4 +1,5 @@
-﻿using SkgtService.Exceptions;
+﻿using GalaSoft.MvvmLight.Messaging;
+using SkgtService.Exceptions;
 using SkgtService.Models;
 using SkgtService.Models.Json;
 using System;
@@ -26,6 +27,8 @@ public class PublicTransport
             return stops;
         }
     }
+
+    public Dictionary<string, Dictionary<string, LineInformation>> Lines => lines;
 
     public async Task LoadData()
     {
@@ -111,6 +114,18 @@ public class PublicTransport
         return null;
     }
 
+    public List<LineInformation> FindLineByTwoStops(string one, string other)
+    {
+        List<LineInformation> result = new List<LineInformation>();
+        foreach (var allLines in lines.Values)
+        {
+            var currentLines = allLines.Values.Where(v => v.Routes.Any(r => r.Codes.Contains(one) && r.Codes.Contains(other)));
+            if (currentLines.Any())
+                result.AddRange(currentLines);
+        }
+
+        return result;
+    } 
 
     public LineInformation FindStopsByLine(string line, string type)
     {

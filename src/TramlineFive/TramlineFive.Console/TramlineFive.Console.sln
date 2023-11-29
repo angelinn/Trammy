@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TramlineFive.Console", "TramlineFive.Console\TramlineFive.Console.csproj", "{FFDBEC36-6668-426C-B2C7-2127DB14F069}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkgtService", "..\SkgtService\SkgtService.csproj", "{8750C699-DEAE-42E3-94D8-0FD1D05BBFA3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TramlineFive.Common", "..\TramlineFive.Common\TramlineFive.Common.csproj", "{60F22A47-0DC9-4829-8344-426A21A17DBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8750C699-DEAE-42E3-94D8-0FD1D05BBFA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8750C699-DEAE-42E3-94D8-0FD1D05BBFA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8750C699-DEAE-42E3-94D8-0FD1D05BBFA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60F22A47-0DC9-4829-8344-426A21A17DBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60F22A47-0DC9-4829-8344-426A21A17DBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60F22A47-0DC9-4829-8344-426A21A17DBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60F22A47-0DC9-4829-8344-426A21A17DBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
