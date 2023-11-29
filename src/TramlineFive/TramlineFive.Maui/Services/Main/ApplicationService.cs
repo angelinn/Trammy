@@ -160,4 +160,9 @@ public class ApplicationService : IApplicationService
     {
         permissionService.ChangeStatusBarColor(color);
     }
+
+    public string GetAppDataDirectory()
+    {
+        return FileSystem.Current.AppDataDirectory;
+    }
 }

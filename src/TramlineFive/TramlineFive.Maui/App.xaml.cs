@@ -10,6 +10,9 @@ using TramlineFive.Themes;
 using GalaSoft.MvvmLight.Messaging;
 using TramlineFive.Maui.Services;
 using TramlineFive.Pages;
+using TramlineFive.Maui.Platforms.Android;
+using Android.Widget;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 
 namespace TramlineFive.Maui
 {
@@ -85,6 +88,39 @@ namespace TramlineFive.Maui
             //System.Diagnostics.Debug.WriteLine("loaded favourites");
 
             StopsLoader.OnStopsUpdated += OnStopsUpdated;
+
+            Messenger.Default.Register<SubscribeMessage>(this, m =>
+            {
+#if ANDROID
+                Android.App.ActivityManager activityManager = Platform.CurrentActivity.GetSystemService(Android.Content.Context.ActivityService) as Android.App.ActivityManager;
+                if (activityManager.IsBackgroundRestricted)
+                {
+                    Toast.MakeText(Platform.CurrentActivity, "Моля позволете приложението да работи във фонов режим.", ToastLength.Long).Show();
+                    Android.Content.Intent i = new Android.Content.Intent(Android.Provider.Settings.ActionApplicationDetailsSettings);
+
+                    i.AddCategory(Android.Content.Intent.CategoryDefault);
+                    i.SetData(Android.Net.Uri.Parse("package:" + Platform.CurrentActivity.ApplicationContext.PackageName));
+                    Platform.CurrentActivity.StartActivity(i);
+
+                    return;
+                }
+
+                Android.Content.Intent intent = new Android.Content.Intent(Platform.CurrentActivity, typeof(WatchService));
+                intent.PutExtra("line", m.lineName);
+                intent.PutExtra("stop", m.stopCode);
+
+                Platform.CurrentActivity.StopService(intent);
+
+                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                {
+                    Platform.CurrentActivity.StartForegroundService(intent);
+                }
+                else
+                {
+                    Platform.CurrentActivity.StartService(intent);
+                }
+#endif
+            });
         }
 
         private void OnStopsUpdated(object sender, EventArgs e)

@@ -26,6 +26,7 @@ namespace TramlineFive.Common.ViewModels
         public ICommand RefreshCommand { get; private set; }
 
         public ICommand AnimateFavouriteCommand { get; set; }
+        public ICommand SubscribeCommand { get; set; }
 
 
         private readonly ArrivalsService arrivalsService;
@@ -43,6 +44,11 @@ namespace TramlineFive.Common.ViewModels
             {
                 await SearchByStopCodeAsync(stopCode);
                 IsRefreshing = false;
+            });
+
+            SubscribeCommand = new RelayCommand<ArrivalInformation>(m =>
+            {
+                MessengerInstance.Send(new SubscribeMessage(m.LineName, stopCode));
             });
 
             MessengerInstance.Register<StopSelectedMessage>(this, async (sc) =>

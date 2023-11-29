@@ -73,6 +73,10 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
+                                    <ViewCell.ContextActions>
+                                        <MenuItem Text="Запиши известия" Command="{Binding BindingContext.SubscribeCommand, Source={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding}" />
+                                    </ViewCell.ContextActions>
+                                    
                                     <views:VirtualTablesViewCell BindingContext="{Binding}" />
                                 </ViewCell>
                             </DataTemplate>

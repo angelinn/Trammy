@@ -19,6 +19,10 @@ using TramlineFive.Common.Messages;
 using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 using Android.Content.Res;
 using TramlineFive.Maui.Services;
+using Bumptech.Glide.Load;
+using TramlineFive.Maui.Platforms.Android;
+using AndroidX.Core.App;
+using AndroidX.Core.Content;
 
 namespace TramlineFive.Maui
 {
@@ -63,7 +67,36 @@ namespace TramlineFive.Maui
                 new AlertDialog.Builder(this).SetMessage(args.Exception.Message).Create().Show();
             };
 
+            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.PostNotifications) != Permission.Granted)
+            {
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.PostNotifications }, 0);
+            }
         }
+
+        //protected override void OnResume()
+        //{
+        //    base.OnResume();
+        //    Intent intent = new Intent(this, typeof(WatchService));
+        //    StopService(intent);
+        //}
+        
+        //protected override void OnPause()
+        //{
+        //    base.OnPause();
+
+        //    Intent intent = new Intent(this, typeof(WatchService));
+        //    intent.PutExtra("line", "107");
+        //    intent.PutExtra("stop", "2193");
+
+        //    if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+        //    {
+        //        StartForegroundService(intent);
+        //    }
+        //    else
+        //    {
+        //        StartService(intent);
+        //    }
+        //}
 
         private void InitFontScale()
         {

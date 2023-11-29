@@ -52,6 +52,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.0.1-alpha" />
     <PackageReference Include="Octokit" Version="0.28.0" />
+    <PackageReference Include="QuikGraph" Version="2.5.0" />
+    <PackageReference Include="QuikGraph.Serialization" Version="2.5.0" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
 
