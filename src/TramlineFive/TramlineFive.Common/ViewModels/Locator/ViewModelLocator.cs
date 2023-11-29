@@ -35,6 +35,7 @@ namespace TramlineFive.Common.ViewModels.Locator
         public TramLinesViewModel TramLinesViewModel => ServiceContainer.ServiceProvider.GetService<TramLinesViewModel>();
         public TrolleyLinesViewModel TrolleyLinesViewModel => ServiceContainer.ServiceProvider.GetService<TrolleyLinesViewModel>();
         public ForwardLineDetailsViewModel ForwardLineDetailsViewModel => ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>();
+        public DirectionsViewModel DirectionsViewModel => ServiceContainer.ServiceProvider.GetService<DirectionsViewModel>();
 
 
     }
@@ -57,6 +58,7 @@ namespace TramlineFive.Common.ViewModels.Locator
             services.AddSingleton<TrolleyLinesViewModel>();
             services.AddSingleton<LineDetailsViewModel>();
             services.AddSingleton<ForwardLineDetailsViewModel>();
+            services.AddSingleton<DirectionsViewModel>();
         }
     }
 }

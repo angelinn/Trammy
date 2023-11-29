@@ -65,6 +65,13 @@
                 <pages:LinesTab BindingContext="{Binding TrolleyLinesViewModel, Source={StaticResource Locator}}" />
             </ShellContent>
         </Tab>
+
+        <ShellContent Style="{StaticResource TabStyle}" Route="Directions" Title="Пътуване" ContentTemplate="{DataTemplate pages:Directions}">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="route" />
+            </ShellContent.Icon>
+        </ShellContent>
+        
         <ShellContent Route="About" Title="Информация">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="info" />
@@ -84,6 +91,7 @@
         </Tab>
 
     </FlyoutItem>
+
 
     <ShellContent Style="{StaticResource TabStyle}" Route="Settings" Title="Настройки" ContentTemplate="{DataTemplate pages:SettingsPage}">
         <ShellContent.Icon>
