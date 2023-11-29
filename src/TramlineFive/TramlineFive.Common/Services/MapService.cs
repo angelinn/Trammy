@@ -150,9 +150,6 @@ public class MapService
         stopsDictionary = new Dictionary<string, IFeature>();
 
         await publicTransport.LoadData();
-        DirectionsService d = new DirectionsService(publicTransport);
-        d.Build();
-        var res = d.GetShortestPath(publicTransport.FindStop("2193"), publicTransport.FindStop("2327")).ToList();
 
         Stops = publicTransport.Stops;
 

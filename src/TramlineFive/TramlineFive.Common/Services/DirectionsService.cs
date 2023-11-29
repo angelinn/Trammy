@@ -1,4 +1,5 @@
 ﻿using KdTree.Math;
+using Mapsui.UI.Maui;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.GeometriesGraph;
 using NetTopologySuite.Noding;
@@ -16,6 +17,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using TramlineFive.Common.Models;
 
 namespace TramlineFive.Common.Services;
 
@@ -60,6 +62,14 @@ public class DirectionsService
 
             return Stop.Code == other.Stop.Code;
         }
+    }
+
+    public async Task BuildAsync()
+    {
+        await Task.Run(() =>
+        {
+            Build();
+        });
     }
 
     public void Build()
@@ -118,6 +128,7 @@ public class DirectionsService
         {
             foreach (StopInformation anotherStop in publicTransport.Stops)
             {
+
                 if (anotherStop != stop)
                 {
                     if (anotherStop.Lines.Count == 0)
@@ -128,6 +139,7 @@ public class DirectionsService
                     if (float.IsNaN(distance))
                         distance = 0;
 
+                    // Прекачване пеша до 300м
                     if (distance < 0.3 && !stop.Lines.Any(a => anotherStop.Lines.Contains(a)))
                     {
                         List<Node> nodes = BuildNode(anotherStop);
@@ -136,7 +148,25 @@ public class DirectionsService
                             var edge = new Edge<Node>(new Node(stop), node);
                             graph.AddVerticesAndEdge(edge);
 
-                            costs.Add(edge, distance * 5);
+                            costs.Add(edge, distance * 5f);
+                        }
+                    }
+                }
+                else
+                {
+                    // Прекачване на същата спирка
+                    List<Node> nodes = BuildNode(stop);
+                    foreach (Node node in nodes)
+                    {
+                        foreach (Node sameNode in nodes)
+                        {
+                            if (node.Line != sameNode.Line && node.Line != null && sameNode.Line != null)
+                            {
+                                var edge = new Edge<Node>(node, sameNode);
+                                graph.AddEdge(edge);
+
+                                costs.Add(edge, 0.5f);
+                            }
                         }
                     }
                 }
@@ -144,14 +174,29 @@ public class DirectionsService
         }
     }
 
-    public IEnumerable<Edge<Node>> GetShortestPath(StopInformation from, StopInformation to)
+    public List<DirectionsStep> GetShortestPath(StopInformation from, StopInformation to)
     {
         var searchFunction = graph.ShortestPathsDijkstra((s) =>
         {
             return costs[s];
         }, new Node(from));
 
-        searchFunction(new Node(to), out var path);
+        if (searchFunction(new Node(to), out IEnumerable<Edge<Node>> path))
+        {
+            var edge = graph.Edges.Where(e => e.Source.Stop.Code == "0776" && e.Target.Stop.Code == "0776");
+            foreach (var a in edge)
+                Console.WriteLine($"{a.Source.Line?.Name} - {a.Target.Line?.Name} {costs[a]}");
+
+            return path.Select(p => new DirectionsStep
+            {
+                FromStop = p.Source.Stop,
+                FromLine = p.Source.Line,
+                ToStop = p.Target.Stop,
+                ToLine = p.Target.Line
+            }).ToList();
+        }
+
+        return new List<DirectionsStep>();
 
         //var edge = graph.Edges.Where(e => e.Source.Stop.Code == "0889" && e.Target.Stop.Code == "0876");
         //foreach (var a in edge)
@@ -161,9 +206,6 @@ public class DirectionsService
         //var edgea = graph.Edges.Where(e => e.Source.Stop.Code == "0876" && e.Target.Stop.Code == "0636");
         //foreach (var a in edgea)
         //    Console.WriteLine($"{a.Source.Line?.Name} - {a.Target.Line?.Name} {costs[a]}");
-
-
-        return path;
     }
 
     private List<Node> BuildNode(StopInformation stop)

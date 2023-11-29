@@ -30,7 +30,7 @@ sw.Start();
 
 Console.WriteLine("Finding path...");
 Console.OutputEncoding = Encoding.UTF8;
-var path = directions.GetShortestPath(pb.FindStop("1567"), pb.FindStop("1994")).ToList();
+var path = directions.GetShortestPath(pb.FindStop("1994"), pb.FindStop("0849")).ToList();
 
 List<LineInformation> previousBuses = null;
 LineInformation singleActive = null;
@@ -39,7 +39,7 @@ string previousStop = "";
 
 foreach (var line in path)
 {
-    List<LineInformation> currentLine = pb.FindLineByTwoStops(line.Source.Stop.Code, line.Target.Stop.Code);
+    List<LineInformation> currentLine = pb.FindLineByTwoStops(line.FromStop.Code, line.ToStop.Code);
     List<LineInformation> sameLines = new List<LineInformation>();
     if (previousBuses != null)
     {
@@ -54,7 +54,7 @@ foreach (var line in path)
     string lineNames = "";
     if (sameLines.Count == 0)
     {
-        if (previousStop == line.Source.Stop.Code && currentLine.Count > 0)
+        if (previousStop == line.FromStop.Code && currentLine.Count > 0)
             lineNames = string.Join(", ", currentLine.Select(s => s.VehicleType + " " + s.Name));
         else
             lineNames = $"Пеша {walkingDistance / 2} км";
@@ -74,15 +74,15 @@ foreach (var line in path)
     }
 
     previousBuses = currentLine;
-    previousStop = line.Target.Stop.Code;
+    previousStop = line.ToStop.Code;
 
     //Console.WriteLine(costs[line]);
 
     //Console.Write($" [{lineNames}]");
     //Console.WriteLine();
 
-    string realLine = line.Source.Line == null ? "Пеша" : line.Source.Line.Name;
-    Console.WriteLine($"[{realLine}] {pb.FindStop(line.Source.Stop.Code).PublicName} - {line.Source.Stop.Code} to {pb.FindStop(line.Target.Stop.Code).PublicName} - {line.Target.Stop.Code}");
+    string realLine = line.FromLine == null ? "Пеша" : line.FromLine.Name;
+    Console.WriteLine($"[{realLine}] {pb.FindStop(line.FromStop.Code).PublicName} - {line.FromStop.Code} to {pb.FindStop(line.ToStop.Code).PublicName} - {line.ToStop.Code}");
 
 }
 //foreach (var shortestPath in res)
