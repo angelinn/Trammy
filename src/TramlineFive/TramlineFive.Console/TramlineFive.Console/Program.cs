@@ -1,4 +1,5 @@
 ﻿
+using QuikGraph.Algorithms.MaximumFlow;
 using SkgtService;
 using SkgtService.Models;
 using System.Diagnostics;
@@ -30,7 +31,7 @@ sw.Start();
 
 Console.WriteLine("Finding path...");
 Console.OutputEncoding = Encoding.UTF8;
-var path = directions.GetShortestPath(pb.FindStop("1994"), pb.FindStop("0849")).ToList();
+var path = directions.GetShortestPath(pb.FindStop("2193"), pb.FindStop("2327")).ToList();
 
 List<LineInformation> previousBuses = null;
 LineInformation singleActive = null;
@@ -82,6 +83,13 @@ foreach (var line in path)
     //Console.WriteLine();
 
     string realLine = line.FromLine == null ? "Пеша" : line.FromLine.Name;
+    if (line == path.First())
+        realLine = "Начало";
+    if (line.FromLine == null && line.ToLine != null)
+        realLine = "Качване на " + line.ToLine.Name;
+    else if (line.FromLine != null && line.ToLine == null)
+        realLine = "Слизане от " + line.FromLine.Name;
+
     Console.WriteLine($"[{realLine}] {pb.FindStop(line.FromStop.Code).PublicName} - {line.FromStop.Code} to {pb.FindStop(line.ToStop.Code).PublicName} - {line.ToStop.Code}");
 
 }

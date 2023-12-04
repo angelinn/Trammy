@@ -57,8 +57,11 @@ public class DirectionsService
 
         public bool Equals(Node other)
         {
-            if (Line != null)
+            if (Line != null && other.Line != null)
                 return Stop.Code == other.Stop.Code && Line.Name == other.Line.Name && Line.VehicleType == other.Line.VehicleType;
+
+            if ((Line != null && other.Line == null) || (Line == null && other.Line != null))
+                return false;
 
             return Stop.Code == other.Stop.Code;
         }
@@ -85,35 +88,27 @@ public class DirectionsService
                         if (i + 1 < route.Codes.Count)
                         {
                             var stop = publicTransport.FindStop(route.Codes[i]);
-                            var anotherStop = publicTransport.FindStop(route.Codes[i + 1]);
+                            var anotherStopInfo = publicTransport.FindStop(route.Codes[i + 1]);
 
                             List<Node> localNodesStop = BuildNode(stop);
-                            List<Node> localNodesAnotherStop = BuildNode(anotherStop);
-                            foreach (var currentLine in localNodesStop)
+                            List<Node> localNodesAnotherStop = BuildNode(anotherStopInfo);
+                            
+                            // build nodes for every route of every line
+                            foreach (var currentStop in localNodesStop)
                             {
-                                foreach (var anotherNode in localNodesAnotherStop)
+                                foreach (var anotherStop in localNodesAnotherStop)
                                 {
-                                    if (currentLine.Line != null && anotherNode.Line != null && currentLine.Line.Name == anotherNode.Line.Name)
+                                    // line not null means not starting or ending trip or walking 
+                                    if (currentStop.Line != null && anotherStop.Line != null && currentStop.Line.Name == anotherStop.Line.Name)
                                     {
-                                        var edge = new Edge<Node>(currentLine, anotherNode);
-                                        float distance = (float)Math.Sqrt(math.DistanceSquaredBetweenPoints(new float[] { (float)stop.Lat, (float)stop.Lon }, new float[] { (float)anotherStop.Lat, (float)anotherStop.Lon }));
+                                        var edge = new Edge<Node>(currentStop, anotherStop);
+                                        float distance = (float)Math.Sqrt(math.DistanceSquaredBetweenPoints(new float[] { (float)stop.Lat, (float)stop.Lon }, 
+                                            new float[] { (float)anotherStopInfo.Lat, (float)anotherStopInfo.Lon }));
+
                                         graph.AddVerticesAndEdge(edge);
 
-                                        // if you have to change vehicles add cost
-                                        if (currentLine.Line?.Name != anotherNode.Line?.Name)
-                                            costs.Add(edge, distance * 1.1f);
-                                        else
-                                            costs.Add(edge, distance);
-
-                                        // walking distance indicated by null line should be more cost
-                                        var emptyEdge = new Edge<Node>(currentLine, new Node(anotherNode.Stop));
-                                        graph.AddVerticesAndEdge(emptyEdge);
-                                        costs[emptyEdge] = distance * 2;
-
-
-                                        var emptyEdgeStart = new Edge<Node>(new Node(currentLine.Stop), anotherNode);
-                                        graph.AddVerticesAndEdge(emptyEdgeStart);
-                                        costs[emptyEdgeStart] = distance * 2;
+                                        // cost is the distance between the stops
+                                        costs.Add(edge, distance);
                                     }
                                 }
                             }
@@ -124,11 +119,12 @@ public class DirectionsService
             }
         }
 
+        // build nodes for when you walk from one stop to a different one to catch a different bus
         foreach (StopInformation stop in publicTransport.Stops)
         {
             foreach (StopInformation anotherStop in publicTransport.Stops)
             {
-
+                // if the stop is different, that means the user has to walk from one stop to another
                 if (anotherStop != stop)
                 {
                     if (anotherStop.Lines.Count == 0)
@@ -140,7 +136,7 @@ public class DirectionsService
                         distance = 0;
 
                     // Прекачване пеша до 300м
-                    if (distance < 0.3 && !stop.Lines.Any(a => anotherStop.Lines.Contains(a)))
+                    if (distance < 0.3 /*&& !stop.Lines.Any(a => anotherStop.Lines.Contains(a))*/)
                     {
                         List<Node> nodes = BuildNode(anotherStop);
                         foreach (Node node in nodes)
@@ -160,13 +156,31 @@ public class DirectionsService
                     {
                         foreach (Node sameNode in nodes)
                         {
-                            if (node.Line != sameNode.Line && node.Line != null && sameNode.Line != null)
+                            // if line from start node is null covers 2 cases:
+                            // * when a user starts trip goes from null to a line
+                            // * when a user gets off bus (line to null) and then changes bus (null to line)
+                            if (node.Line == null)
+                            { 
+                                var edge = new Edge<Node>(node, sameNode);
+                                graph.AddVerticesAndEdge(edge);
+
+                                costs.Add(edge, 0.05f);
+                            }
+                            else if (sameNode.Line == null)
                             {
                                 var edge = new Edge<Node>(node, sameNode);
-                                graph.AddEdge(edge);
+                                graph.AddVerticesAndEdge(edge);
 
-                                costs.Add(edge, 0.5f);
+                                costs.Add(edge, 0.05f);
                             }
+                            //else if (node.Line != sameNode.Line && node.Line != null && sameNode.Line != null)
+                            //{
+                            //    // 
+                            //    var edge = new Edge<Node>(node, sameNode);
+                            //    graph.AddEdge(edge);
+
+                            //    costs.Add(edge, 0.5f);
+                            //}
                         }
                     }
                 }
@@ -183,7 +197,7 @@ public class DirectionsService
 
         if (searchFunction(new Node(to), out IEnumerable<Edge<Node>> path))
         {
-            var edge = graph.Edges.Where(e => e.Source.Stop.Code == "0776" && e.Target.Stop.Code == "0776");
+            var edge = graph.Edges.Where(e => e.Source.Stop.Code == "0849" && e.Target.Stop.Code == "6644");
             foreach (var a in edge)
                 Console.WriteLine($"{a.Source.Line?.Name} - {a.Target.Line?.Name} {costs[a]}");
 
@@ -214,6 +228,16 @@ public class DirectionsService
         foreach (var line in stop.Lines)
         {
             if (line.Name[0] == 'N')
+                continue;
+
+            // 800 lines do not work on weekends
+            if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+            {
+                if (line.VehicleType == TransportType.Additional)
+                    continue;
+            }
+            // 103 does only work on weekends
+            else if (line.Name == "103")
                 continue;
 
             result.Add(new Node(stop, line));
