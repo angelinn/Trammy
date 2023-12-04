@@ -53,11 +53,9 @@ public class ArrivalsService
             }
 
             LineInformation lineInformation = publicTransport.FindByTypeAndLine(line.VehicleType, line.Name);
-            if (lineInformation == null)
-                continue;
 
             // routes.json comes with cyrilic E
-            if (lineInformation.Routes.Count > 0)
+            if (lineInformation != null && lineInformation.Routes.Count > 0)
             {
                 List<LineRoute> waysWithStop = lineInformation.Routes.Where(w => w.Codes.FirstOrDefault(code => code == stopCode) != null).ToList();
                 if (waysWithStop.Count == 0)
