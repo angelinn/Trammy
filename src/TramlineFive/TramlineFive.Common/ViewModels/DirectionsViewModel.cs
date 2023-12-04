@@ -11,11 +11,22 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
+using TramlineFive.Common.ViewModels.Locator;
 
 namespace TramlineFive.Common.ViewModels;
 
+public enum DirectionType
+{
+    None,
+    Begin,
+    Walk,
+    Change
+}
+
 public class DirectionStepViewModel : BaseViewModel
 {
+    public DirectionType Type { get; set; }
+
     public LineInformation Line { get; set; }
     public List<StopInformation> Stops { get; set; } = new();
 }
@@ -130,23 +141,31 @@ public class DirectionsViewModel : BaseViewModel
         Directions.Clear();
         DirectionStepViewModel viewModel = new();
 
+
         for (int i = 0; i < path.Count; ++i)
         {
             if (i == 0 && i + 1 < path.Count)
             {
-                path[0].FromLine = path[1].FromLine;
-                path[0].ToLine = path[1].ToLine;
+                //path[0].FromLine = path[1].FromLine;
+                //path[0].ToLine = path[1].ToLine;
             }
 
             if (viewModel.Line == null)
             {
                 if (viewModel.Stops.Count == 0)
+                {
                     viewModel.Line = path[i].FromLine;
+                    viewModel.Stops.Add(path[i].FromStop);
+                }
             }
 
             if (i == path.Count - 1)
             {
-                viewModel.Stops.Add(path[i].ToStop);
+                if (path[i].FromStop != path[i].ToStop)
+                    viewModel.Stops.Add(path[i].ToStop);
+
+                if (path[i].FromLine == null && path[i].ToLine == null)
+                    viewModel.Type = DirectionType.Walk;
 
                 Directions.Add(viewModel);
                 break;
@@ -155,18 +174,48 @@ public class DirectionsViewModel : BaseViewModel
 
             if (path[i].FromLine == viewModel.Line)
             {
-                viewModel.Stops.Add(path[i].FromStop);
+                //viewModel.Stops.Add(path[i].FromStop);
 
-                if (path[i].FromLine == null)
+                //if (path[i].FromLine == null)
+                if (path[i].FromLine == path[i].ToLine)
                     viewModel.Stops.Add(path[i].ToStop);
-
-                if (path[i].ToLine != viewModel.Line)
+                else
                 {
-                    if (path[i].ToLine == null)
+                    
+                    if (i == 0)
+                    {
+                        viewModel.Type = DirectionType.Walk;
+
+                        Directions.Add(viewModel);
+                        viewModel = new();
+                        viewModel.Type = DirectionType.Begin;
+
+                        continue;
+                    }
+
+                    // if you have to walk from a previous stop to next one 
+                    if (path[i].ToLine != null && path[i].FromStop != path[i].ToStop)
                         viewModel.Stops.Add(path[i].ToStop);
 
-                    Directions.Add(viewModel);
-                    viewModel = new();
+                    if (path[i].FromLine == null && path[i].ToLine == null)
+                        viewModel.Type = DirectionType.Walk;
+
+                    if (path[i].FromLine == null && path[i].ToLine != null && viewModel.Stops.Count == 1)
+                    {
+                        if (path[i].FromStop != path[i].ToStop)
+                        {
+                            viewModel.Type = DirectionType.Walk;
+                            Directions.Add(viewModel);
+                        }
+
+                        viewModel = new();
+                        viewModel.Type = DirectionType.Change;
+                    }
+                    else
+                    {
+                        Directions.Add(viewModel);
+                        viewModel = new();
+                    }
                 }
             }
             else

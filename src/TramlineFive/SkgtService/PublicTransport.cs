@@ -129,7 +129,7 @@ public class PublicTransport
         }
 
         return result;
-    } 
+    }
 
     public LineInformation FindStopsByLine(string line, string type)
     {

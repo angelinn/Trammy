@@ -44,16 +44,12 @@
                                 </Grid.RowDefinitions>
                                 <Label>
                                     <Label.Text>
-                                        <MultiBinding StringFormat="{}{0} {1}">
+                                        <MultiBinding StringFormat="{}{0} {1} ({2})">
                                             <Binding Path="Line.VehicleType" />
                                             <Binding Path="Line.Name" />
+                                            <Binding Path="Type" />
                                         </MultiBinding>
                                     </Label.Text>
-                                    <Label.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding Line, TargetNullValue=''}" Value="">
-                                            <Setter Property="Text" Value="Пеша" />
-                                        </DataTrigger>
-                                    </Label.Triggers>
                                 </Label>
                                 <Label Text="{Binding Stops.Count, StringFormat='{0} спирки'}" Grid.Row="1" />
                                 <ListView ItemsSource="{Binding Stops}" Grid.Row="2">
