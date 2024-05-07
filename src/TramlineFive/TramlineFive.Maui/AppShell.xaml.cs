@@ -26,7 +26,7 @@ namespace TramlineFive.Maui
                 FlyoutIsPresented = !FlyoutIsPresented;
             });
 
-            Messenger.Default.Register<ChangePageMessage>(this, (m) => GoToAsync($"//{m.Page}"));
+            Messenger.Default.Register<ChangePageMessage>(this, (m) => PushAsync($"//{m.Page}"));
         }
     }
 }

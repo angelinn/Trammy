@@ -11,8 +11,10 @@
     <Shell.Resources>
         <Style x:Key="TabStyle" TargetType="ShellContent">
             <Setter Property="Shell.TitleColor"
-                        Value="Blue" />
+                        Value="White" />
             <Setter Property="Shell.TabBarTitleColor"
+              Value="DodgerBlue" />
+            <Setter Property="Shell.BackgroundColor"
               Value="DodgerBlue" />
         </Style>
 

@@ -5,6 +5,7 @@
              xmlns:cv="clr-namespace:TramlineFive.Converters" 
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              Title="Настройки"
+             Shell.NavBarIsVisible="True"
              BindingContext="{Binding SettingsViewModel, Source={StaticResource Locator}}">
 
     <ContentPage.Resources>
@@ -24,8 +25,8 @@
                     <TapGestureRecognizer Command="{Binding CleanHistoryCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="delete" FontSize="24" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="5,0,0,0"/>
-                <Label Grid.Column="1" Text="Изчистване на историята на търсенията" FontSize="16" VerticalTextAlignment="Center" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="delete" FontSize="24" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="10,0,0,0"/>
+                <Label Grid.Column="1" Text="Изчистване на история" FontSize="16" VerticalTextAlignment="Center" />
                 <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HeightRequest="10"
                                    HorizontalOptions="{OnPlatform Android=StartAndExpand, WinUI=FillAndExpand}" />
             </Grid>
@@ -38,7 +39,7 @@
                     <TapGestureRecognizer Command="{Binding UpdateStopsCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="refresh" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="5,0,0,0"/>
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="refresh" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="10,0,0,0"/>
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="Презареди спирки" FontSize="16" VerticalTextAlignment="Center" />
                     <Label Text="{Binding Updated, StringFormat='Последно обновено: {0:MM/dd/yyyy hh:mm}'}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" />
@@ -55,9 +56,14 @@
                     <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="history" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalTextAlignment="Center" Margin="5,0,0,0" />
-                <Label Grid.Column="1" Text="Покажи най-близка спирка при стартиране" FontSize="16" VerticalTextAlignment="Center" />
-                <Switch Grid.Column="2" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="Start" OnColor="{DynamicResource IconsColor}" ThumbColor="{DynamicResource IconsColor}" VerticalOptions="Center" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="history" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalTextAlignment="Center" Margin="10,0,0,0" />
+
+                <StackLayout Grid.Column="1" Spacing="3">
+
+                    <Label Text="Най-близка спирка при стартиране" FontSize="16" VerticalTextAlignment="Center" />
+                    <Label Text="Тестово" TextColor="{DynamicResource DetailsTextColor}" />
+                </StackLayout>
+                <Switch Grid.ColumnSpan="3" Margin="0,0,-15,0" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="End" OnColor="{DynamicResource IconsColor}" ThumbColor="{DynamicResource IconsColor}" VerticalOptions="Center" />
             </Grid>
 
             <Grid Margin="0,20,0,0">
@@ -70,13 +76,13 @@
                     <TapGestureRecognizer Command="{Binding ChooseTileServerCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{DynamicResource IconsColor}" FontSize="26" VerticalOptions="Center" Margin="5,0,0,0" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{DynamicResource IconsColor}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="Tile сървър" FontSize="16" VerticalTextAlignment="Center" />
                     <Label Text="{Binding SelectedTileServer}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{DynamicResource DetailsTextColor}"/>
                 </StackLayout>
             </Grid>
-            
+
             <Grid Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
@@ -86,14 +92,13 @@
                     <TapGestureRecognizer Command="{Binding ChooseThemeCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="brightness_6" TextColor="{DynamicResource IconsColor}" FontSize="24" VerticalOptions="Center" Margin="5,0,0,0" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="brightness_6" TextColor="{DynamicResource IconsColor}" FontSize="24" VerticalOptions="Center" Margin="10,0,0,0" />
 
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Grid.Column="1" Text="Тема" FontSize="16" VerticalTextAlignment="Center" />
                     <Label Grid.Column="1" Text="{Binding SelectedTheme.Name}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" VerticalTextAlignment="Center" />
                 </StackLayout>
             </Grid>
-
 
             <!--<Label Text="Max zoom for text" Margin="0,20,0,0" FontSize="Medium" />
             <Entry Text="{Binding MaxTextZoom}" />
