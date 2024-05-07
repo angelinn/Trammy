@@ -6,6 +6,7 @@ using Mapsui.Widgets;
 using Mapsui.Widgets.ScaleBar;
 using Mapsui.Widgets.Zoom;
 using Microsoft.Maui.Layouts;
+using SkgtService.Models.Json;
 using System;
 using System.Threading.Tasks;
 using TramlineFive.Common;
@@ -30,9 +31,31 @@ namespace TramlineFive.Pages
         {
             InitializeComponent();
 
+            Loaded += OnLoaded;
+
             Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
             //Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
             Messenger.Default.Register<UpdateLocationMessage>(this, m => map.MyLocationLayer.UpdateMyLocation(new Position(m.Position.Latitude, m.Position.Longitude)));
+        }
+
+        private async void OnLoaded(object sender, EventArgs e)
+        {
+            DateTime versionCheckTime = Preferences.Get("VersionCheckDate", DateTime.MinValue);
+            if (DateTime.Now - versionCheckTime < TimeSpan.FromDays(1))
+                return;
+
+            NewVersion version = await ServiceContainer.ServiceProvider.GetService<VersionService>().CheckForUpdates();
+            if (version != null)
+            {
+                bool result = await DisplayAlert("Нова версия", $"{AppInfo.Name} има нова версия {version.VersionNumber} 🎉", "СВАЛЯНЕ", "ОТКАЗ");
+                if (result)
+                {
+                    Uri url = new Uri(version.ReleaseUrl);
+                    await Browser.Default.OpenAsync(url);
+                }
+            }
+
+            Preferences.Set("VersionCheckDate", DateTime.Now);
         }
 
         private async void OnMapTouchAction(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)

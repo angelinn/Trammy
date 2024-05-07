@@ -20,7 +20,7 @@ namespace TramlineFive.Maui
     public partial class App : Application
     {
         private readonly PathService dbPathService;
-        public App(PathService dbPathService, VersionCheckingService versionCheckingService)
+        public App(PathService dbPathService)
         {
             InitializeComponent();
 
@@ -36,7 +36,6 @@ namespace TramlineFive.Maui
 
             Messenger.Default.Send(new ChangeThemeMessage(theme));
             System.Diagnostics.Debug.WriteLine("creating task");
-            versionCheckingService.CreateTask();
 
             System.Diagnostics.Debug.WriteLine("created");
             MainPage = new AppShell();
@@ -105,7 +104,6 @@ namespace TramlineFive.Maui
                     applicationService.DisplayNotification("Trammy", "Спирките са обновени");
                 }
             }
-
 
             Messenger.Default.Register<SubscribeMessage>(this, m =>
             {

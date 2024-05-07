@@ -25,7 +25,10 @@ public class VersionService
 
         string version = applicationService.GetVersion();
 
-        if (String.Compare(lastRelease.TagName, version) > 0)
+        Version release = new Version(lastRelease.TagName);
+        Version current = new Version(version);
+
+        if (release > current)
             return new NewVersion { VersionNumber = lastRelease.TagName, ReleaseUrl = lastRelease.HtmlUrl };
 
         return null;
