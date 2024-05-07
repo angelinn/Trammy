@@ -49,7 +49,7 @@ namespace TramlineFive.Common.ViewModels
 
             RefreshStopsUpdatedTime();
 
-            ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, true);
+            ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, false);
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
             SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, TileServers.First());
