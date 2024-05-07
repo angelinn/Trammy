@@ -13,6 +13,7 @@ using TramlineFive.Pages;
 using TramlineFive.Maui.Platforms.Android;
 using Android.Widget;
 using Microsoft.Maui.Controls.PlatformConfiguration;
+using TramlineFive.Services.Main;
 
 namespace TramlineFive.Maui
 {
@@ -88,6 +89,23 @@ namespace TramlineFive.Maui
             //System.Diagnostics.Debug.WriteLine("loaded favourites");
 
             StopsLoader.OnStopsUpdated += OnStopsUpdated;
+
+            IApplicationService applicationService = ServiceContainer.ServiceProvider.GetService<IApplicationService>();
+
+            // Update stops every some time
+            if (DateTime.TryParse(applicationService.GetStringSetting(Settings.StopsUpdated, null), out DateTime updated))
+            {
+                if (DateTime.Now - updated > TimeSpan.FromDays(7))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Updating stops {DateTime.Now - updated} time old");
+
+                    Task _ = StopsLoader.UpdateStopsAsync();
+                    _ = StopsLoader.UpdateRoutesAsync();
+
+                    applicationService.DisplayNotification("Trammy", "Спирките са обновени");
+                }
+            }
+
 
             Messenger.Default.Register<SubscribeMessage>(this, m =>
             {
