@@ -26,7 +26,7 @@ using AndroidX.Core.Content;
 
 namespace TramlineFive.Maui
 {
-    [Activity(Label = "Tramline Five", Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Trammy", Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : MauiAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
