@@ -77,7 +77,6 @@ public class MapService
         map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
 
         LoadPinStyles();
-
         ILayer stopsLayer = await LoadStops();
         map.Layers.Add(stopsLayer);
 

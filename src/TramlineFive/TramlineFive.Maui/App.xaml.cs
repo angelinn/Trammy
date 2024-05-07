@@ -92,6 +92,20 @@ namespace TramlineFive.Maui
             Messenger.Default.Register<SubscribeMessage>(this, m =>
             {
 #if ANDROID
+                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M)
+                {
+                    Android.Content.Intent batteryIntent = new();
+                    string packageName = Platform.CurrentActivity.ApplicationContext.PackageName;
+                    var pm = Platform.CurrentActivity.GetSystemService(Android.Content.Context.PowerService) as Android.OS.PowerManager;
+
+                    if (!pm.IsIgnoringBatteryOptimizations(packageName))
+                    {
+                        batteryIntent.SetAction(Android.Provider.Settings.ActionRequestIgnoreBatteryOptimizations);
+                        batteryIntent.SetData(Android.Net.Uri.Parse("package:" + packageName));
+                        Platform.CurrentActivity.StartActivity(batteryIntent);
+                    }
+                }
+
                 Android.App.ActivityManager activityManager = Platform.CurrentActivity.GetSystemService(Android.Content.Context.ActivityService) as Android.App.ActivityManager;
                 if (activityManager.IsBackgroundRestricted)
                 {

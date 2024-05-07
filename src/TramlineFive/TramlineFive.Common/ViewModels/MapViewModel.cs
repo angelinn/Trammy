@@ -79,8 +79,16 @@ namespace TramlineFive.Common.ViewModels
 
         public async Task Initialize(Map nativeMap, Navigator navigator)
         {
-            await mapService.Initialize(nativeMap, navigator, 
-                ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+            try
+            {
+                await mapService.Initialize(nativeMap, navigator,
+                    ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+            }
+            catch (Exception ex)
+            {
+                ApplicationService.DisplayToast(ex.Message);
+            }
+
         } 
 
         public async Task LoadAsync()

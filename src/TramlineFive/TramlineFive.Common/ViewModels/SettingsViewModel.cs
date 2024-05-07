@@ -132,6 +132,10 @@ namespace TramlineFive.Common.ViewModels
             IsUpdatingStops = true;
 
             await StopsLoader.UpdateStopsAsync();
+            await StopsLoader.UpdateRoutesAsync();
+
+            MessengerInstance.Send<RefreshStopsMessage>();
+
             ApplicationService.DisplayNotification("Tramline 5", "Спирките са обновени");
 
             IsUpdatingStops = false;
