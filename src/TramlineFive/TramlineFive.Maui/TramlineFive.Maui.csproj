@@ -11,10 +11,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>TramlineFive.Maui</ApplicationTitle>
+		<ApplicationTitle>Trammy</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.tramlinefive.maui</ApplicationId>
+		<ApplicationId>com.openbulgariasoftware.trammy</ApplicationId>
 		<ApplicationIdGuid>a7870315-0617-407e-9b7f-ce7d39c8b02e</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -138,6 +138,7 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
 		<PackageReference Include="Mapsui.Maui" Version="4.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Sentry.Maui" Version="4.5.0" />
 		<PackageReference Include="Xamarin.CommunityToolkit.MauiCompat" Version="2.0.2-preview1013" />
 	</ItemGroup>
 
