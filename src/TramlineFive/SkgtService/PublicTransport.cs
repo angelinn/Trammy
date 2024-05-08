@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using SkgtService.Exceptions;
+﻿using SkgtService.Exceptions;
 using SkgtService.Models;
 using SkgtService.Models.Json;
 using System;

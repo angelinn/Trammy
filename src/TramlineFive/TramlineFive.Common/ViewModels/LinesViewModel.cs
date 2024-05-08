@@ -1,4 +1,6 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
 using NetTopologySuite.Index.HPRtree;
 using Octokit;
 using SkgtService;
@@ -15,45 +17,29 @@ using TramlineFive.Common.Models;
 
 namespace TramlineFive.Common.ViewModels
 {
-    public abstract class LinesViewModel : BaseViewModel
+    public abstract partial class LinesViewModel : BaseViewModel
     {
+        private readonly PublicTransport publicTransport;
+
+        [ObservableProperty]
         private ObservableCollection<LineViewModel> lines;
-        public ObservableCollection<LineViewModel> Lines
-        {
-            get => lines;
-            set
-            {
-                lines = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private List<LineViewModel> allLines;
 
-        public ICommand FilterLinesCommand { get; private set; }
-
         public string SearchText { get; set; }
 
+        [ObservableProperty]
         private LineViewModel selectedLine;
-        private readonly PublicTransport publicTransport;
 
-        public LineViewModel SelectedLine
+        partial void OnSelectedLineChanged(LineViewModel value)
         {
-            get => selectedLine;
-            set
-            {
-                if (value != null)
-                    OpenDetails(value);
-
-                selectedLine = null;
-                RaisePropertyChanged();
-            }
+            if (value != null)
+                OpenDetails(value);
         }
 
 
         public LinesViewModel(PublicTransport publicTransport)
         {
-            FilterLinesCommand = new RelayCommand(FilterLines);
             this.publicTransport = publicTransport;
         }
 
@@ -75,6 +61,7 @@ namespace TramlineFive.Common.ViewModels
             NavigationService.GoToDetails(selected);
         }
 
+        [RelayCommand]
         private void FilterLines()
         {
             Lines = new ObservableCollection<LineViewModel>(allLines.Where(t => t.Name.Contains(SearchText)));

@@ -1,4 +1,4 @@
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.ViewModels;
 
@@ -9,7 +9,7 @@ public partial class LineDetails : ContentPage
     public LineDetails()
 	{
         InitializeComponent();
-        Messenger.Default.Register<ScrollToHighlightedStopMessage>(this, m =>
+        WeakReferenceMessenger.Default.Register<ScrollToHighlightedStopMessage>(this, (r, m) =>
         {
             stopsList.ScrollTo(m.Item, ScrollToPosition.Center, true);
         });

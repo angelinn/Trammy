@@ -1,7 +1,7 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using TramlineFive.Common.Messages;
+﻿using TramlineFive.Common.Messages;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.Common.Services;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace TramlineFive.Maui
 {
@@ -30,7 +30,7 @@ namespace TramlineFive.Maui
         {
             InitializeComponent();
 
-            Messenger.Default.Register<SlideHamburgerMessage>(this, async (m) => await ToggleHamburgerAsync());
+            WeakReferenceMessenger.Default.Register<SlideHamburgerMessage>(this, async (r, m) => await ToggleHamburgerAsync());
         }
 
         public async Task ToggleHamburgerAsync()

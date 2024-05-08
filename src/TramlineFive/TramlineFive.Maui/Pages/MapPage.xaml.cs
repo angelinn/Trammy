@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Mapsui;
 using Mapsui.UI.Maui;
 using Mapsui.Widgets;
@@ -33,9 +32,9 @@ namespace TramlineFive.Pages
 
             Loaded += OnLoaded;
 
-            Messenger.Default.Register<ShowMapMessage>(this, async (m) => await ToggleMap(m));
+            WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await ToggleMap(m));
             //Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
-            Messenger.Default.Register<UpdateLocationMessage>(this, m => map.MyLocationLayer.UpdateMyLocation(new Position(m.Position.Latitude, m.Position.Longitude)));
+            WeakReferenceMessenger.Default.Register<UpdateLocationMessage>(this, (r, m) => map.MyLocationLayer.UpdateMyLocation(new Position(m.Position.Latitude, m.Position.Longitude)));
         }
 
         private async void OnLoaded(object sender, EventArgs e)
@@ -142,7 +141,7 @@ namespace TramlineFive.Pages
             map.TouchAction += OnMapTouchAction;
 
             if (VersionTracking.IsFirstLaunchEver)
-                Messenger.Default.Send(new ChangePageMessage("Location"));
+                WeakReferenceMessenger.Default.Send(new ChangePageMessage("Location"));
         }
 
         protected override void OnSizeAllocated(double width, double height)

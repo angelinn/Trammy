@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using SkgtService;
 using SkgtService.Models;
 using System;
@@ -10,25 +10,14 @@ using TramlineFive.DataAccess.Entities;
 
 namespace TramlineFive.DataAccess.Domain
 {
-    public class FavouriteDomain : ObservableObject
+    public partial class FavouriteDomain : ObservableRecipient
     {
         public string Name { get; set; }
         public string StopCode { get; set; }
         public List<LineInformation> Lines { get; set; }
 
+        [ObservableProperty]
         private int timesClicked;
-        public int TimesClicked
-        {
-            get
-            {
-                return timesClicked;
-            }
-            set
-            {
-                timesClicked = value;
-                RaisePropertyChanged();
-            }
-        }
 
         public FavouriteDomain(Favourite entity)
         {

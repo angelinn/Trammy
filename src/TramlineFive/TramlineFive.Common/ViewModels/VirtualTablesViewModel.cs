@@ -1,5 +1,6 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using SkgtService;
 using SkgtService.Exceptions;
 using SkgtService.Models;
@@ -20,14 +21,9 @@ using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels
 {
-    public class VirtualTablesViewModel : BaseViewModel
+    public partial class VirtualTablesViewModel : BaseViewModel
     {
-        public ICommand FavouriteCommand { get; private set; }
-        public ICommand RefreshCommand { get; private set; }
-
         public ICommand AnimateFavouriteCommand { get; set; }
-        public ICommand SubscribeCommand { get; set; }
-
 
         private readonly ArrivalsService arrivalsService;
         private readonly VersionService versionService;
@@ -39,38 +35,42 @@ namespace TramlineFive.Common.ViewModels
             this.arrivalsService = arrivalsService;
             this.versionService = versionService;
 
-            FavouriteCommand = new RelayCommand(async () => await AddFavouriteAsync());
-            RefreshCommand = new RelayCommand(async () =>
+
+            Messenger.Register<StopSelectedMessage>(this, async (r, sc) =>
             {
-                await SearchByStopCodeAsync(stopCode);
-                IsRefreshing = false;
+                await CheckStopAsync(sc.Value.Selected);
             });
 
-            SubscribeCommand = new RelayCommand<ArrivalInformation>(m =>
-            {
-                MessengerInstance.Send(new SubscribeMessage(m.LineName, stopCode));
-            });
-
-            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) =>
-            {
-                await CheckStopAsync(sc.Selected);
-            });
-            MessengerInstance.Register<FavouritesChangedMessage>(this, (m) =>
+            Messenger.Register<FavouritesChangedMessage>(this, (r, m) =>
             {
                 if (StopInfo != null)
                 {
                     StopInfo.IsFavourite = m.Favourites.Any(f => f.StopCode == StopInfo.Code);
-                    RaisePropertyChanged("StopInfo");
+                    OnPropertyChanged(nameof(StopInfo));
                 }
             });
         }
 
-        private async Task AddFavouriteAsync()
+        [RelayCommand]
+        private async Task Refresh()
         {
-            FavouriteDomain added = await FavouriteDomain.AddAsync(stopInfo.PublicName, stopInfo.Code);
+            await SearchByStopCodeAsync(stopCode);
+            IsRefreshing = false;
+        }
+
+        [RelayCommand]
+        private void Subscribe(ArrivalInformation m)
+        {
+            Messenger.Send(new SubscribeMessage(m.LineName, stopCode));
+        }
+
+        [RelayCommand]
+        private async Task Favourite()
+        {
+            FavouriteDomain added = await FavouriteDomain.AddAsync(StopInfo.PublicName, StopInfo.Code);
             if (added != null)
             {
-                MessengerInstance.Send(new FavouriteAddedMessage(added));
+                Messenger.Send(new FavouriteAddedMessage(added));
                 ApplicationService.DisplayToast($"Спирка {added.Name} е добавена към любими");
             }
             else
@@ -117,12 +117,12 @@ namespace TramlineFive.Common.ViewModels
 
                 StopInfo = info;
 
-                Direction = stopInfo.Arrivals.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
+                Direction = StopInfo.Arrivals.FirstOrDefault(l => !String.IsNullOrEmpty(l.Direction))?.Direction;
 
                 sw.Stop();
 
-                MessengerInstance.Send(new ShowMapMessage(true, StopInfo.Arrivals.Count, sw.ElapsedMilliseconds));
-                await HistoryDomain.AddAsync(stopCode, stopInfo.PublicName);
+                Messenger.Send(new ShowMapMessage(true, StopInfo.Arrivals.Count, sw.ElapsedMilliseconds));
+                await HistoryDomain.AddAsync(stopCode, StopInfo.PublicName);
             }
             catch (StopNotFoundException)
             {
@@ -135,107 +135,31 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
-
+        [ObservableProperty]
         private ArrivalInformation selected;
-        public ArrivalInformation Selected
+        partial void OnSelectedChanged(ArrivalInformation value)
         {
-            get
-            {
-                return selected;
-            }
-            set
-            {
-                selected = null;
-                RaisePropertyChanged();
-
-                if (value != null)
-                    NavigationService.GoToDetails(value, stopCode);
-            }
+            if (value != null)
+                NavigationService.GoToDetails(value, stopCode);
         }
 
+        [ObservableProperty]
         private string direction;
-        public string Direction
-        {
-            get
-            {
-                return direction;
-            }
-            set
-            {
-                direction = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private StopResponse stopInfo;
-        public StopResponse StopInfo
-        {
-            get
-            {
-                return stopInfo;
-            }
-            set
-            {
-                stopInfo = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private NewVersion version;
-        public NewVersion Version
-        {
-            get
-            {
-                return version;
-            }
-            set
-            {
-                version = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private string message;
-        public string Message
-        {
-            get
-            {
-                return message;
-            }
-            set
-            {
-                message = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private bool isLoading;
-        public bool IsLoading
-        {
-            get
-            {
-                return isLoading;
-            }
-            set
-            {
-                isLoading = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private bool isRefreshing;
-        public bool IsRefreshing
-        {
-            get
-            {
-                return isRefreshing;
-            }
-            set
-            {
-                isRefreshing = value;
-                RaisePropertyChanged();
-            }
-        }
 
         //private string stopCode;
         //public string StopCode

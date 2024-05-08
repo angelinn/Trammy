@@ -1,4 +1,6 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
 using NetTopologySuite.Index.HPRtree;
 using SkgtService;
 using SkgtService.Models;
@@ -31,81 +33,37 @@ public class DirectionStepViewModel : BaseViewModel
     public List<StopInformation> Stops { get; set; } = new();
 }
 
-public class DirectionsViewModel : BaseViewModel
+public partial class DirectionsViewModel : BaseViewModel
 {
     private readonly DirectionsService directionsService;
     private readonly PublicTransport publicTransport;
 
     public ObservableCollection<DirectionStepViewModel> Directions { get; set; } = new();
 
+    [ObservableProperty]
     private string from = "2193";
-    public string From
-    {
-        get => from;
-        set
-        {
-            from = value;
-            RaisePropertyChanged();
-        }
-    }
 
+    [ObservableProperty]
     private string to = "2327";
-    public string To
-    {
-        get => to;
-        set
-        {
-            to = value;
-            RaisePropertyChanged();
-        }
-    }
 
+    [ObservableProperty]
     private bool isLoading;
-    public bool IsLoading
-    {
-        get => isLoading;
-        set
-        {
-            isLoading = value;
-            RaisePropertyChanged();
-        }
-    }
 
-
+    [ObservableProperty]
     private float sameStopChangeW;
-    public float SameStopChangeW
-    {
-        get => sameStopChangeW;
-        set
-        {
-            sameStopChangeW = value;
-            RaisePropertyChanged();
-        }
-    }
 
-
+    [ObservableProperty]
     private float walkToStopW;
-    public float WalkToStopW
-    {
-        get => walkToStopW;
-        set
-        {
-            walkToStopW = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public ICommand SearchCommand { get; set; }
 
     public DirectionsViewModel(DirectionsService directionsService, PublicTransport publicTransport)
     {
         this.directionsService = directionsService;
         this.publicTransport = publicTransport;
-
-        SearchCommand = new RelayCommand(async () => await Search());
     }
 
     private bool isBuilt;
+
+    [RelayCommand]
     private async Task Search()
     {
         IsLoading = true;

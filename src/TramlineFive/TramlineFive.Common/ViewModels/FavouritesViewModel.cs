@@ -1,5 +1,8 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+
 using Mapsui;
 using Microsoft.Extensions.DependencyInjection;
 using SkgtService;
@@ -9,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,11 +23,9 @@ using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels
 {
-    public class FavouritesViewModel : BaseViewModel
+    public partial class FavouritesViewModel : BaseViewModel
     {
         public ObservableCollection<FavouriteDomain> Favourites { get; private set; }
-
-        public ICommand RemoveCommand { get; private set; }
 
         private readonly LocationService locationService;
         private bool firstLocalization = true;
@@ -32,11 +34,10 @@ namespace TramlineFive.Common.ViewModels
 
         public FavouritesViewModel(LocationService locationService, PublicTransport publicTransport)
         {
-            MessengerInstance.Register<FavouriteAddedMessage>(this, (f) => OnFavouriteAdded(f.Added));
-            RemoveCommand = new RelayCommand<FavouriteDomain>(async (f) => await RemoveFavouriteAsync(f));
+            Messenger.Register<FavouriteAddedMessage>(this, (r, f) => OnFavouriteAdded(f.Value));
 
-            MessengerInstance.Register<StopSelectedMessage>(this, async (sc) => await OnStopSelected(sc.Selected));
-            MessengerInstance.Register<UpdateLocationMessage>(this, async (message) =>
+            Messenger.Register<StopSelectedMessage>(this, async (r, sc) => await OnStopSelected(sc.Value.Selected));
+            Messenger.Register<UpdateLocationMessage>(this, async (r, message) =>
             {
                 if (firstLocalization && ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, true))
                 {
@@ -69,7 +70,7 @@ namespace TramlineFive.Common.ViewModels
             }
 
             if (minDistanceFavourite != null)
-                MessengerInstance.Send(new StopSelectedMessage(minDistanceFavourite.StopCode, true));
+                Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(minDistanceFavourite.StopCode, true)));
         }
 
         private async Task OnStopSelected(string stopCode)
@@ -87,12 +88,13 @@ namespace TramlineFive.Common.ViewModels
             favourite.Lines = publicTransport.FindStop(favourite.StopCode).Lines;
             Favourites.Add(favourite);
 
-            RaisePropertyChanged("HasFavourites");
+            OnPropertyChanged(nameof(HasFavourites));
 
             ApplicationService.VibrateShort();
-            MessengerInstance.Send(new FavouritesChangedMessage(Favourites.ToList()));
+            Messenger.Send(new FavouritesChangedMessage(Favourites.ToList()));
         }
 
+        [RelayCommand]
         private async Task RemoveFavouriteAsync(FavouriteDomain favourite)
         {
             if (await ApplicationService.DisplayAlertAsync("", $"Премахване на {favourite.Name}?", "Да", "Не"))
@@ -103,9 +105,9 @@ namespace TramlineFive.Common.ViewModels
                 ApplicationService.DisplayToast($"{favourite.Name} е премахната");
                 ApplicationService.VibrateShort();
 
-                RaisePropertyChanged("HasFavourites");
+                OnPropertyChanged(nameof(HasFavourites));
 
-                MessengerInstance.Send(new FavouritesChangedMessage(Favourites.ToList()));
+                Messenger.Send(new FavouritesChangedMessage(Favourites.ToList()));
             }
         }
 
@@ -119,49 +121,31 @@ namespace TramlineFive.Common.ViewModels
 
             IsLoading = false;
 
-            RaisePropertyChanged("Favourites");
-            RaisePropertyChanged("HasFavourites");
+            OnPropertyChanged(nameof(Favourites));
+            OnPropertyChanged(nameof(HasFavourites));
 
-            MessengerInstance.Send(new FavouritesChangedMessage(Favourites.ToList()));
+            Messenger.Send(new FavouritesChangedMessage(Favourites.ToList()));
         }
 
-        public bool HasFavourites => (Favourites == null || Favourites.Count == 0) && !isLoading;
+        public bool HasFavourites => (Favourites == null || Favourites.Count == 0) && !IsLoading;
 
-        private FavouriteDomain selected;
-        public FavouriteDomain Selected
-        {
-            get
-            {
-                return selected;
-            }
-            set
-            {
-                selected = value;
-                RaisePropertyChanged();
-
-                if (value != null)
-                {
-                    ServiceContainer.ServiceProvider.GetService<MainViewModel>().ChangeViewCommand.Execute("Map");
-                    MessengerInstance.Send(new StopSelectedMessage(selected.StopCode, true));
-
-                    selected = null;
-                    RaisePropertyChanged();
-                }
-            }
-        }
-
+        [ObservableProperty]
         private bool isLoading = true;
-        public bool IsLoading
+
+        [ObservableProperty]
+        private FavouriteDomain selected;
+
+        partial void OnSelectedChanged(FavouriteDomain value)
         {
-            get
+            if (value != null)
             {
-                return isLoading;
-            }
-            set
-            {
-                isLoading = value;
-                RaisePropertyChanged();
+                ServiceContainer.ServiceProvider.GetService<MainViewModel>().ChangeViewCommand.Execute("Map");
+                Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(Selected.StopCode, true)));
+
+                Selected = null;
+                OnPropertyChanged();
             }
         }
+
     }
 }

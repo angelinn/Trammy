@@ -11,7 +11,6 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Extensions.DependencyInjection;
 using SkgtService.Models;
 using SkgtService.Models.Json;

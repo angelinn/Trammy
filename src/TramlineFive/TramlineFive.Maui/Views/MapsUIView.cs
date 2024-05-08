@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Ioc;
-using Mapsui.Styles;
+﻿using Mapsui.Styles;
 using System;
 using System.Collections.Generic;
 using System.Text;

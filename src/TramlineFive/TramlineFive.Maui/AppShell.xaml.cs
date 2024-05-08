@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using TramlineFive.Common.Messages;
 using TramlineFive.Pages;
 
@@ -10,9 +10,9 @@ namespace TramlineFive.Maui
 
         public AppShell()
         {
-            InitializeComponent();
+            InitializeComponent(); 
 
-            Messenger.Default.Register<SlideHamburgerMessage>(this, (m) =>
+            WeakReferenceMessenger.Default.Register<SlideHamburgerMessage>(this, (r, m) =>
             {
                 // Workaround for opening the flyout
                 if (!opened)
@@ -26,7 +26,7 @@ namespace TramlineFive.Maui
                 FlyoutIsPresented = !FlyoutIsPresented;
             });
 
-            Messenger.Default.Register<ChangePageMessage>(this, (m) => GoToAsync($"//{m.Page}"));
+            WeakReferenceMessenger.Default.Register<ChangePageMessage>(this, (r, m) => GoToAsync($"//{m.Page}"));
         }
     }
 }

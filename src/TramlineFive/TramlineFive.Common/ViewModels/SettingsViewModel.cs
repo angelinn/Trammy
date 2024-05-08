@@ -1,4 +1,7 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
 using SkgtService;
 using System;
 using System.Collections.Generic;
@@ -14,13 +17,8 @@ using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels
 {
-    public class SettingsViewModel : BaseViewModel
+    public partial class SettingsViewModel : BaseViewModel
     {
-        public ICommand CleanHistoryCommand { get; init; }
-        public ICommand UpdateStopsCommand { get; init; }
-        public ICommand ChooseTileServerCommand { get; }
-        public ICommand ChooseThemeCommand { get; } 
-
         public DateTime Updated { get; private set; }
 
         public List<string> TileServers => TileServerSettings.TileServers.Keys.ToList();
@@ -30,23 +28,6 @@ namespace TramlineFive.Common.ViewModels
 
         public SettingsViewModel()
         {
-            CleanHistoryCommand = new RelayCommand(async () => await CleanHistoryAsync());
-            UpdateStopsCommand = new RelayCommand(async () => await ReloadStopsAsync());
-
-            ChooseTileServerCommand = new RelayCommand(async () =>
-            {
-                string result = await displayActionSheet("Избор на tile сървър", String.Empty, String.Empty, TileServers.ToArray());
-                if (!String.IsNullOrEmpty(result))
-                    SelectedTileServer = result;
-            });
-
-            ChooseThemeCommand = new RelayCommand(async () =>
-            {
-                string result = await displayActionSheet("Избор на тема", String.Empty, String.Empty, Themes.Select(theme => theme.Name).ToArray());
-                if (!String.IsNullOrEmpty(result))
-                    SelectedTheme = Themes.FirstOrDefault(theme => theme.Name == result);
-            });
-
             RefreshStopsUpdatedTime();
 
             ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, false);
@@ -63,58 +44,48 @@ namespace TramlineFive.Common.ViewModels
             this.displayActionSheet = displayActionSheet;
         }
 
+        [RelayCommand]
+        private async Task ChooseTileServer()
+        {
+            string result = await displayActionSheet("Избор на tile сървър", String.Empty, String.Empty, TileServers.ToArray());
+            if (!String.IsNullOrEmpty(result))
+                SelectedTileServer = result;
+        }
+
+        [RelayCommand]
+        private async Task ChooseTheme()
+        {
+            string result = await displayActionSheet("Избор на тема", String.Empty, String.Empty, Themes.Select(theme => theme.Name).ToArray());
+            if (!String.IsNullOrEmpty(result))
+                SelectedTheme = Themes.FirstOrDefault(theme => theme.Name == result);
+        }
+
+        [ObservableProperty]
         private int maxTextZoom;
-        public int MaxTextZoom
+        partial void OnMaxTextZoomChanged(int value)
         {
-            get
-            {
-                return maxTextZoom;
-            }
-            set
-            {
-                maxTextZoom = value;
-
-                ApplicationService.SetIntSetting(Settings.MaxTextZoom, maxTextZoom);
-                MessengerInstance.Send(new SettingChanged<int>(Settings.MaxTextZoom, maxTextZoom));
-                RaisePropertyChanged();
-            }
+            ApplicationService.SetIntSetting(Settings.MaxTextZoom, value);
+            Messenger.Send(new SettingChanged<int>(Settings.MaxTextZoom, value));
         }
 
+        [ObservableProperty]
         private int maxPinsZoom;
-        public int MaxPinsZoom
+        partial void OnMaxPinsZoomChanged(int value)
         {
-            get
-            {
-                return maxPinsZoom;
-            }
-            set
-            {
-                maxPinsZoom = value;
-
-                ApplicationService.SetIntSetting(Settings.MaxPinsZoom, maxPinsZoom);
-                MessengerInstance.Send(new SettingChanged<int>(Settings.MaxPinsZoom, maxPinsZoom));
-                RaisePropertyChanged();
-            }
+            ApplicationService.SetIntSetting(Settings.MaxPinsZoom, value);
+            Messenger.Send(new SettingChanged<int>(Settings.MaxPinsZoom, value));
         }
 
+        [ObservableProperty]
         private string selectedTileServer;
-        public string SelectedTileServer
+        partial void OnSelectedTileServerChanged(string value)
         {
-            get
-            {
-                return selectedTileServer;
-            }
-            set
-            {
-                selectedTileServer = value;
-                ApplicationService.SetStringSetting(Settings.SelectedTileServer, selectedTileServer);
-                MessengerInstance.Send(new SettingChanged<string>(Settings.SelectedTileServer, selectedTileServer));
-
-                RaisePropertyChanged();
-            }
+            ApplicationService.SetStringSetting(Settings.SelectedTileServer, value);
+            Messenger.Send(new SettingChanged<string>(Settings.SelectedTileServer, value));
         }
 
-        private async Task CleanHistoryAsync()
+        [RelayCommand]
+        private async Task CleanHistory()
         {
             IsLoading = true;
 
@@ -122,11 +93,12 @@ namespace TramlineFive.Common.ViewModels
 
             IsLoading = false;
 
-            MessengerInstance.Send(new HistoryClearedMessage());
+            Messenger.Send(new HistoryClearedMessage());
             ApplicationService.DisplayToast("Историята е изчистена");
         }
 
-        private async Task ReloadStopsAsync()
+        [RelayCommand]
+        private async Task UpdateStops()
         {
             IsUpdatingStops = true;
 
@@ -140,7 +112,7 @@ namespace TramlineFive.Common.ViewModels
             ApplicationService.DisplayNotification("Tramline 5", "Спирките са обновени");
 
             IsUpdatingStops = false;
-            RaisePropertyChanged("Updated");
+            OnPropertyChanged(nameof(Updated));
         }
 
         private void RefreshStopsUpdatedTime()
@@ -149,66 +121,27 @@ namespace TramlineFive.Common.ViewModels
                 Updated = updated;
         }
 
+        [ObservableProperty]
         private bool isLoading;
-        public bool IsLoading
-        {
-            get
-            {
-                return isLoading;
-            }
-            set
-            {
-                isLoading = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private bool isUpdatingStops;
-        public bool IsUpdatingStops
-        {
-            get
-            {
-                return isUpdatingStops;
-            }
-            set
-            {
-                isUpdatingStops = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private bool showNearestStop;
-        public bool ShowNearestStop
+        partial void OnShowNearestStopChanged(bool value)
         {
-            get
-            {
-                return showNearestStop;
-            }
-            set
-            {
-                showNearestStop = value;
-                ApplicationService.SetBoolSetting(Settings.ShowStopOnLaunch, showNearestStop);
-                RaisePropertyChanged();
-            }
+            ApplicationService.SetBoolSetting(Settings.ShowStopOnLaunch, showNearestStop);
         }
 
+        [ObservableProperty]
         private Theme selectedTheme;
-        public Theme SelectedTheme
+        partial void OnSelectedThemeChanged(Theme oldValue, Theme newValue)
         {
-            get
+            if (oldValue != null && newValue != null && oldValue.Value != newValue.Value)
             {
-                return selectedTheme;
-            }
-            set
-            {
-                if (selectedTheme != null && value != null && selectedTheme.Value != value.Value)
-                {
-                    ApplicationService.SetStringSetting(Settings.Theme, value.Value);
-                    MessengerInstance.Send(new ChangeThemeMessage(value.Value));
-                }
-
-                selectedTheme = value;
-                RaisePropertyChanged();
+                ApplicationService.SetStringSetting(Settings.Theme, newValue.Value);
+                Messenger.Send(new ChangeThemeMessage(newValue.Value));
             }
         }
     }

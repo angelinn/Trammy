@@ -1,6 +1,6 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Mapsui;
 using Mapsui.Layers;
 using Mapsui.Projections;
@@ -24,20 +24,12 @@ using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels
 {
-    public class MapViewModel : BaseViewModel
+    public partial class MapViewModel : BaseViewModel
     {
         public ObservableCollection<ArrivalStopModel> RecommendedStops { get; private set; } = new();
         public List<string> FilteredStops { get; private set; }
 
-        public ICommand MyLocationCommand { get; }
-        public ICommand OpenHamburgerCommand { get; }
-        public ICommand ShowMapCommand { get; }
-        public ICommand ShowSearchCommand { get; }
-        public ICommand SearchByCodeCommand { get; }
         public ICommand SearchCommand { get; }
-        public ICommand SearchFocusedCommand { get; }
-        public ICommand SearchUnfocusedCommand { get; }
-        public ICommand MapInfoCommand { get; }
 
         private List<ArrivalStopModel> topFavourites = new();
         private List<ArrivalStopModel> nearbyStops = new();
@@ -49,15 +41,7 @@ namespace TramlineFive.Common.ViewModels
 
         public MapViewModel(MapService mapServiceOther, PublicTransport publicTransport)
         {
-            MyLocationCommand = new RelayCommand(async () => await OnMyLocationTappedAsync());
-            OpenHamburgerCommand = new RelayCommand(OnOpenHamburger);
-            ShowMapCommand = new RelayCommand(OnShowMap);
-
-            SearchByCodeCommand = new RelayCommand<string>(OnSearchByCode);
-            SearchCommand = new RelayCommand(() => OnSearchByCode(stopCode));
-            SearchFocusedCommand = new RelayCommand(OnSearchFocused);
-            SearchUnfocusedCommand = new RelayCommand(OnSearchUnfocused);
-            MapInfoCommand = new RelayCommand<MapInfoEventArgs>(OnMapInfo);
+            SearchCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(() => SearchByCode(stopCode));
 
             mapService = mapServiceOther;
             this.publicTransport = publicTransport;
@@ -69,12 +53,12 @@ namespace TramlineFive.Common.ViewModels
             if (maxPinsZoom > 0)
                 mapService.MaxPinsZoom = maxPinsZoom;
 
-            MessengerInstance.Register<StopSelectedMessage>(this, OnStopSelectedMessageReceived);
-            MessengerInstance.Register<FavouritesChangedMessage>(this, OnFavouritesChanged);
-            MessengerInstance.Register<NearbyStopsMessage>(this, OnNearbyStops);
-            MessengerInstance.Register<SettingChanged<int>>(this, async (m) => await OnIntSettingChangedAsync(m));
-            MessengerInstance.Register<SettingChanged<string>>(this, async (m) => await OnStringSettingChangedAsync(m)); 
-            MessengerInstance.Register<MapLoadedMessage>(this, async (m) => await CheckForHistory());
+            Messenger.Register<StopSelectedMessage>(this, (r, m) => OnStopSelectedMessageReceived(m));
+            Messenger.Register<FavouritesChangedMessage>(this, (r, m) => OnFavouritesChanged(m));
+            Messenger.Register<NearbyStopsMessage>(this, (r, m) => OnNearbyStops(m));
+            Messenger.Register<SettingChanged<int>>(this, async (r, m) => await OnIntSettingChangedAsync(m));
+            Messenger.Register<SettingChanged<string>>(this, async (r, m) => await OnStringSettingChangedAsync(m));
+            Messenger.Register<MapLoadedMessage>(this, async (r, m) => await CheckForHistory());
         }
 
         public async Task Initialize(Map nativeMap, Navigator navigator)
@@ -99,7 +83,8 @@ namespace TramlineFive.Common.ViewModels
             IsMyLocationVisible = true;
         }
 
-        private async Task OnMyLocationTappedAsync()
+        [RelayCommand]
+        private async Task MyLocation()
         {
             if (await LocalizeAsync() == LocationStatus.TurnedOff)
                 ApplicationService.OpenLocationUI();
@@ -147,7 +132,7 @@ namespace TramlineFive.Common.ViewModels
                         mapService.MoveToUser(position.Value, true);
                     });
 
-                    MessengerInstance.Send(new UpdateLocationMessage(position.Value));
+                    Messenger.Send(new UpdateLocationMessage(position.Value));
 
                     isAnimating = false;
                     HasLocation = true;
@@ -225,25 +210,26 @@ namespace TramlineFive.Common.ViewModels
 
         private void FilterStops()
         {
-            if (String.IsNullOrEmpty(stopCode))
+            if (String.IsNullOrEmpty(StopCode))
                 return;
 
-            if (Char.IsDigit(stopCode[0]))
-                FilteredStops = publicTransport.Stops.Where(s => s.Code.Contains(stopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+            if (Char.IsDigit(StopCode[0]))
+                FilteredStops = publicTransport.Stops.Where(s => s.Code.Contains(StopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
             else
-                FilteredStops = publicTransport.Stops.Where(s => s.PublicName.ToLower().Contains(stopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+                FilteredStops = publicTransport.Stops.Where(s => s.PublicName.ToLower().Contains(StopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
 
-            RaisePropertyChanged("FilteredStops");
+            OnPropertyChanged(nameof(FilteredStops));
 
             SuggestionsHeight = FilteredStops.Count * 50;
         }
 
-        private void OnMapInfo(MapInfoEventArgs e)
+        [RelayCommand]
+        private void MapInfo(MapInfoEventArgs e)
         {
-            if (isVirtualTablesUp)
+            if (IsVirtualTablesUp)
             {
                 IsVirtualTablesUp = false;
-                MessengerInstance.Send(new ShowMapMessage(false));
+                Messenger.Send(new ShowMapMessage(false));
             }
             else
             {
@@ -271,183 +257,92 @@ namespace TramlineFive.Common.ViewModels
                 await mapService.SetupMapAsync(m.Value);
         }
 
-        private async void OnStopSelectedMessageReceived(StopSelectedMessage message)
+        private void OnStopSelectedMessageReceived(StopSelectedMessage message)
         {
-            if (message.Clicked)
+            if (message.Value.Clicked)
             {
                 IsVirtualTablesUp = true;
 
-                mapService.MoveToStop(message.Selected);
+                mapService.MoveToStop(message.Value.Selected);
             }
         }
 
+        [RelayCommand]
         private void OnSearchFocused()
         {
             IsFocused = true;
         }
 
+        [RelayCommand]
         private void OnSearchUnfocused()
         {
             IsFocused = false;
             IsSearching = false;
         }
 
-        private void OnSearchByCode(string i)
+        [RelayCommand]
+        private void SearchByCode(string i)
         {
             IsVirtualTablesUp = true;
-            MessengerInstance.Send(new StopSelectedMessage(i, true));
+            Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(i, true)));
         }
 
-        private void OnShowMap()
+        [RelayCommand]
+        private void ShowMap()
         {
             IsVirtualTablesUp = false;
-            MessengerInstance.Send(new ShowMapMessage(false));
+            Messenger.Send(new ShowMapMessage(false));
         }
 
-        private void OnOpenHamburger()
+        [RelayCommand]
+        private void OpenHamburger()
         {
-            MessengerInstance.Send(new SlideHamburgerMessage());
+            Messenger.Send(new SlideHamburgerMessage());
         }
 
+        [ObservableProperty]
         private string selectedSuggestion;
-        public string SelectedSuggestion
+
+        partial void OnSelectedSuggestionChanged(string value)
         {
-            get
+            if (!String.IsNullOrEmpty(value))
             {
-                return selectedSuggestion;
-            }
-            set
-            {
-                selectedSuggestion = value;
-
-                if (!String.IsNullOrEmpty(selectedSuggestion))
-                {
-                    string code = selectedSuggestion.Substring(0, 4);
-                    MessengerInstance.Send(new StopSelectedMessage(code, true));
-                }
-
-                RaisePropertyChanged();
+                string code = value.Substring(0, 4);
+                Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(code, true)));
             }
         }
 
+        [ObservableProperty]
         private int suggestionsHeight;
-        public int SuggestionsHeight
-        {
-            get
-            {
-                return suggestionsHeight;
-            }
-            set
-            {
-                suggestionsHeight = value;
-                RaisePropertyChanged();
-            }
-        }
 
-
+        [ObservableProperty]
         private bool hasLocation = true;
-        public bool HasLocation
-        {
-            get
-            {
-                return hasLocation;
-            }
-            set
-            {
-                hasLocation = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private bool isVirtualTablesUp;
-        public bool IsVirtualTablesUp
-        {
-            get
-            {
-                return isVirtualTablesUp;
-            }
-            set
-            {
-                isVirtualTablesUp = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private bool isSearching;
-        public bool IsSearching
-        {
-            get
-            {
-                return isSearching;
-            }
-            set
-            {
-                isSearching = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private bool isFocused;
-        public bool IsFocused
-        {
-            get
-            {
-                return isFocused;
-            }
-            set
-            {
-                isFocused = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private string stopCode;
-        public string StopCode
-        {
-            get
-            {
-                return stopCode;
-            }
-            set
-            {
-                stopCode = value;
-                if (isFocused && !String.IsNullOrEmpty(stopCode))
-                {
-                    IsSearching = true;
-                    FilterStops();
-                }
 
-                RaisePropertyChanged();
+        partial void OnStopCodeChanged(string value)
+        {
+            if (IsFocused && !String.IsNullOrEmpty(value))
+            {
+                IsSearching = true;
+                FilterStops();
             }
         }
 
+        [ObservableProperty]
         private bool isMapVisible;
-        public bool IsMapVisible
-        {
-            get
-            {
-                return isMapVisible;
-            }
-            set
-            {
-                isMapVisible = value;
-                RaisePropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private bool isMyLocationVisible;
-        public bool IsMyLocationVisible
-        {
-            get
-            {
-                return isMyLocationVisible;
-            }
-            set
-            {
-                isMyLocationVisible = value;
-                RaisePropertyChanged();
-            }
-        }
-
     }
 }

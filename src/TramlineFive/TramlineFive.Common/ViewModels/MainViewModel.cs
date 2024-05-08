@@ -1,5 +1,7 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,13 +14,8 @@ using TramlineFive.Common.Models;
 
 namespace TramlineFive.Common.ViewModels
 {
-    public class MainViewModel : BaseViewModel
+    public partial class MainViewModel : BaseViewModel
     {
-        public ICommand ChangeViewCommand { get; private set; }
-        public ICommand ToggleHamburgerCommand { get; private set; }
-        public ICommand OpenSettingsCommand { get; private set; }
-        public ICommand OpenAboutCommand { get; private set; }
-
         public ICommand ShowMapCommand { get { return pages[Names.Map].Show; } set { pages[Names.Map].Show = value; } }
         public ICommand HideMapCommand { get { return pages[Names.Map].Hide; } set { pages[Names.Map].Hide = value; } }
         public ICommand ShowFavouriteCommand { get { return pages[Names.Favourites].Show; } set { pages[Names.Favourites].Show = value; } }
@@ -38,19 +35,14 @@ namespace TramlineFive.Common.ViewModels
 
         public MainViewModel()
         {
-            ChangeViewCommand = new RelayCommand<string>((p) => ChangeView(p));
-            ToggleHamburgerCommand = new RelayCommand(() => MessengerInstance.Send(new SlideHamburgerMessage()));
-            OpenSettingsCommand = new RelayCommand(() => NavigationService.ChangePage("Settings"));
-            OpenAboutCommand = new RelayCommand(() => NavigationService.ChangePage("About"));
-
-
-            MessengerInstance.Register<ChangeThemeMessage>(this, (m) => RefreshView());
+            Messenger.Register<ChangeThemeMessage>(this, (r, m) => RefreshView());
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("bg");
         }
 
+        [RelayCommand]
         private void ChangeView(string view)
         {
-            MessengerInstance.Send(new ChangePageMessage(view));
+            Messenger.Send(new ChangePageMessage(view));
             return;
 
             foreach (string key in pages.Keys.ToList())
@@ -75,11 +67,29 @@ namespace TramlineFive.Common.ViewModels
             RefreshView();
         }
 
+        [RelayCommand]
+        private void ToggleHamburger()
+        {
+            Messenger.Send(new SlideHamburgerMessage());
+        }
+
+        [RelayCommand]
+        private void OpenSettings()
+        {
+            NavigationService.ChangePage("Settings");
+        }
+
+        [RelayCommand]
+        private void OpenAbout()
+        {
+            NavigationService.ChangePage("About");
+        }
+
         private void RefreshView()
         {
-            RaisePropertyChanged("IsMapVisible");
-            RaisePropertyChanged("IsFavouritesVisible");
-            RaisePropertyChanged("IsHistoryVisible");
+            OnPropertyChanged(nameof(IsMapVisible));
+            OnPropertyChanged(nameof(IsFavouritesVisible));
+            OnPropertyChanged(nameof(IsHistoryVisible));
         }
 
         public bool IsMapVisible
@@ -91,7 +101,7 @@ namespace TramlineFive.Common.ViewModels
             set
             {
                 pages["Map"].IsVisible = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -104,7 +114,7 @@ namespace TramlineFive.Common.ViewModels
             set
             {
                 pages["Favourites"].IsVisible = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -117,7 +127,7 @@ namespace TramlineFive.Common.ViewModels
             set
             {
                 pages["History"].IsVisible = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Maui.Alerts;
-using GalaSoft.MvvmLight.Messaging;
 using SkgtService;
 using SkgtService.Models;
 using SkgtService.Models.Json;

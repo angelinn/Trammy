@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using SkgtService.Models;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,7 @@ namespace TramlineFive.Pages
             InitializeComponent();
             Loaded += OnLoaded;
 
-            Messenger.Default.Register<StopSelectedMessage>(this, m =>
+            WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, (r, m) =>
             {
                 txtStopName.CancelAnimations();
                 txtStopName.TranslationX = 0;

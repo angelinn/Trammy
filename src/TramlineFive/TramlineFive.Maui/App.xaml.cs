@@ -7,13 +7,13 @@ using TramlineFive.DataAccess;
 using TramlineFive.Services;
 using TramlineFive.Common.Services;
 using TramlineFive.Themes;
-using GalaSoft.MvvmLight.Messaging;
 using TramlineFive.Maui.Services;
 using TramlineFive.Pages;
 using TramlineFive.Maui.Platforms.Android;
 using Android.Widget;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using TramlineFive.Services.Main;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace TramlineFive.Maui
 {
@@ -32,9 +32,9 @@ namespace TramlineFive.Maui
             System.Diagnostics.Debug.WriteLine("Initialized stops loader");
             string theme = Preferences.Get(Settings.Theme, Names.LightTheme);
 
-            Messenger.Default.Register<ChangeThemeMessage>(this, m => OnThemeChanged(m));
+            WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, (r, m) => OnThemeChanged(m));
 
-            Messenger.Default.Send(new ChangeThemeMessage(theme));
+            WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(theme));
             System.Diagnostics.Debug.WriteLine("creating task");
 
             System.Diagnostics.Debug.WriteLine("created");
@@ -105,7 +105,7 @@ namespace TramlineFive.Maui
                 }
             }
 
-            Messenger.Default.Register<SubscribeMessage>(this, m =>
+            WeakReferenceMessenger.Default.Register<SubscribeMessage>(this, (r, m) =>
             {
 #if ANDROID
                 if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M)

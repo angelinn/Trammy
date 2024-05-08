@@ -27,6 +27,6 @@ public class LicensesViewModel : BaseViewModel
             .Build();
 
         Licenses = deserializer.Deserialize<Projects>(yaml).Licenses.GroupBy(l => l.License).ToList();
-        RaisePropertyChanged("Licenses");
+        OnPropertyChanged("Licenses");
     }
 }

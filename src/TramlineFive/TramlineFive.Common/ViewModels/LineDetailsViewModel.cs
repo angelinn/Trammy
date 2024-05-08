@@ -1,5 +1,8 @@
-﻿using Fizzler;
-using GalaSoft.MvvmLight.Command;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Fizzler;
+
 using Mapsui;
 using Newtonsoft.Json.Linq;
 using SkgtService;
@@ -25,20 +28,12 @@ public class ZoomToLineStopMessage
     public string Code { get; set; }
 }
 
-public class CodeViewModel : BaseViewModel
+public partial class CodeViewModel : BaseViewModel
 {
     public string Code { get; set; }
 
+    [ObservableProperty]
     private bool isHighlighted;
-    public bool IsHighlighted
-    {
-        get => isHighlighted;
-        set
-        {
-            isHighlighted = value;
-            RaisePropertyChanged();
-        }
-    }
 }
 
 public class RouteViewModel
@@ -60,36 +55,27 @@ public class ScrollToHighlightedStopMessage
     public CodeViewModel Item { get; set; }
 }
 
-public abstract class BaseLineDetailsViewModel : BaseViewModel
+public abstract partial class BaseLineDetailsViewModel : BaseViewModel
 {
     private readonly LineMapService lineMapService;
     private readonly PublicTransport publicTransport;
 
     public LineMapService LineMapService => lineMapService;
 
+    [ObservableProperty]
     private LineViewModel line;
-    public LineViewModel Line
-    {
-        get => line;
-        set
-        {
-            line = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public ICommand CheckStopCommand { get; private set; }
 
     public BaseLineDetailsViewModel(PublicTransport publicTransport)
     {
         lineMapService = new LineMapService(publicTransport);
-
-        CheckStopCommand = new RelayCommand<CodeViewModel>((code) =>
-        {
-            MessengerInstance.Send(new ChangePageMessage("Map"));
-            MessengerInstance.Send(new StopSelectedMessage(code.Code, true));
-        });
         this.publicTransport = publicTransport;
+    }
+
+    [RelayCommand]
+    public void CheckStop(CodeViewModel code)
+    {
+        Messenger.Send(new ChangePageMessage("Map"));
+        Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(code.Code, true)));
     }
 
     public async void SetHighlightedStop(string stop)
@@ -98,7 +84,7 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
         if (code != null)
         {
             code.IsHighlighted = true;
-            MessengerInstance.Send(new ScrollToHighlightedStopMessage { Item = code });
+            Messenger.Send(new ScrollToHighlightedStopMessage { Item = code });
 
             await Task.Delay(1000);
             lineMapService.ZoomTo(stop);
@@ -113,59 +99,50 @@ public abstract class BaseLineDetailsViewModel : BaseViewModel
         lineMapService.SetupMapAsync(route, line.Type);
     }
 
+    [ObservableProperty]
     private CodeViewModel selectedStop;
-    public CodeViewModel SelectedStop
+
+    partial void OnSelectedStopChanged(CodeViewModel value)
     {
-        get => selectedStop;
-        set
+        if (value != null)
         {
-            selectedStop = null;
-            RaisePropertyChanged();
-
-            if (value != null)
+            foreach (CodeViewModel codeVm in route.Codes)
             {
-                foreach (CodeViewModel codeVm in route.Codes)
+                if (codeVm.Code == value.Code && codeVm.IsHighlighted)
                 {
-                    if (codeVm.Code == value.Code && codeVm.IsHighlighted)
-                    {
-                        lineMapService.ResetView();
-                        codeVm.IsHighlighted = false;
-
-                        return;
-                    } 
-
+                    lineMapService.ResetView();
                     codeVm.IsHighlighted = false;
+
+                    return;
                 }
 
-                value.IsHighlighted = true;
-                lineMapService.ZoomTo(value.Code);
+                codeVm.IsHighlighted = false;
             }
+
+            value.IsHighlighted = true;
+            lineMapService.ZoomTo(value.Code);
         }
     }
 
     public string TargetStop => Route?.Last;
 
+    [ObservableProperty]
     private RouteViewModel route;
-    public RouteViewModel Route
+
+    partial void OnRouteChanged(RouteViewModel value)
     {
-        get => route;
-        set
-        {
-            route = value;
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(TargetStop));
-        }
+        OnPropertyChanged(nameof(TargetStop));
     }
 }
 
 public class ForwardLineDetailsViewModel : BaseLineDetailsViewModel
 {
     public ForwardLineDetailsViewModel(PublicTransport publicTransport) : base(publicTransport)
-    {   }
+    { }
 }
 
 public class LineDetailsViewModel : BaseLineDetailsViewModel
 {
     public LineDetailsViewModel(PublicTransport publicTransport) : base(publicTransport)
-    {   }
+    { }
 }

@@ -8,7 +8,6 @@ using Android.Widget;
 using Android.OS;
 using TramlineFive.Droid.Services;
 using Android;
-using GalaSoft.MvvmLight.Ioc;
 using TramlineFive.Common.Services;
 using TramlineFive.Services;
 using Android.Content;
@@ -16,13 +15,13 @@ using System.Reflection;
 using Android.Util;
 using TramlineFive.Common.Messages;
 
-using Messenger = GalaSoft.MvvmLight.Messaging.Messenger;
 using Android.Content.Res;
 using TramlineFive.Maui.Services;
 using Bumptech.Glide.Load;
 using TramlineFive.Maui.Platforms.Android;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace TramlineFive.Maui
 {
@@ -56,7 +55,7 @@ namespace TramlineFive.Maui
             PushService.SetContext(this);
 
             InitFontScale();
-            Messenger.Default.Register<ChangeThemeMessage>(this, OnThemeChanged);
+            WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, OnThemeChanged);
 
             //LoadApplication(new App());
 
@@ -108,7 +107,7 @@ namespace TramlineFive.Maui
             BaseContext.Resources.UpdateConfiguration(Resources.Configuration, metrics);
         }
 
-        private void OnThemeChanged(ChangeThemeMessage message)
+        private void OnThemeChanged(object recipient, ChangeThemeMessage message)
         {
             Android.Graphics.Color color = message.Name == Common.Names.LightTheme ? Android.Graphics.Color.White : Android.Graphics.Color.ParseColor("#22272e");
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)

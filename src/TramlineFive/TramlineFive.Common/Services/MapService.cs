@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using Mapsui;
+﻿using Mapsui;
 using Mapsui.Layers;
 using Mapsui.Providers;
 using Mapsui.Styles;
@@ -19,10 +18,10 @@ using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using Mapsui.Projections;
 using KdTree;
-using GalaSoft.MvvmLight.Ioc;
 using Mapsui.Animations;
 using SkgtService.Models.Json;
 using SkgtService.Models;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace TramlineFive.Common.Services;
 
@@ -71,7 +70,7 @@ public class MapService
             n.ZoomTo(map.Navigator.Resolutions[17]);
             ShowNearbyStops(point);
 
-            Messenger.Default.Send(new MapLoadedMessage());
+            WeakReferenceMessenger.Default.Send(new MapLoadedMessage());
         };
 
         map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
@@ -106,7 +105,7 @@ public class MapService
 
     private void SendMapRefreshMessage()
     {
-        Messenger.Default.Send(new RefreshMapMessage());
+        WeakReferenceMessenger.Default.Send(new RefreshMapMessage());
     }
 
     private SymbolStyle trolleyPinStyle;
@@ -273,7 +272,7 @@ public class MapService
             //FilterStops(neighbours);
 
             if (nearbyStops.Count > 0)
-                Messenger.Default.Send(new NearbyStopsMessage(nearbyStops.Select(p => p.Value).ToList()));
+                WeakReferenceMessenger.Default.Send(new NearbyStopsMessage(nearbyStops.Select(p => p.Value).ToList()));
         });
     }
 
@@ -334,13 +333,13 @@ public class MapService
 
     public void OnMapInfo(MapInfoEventArgs e)
     {
-        Messenger.Default.Send(new MapClickedMessage());
+        WeakReferenceMessenger.Default.Send(new MapClickedMessage());
 
         if (e.MapInfo.Feature != null && e.MapInfo.Feature.Styles.First().Enabled)
         {
             StopInformation location = e.MapInfo.Feature["stopObject"] as StopInformation;
 
-            Messenger.Default.Send(new StopSelectedMessage(location.Code, true));
+            WeakReferenceMessenger.Default.Send(new StopSelectedMessage(new StopSelectedMessagePayload(location.Code, true)));
             return;
         }
         //ShowNearbyStops(e.MapInfo.WorldPosition);

@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿
 using NetTopologySuite.Index.HPRtree;
 using SkgtService;
 using SkgtService.Models;
