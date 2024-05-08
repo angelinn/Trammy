@@ -272,7 +272,8 @@ public class MapService
 
             //FilterStops(neighbours);
 
-            Messenger.Default.Send(new NearbyStopsMessage(nearbyStops.Select(p => p.Value).ToList()));
+            if (nearbyStops.Count > 0)
+                Messenger.Default.Send(new NearbyStopsMessage(nearbyStops.Select(p => p.Value).ToList()));
         });
     }
 

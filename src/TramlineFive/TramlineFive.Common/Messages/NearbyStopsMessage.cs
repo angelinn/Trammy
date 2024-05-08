@@ -10,6 +10,8 @@ namespace TramlineFive.Common.Messages
     {
         public List<StopInformation> NearbyStops { get; set; }
 
+        public NearbyStopsMessage() { }
+
         public NearbyStopsMessage(List<StopInformation> nearbyStops)
         {
             NearbyStops = nearbyStops;
