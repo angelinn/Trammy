@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Maui.Views.VirtualTablesViewCell"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
+             BackgroundColor="Transparent"
              Margin="0,0,0,5">
 
-        <Border.StrokeShape>
-            <RoundRectangle CornerRadius="20" />
-        </Border.StrokeShape>
-        <Border.Resources>
+    <Border.StrokeShape>
+        <RoundRectangle CornerRadius="20" />
+    </Border.StrokeShape>
+    <Border.Resources>
             <ResourceDictionary>
                 <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
             </ResourceDictionary>

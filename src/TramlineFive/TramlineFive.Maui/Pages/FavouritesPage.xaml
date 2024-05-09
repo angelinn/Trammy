@@ -2,9 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.FavouritesPage"
-             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
-      
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
     <ContentPage.Resources>
@@ -42,7 +41,13 @@
                                     <SwipeView.RightItems>
                                         <SwipeItems>
                                             <SwipeItemView WidthRequest="100" Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}">
-                                                <Grid BackgroundColor="Red" xct:TouchEffect.NativeAnimation="True">
+                                                <Grid BackgroundColor="Red">
+                                                    <Grid.Behaviors>
+                                                        <mct:TouchBehavior DefaultAnimationDuration="250"
+                                                            DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                                            PressedOpacity="0.6"
+                                                            PressedScale="0.8" />
+                                                    </Grid.Behaviors>
                                                     <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="0">
                                                         <Label Text="delete" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="30" TextColor="White" HorizontalOptions="Center" />
                                                         <Label Text="Изтрий" TextColor="White" Margin="0,1,0,0" />
@@ -52,7 +57,13 @@
                                         </SwipeItems>
                                     </SwipeView.RightItems>
 
-                                    <Grid Background="{DynamicResource BackgroundColor}"  Padding="0" VerticalOptions="FillAndExpand" xct:TouchEffect.NativeAnimation="True" xct:TouchEffect.LongPressCommand="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" xct:TouchEffect.LongPressCommandParameter="{Binding}">
+                                    <Grid Background="{DynamicResource BackgroundColor}"  Padding="0" VerticalOptions="FillAndExpand">
+                                        <Grid.Behaviors>
+                                            <mct:TouchBehavior DefaultAnimationDuration="250"
+                                                DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                                PressedOpacity="0.6"
+                                                PressedScale="0.8" />
+                                        </Grid.Behaviors>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="60" />

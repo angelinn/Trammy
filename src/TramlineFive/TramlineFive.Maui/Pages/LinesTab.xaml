@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.LinesTab"
-             xmlns:d="clr-namespace:TramlineFive.Behaviors"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              x:Name="Page">
 
@@ -28,7 +28,7 @@
         
         <SearchBar x:Name="search" Placeholder="Търси линия..." Margin="0" Text="{Binding SearchText}">
             <SearchBar.Behaviors>
-                <d:EventToCommandBehavior EventName="TextChanged" Command="{Binding FilterLinesCommand}" />
+                <mct:EventToCommandBehavior EventName="TextChanged" Command="{Binding FilterLinesCommand}" />
             </SearchBar.Behaviors>
         </SearchBar>
 

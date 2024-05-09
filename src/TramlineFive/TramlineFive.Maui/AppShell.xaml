@@ -16,6 +16,8 @@
               Value="DodgerBlue" />
             <Setter Property="Shell.BackgroundColor"
               Value="DodgerBlue" />
+            <Setter Property="Shell.TabBarForegroundColor" 
+              Value="DodgerBlue" />
         </Style>
 
         <Style Class="FlyoutItemLabelStyle" TargetType="Label">

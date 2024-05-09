@@ -2,8 +2,8 @@
 <Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:TramlineFive.Converters" 
-             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:d="clr-namespace:TramlineFive.Behaviors"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
              xmlns:views="clr-namespace:TramlineFive.Maui.Views"
              BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
@@ -49,18 +49,14 @@
                                 </Grid>
 
                                 <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource BackgroundColor}">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding FavouriteCommand}" />
-                                    </Grid.GestureRecognizers>
-
                                     <Grid.Behaviors>
-                                        <d:AnimationBehavior AnimateCommand="{Binding AnimateFavouriteCommand}">
-                                            <d:AnimationBehavior.AnimationType>
-                                                <xct:FlipHorizontalAnimation Rotation="360" />
-                                            </d:AnimationBehavior.AnimationType>
-                                        </d:AnimationBehavior>
+                                        <mct:TouchBehavior DefaultAnimationDuration="350"
+                                            PressedOpacity="0.6"
+                                            PressedScale="0.8"
+                                            PressedRotationY="350"
+                                            Command="{Binding FavouriteCommand}" />
                                     </Grid.Behaviors>
-
+                                    
                                     <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe838;" Margin="10,10,15,10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Grid>
 

@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.HistoryPage"
-             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}">
 
     <Grid BackgroundColor="{DynamicResource BackgroundColor}" >

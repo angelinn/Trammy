@@ -6,9 +6,8 @@
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              xmlns:pages="clr-namespace:TramlineFive.Pages"
              xmlns:views="clr-namespace:TramlineFive.Views"
-             xmlns:d="clr-namespace:TramlineFive.Behaviors"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
-             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:mapsuipl="clr-namespace:Mapsui;assembly=Mapsui"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}"
              Padding="0">
@@ -29,7 +28,7 @@
         <mapsui:MapView x:Name="map" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"
                             IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False">
             <mapsui:MapView.Behaviors>
-                <d:EventToCommandBehavior EventName="Info" Command="{Binding MapInfoCommand}" />
+                <mct:EventToCommandBehavior EventName="Info" Command="{Binding MapInfoCommand}" x:TypeArguments="mapsuipl:MapInfoEventArgs" />
             </mapsui:MapView.Behaviors>
         </mapsui:MapView>
 
@@ -59,10 +58,14 @@
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid HorizontalOptions="FillAndExpand" xct:TouchEffect.NativeAnimation="True">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding OpenHamburgerCommand}" />
-                        </Grid.GestureRecognizers>
+                    <Grid HorizontalOptions="FillAndExpand">
+                        <Grid.Behaviors>
+                            <mct:TouchBehavior DefaultAnimationDuration="250"
+                                DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                PressedOpacity="0.6"
+                                PressedScale="0.8"
+                                Command="{Binding OpenHamburgerCommand}" />
+                        </Grid.Behaviors>
 
                         <Image Margin="5,0,0,0" HorizontalOptions="Center" VerticalOptions="Center" >
                             <Image.Source>
@@ -73,9 +76,9 @@
                     <Entry Grid.Column="1" TextColor="{DynamicResource LabelTextColor}" Placeholder="Код/име на спирка..." PlaceholderColor="{DynamicResource PlaceholderTextColor}"
                                        FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
                         <Entry.Behaviors>
-                            <d:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
-                            <d:EventToCommandBehavior EventName="Focused" Command="{Binding SearchFocusedCommand}" />
-                            <d:EventToCommandBehavior EventName="Unfocused" Command="{Binding SearchUnfocusedCommand}" />
+                            <mct:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
+                            <mct:EventToCommandBehavior EventName="Focused" Command="{Binding SearchFocusedCommand}" />
+                            <mct:EventToCommandBehavior EventName="Unfocused" Command="{Binding SearchUnfocusedCommand}" />
                         </Entry.Behaviors>
                     </Entry>
                     <ActivityIndicator Grid.Column="1" HorizontalOptions="End" Scale=".5"
@@ -94,7 +97,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="0,2,0,2" WidthRequest="145" HeightRequest="42">
-                            <Border Stroke="Transparent" Padding="10,8,5,10" xct:TouchEffect.NativeAnimation="True" Opacity="0.9" Background="white">
+                            <Border Stroke="Transparent" Padding="10,8,5,10" Opacity="0.9" Background="white">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20" />
                                 </Border.StrokeShape>
@@ -147,10 +150,14 @@
                 </ListView>
             </Frame>
 
-        <Frame AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="1,0.80,1,58" Grid.Row="1" Margin="0,0,10,0" BackgroundColor="{DynamicResource BackgroundColor}"  CornerRadius="50" Opacity="0.9" Padding="0" xct:TouchEffect.NativeAnimation="True" HorizontalOptions="End" VerticalOptions="End" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
-            <Frame.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding MyLocationCommand}" />
-            </Frame.GestureRecognizers>
+        <Frame AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="1,0.80,1,58" Grid.Row="1" Margin="0,0,10,0" BackgroundColor="{DynamicResource BackgroundColor}"  CornerRadius="50" Opacity="0.9" Padding="0" HorizontalOptions="End" VerticalOptions="End" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
+            <Frame.Behaviors>
+                <mct:TouchBehavior DefaultAnimationDuration="250"
+                                DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                PressedOpacity="0.6"
+                                PressedScale="0.8"
+                                Command="{Binding MyLocationCommand}" />
+            </Frame.Behaviors>
 
             <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="{Binding HasLocation, Converter={StaticResource LocationConverter}}" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="25" />
         </Frame>    

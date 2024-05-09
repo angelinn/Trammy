@@ -78,7 +78,7 @@ namespace TramlineFive.Common.ViewModels
                 ApplicationService.DisplayToast($"Спирката вече съществува в любими");
             }
 
-            AnimateFavouriteCommand.Execute(null);
+            //AnimateFavouriteCommand.Execute(null);
         }
 
         public async Task CheckStopAsync(string selected)

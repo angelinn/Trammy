@@ -9,9 +9,8 @@ using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels.Locator;
 using TramlineFive.Maui.Services;
 using TramlineFive.Services.Main;
-using Xamarin.CommunityToolkit.Effects;
-using SkiaSharp.Views.Maui.Controls.Hosting;
 using SkgtService;
+using Android.Content.Res;
 
 namespace TramlineFive.Maui
 {
@@ -59,22 +58,11 @@ namespace TramlineFive.Maui
                     fonts.AddFont("MaterialIconsTwoToneRegular.otf", "mit");
                 })
                 .UseMauiCommunityToolkit()
-                .UseMauiCompatibility()
-                //.ConfigureMauiHandlers(handlers =>
-                //{
-                //    // Register ALL handlers in the Xamarin Community Toolkit assembly
-                //    handlers.AddCompatibilityRenderers(typeof(Xamarin.CommunityToolkit.UI.Views.AvatarView).Assembly);
-                //})
-                .ConfigureEffects(effects =>
-                {
-                    effects.AddCompatibilityEffects(typeof(Xamarin.CommunityToolkit.Effects.TouchEffect).Assembly);
-                });
+                .UseMauiCompatibility();
 
             Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
             {
-                GradientDrawable gd = new GradientDrawable();
-                gd.SetColor(global::Android.Graphics.Color.Transparent);
-                handler.PlatformView.SetBackgroundDrawable(gd);
+                handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
             });
 
             ConfigureServices(builder.Services);
