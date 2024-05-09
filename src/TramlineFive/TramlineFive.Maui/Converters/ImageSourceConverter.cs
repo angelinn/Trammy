@@ -10,7 +10,7 @@ namespace TramlineFive.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string prefix = (Device.RuntimePlatform == Device.Android) ? "Resources/drawable" : "Assets";
+            string prefix = (DeviceInfo.Platform == DevicePlatform.Android) ? "Resources/drawable" : "Assets";
             char[] type = (value as string).ToCharArray();
 
             // Shout-out to Atanas Semerdzhiev

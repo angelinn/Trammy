@@ -101,7 +101,7 @@ public class ApplicationService : IApplicationService
 
     public void RunOnUIThread(Action action)
     {
-        Device.BeginInvokeOnMainThread(action);
+        Dispatcher.GetForCurrentThread().Dispatch(action);
     }
 
     public async Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel)

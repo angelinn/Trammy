@@ -15,8 +15,8 @@ namespace TramlineFive.Converters
         {
             ResourceDictionary theme = Application.Current.Resources.MergedDictionaries.FirstOrDefault(i => i.ContainsKey("MenuTextColor"));
 
-            Color notSelected = Color.FromHex(notSelectedColor); 
-            Color selected = Color.FromHex(selectedColor);
+            Color notSelected = Color.FromArgb(notSelectedColor); 
+            Color selected = Color.FromArgb(selectedColor);
             if (theme != null)
             {
                 notSelected = (Color)theme["MenuTextColor"];
