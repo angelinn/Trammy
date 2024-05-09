@@ -89,8 +89,8 @@
                 </Grid>
             </Border>
         </StackLayout> 
-        <CollectionView EmptyView="No items" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,45" Grid.Row="2" Margin="17,5,17,0" ItemsSource="{Binding RecommendedStops}" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
-        <!--<CollectionView AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,50" ItemsSource="{Binding RecommendedStops}">-->
+        <!--<CollectionView EmptyView="No items" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,45" Grid.Row="2" Margin="17,5,17,0" ItemsSource="{Binding RecommendedStops}" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
+        --><!--<CollectionView AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,50" ItemsSource="{Binding RecommendedStops}">--><!--
             <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
                 </CollectionView.ItemsLayout>
@@ -125,7 +125,7 @@
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-            </CollectionView>
+            </CollectionView>-->
 
             <Frame AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" BackgroundColor="{DynamicResource BackgroundColor}" Margin="15,-5,15,0" Opacity="0.9" VerticalOptions="End" Padding="0" CornerRadius="30" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
                 <ListView SeparatorColor="Transparent" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >

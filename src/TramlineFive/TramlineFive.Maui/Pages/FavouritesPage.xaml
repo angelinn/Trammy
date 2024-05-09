@@ -4,6 +4,7 @@
              x:Class="TramlineFive.Pages.FavouritesPage"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
+             Shell.NavBarIsVisible="True"
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
     <ContentPage.Resources>
@@ -12,17 +13,23 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid BackgroundColor="{DynamicResource BackgroundColor}">
+    <Grid BackgroundColor="#f5f0f0">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
 
-        <Grid BackgroundColor="{DynamicResource BarBackgroundColor}" >
-            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal" BackgroundColor="Transparent">
-                <!--<Label Text="favorite" FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="White" FontSize="30" VerticalTextAlignment="End"  />-->
-                <Label Text="Любими" HorizontalTextAlignment="Center" Margin="5,40,0,0" TextColor="White" FontSize="30" />
-            </StackLayout>
+        <Grid Padding="15">
+            <Border Background="#d2e9ff" Stroke="Transparent">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+                <StackLayout HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="Transparent" Padding="20">
+                    <Label Text="Най-посещаванa спирка:" />
+                    <Label Text="{Binding Favourites[0].Name}" HorizontalTextAlignment="Center" />
+                    
+                </StackLayout>
+            </Border>
         </Grid>
 
         <Grid Grid.Row="1">
@@ -32,12 +39,12 @@
                 <Label Text="tram" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="105" TextColor="{DynamicResource BlueAccentColor}" HorizontalOptions="Center" Margin="0,10,0,0" Opacity="0.7" />
             </StackLayout>
 
-            <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="70" SeparatorVisibility="Default" VerticalOptions="Fill" CachingStrategy="RecycleElement" >
+            <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="70" SeparatorVisibility="None" VerticalOptions="Fill" CachingStrategy="RecycleElement" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <SwipeView Margin="5,0,0,0" BackgroundColor="{DynamicResource BackgroundColor}">
+                                <SwipeView Padding="10,0,10,0" Background="Transparent">
                                     <SwipeView.RightItems>
                                         <SwipeItems>
                                             <SwipeItemView WidthRequest="100" Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}">
@@ -57,56 +64,64 @@
                                         </SwipeItems>
                                     </SwipeView.RightItems>
 
-                                    <Grid Background="{DynamicResource BackgroundColor}"  Padding="0" VerticalOptions="FillAndExpand">
+
+                                    <Grid>
                                         <Grid.Behaviors>
-                                            <mct:TouchBehavior DefaultAnimationDuration="250"
-                                                DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
-                                                PressedOpacity="0.6"
-                                                PressedScale="0.8" />
-                                        </Grid.Behaviors>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="60" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="60" />
-                                            </Grid.ColumnDefinitions>
+                                                <mct:TouchBehavior DefaultAnimationDuration="250"
+                                                    DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                                    PressedOpacity="0.6"
+                                                    PressedScale="0.8" />
+                                            </Grid.Behaviors>
+                                            
+                                        <Border Background="{DynamicResource BackgroundColor}" Stroke="Transparent">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="20" />
+                                            </Border.StrokeShape>
+                                                
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="60" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="60" />
+                                                </Grid.ColumnDefinitions>
 
-                                            <Label FontFamily="mir" Text="tram" TextColor="{DynamicResource IconsColor}" FontSize="31" VerticalOptions="Center" HorizontalOptions="Center" />
+                                                <Label FontFamily="mir" Text="tram" TextColor="{DynamicResource IconsColor}" FontSize="31" VerticalOptions="Center" HorizontalOptions="Center" />
 
-                                            <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
+                                                <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
 
-                                                <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
-                                                    <Label Text="{Binding Name}" />
-                                                    <Label Text="{Binding StopCode, StringFormat=' ({0})'}" FontSize="Small" />
+                                                    <StackLayout Orientation="Horizontal" Margin="0,0,0,0">
+                                                        <Label Text="{Binding Name}" />
+                                                        <Label Text="{Binding StopCode, StringFormat=' ({0})'}" FontSize="Small" />
+                                                    </StackLayout>
+
+                                                    <CollectionView ItemsSource="{Binding Lines}" Margin="0,5,0,0">
+                                                        <CollectionView.ItemsLayout>
+                                                            <LinearItemsLayout Orientation="Horizontal" />
+                                                        </CollectionView.ItemsLayout>
+
+                                                        <CollectionView.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid Padding="0,0,3,0">
+                                                                    <Border StrokeThickness="0" WidthRequest="35" Background="{Binding VehicleType, Converter={StaticResource TransportToColor}}">
+                                                                        <Border.StrokeShape>
+                                                                            <RoundRectangle CornerRadius="15" />
+                                                                        </Border.StrokeShape>
+
+                                                                        <Label FontSize="12" HorizontalOptions="Center" Text="{Binding Name}" Padding="2" TextColor="White" />
+                                                                    </Border>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </CollectionView.ItemTemplate>
+
+                                                    </CollectionView>
                                                 </StackLayout>
 
-                                                <CollectionView ItemsSource="{Binding Lines}" Margin="0,5,0,0">
-                                                    <CollectionView.ItemsLayout>
-                                                        <LinearItemsLayout Orientation="Horizontal" />
-                                                    </CollectionView.ItemsLayout>
-
-                                                    <CollectionView.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Grid Padding="0,0,3,0">
-                                                                <Border StrokeThickness="0" WidthRequest="35" Background="{Binding VehicleType, Converter={StaticResource TransportToColor}}">
-                                                                    <Border.StrokeShape>
-                                                                        <RoundRectangle CornerRadius="15" />
-                                                                    </Border.StrokeShape>
-
-                                                                    <Label FontSize="12" HorizontalOptions="Center" Text="{Binding Name}" Padding="2" TextColor="White" />
-                                                                </Border>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </CollectionView.ItemTemplate>
-
-                                                </CollectionView>
-                                            </StackLayout>
-
-                                            <StackLayout Orientation="Horizontal" Grid.Column="2" Spacing="0" Margin="0,0,5,0">
-                                                <Label Text="{Binding TimesClicked, StringFormat='{0}'}" FontSize="Small" VerticalOptions="Center" />
-                                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="search" FontSize="20" Margin="5,0,0,0" TextColor="{DynamicResource DetailsTextColor}" VerticalOptions="Center" />
-                                            </StackLayout>
-                                        </Grid>
+                                                <StackLayout Orientation="Horizontal" Grid.Column="2" Spacing="0" Margin="0,0,5,0">
+                                                    <Label Text="{Binding TimesClicked, StringFormat='{0}'}" FontSize="Small" VerticalOptions="Center" />
+                                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="search" FontSize="20" Margin="5,0,0,0" TextColor="{DynamicResource DetailsTextColor}" VerticalOptions="Center" />
+                                                </StackLayout>
+                                            </Grid>
+                                        </Border>
                                     </Grid>
                                 </SwipeView>
                             </ViewCell.View>

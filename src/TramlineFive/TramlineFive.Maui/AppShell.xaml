@@ -44,7 +44,7 @@
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="fmd_good" />
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent Style="{StaticResource TabStyle}"  Route="Favourites" Title="Любими" ContentTemplate="{DataTemplate pages:FavouritesPage}">
+        <ShellContent Style="{StaticResource TabStyle}"  Route="Favourites" Title="Любими" Shell.FlyoutBehavior="Disabled" ContentTemplate="{DataTemplate pages:FavouritesPage}">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="star_border" />
             </ShellContent.Icon>
