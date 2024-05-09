@@ -35,7 +35,7 @@ namespace TramlineFive.Common.ViewModels
         {
             if (value != null)
             {
-                ServiceContainer.ServiceProvider.GetService<MainViewModel>().ChangeViewCommand.Execute("Map");
+                Messenger.Send(new ChangePageMessage("//Map"));
                 Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(value.StopCode, true)));
 
                 Selected = null;

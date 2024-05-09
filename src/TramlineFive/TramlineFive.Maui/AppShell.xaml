@@ -67,39 +67,30 @@
                 <pages:LinesTab BindingContext="{Binding TrolleyLinesViewModel, Source={StaticResource Locator}}" />
             </ShellContent>
         </Tab>
-
-        <ShellContent Style="{StaticResource TabStyle}" Route="Directions" Title="Пътуване" ContentTemplate="{DataTemplate pages:Directions}">
-            <ShellContent.Icon>
-                <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="route" />
-            </ShellContent.Icon>
-        </ShellContent>
-        
-        <ShellContent Route="About" Title="Информация">
-            <ShellContent.Icon>
-                <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="info" />
-            </ShellContent.Icon>
-
-            <pages:AboutPage />
-        </ShellContent>
-
-        <Tab Route="LineDetails" Shell.BackgroundColor="DodgerBlue" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False">
-            <ShellContent Route="Forward" BindingContext="{Binding LineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
-                <pages:LineDetails BindingContext="{Binding}"  />
-            </ShellContent>
-
-            <ShellContent Route="Backward" BindingContext="{Binding ForwardLineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
-                <pages:LineDetails BindingContext="{Binding}" />
-            </ShellContent>
-        </Tab>
-
     </FlyoutItem>
 
+    <Tab Route="LineDetails" Shell.BackgroundColor="DodgerBlue" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False">
+        <ShellContent Route="Forward" BindingContext="{Binding LineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
+            <pages:LineDetails BindingContext="{Binding}"  />
+        </ShellContent>
 
-    <ShellContent Style="{StaticResource TabStyle}" Route="Settings" Title="Настройки" ContentTemplate="{DataTemplate pages:SettingsPage}">
+        <ShellContent Route="Backward" BindingContext="{Binding ForwardLineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
+            <pages:LineDetails BindingContext="{Binding}" />
+        </ShellContent>
+    </Tab>
+
+    <ShellContent Style="{StaticResource TabStyle}" Route="Settings" Title="Настройки" Shell.FlyoutBehavior="Disabled" ContentTemplate="{DataTemplate pages:SettingsPage}">
         <ShellContent.Icon>
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="settings" />
         </ShellContent.Icon>
     </ShellContent>
+
+    <ShellContent Style="{StaticResource TabStyle}" Route="Directions" Title="Пътуване (Експериментално)" ContentTemplate="{DataTemplate pages:Directions}">
+        <ShellContent.Icon>
+            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="route" />
+        </ShellContent.Icon>
+    </ShellContent>
+    
     <ShellContent Route="About" Title="Информация">
         <ShellContent.Icon>
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="DodgerBlue" Glyph="info" />
@@ -107,6 +98,7 @@
 
         <pages:AboutPage />
     </ShellContent>
+    
 
     <ShellContent FlyoutItemIsVisible="False" Route="Location" ContentTemplate="{DataTemplate pages:LocationPromptPage}" />
 </Shell>

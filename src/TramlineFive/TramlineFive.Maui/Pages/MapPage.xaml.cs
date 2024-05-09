@@ -141,7 +141,7 @@ namespace TramlineFive.Pages
             map.TouchAction += OnMapTouchAction;
 
             if (VersionTracking.IsFirstLaunchEver)
-                WeakReferenceMessenger.Default.Send(new ChangePageMessage("Location"));
+                WeakReferenceMessenger.Default.Send(new ChangePageMessage("//Location"));
         }
 
         protected override void OnSizeAllocated(double width, double height)

@@ -74,7 +74,7 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
     [RelayCommand]
     public void CheckStop(CodeViewModel code)
     {
-        Messenger.Send(new ChangePageMessage("Map"));
+        Messenger.Send(new ChangePageMessage("//Map"));
         Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(code.Code, true)));
     }
 

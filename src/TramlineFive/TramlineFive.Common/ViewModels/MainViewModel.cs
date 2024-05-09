@@ -40,34 +40,6 @@ namespace TramlineFive.Common.ViewModels
         }
 
         [RelayCommand]
-        private void ChangeView(string view)
-        {
-            Messenger.Send(new ChangePageMessage(view));
-            return;
-
-            foreach (string key in pages.Keys.ToList())
-            {
-                if (pages[key].IsVisible)
-                    pages[key].Hide.Execute(null);
-
-                if (key == view)
-                {
-                    pages[key].Show.Execute(null);
-                    pages[key].AnimateButton.Execute(null);
-                }
-
-                pages[key].IsVisible = key == view;
-            }
-
-            //if (view == Names.Map)
-            //    ApplicationService.ChangeStatusBarColor(String.Empty);
-            //else
-            //    ApplicationService.ChangeStatusBarColor("#1e90ff");
-
-            RefreshView();
-        }
-
-        [RelayCommand]
         private void ToggleHamburger()
         {
             Messenger.Send(new SlideHamburgerMessage());
