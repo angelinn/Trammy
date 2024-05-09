@@ -1,11 +1,12 @@
-# Трамвай №5 - приложение за лесна проверка на градския транспорт
+# Trammy - приложение за лесна проверка на градския транспорт
 [![Build status](https://github.com/angelinn/TramlineFive/actions/workflows/main.yml/badge.svg)](https://github.com/angelinn/TramlineFive/actions/workflows/main.yml/badge.svg)
 ![Made in Bulgaria](https://img.shields.io/static/v1?label=made%20in&message=Bulgaria&color=success)
 
 ![MAUI](https://img.shields.io/static/v1?label=.NET%20&message=MAUI&color=purple)
-![Mapsui](https://img.shields.io/static/v1?label=mapsui%20&message=4.1.0&color=blue)
+![.NET 8](https://img.shields.io/static/v1?label=.NET&message=8.0&color=blue)
+![Mapsui](https://img.shields.io/static/v1?label=mapsui%20&message=4.1.0&color=blue) 
 
-Трамвай №5 (Tramline Five) е приложение за проверка на времената на пристигане на градския транспорт в София в реално време.
+Trammy (старо име Tramline Five) е приложение за проверка на времената на пристигане на градския транспорт в София в реално време.
 
 Създадено е с идея да предложи на потребителите алтернатива на приложение с отворен код за проверка на градския транспорт.
 Без реклами, без събиране на данни.
@@ -24,11 +25,6 @@
 През далечната 2012 година нямаше приложение за Windows Mobile, което да прави проверки за градския транспорт. Това роди вдъхновението за направата на подобно приложение. 
 
 След приключването на Windows Mobile, приложението бе прехвърлено към Android, като идеята му е да използва само ресурси с отворен код, за да бъде максимално прозрачно и без реклами.
-
-## Технологии
-* [.NET MAUI](https://github.com/dotnet/mauis)
-* [Mapsui](https://github.com/mapsui/Mapsui)
-* [SQLite 3](https://www.sqlite.org/index.html)
 
 ## License
 * Данните за пристиганията в реално време са собственост на Център за градска мобилност.
