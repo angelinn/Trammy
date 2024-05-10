@@ -12,4 +12,5 @@ public static class Settings
     public const string StopsUpdated = "StopsUpdated";
     public const string SelectedTileServer = "SelectedTileServer";
     public const string Theme = "Theme";
+    public const string FetchingStrategy = "FetchingStrategy";
 }

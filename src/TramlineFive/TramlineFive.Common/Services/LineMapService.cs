@@ -38,7 +38,7 @@ public class LineMapService
 
     public async Task SetupMapAsync(LineRoute route, TransportType transportType, string tileServer = null)
     {
-        Map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
+        Map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light", null));
         Map.Home = (h) => ZoomToBox(h, routeBox);
         LoadPinStyles();
 

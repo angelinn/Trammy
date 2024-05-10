@@ -22,6 +22,7 @@ using Mapsui.Animations;
 using SkgtService.Models.Json;
 using SkgtService.Models;
 using CommunityToolkit.Mvvm.Messaging;
+using Mapsui.Tiling.Fetcher;
 
 namespace TramlineFive.Common.Services;
 
@@ -51,17 +52,18 @@ public class MapService
         this.publicTransport = publicTransport;
     }
 
-    public async Task Initialize(Map map, Navigator navigator, string tileServer)
+    public async Task Initialize(Map map, Navigator navigator, string tileServer, string fetchStrategy)
     {
         this.map = map;
         this.navigator = navigator;
 
         await TileServerSettings.LoadTileServersAsync();
 
-        await SetupMapAsync(tileServer);
+
+        await SetupMapAsync(tileServer, fetchStrategy);
     }
 
-    public async Task SetupMapAsync(string tileServer)
+    public async Task SetupMapAsync(string tileServer, string fetchingStrategy)
     {
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
         map.Home = n =>
@@ -73,7 +75,15 @@ public class MapService
             WeakReferenceMessenger.Default.Send(new MapLoadedMessage());
         };
 
-        map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light"));
+        IDataFetchStrategy fetchStrategy = fetchingStrategy switch
+        {
+            "None" => null,
+            "Minimal" => new MinimalDataFetchStrategy(),
+            "Full" => new DataFetchStrategy(),
+            _ => new DataFetchStrategy()
+        };
+
+        map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light", fetchStrategy));
 
         LoadPinStyles();
         ILayer stopsLayer = await LoadStops();

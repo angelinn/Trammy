@@ -66,7 +66,7 @@ namespace TramlineFive.Common.ViewModels
             try
             {
                 await mapService.Initialize(nativeMap, navigator,
-                    ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+                    ApplicationService.GetStringSetting(Settings.SelectedTileServer, null), ApplicationService.GetStringSetting(Settings.FetchingStrategy, null));
             }
             catch (Exception ex)
             {
@@ -242,19 +242,21 @@ namespace TramlineFive.Common.ViewModels
             if (m.Name == Settings.MaxTextZoom && m.Value > 0)
             {
                 mapService.MaxTextZoom = m.Value;
-                await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+                await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null), ApplicationService.GetStringSetting(Settings.FetchingStrategy, null));
             }
             else if (m.Name == Settings.MaxPinsZoom && m.Value > 0)
             {
                 mapService.MaxPinsZoom = m.Value;
-                await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null));
+                await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, null), ApplicationService.GetStringSetting(Settings.FetchingStrategy, null));
             }
         }
 
         private async Task OnStringSettingChangedAsync(SettingChanged<string> m)
         {
             if (m.Name == Settings.SelectedTileServer)
-                await mapService.SetupMapAsync(m.Value);
+                await mapService.SetupMapAsync(m.Value, ApplicationService.GetStringSetting(Settings.FetchingStrategy, "Minimal"));
+            else if (m.Name == Settings.FetchingStrategy)
+                await mapService.SetupMapAsync(ApplicationService.GetStringSetting(Settings.SelectedTileServer, "carto-light"), m.Value);
         }
 
         private void OnStopSelectedMessageReceived(StopSelectedMessage message)

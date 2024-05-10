@@ -2,6 +2,7 @@
 using BruTile.Web;
 using Mapsui.Tiling.Fetcher;
 using Mapsui.Tiling.Layers;
+using Mapsui.Tiling.Rendering;
 using System;
 using System.Text;
 using TramlineFive.Common.Services;
@@ -13,9 +14,9 @@ public static class TileServerFactory
     private static readonly BruTile.Attribution OpenStreetMap = new BruTile.Attribution(
             "© OpenStreetMap contributors", "http://www.openstreetmap.org/copyright");
 
-    public static TileLayer CreateTileLayer(string name)
+    public static TileLayer CreateTileLayer(string name, IDataFetchStrategy dataFetchStrategy)
     {
-        return new TileLayer(CreateTileSource(name), dataFetchStrategy: new DataFetchStrategy()) { Name = name };
+        return new TileLayer(CreateTileSource(name), dataFetchStrategy: dataFetchStrategy, renderFetchStrategy: new MinimalRenderFetchStrategy()) { Name = name };
     }
 
     private static HttpTileSource CreateTileSource(string name)

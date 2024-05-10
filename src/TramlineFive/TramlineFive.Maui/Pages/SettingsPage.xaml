@@ -99,6 +99,24 @@
                 </StackLayout>
             </Grid>
 
+
+            <Grid Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="55" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ChooseFetchingStrategyCommand}" />
+                </Grid.GestureRecognizers>
+
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{DynamicResource IconsColor}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
+                <StackLayout Grid.Column="1" Spacing="3">
+                    <Label Text="Начин на зареждане" FontSize="16" VerticalTextAlignment="Center" />
+                    <Label Text="{Binding SelectedFetchingStrategy}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{DynamicResource DetailsTextColor}"/>
+                </StackLayout>
+            </Grid>
+
             <!--<Label Text="Max zoom for text" Margin="0,20,0,0" FontSize="Medium" />
             <Entry Text="{Binding MaxTextZoom}" />
 

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -22,6 +23,13 @@ namespace TramlineFive.Common.ViewModels
         public DateTime Updated { get; private set; }
 
         public List<string> TileServers => TileServerSettings.TileServers.Keys.ToList();
+        public List<string> FetchingStrategies => new List<string>()
+        {
+            "None",
+            "Minimal",
+            "Full"
+        };
+
         public List<Theme> Themes => new() { new Theme("Светла", Names.LightTheme), new Theme("Тъмна", Names.DarkTheme) };
 
         private Func<string, string, string, string[], Task<string>> displayActionSheet;
@@ -34,6 +42,7 @@ namespace TramlineFive.Common.ViewModels
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
             SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, TileServers.First());
+            SelectedFetchingStrategy = ApplicationService.GetStringSetting(Settings.FetchingStrategy, "Full");
 
             string theme = ApplicationService.GetStringSetting(Settings.Theme, Names.LightTheme);
             SelectedTheme = theme == Names.LightTheme ? Themes[0] : Themes[1];
@@ -50,6 +59,15 @@ namespace TramlineFive.Common.ViewModels
             string result = await displayActionSheet("Избор на tile сървър", String.Empty, String.Empty, TileServers.ToArray());
             if (!String.IsNullOrEmpty(result))
                 SelectedTileServer = result;
+        }
+
+
+        [RelayCommand]
+        private async Task ChooseFetchingStrategy()
+        {
+            string result = await displayActionSheet("Избор на стратегия", String.Empty, String.Empty, FetchingStrategies.ToArray());
+            if (!String.IsNullOrEmpty(result))
+                SelectedFetchingStrategy = result;
         }
 
         [RelayCommand]
@@ -131,7 +149,7 @@ namespace TramlineFive.Common.ViewModels
         private bool showNearestStop;
         partial void OnShowNearestStopChanged(bool value)
         {
-            ApplicationService.SetBoolSetting(Settings.ShowStopOnLaunch, showNearestStop);
+            ApplicationService.SetBoolSetting(Settings.ShowStopOnLaunch, ShowNearestStop);
         }
 
         [ObservableProperty]
@@ -143,6 +161,14 @@ namespace TramlineFive.Common.ViewModels
                 ApplicationService.SetStringSetting(Settings.Theme, newValue.Value);
                 Messenger.Send(new ChangeThemeMessage(newValue.Value));
             }
+        }
+
+        [ObservableProperty]
+        private string selectedFetchingStrategy;
+        partial void OnSelectedFetchingStrategyChanged(string value)
+        {
+            ApplicationService.SetStringSetting(Settings.FetchingStrategy, value);
+            Messenger.Send(new SettingChanged<string>(Settings.FetchingStrategy, value));
         }
     }
 
