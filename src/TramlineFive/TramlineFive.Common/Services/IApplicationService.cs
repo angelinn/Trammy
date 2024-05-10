@@ -17,6 +17,7 @@ public interface IApplicationService
 
     string GetVersion();
     Task OpenUri(string uri);
+    Task OpenBrowserAsync(Uri uri);
     void RunOnUIThread(Action action);
     Task<Position?> GetCurrentPositionAsync();
     Task<bool> HasLocationPermissions();

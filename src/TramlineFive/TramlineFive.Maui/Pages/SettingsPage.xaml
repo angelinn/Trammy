@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.SettingsPage"
              xmlns:cv="clr-namespace:TramlineFive.Converters" 
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Настройки"
              Shell.NavBarIsVisible="True"
              BindingContext="{Binding SettingsViewModel, Source={StaticResource Locator}}">
@@ -20,9 +21,14 @@
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CleanHistoryCommand}" />
-                </Grid.GestureRecognizers>
+
+                <Grid.Behaviors>
+                    <mct:TouchBehavior Command="{Binding CleanHistoryCommand}" 
+                                       DefaultAnimationDuration="250"
+                                        DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                        PressedOpacity="0.6"
+                                        PressedScale="0.8"/>
+                </Grid.Behaviors>
 
                 <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="delete" FontSize="24" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="10,0,0,0"/>
                 <Label Grid.Column="1" Text="Изчистване на история" FontSize="16" VerticalTextAlignment="Center" />
@@ -34,9 +40,13 @@
                     <ColumnDefinition Width="55" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding UpdateStopsCommand}" />
-                </Grid.GestureRecognizers>
+                <Grid.Behaviors>
+                    <mct:TouchBehavior Command="{Binding UpdateStopsCommand}" 
+                                       DefaultAnimationDuration="250"
+                                        DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                        PressedOpacity="0.6"
+                                        PressedScale="0.8"/>
+                </Grid.Behaviors>
 
                 <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="refresh" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="10,0,0,0"/>
                 <StackLayout Grid.Column="1" Spacing="3">
@@ -46,6 +56,24 @@
                 <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}" HeightRequest="10"
                                    HorizontalOptions="{OnPlatform Android=StartAndExpand, WinUI=FillAndExpand}">
                 </ActivityIndicator>
+            </Grid>
+
+            <Grid Margin="0,20,0,0" HeightRequest="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="55" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.Behaviors>
+                    <mct:TouchBehavior Command="{Binding CheckForUpdatesCommand}" 
+                                       DefaultAnimationDuration="250"
+                                        DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                        PressedOpacity="0.6"
+                                        PressedScale="0.8"/>
+                </Grid.Behaviors>
+
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="upgrade" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="10,0,0,0"/>
+
+                <Label Grid.Column="1" Text="Проверка за нова версия" FontSize="16" VerticalTextAlignment="Center" />
             </Grid>
 
             <Grid Margin="0,20,0,0">

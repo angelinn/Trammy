@@ -6,13 +6,13 @@
              BindingContext="{Binding AboutViewModel, Source={StaticResource Locator}}" BackgroundColor="{DynamicResource BackgroundColor}" >
 
     <StackLayout Padding="10">
-        <Label Text="Tramline Five" FontSize="Large" />
-        <Label Text="{Binding Version, StringFormat='Version: {0}'}" FontSize="Large" />
+        <Label Text="Trammy" FontSize="Large" />
+        <Label Text="{Binding Version, StringFormat='Версия: {0}'}" FontSize="Large" />
 
-        <Button Text="FAQ" HorizontalOptions="Start" Margin="0,20,0,0" />
+        <Button Text="FAQ" HorizontalOptions="Start" Margin="0,20,0,10" />
         <Button Text="Докладвай бъг/предложение" HorizontalOptions="Start" />
 
-        <Label Margin="0,20,0,0" Text="Това приложение е open source.&#x0a;&#x0a;Създадено е с цел улесняване на проверката на пристиганията на градския транспорт в България.&#x0a;&#x0a;Приложението не генерира печалба." />
+        <Label Margin="0,20,0,10" Text="Това приложение е open source.&#x0a;&#x0a;Създадено е с цел улесняване на проверката на пристиганията на градския транспорт в България.&#x0a;&#x0a;Приложението не генерира печалба." />
 
         <Button Text="Open source лицензи" Command="{Binding OpenLicensesPage}" />
     </StackLayout>

@@ -89,6 +89,11 @@ public class ApplicationService : IApplicationService
         }
     }
 
+    public async Task OpenBrowserAsync(Uri uri)
+    {
+        await Browser.Default.OpenAsync(uri);
+    }
+
     public async Task OpenUri(string uri)
     {
         await Launcher.OpenAsync(new Uri(uri));

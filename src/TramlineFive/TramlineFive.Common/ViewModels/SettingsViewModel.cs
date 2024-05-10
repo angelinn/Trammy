@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using SkgtService;
+using SkgtService.Models.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,9 +35,13 @@ namespace TramlineFive.Common.ViewModels
 
         private Func<string, string, string, string[], Task<string>> displayActionSheet;
 
-        public SettingsViewModel()
+        private readonly VersionService versionService;
+
+        public SettingsViewModel(VersionService versionService)
         {
             RefreshStopsUpdatedTime();
+
+            this.versionService = versionService;
 
             ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, false);
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
@@ -51,6 +56,26 @@ namespace TramlineFive.Common.ViewModels
         public void Initialize(Func<string, string, string, string[], Task<string>> displayActionSheet)
         {
             this.displayActionSheet = displayActionSheet;
+        }
+
+        [RelayCommand]
+        private async Task CheckForUpdates()
+        {
+
+            NewVersion version = await versionService.CheckForUpdates();
+            if (version != null)
+            {
+                bool result = await ApplicationService.DisplayAlertAsync("Нова версия", $"Има нова версия {version.VersionNumber} 🎉", "СВАЛЯНЕ", "ОТКАЗ");
+                if (result)
+                {
+                    Uri url = new Uri(version.ReleaseUrl);
+                    await ApplicationService.OpenBrowserAsync(url);
+                }
+            }
+            else
+            {
+                await ApplicationService.DisplayAlertAsync("", "Инсталирана е последна версия на Trammy! 🎉", "ОК");
+            }
         }
 
         [RelayCommand]
