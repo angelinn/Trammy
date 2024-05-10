@@ -28,11 +28,12 @@ namespace TramlineFive.Common.ViewModels
         public ObservableCollection<FavouriteDomain> Favourites { get; private set; }
 
         private readonly LocationService locationService;
+        private readonly WeatherService weatherService;
         private bool firstLocalization = true;
 
         private readonly PublicTransport publicTransport;
 
-        public FavouritesViewModel(LocationService locationService, PublicTransport publicTransport)
+        public FavouritesViewModel(LocationService locationService, PublicTransport publicTransport, WeatherService weatherService)
         {
             Messenger.Register<FavouriteAddedMessage>(this, (r, f) => OnFavouriteAdded(f.Value));
 
@@ -48,6 +49,7 @@ namespace TramlineFive.Common.ViewModels
 
             this.locationService = locationService;
             this.publicTransport = publicTransport;
+            this.weatherService = weatherService;
         }
 
         private async Task OnNearestFavouriteRequested(Position location)
@@ -59,7 +61,7 @@ namespace TramlineFive.Common.ViewModels
                 await Task.Delay(100);
 
             foreach (FavouriteDomain favourite in Favourites)
-            { 
+            {
                 StopInformation stop = MapService.Stops.FirstOrDefault(s => s.Code == favourite.StopCode);
                 double distance = locationService.GetDistance(location.Latitude, location.Longitude, stop.Lat, stop.Lon);
                 if (distance < minDistance)
@@ -125,9 +127,14 @@ namespace TramlineFive.Common.ViewModels
             OnPropertyChanged(nameof(HasFavourites));
 
             Messenger.Send(new FavouritesChangedMessage(Favourites.ToList()));
+
+            Forecast = await weatherService.GetWeather("Sofia, Bulgaria");
         }
 
         public bool HasFavourites => (Favourites == null || Favourites.Count == 0) && !IsLoading;
+
+        [ObservableProperty]
+        private Forecast forecast;
 
         [ObservableProperty]
         private bool isLoading = true;
