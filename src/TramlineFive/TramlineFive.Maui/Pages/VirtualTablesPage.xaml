@@ -22,65 +22,61 @@
             <RoundRectangle CornerRadius="30,30,0,0" />
         </Border.StrokeShape>
 
-        <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" RefreshColor="{DynamicResource BlueAccentColor}" >
-            <ScrollView>
-                <Grid BackgroundColor="{DynamicResource BackgroundColor}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="80" />
-                        <RowDefinition Height="330" />
-                    </Grid.RowDefinitions>
+        <Grid BackgroundColor="{DynamicResource BackgroundColor}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                    <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}" >
-                        <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="68" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+            <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}" >
+                <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="68" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                                <StackLayout x:Name="txtStopName" Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
-                                    <Label Text="{Binding StopInfo.PublicName}" FontSize="Default" />
-                                    <Label Text="{Binding StopInfo.Code, StringFormat=' ({0})'}" TextColor="{DynamicResource IconsColor}" FontSize="Small" />
-                                </StackLayout>
+                        <StackLayout x:Name="txtStopName" Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
+                            <Label Text="{Binding StopInfo.PublicName}" FontSize="Default" />
+                            <Label Text="{Binding StopInfo.Code, StringFormat=' ({0})'}" TextColor="{DynamicResource IconsColor}" FontSize="Small" />
+                        </StackLayout>
 
-                                <Grid BackgroundColor="{DynamicResource BackgroundColor}">
-                                  <Label Background="{DynamicResource BackgroundColor}"   FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                </Grid>
+                        <Grid BackgroundColor="{DynamicResource BackgroundColor}">
+                            <Label Background="{DynamicResource BackgroundColor}"   FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Grid>
 
-                                <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource BackgroundColor}">
-                                    <Grid.Behaviors>
-                                        <mct:TouchBehavior DefaultAnimationDuration="350"
+                        <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource BackgroundColor}">
+                            <Grid.Behaviors>
+                                <mct:TouchBehavior DefaultAnimationDuration="350"
                                             PressedOpacity="0.6"
                                             PressedScale="0.8"
                                             PressedRotationY="350"
                                             Command="{Binding FavouriteCommand}" />
-                                    </Grid.Behaviors>
-                                    
-                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe838;" Margin="10,10,15,10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
-                                </Grid>
+                            </Grid.Behaviors>
 
-                                <BoxView Grid.ColumnSpan="2" HeightRequest="1" Color="{DynamicResource BackgroundColor}" VerticalOptions="End" />
-                            </Grid>
+                            <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe838;" Margin="10,10,15,10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Grid>
+
+                        <BoxView Grid.ColumnSpan="2" HeightRequest="1" Color="{DynamicResource BackgroundColor}" VerticalOptions="End" />
                     </Grid>
-
-                    <ListView Margin="3,0,3,0" Grid.Row="1" SeparatorVisibility="None" BackgroundColor="{DynamicResource BackgroundColor}" ItemsSource="{Binding StopInfo.Arrivals}" HorizontalOptions="FillAndExpand" RowHeight="120" SelectedItem="{Binding Selected, Mode=TwoWay}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ViewCell.ContextActions>
-                                        <MenuItem Text="Запиши известия" Command="{Binding BindingContext.SubscribeCommand, Source={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding}" />
-                                    </ViewCell.ContextActions>
-                                    
-                                    <views:VirtualTablesViewCell BindingContext="{Binding}" />
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-
                 </Grid>
-            </ScrollView>
-        </RefreshView>
+            </Grid>
+
+            <ListView IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}" RefreshControlColor="{DynamicResource BlueAccentColor}" Margin="3,0,3,0" Grid.Row="1" SeparatorVisibility="None" BackgroundColor="{DynamicResource BackgroundColor}" ItemsSource="{Binding StopInfo.Arrivals}" HorizontalOptions="FillAndExpand" RowHeight="120" SelectedItem="{Binding Selected, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Запиши известия" Command="{Binding BindingContext.SubscribeCommand, Source={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding}" />
+                            </ViewCell.ContextActions>
+
+                            <views:VirtualTablesViewCell BindingContext="{Binding}" />
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+        </Grid>
     </Border>
 </Grid>
     
