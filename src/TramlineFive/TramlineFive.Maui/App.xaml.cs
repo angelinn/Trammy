@@ -37,7 +37,8 @@ namespace TramlineFive.Maui
             WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(theme));
             Current.RequestedThemeChanged += (s, a) =>
             {
-                WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(a.RequestedTheme == AppTheme.Light ? Names.LightTheme : Names.DarkTheme));
+                if (Preferences.Get(Settings.Theme, Names.SystemDefault) == Names.SystemDefault)
+                    WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(a.RequestedTheme == AppTheme.Light ? Names.LightTheme : Names.DarkTheme));
             };
 
             System.Diagnostics.Debug.WriteLine("creating task");

@@ -41,11 +41,11 @@
                             <Label Text="{Binding StopInfo.Code, StringFormat=' ({0})'}" TextColor="{DynamicResource IconsColor}" FontSize="Small" />
                         </StackLayout>
 
-                        <Grid BackgroundColor="{DynamicResource BackgroundColor}">
-                            <Label Background="{DynamicResource BackgroundColor}"   FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" />
+                        <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}">
+                            <Label Background="{DynamicResource VirtualTablesTopBarColor}"   FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Grid>
 
-                        <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource BackgroundColor}">
+                        <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource VirtualTablesTopBarColor}">
                             <Grid.Behaviors>
                                 <mct:TouchBehavior DefaultAnimationDuration="350"
                                             PressedOpacity="0.6"
