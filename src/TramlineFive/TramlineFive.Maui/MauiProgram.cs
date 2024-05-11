@@ -11,8 +11,6 @@ using TramlineFive.Maui.Services;
 using TramlineFive.Services.Main;
 using SkgtService;
 using Android.Content.Res;
-using OpenWeatherMap.Cache.Extensions;
-using static OpenWeatherMap.Cache.Enums;
 
 namespace TramlineFive.Maui
 {

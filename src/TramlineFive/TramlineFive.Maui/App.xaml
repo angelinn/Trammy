@@ -18,12 +18,13 @@
 
                     <Style TargetType="Label">
                         <Setter Property="TextColor" Value="{DynamicResource LabelTextColor}" />
+                        <Setter Property="FontAutoScalingEnabled" Value="False" />
                     </Style>
 
                     <Style TargetType="Picker">
                         <Setter Property="TextColor" Value="{DynamicResource LabelTextColor}" />
                     </Style>
-
+                    
                     <vm:ViewModelLocator x:Key="Locator" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>

@@ -47,7 +47,7 @@
                                                 <Label Text="{Binding StopCode, StringFormat=' ({0})'}" />
                                             </StackLayout>
 
-                                            <Label Text="{Binding TimeString}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" Margin="0,5,0,0" />
+                                            <Label Text="{Binding TimeString}" TextColor="{DynamicResource DetailsTextColor}" Margin="0,5,0,0" />
                                         </StackLayout>
                                     </Grid>
                                 </Border>
