@@ -3,7 +3,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     x:Class="TramlineFive.Themes.DarkTheme">
 
-    <Color x:Key="BarBackgroundColor">#2d333b</Color>
+    <Color x:Key="BarBackgroundColor">#1f1f1f</Color>
     <Color x:Key="BarTextColor">White</Color>
     <Color x:Key="LabelTextColor">White</Color>
     <Color x:Key="DetailsTextColor">#bfbfbf</Color>
@@ -15,6 +15,8 @@
     <Color x:Key="RedAccentColor">Crimson</Color>
     <Color x:Key="BlueAccentColor">#1e90ff</Color>
     <Color x:Key="IconsColor">White</Color>
-
+    <Color x:Key="CardColor">#2d333b</Color>
+    <Color x:Key="PageBackground">#121212</Color>
+    <Color x:Key="TopBarColor">#22272e</Color>
 </ResourceDictionary>
     

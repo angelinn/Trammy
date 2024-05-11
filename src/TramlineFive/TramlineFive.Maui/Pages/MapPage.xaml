@@ -12,16 +12,16 @@
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}"
              Padding="0">
 
-        <ContentPage.Behaviors>
-            <mct:StatusBarBehavior StatusBarColor="DodgerBlue" StatusBarStyle="LightContent" />
-        </ContentPage.Behaviors>
-    
-    <ContentPage.Resources> 
+    <ContentPage.Behaviors>
+        <mct:StatusBarBehavior StatusBarColor="DodgerBlue" StatusBarStyle="LightContent" />
+    </ContentPage.Behaviors>
+
+    <ContentPage.Resources>
         <ResourceDictionary>
             <cv:ColorConverter x:Key="ColorConverter" />
             <cv:LocationConverter x:Key="LocationConverter" />
             <cv:InverseBoolConverter x:Key="InverseBool" />
-        </ResourceDictionary> 
+        </ResourceDictionary>
     </ContentPage.Resources>
 
     <AbsoluteLayout>
@@ -33,7 +33,7 @@
         </mapsui:MapView>
 
         <ActivityIndicator AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"                                            BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" IsRunning="{Binding IsLoading}" HeightRequest="64" Color="DodgerBlue" Margin="0,100,0,0" />
-        
+
         <Grid x:Name="grid" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -52,7 +52,7 @@
                 <Border.Shadow>
                     <Shadow Brush="gray" Radius="30" Opacity="0.6" Offset="0,5" />
                 </Border.Shadow>
-                 
+
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
@@ -88,9 +88,11 @@
                                            IsEnabled="{Binding IsLoading}"/>
                 </Grid>
             </Border>
-        </StackLayout> 
+        </StackLayout>
         <!--<CollectionView EmptyView="No items" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,45" Grid.Row="2" Margin="17,5,17,0" ItemsSource="{Binding RecommendedStops}" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
-        --><!--<CollectionView AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,50" ItemsSource="{Binding RecommendedStops}">--><!--
+        -->
+        <!--<CollectionView AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,50" ItemsSource="{Binding RecommendedStops}">-->
+        <!--
             <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
                 </CollectionView.ItemsLayout>
@@ -127,40 +129,46 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>-->
 
-            <Frame AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" BackgroundColor="{DynamicResource BackgroundColor}" Margin="15,-5,15,0" Opacity="0.9" VerticalOptions="End" Padding="0" CornerRadius="30" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
-                <ListView SeparatorColor="Transparent" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <ViewCell.View>
-                                    <Grid ColumnSpacing="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="50" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+        <Border Stroke="Transparent" AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" BackgroundColor="{DynamicResource BackgroundColor}" Margin="15,-5,15,0" Opacity="0.9" VerticalOptions="End" Padding="0" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="30" />
+            </Border.StrokeShape>
+            <ListView SeparatorColor="Transparent" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Grid ColumnSpacing="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
 
-                                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe8b6;" FontSize="23" VerticalOptions="Center" Margin="5,7,0,0" HorizontalOptions="Center" TextColor="#9aa0a6" />
+                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe8b6;" FontSize="23" VerticalOptions="Center" Margin="5,7,0,0" HorizontalOptions="Center" TextColor="#9aa0a6" />
 
-                                        <Label Grid.Column="1" Text="{Binding}" VerticalOptions="Center" Margin="0,5,0,0" FontSize="15" />
-                                    </Grid>
-                                </ViewCell.View>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Frame>
+                                    <Label Grid.Column="1" Text="{Binding}" VerticalOptions="Center" Margin="0,5,0,0" FontSize="15" />
+                                </Grid>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Border>
 
-        <Frame AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="1,0.80,1,58" Grid.Row="1" Margin="0,0,10,0" BackgroundColor="{DynamicResource BackgroundColor}"  CornerRadius="50" Opacity="0.9" Padding="0" HorizontalOptions="End" VerticalOptions="End" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
-            <Frame.Behaviors>
+        <Border Stroke="Transparent" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="1,0.80,1,58" Grid.Row="1" Margin="0,0,10,0" BackgroundColor="{DynamicResource BackgroundColor}"  Opacity="0.9" Padding="0" HorizontalOptions="End" VerticalOptions="End" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="50" />
+            </Border.StrokeShape>
+            <Border.Behaviors>
                 <mct:TouchBehavior DefaultAnimationDuration="250"
                                 DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
                                 PressedOpacity="0.6"
                                 PressedScale="0.8"
                                 Command="{Binding MyLocationCommand}" />
-            </Frame.Behaviors>
+            </Border.Behaviors>
 
             <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="{Binding HasLocation, Converter={StaticResource LocationConverter}}" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="25" />
-        </Frame>    
+        </Border>
         <!--<views:FloatingActionButton Grid.RowSpan="5" Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="End" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,0,0,20">
                 <views:FloatingActionButton.Image>
                     <OnPlatform x:TypeArguments="FileImageSource">

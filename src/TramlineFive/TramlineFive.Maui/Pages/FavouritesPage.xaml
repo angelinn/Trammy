@@ -13,14 +13,14 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid BackgroundColor="#f5f0f0">
+    <Grid BackgroundColor="{DynamicResource PageBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
 
         <Grid Padding="15">
-            <Border Background="#d2e9ff" Stroke="Transparent">
+            <Border Background="{DynamicResource CardColor}" Stroke="Transparent">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>

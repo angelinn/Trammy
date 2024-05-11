@@ -6,7 +6,7 @@
              Shell.NavBarIsVisible="True" 
              Shell.FlyoutBehavior="Disabled">
 
-    <Grid BackgroundColor="#f5f0f0" >
+    <Grid BackgroundColor="{DynamicResource PageBackground}" >
         <!--<Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="3*" />
@@ -28,7 +28,7 @@
                     <DataTemplate>
                         <ViewCell> 
                             <ViewCell.View>
-                                <Border Padding="0"  Margin="15,0,15,10" Stroke="Transparent" Background="White">
+                                <Border Padding="0"  Margin="15,0,15,10" Stroke="Transparent" Background="{DynamicResource BackgroundColor}">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="30" />
                                     </Border.StrokeShape>

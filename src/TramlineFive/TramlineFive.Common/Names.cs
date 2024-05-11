@@ -11,4 +11,5 @@ public static class Names
     public const string History = "History";
     public const string LightTheme = "Light";
     public const string DarkTheme = "Dark";
+    public const string SystemDefault = "SystemDefault";
 }

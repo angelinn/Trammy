@@ -31,7 +31,7 @@ namespace TramlineFive.Common.ViewModels
             "Full"
         };
 
-        public List<Theme> Themes => new() { new Theme("Светла", Names.LightTheme), new Theme("Тъмна", Names.DarkTheme) };
+        public List<Theme> Themes => new() { new Theme("Светла", Names.LightTheme), new Theme("Тъмна", Names.DarkTheme), new Theme("Следвай системата", Names.SystemDefault) };
 
         private Func<string, string, string, string[], Task<string>> displayActionSheet;
 
@@ -49,7 +49,7 @@ namespace TramlineFive.Common.ViewModels
             SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, TileServers.First());
             SelectedFetchingStrategy = ApplicationService.GetStringSetting(Settings.FetchingStrategy, "Full");
 
-            string theme = ApplicationService.GetStringSetting(Settings.Theme, Names.LightTheme);
+            string theme = ApplicationService.GetStringSetting(Settings.Theme, Names.SystemDefault);
             SelectedTheme = theme == Names.LightTheme ? Themes[0] : Themes[1];
         }
 

@@ -30,17 +30,21 @@ namespace TramlineFive.Maui
             StopsLoader.Initialize(dbPathService.GetBaseFilePath());
 
             System.Diagnostics.Debug.WriteLine("Initialized stops loader");
-            string theme = Preferences.Get(Settings.Theme, Names.LightTheme);
+            string theme = Preferences.Get(Settings.Theme, Names.SystemDefault);
 
             WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, (r, m) => OnThemeChanged(m));
 
             WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(theme));
+            Current.RequestedThemeChanged += (s, a) =>
+            {
+                WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(a.RequestedTheme == AppTheme.Light ? Names.LightTheme : Names.DarkTheme));
+            };
+
             System.Diagnostics.Debug.WriteLine("creating task");
 
             System.Diagnostics.Debug.WriteLine("created");
             MainPage = new AppShell();
         }
-
 
         private void OnThemeChanged(ChangeThemeMessage m)
         {
@@ -49,14 +53,22 @@ namespace TramlineFive.Maui
             if (themeDictionary != null)
                 Current.Resources.MergedDictionaries.Remove(themeDictionary);
 
-            if (m.Name == Names.LightTheme)
+            if (m.Name == Names.SystemDefault)
             {
-                Current.UserAppTheme = AppTheme.Light;
+                //Current.UserAppTheme = Current.RequestedTheme;
+                if (Current.RequestedTheme == AppTheme.Light)
+                    Current.Resources.MergedDictionaries.Add(new LightTheme());
+                else if (Current.RequestedTheme == AppTheme.Dark)
+                    Current.Resources.MergedDictionaries.Add(new DarkTheme());
+            }
+            else if (m.Name == Names.LightTheme)
+            {
+                //Current.UserAppTheme = AppTheme.Light;
                 Current.Resources.MergedDictionaries.Add(new LightTheme());
             }
             else
             {
-                Current.UserAppTheme = AppTheme.Dark;
+                //Current.UserAppTheme = AppTheme.Dark;
                 Current.Resources.MergedDictionaries.Add(new DarkTheme());
             }
             System.Diagnostics.Debug.WriteLine("theme set");

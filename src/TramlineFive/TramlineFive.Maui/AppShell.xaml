@@ -15,7 +15,7 @@
             <Setter Property="Shell.TabBarTitleColor"
               Value="DodgerBlue" />
             <Setter Property="Shell.BackgroundColor"
-              Value="DodgerBlue" />
+              Value="{DynamicResource BarBackgroundColor}" />
             <Setter Property="Shell.TabBarForegroundColor" 
               Value="DodgerBlue" />
         </Style>
@@ -54,7 +54,7 @@
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="history" />
             </ShellContent.Icon>
         </ShellContent>
-        <Tab Route="Lines" Shell.TabBarTitleColor="DodgerBlue" Shell.TabBarForegroundColor="DodgerBlue" Title="Линии" Shell.BackgroundColor="DodgerBlue" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True">
+        <Tab Route="Lines" Shell.TabBarTitleColor="DodgerBlue" Shell.TabBarForegroundColor="DodgerBlue" Title="Линии" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="departure_board" />
             </Tab.Icon>
