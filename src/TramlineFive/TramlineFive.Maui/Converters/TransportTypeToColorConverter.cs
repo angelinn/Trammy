@@ -12,7 +12,7 @@ namespace TramlineFive.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool isLightTheme = Application.Current.UserAppTheme == AppTheme.Light;
+            bool isLightTheme = Application.Current.RequestedTheme == AppTheme.Light;
 
             string textValue = string.Empty;
             if (value is TransportType type)

@@ -50,7 +50,13 @@ namespace TramlineFive.Common.ViewModels
             SelectedFetchingStrategy = ApplicationService.GetStringSetting(Settings.FetchingStrategy, "Full");
 
             string theme = ApplicationService.GetStringSetting(Settings.Theme, Names.SystemDefault);
-            SelectedTheme = theme == Names.LightTheme ? Themes[0] : Themes[1];
+            SelectedTheme = theme switch
+            {
+                Names.LightTheme => Themes[0],
+                Names.DarkTheme => Themes[1],
+                Names.SystemDefault => Themes[2],
+                _ => Themes[2]
+            };
         }
 
         public void Initialize(Func<string, string, string, string[], Task<string>> displayActionSheet)
