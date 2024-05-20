@@ -36,7 +36,7 @@ namespace TramlineFive.Common.ViewModels
             if (value != null)
                 OpenDetails(value);
         }
-
+        
 
         public LinesViewModel(PublicTransport publicTransport)
         {

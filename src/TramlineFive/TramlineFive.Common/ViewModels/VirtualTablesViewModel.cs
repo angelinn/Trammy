@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Sentry;
 using SkgtService;
 using SkgtService.Exceptions;
 using SkgtService.Models;
@@ -131,7 +132,8 @@ namespace TramlineFive.Common.ViewModels
             }
             catch (Exception e)
             {
-                await ApplicationService.DisplayAlertAsync("Грешка", e.Message, "OK");
+                SentrySdk.CaptureException(e);
+                await ApplicationService.DisplayAlertAsync("Грешка при извличане на информация за виртуалните табла", $"Възможно е информационната система за виртуални табла да не работи. {e.GetType()} - {e.Message}", "OK");
             }
         }
 
