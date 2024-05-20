@@ -1,5 +1,4 @@
-﻿using Android.Graphics.Drawables;
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Compatibility.Hosting;
 using Microsoft.Maui.LifecycleEvents;
@@ -10,7 +9,6 @@ using TramlineFive.Common.ViewModels.Locator;
 using TramlineFive.Maui.Services;
 using TramlineFive.Services.Main;
 using SkgtService;
-using Android.Content.Res;
 
 namespace TramlineFive.Maui
 {
@@ -60,11 +58,12 @@ namespace TramlineFive.Maui
                 .UseMauiCommunityToolkit()
                 .UseMauiCompatibility();
 
+#if ANDROID
             Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>
             {
-                handler.PlatformView.BackgroundTintList = ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
+                handler.PlatformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
             });
-
+#endif
             ConfigureServices(builder.Services);
 
 #if DEBUG

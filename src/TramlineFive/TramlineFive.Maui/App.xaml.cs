@@ -9,8 +9,6 @@ using TramlineFive.Common.Services;
 using TramlineFive.Themes;
 using TramlineFive.Maui.Services;
 using TramlineFive.Pages;
-using TramlineFive.Maui.Platforms.Android;
-using Android.Widget;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using TramlineFive.Services.Main;
 using CommunityToolkit.Mvvm.Messaging;
@@ -138,7 +136,8 @@ namespace TramlineFive.Maui
                 Android.App.ActivityManager activityManager = Platform.CurrentActivity.GetSystemService(Android.Content.Context.ActivityService) as Android.App.ActivityManager;
                 if (activityManager.IsBackgroundRestricted)
                 {
-                    Toast.MakeText(Platform.CurrentActivity, "Моля позволете приложението да работи във фонов режим.", ToastLength.Long).Show();
+
+                    Android.Widget.Toast.MakeText(Platform.CurrentActivity, "Моля позволете приложението да работи във фонов режим.", Android.Widget.ToastLength.Long).Show();
                     Android.Content.Intent i = new Android.Content.Intent(Android.Provider.Settings.ActionApplicationDetailsSettings);
 
                     i.AddCategory(Android.Content.Intent.CategoryDefault);
@@ -148,7 +147,7 @@ namespace TramlineFive.Maui
                     return;
                 }
 
-                Android.Content.Intent intent = new Android.Content.Intent(Platform.CurrentActivity, typeof(WatchService));
+                Android.Content.Intent intent = new Android.Content.Intent(Platform.CurrentActivity, typeof(TramlineFive.Maui.Platforms.Android.WatchService));
                 intent.PutExtra("line", m.lineName);
                 intent.PutExtra("stop", m.stopCode);
 
