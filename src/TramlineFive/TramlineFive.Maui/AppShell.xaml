@@ -39,6 +39,7 @@
         <FlyoutItem.Icon>
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="home" Color="{DynamicResource IconsColor}" />
         </FlyoutItem.Icon>
+
         <ShellContent Style="{StaticResource TabStyle}" Route="Map" Title="Карта" ContentTemplate="{DataTemplate pages:MapPage}">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="fmd_good" />
@@ -60,26 +61,47 @@
             </Tab.Icon>
 
             <ShellContent Route="Bus" Title="Автобуси">
-                <pages:LinesTab BindingContext="{Binding BusLinesViewModel, Source={StaticResource Locator}}" />
+                <ShellContent.ContentTemplate>
+                    <DataTemplate>
+                        <pages:LinesTab BindingContext="{Binding BusLinesViewModel, Source={StaticResource Locator}}" />
+                    </DataTemplate>
+                </ShellContent.ContentTemplate>
             </ShellContent>
             <ShellContent Route="Tram" Title="Трамваи">
-                <pages:LinesTab BindingContext="{Binding TramLinesViewModel, Source={StaticResource Locator}}" />
+                <ShellContent.ContentTemplate>
+                    <DataTemplate>
+                        <pages:LinesTab BindingContext="{Binding TramLinesViewModel, Source={StaticResource Locator}}" />
+                    </DataTemplate>
+                </ShellContent.ContentTemplate>
             </ShellContent>
             <ShellContent Route="Trolley" Title="Тролеи">
-                <pages:LinesTab BindingContext="{Binding TrolleyLinesViewModel, Source={StaticResource Locator}}" />
+                <ShellContent.ContentTemplate>
+                    <DataTemplate>
+                        <pages:LinesTab BindingContext="{Binding TrolleyLinesViewModel, Source={StaticResource Locator}}" />
+                    </DataTemplate>
+                </ShellContent.ContentTemplate>
             </ShellContent>
         </Tab>
     </FlyoutItem>
 
     <Tab Route="LineDetails" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False">
         <ShellContent Route="Forward" BindingContext="{Binding LineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
-            <pages:LineDetails BindingContext="{Binding}"  />
+            <ShellContent.ContentTemplate>
+                <DataTemplate>
+                    <pages:LineDetails BindingContext="{Binding LineDetailsViewModel, Source={StaticResource Locator}}" />
+                </DataTemplate>
+            </ShellContent.ContentTemplate>
         </ShellContent>
 
         <ShellContent Route="Backward" BindingContext="{Binding ForwardLineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
-            <pages:LineDetails BindingContext="{Binding}" />
+            <ShellContent.ContentTemplate>
+                <DataTemplate>
+                    <pages:LineDetails BindingContext="{Binding ForwardLineDetailsViewModel, Source={StaticResource Locator}}" />
+                </DataTemplate>
+            </ShellContent.ContentTemplate>
         </ShellContent>
     </Tab>
+
 
     <ShellContent Style="{StaticResource TabStyle}" Route="Settings" Title="Настройки" Shell.FlyoutBehavior="Disabled" ContentTemplate="{DataTemplate pages:SettingsPage}">
         <ShellContent.Icon>
@@ -92,15 +114,13 @@
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="route" Color="{DynamicResource IconsColor}" />
         </ShellContent.Icon>
     </ShellContent>
-    
-    <ShellContent Route="About" Title="Информация">
+
+
+    <ShellContent Route="About" Title="Информация" ContentTemplate="{DataTemplate pages:AboutPage}">
         <ShellContent.Icon>
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="{DynamicResource IconsColor}" Glyph="info" />
         </ShellContent.Icon>
-
-        <pages:AboutPage />
     </ShellContent>
-    
 
     <ShellContent FlyoutItemIsVisible="False" Route="Location" ContentTemplate="{DataTemplate pages:LocationPromptPage}" />
 </Shell>
