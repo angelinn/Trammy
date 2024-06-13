@@ -44,8 +44,8 @@ public class NavigationService : INavigationService
 
     public async void GoToDetails(LineViewModel line, string stop)
     {
-        ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().Load(line, line.Routes.Routes[0]);
-        ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().Load(line, line.Routes.Routes[^1]);
+        ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().Load(line, line.Routes.Routes[^1]);
+        ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().Load(line, line.Routes.Routes[0]);
 
         string tab = string.Empty;
 
