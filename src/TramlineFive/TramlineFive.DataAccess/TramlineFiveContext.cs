@@ -10,25 +10,35 @@ namespace TramlineFive.DataAccess
 {
     public class TramlineFiveContext
     {
+        private static bool loaded;
         public static string DatabasePath { get; set; }
         public static async Task EnsureCreatedAsync()
         {
+            if (loaded)
+                return;
+
             if (!File.Exists(DatabasePath))
             {
                 SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
                 await db.CreateTableAsync<History>();
                 await db.CreateTableAsync<Favourite>();
             }
+
+            loaded = true;
         }
 
         public static async Task<Favourite> FindFavouriteAsync(string stopCode)
         {
+            await EnsureCreatedAsync();
+
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
             return await db.FindAsync<Favourite>(f => f.StopCode == stopCode);
         }
 
         public static async Task RemoveFavouriteAsync(string stopCode)
         {
+            await EnsureCreatedAsync();
+
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
 
             Favourite target = await FindFavouriteAsync(stopCode);
@@ -38,12 +48,16 @@ namespace TramlineFive.DataAccess
 
         public static async Task AddAsync(object entity)
         {
+            await EnsureCreatedAsync();
+
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
             await db.InsertAsync(entity);
         }
 
         public static async Task IncrementFavouriteAsync(string stopCode)
         {
+            await EnsureCreatedAsync();
+
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
             Favourite favourite = await db.FindAsync<Favourite>(f => f.StopCode == stopCode);
 
@@ -53,24 +67,32 @@ namespace TramlineFive.DataAccess
 
         public static async Task<IEnumerable<T>> Take<T>(int count = 10) where T : new()
         {
+            await EnsureCreatedAsync();
+
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
             return await db.Table<T>().Take(10).ToListAsync();
         }
 
         public static async Task<IEnumerable<T>> TakeAll<T>() where T : new()
         {
+            await EnsureCreatedAsync();
+
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
             return await db.Table<T>().ToListAsync();
         }
 
         public static async Task<IEnumerable<T>> TakeByDescending<T, U>(System.Linq.Expressions.Expression<Func<T, U>> func, int count = 10) where T : new()
         {
+            await EnsureCreatedAsync();
+
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
             return await db.Table<T>().OrderByDescending(func).Take(10).ToListAsync();
         }
 
         public static async Task<List<History>> TakeForLastDays(int days)
         {
+            await EnsureCreatedAsync();
+
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
 
             DateTime limit = DateTime.Now.Subtract(TimeSpan.FromDays(days));
@@ -79,6 +101,8 @@ namespace TramlineFive.DataAccess
 
         public static async Task CleanHistoryAsync()
         {
+            await EnsureCreatedAsync();
+
             SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
             await db.ExecuteAsync("DELETE FROM History");
         }

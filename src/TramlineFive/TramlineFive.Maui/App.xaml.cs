@@ -22,26 +22,9 @@ namespace TramlineFive.Maui
         {
             InitializeComponent();
 
-            System.Diagnostics.Debug.WriteLine("Initialized");
             this.dbPathService = dbPathService;
+            TramlineFiveContext.DatabasePath = dbPathService.GetDBPath();
 
-            StopsLoader.Initialize(dbPathService.GetBaseFilePath());
-
-            System.Diagnostics.Debug.WriteLine("Initialized stops loader");
-            string theme = Preferences.Get(Settings.Theme, Names.SystemDefault);
-
-            WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, (r, m) => OnThemeChanged(m));
-
-            WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(theme));
-            Current.RequestedThemeChanged += (s, a) =>
-            {
-                if (Preferences.Get(Settings.Theme, Names.SystemDefault) == Names.SystemDefault)
-                    WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(a.RequestedTheme == AppTheme.Light ? Names.LightTheme : Names.DarkTheme));
-            };
-
-            System.Diagnostics.Debug.WriteLine("creating task");
-
-            System.Diagnostics.Debug.WriteLine("created");
             MainPage = new AppShell();
         }
 
@@ -73,30 +56,21 @@ namespace TramlineFive.Maui
             System.Diagnostics.Debug.WriteLine("theme set");
         }
 
-        protected override async void OnStart()
+        protected override void OnStart()
         {
-            //AppCenter.Start("android=e3e6e5fc-9b54-46ae-ad7d-8fe6b80e9471",
-            //    typeof(Analytics), typeof(Crashes));
+            StopsLoader.Initialize(dbPathService.GetBaseFilePath());
 
-            //if (VersionTracking.IsFirstLaunchEver && await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>() != PermissionStatus.Granted)
-            //    MainPage = new Pages.LocationPromptPage();
-            //else
-            //MainPage = new NavigationPage(new MainPage());
+            string theme = Preferences.Get(Settings.Theme, Names.SystemDefault);
 
-            System.Diagnostics.Debug.WriteLine("loading db");
-            TramlineFiveContext.DatabasePath = dbPathService.GetDBPath();
-            await TramlineFiveContext.EnsureCreatedAsync();
+            WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, (r, m) => OnThemeChanged(m));
 
-            //System.Diagnostics.Debug.WriteLine("loaded db");
+            WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(theme));
+            Current.RequestedThemeChanged += (s, a) =>
+            {
+                if (Preferences.Get(Settings.Theme, Names.SystemDefault) == Names.SystemDefault)
+                    WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(a.RequestedTheme == AppTheme.Light ? Names.LightTheme : Names.DarkTheme));
+            };
 
-            //System.Diagnostics.Debug.WriteLine("loading history");
-            await ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync();
-
-            //System.Diagnostics.Debug.WriteLine("loaded history");
-
-            //System.Diagnostics.Debug.WriteLine("loading favourites");
-            await ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync();
-            //System.Diagnostics.Debug.WriteLine("loaded favourites");
 
             StopsLoader.OnStopsUpdated += OnStopsUpdated;
 
@@ -109,7 +83,7 @@ namespace TramlineFive.Maui
                 {
                     System.Diagnostics.Debug.WriteLine($"Updating stops {DateTime.Now - updated} time old");
 
-                    Task _ = StopsLoader.UpdateStopsAsync();
+                    _ = StopsLoader.UpdateStopsAsync();
                     _ = StopsLoader.UpdateRoutesAsync();
 
                     applicationService.DisplayNotification("Trammy", "Спирките са обновени");
