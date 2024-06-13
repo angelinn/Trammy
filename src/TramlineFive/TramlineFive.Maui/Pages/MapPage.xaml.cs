@@ -1,5 +1,9 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Maui.Behaviors;
+using CommunityToolkit.Mvvm.Messaging;
 using Mapsui;
+using Mapsui.Extensions;
+using Mapsui.Layers;
+using Mapsui.Projections;
 using Mapsui.UI.Maui;
 using Mapsui.Widgets;
 using Mapsui.Widgets.ScaleBar;
@@ -26,19 +30,49 @@ namespace TramlineFive.Pages
         //MapView map;
         //View slideMenu;
 
+        //private MapView map;
+
         public MapPage()
         {
             InitializeComponent();
 
-            Loaded += OnLoaded;
 
             WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await ToggleMap(m));
             //Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
-            WeakReferenceMessenger.Default.Register<UpdateLocationMessage>(this, (r, m) => map.MyLocationLayer.UpdateMyLocation(new Position(m.Position.Latitude, m.Position.Longitude)));
         }
 
-        private async void OnLoaded(object sender, EventArgs e)
+        private async Task LoadDataAsync()
         {
+            _ = LoadMapAsync();
+
+            await ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync();
+            await ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync();
+        }
+
+        protected override async void OnAppearing()
+        {
+            if (initialized)
+                return;
+
+            //map = new MapView();
+            //map.IsNorthingButtonVisible = false;
+            //map.IsMyLocationButtonVisible = false;
+            //map.IsZoomButtonVisible = false;
+            //map.MyLocationEnabled = false;
+
+            //map.VerticalOptions = LayoutOptions.StartAndExpand;
+            //map.HorizontalOptions = LayoutOptions.Fill;
+
+            //absLayout.SetLayoutBounds(map, new Rect(1, 1, 1, 1));
+            //absLayout.SetLayoutFlags(map, AbsoluteLayoutFlags.All);
+            //absLayout.Insert(0, map);
+
+            //await Task.Delay(100);
+
+            initialized = true;
+
+            _ = LoadDataAsync();
+
             DateTime versionCheckTime = Preferences.Get("VersionCheckDate", DateTime.MinValue);
             if (DateTime.Now - versionCheckTime < TimeSpan.FromDays(1))
                 return;
@@ -55,6 +89,7 @@ namespace TramlineFive.Pages
             }
 
             Preferences.Set("VersionCheckDate", DateTime.Now);
+
         }
 
         private async void OnMapTouchAction(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)
@@ -108,7 +143,7 @@ namespace TramlineFive.Pages
                     await Task.Delay((int)difference);
             }
 
-            
+
             Dispatcher.Dispatch(async () =>
             {
                 isOpened = message.Show;
@@ -120,14 +155,8 @@ namespace TramlineFive.Pages
             });
         }
 
-        protected override void OnAppearing()
+        private async Task LoadMapAsync()
         {
-            if (initialized)
-                return;
-
-            initialized = true;
-            Task task = (BindingContext as MapViewModel).LoadAsync();
-
             nativeMap = new Map
             {
                 BackColor = Mapsui.Styles.Color.White,
@@ -135,10 +164,12 @@ namespace TramlineFive.Pages
             };
 
             mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
-            Task _ = (BindingContext as MapViewModel).Initialize(nativeMap, nativeMap.Navigator);
+            await (BindingContext as MapViewModel).Initialize(nativeMap, nativeMap.Navigator);
 
             map.Map = nativeMap;
             map.TouchAction += OnMapTouchAction;
+
+            await (BindingContext as MapViewModel).LoadAsync();
 
             if (VersionTracking.IsFirstLaunchEver)
                 WeakReferenceMessenger.Default.Send(new ChangePageMessage("//Location"));
@@ -148,7 +179,9 @@ namespace TramlineFive.Pages
         {
             base.OnSizeAllocated(width, height);
             slideMenu.TranslationY = isOpened ? 0 : Height;
-            map.HeightRequest = Height;
-        }   
+
+            if (map != null)
+                map.HeightRequest = Height;
+        }
     }
 }

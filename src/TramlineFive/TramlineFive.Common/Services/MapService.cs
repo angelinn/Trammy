@@ -23,6 +23,7 @@ using SkgtService.Models.Json;
 using SkgtService.Models;
 using CommunityToolkit.Mvvm.Messaging;
 using Mapsui.Tiling.Fetcher;
+using Mapsui.Extensions;
 
 namespace TramlineFive.Common.Services;
 
@@ -70,7 +71,7 @@ public class MapService
         {
             n.CenterOn(point);
             n.ZoomTo(map.Navigator.Resolutions[17]);
-            ShowNearbyStops(point);
+            _ = ShowNearbyStops(point);
 
             WeakReferenceMessenger.Default.Send(new MapLoadedMessage());
         };
@@ -85,9 +86,21 @@ public class MapService
 
         map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light", fetchStrategy));
 
+        await Task.Delay(100);
+
         LoadPinStyles();
         ILayer stopsLayer = await LoadStops();
         map.Layers.Add(stopsLayer);
+
+        MyLocationLayer locationLayer = new MyLocationLayer(map);
+        locationLayer.Enabled = true;
+        map.Layers.Add(locationLayer);
+
+        WeakReferenceMessenger.Default.Register<UpdateLocationMessage>(this, (r, m) =>
+        {
+            var point = SphericalMercator.FromLonLat(m.Position.Longitude, m.Position.Latitude).ToMPoint();
+            locationLayer.UpdateMyLocation(point);
+        });
 
         navigator.ViewportChanged += (sender, args) => SendMapRefreshMessage();
     }
