@@ -30,7 +30,7 @@
             <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
 
-        <mapsui:MapView x:Name="map" IsNorthingButtonVisible="False" IsMyLocationButtonVisible="False" IsZoomButtonVisible="False" MyLocationEnabled="False" />
+        <mapsui:MapControl x:Name="map" />
 
         <ListView x:Name="stopsList" ItemsSource="{Binding Route.Codes}" RowHeight="60" SeparatorVisibility="None" SelectedItem="{Binding SelectedStop, Mode=TwoWay}" Grid.Row="1">
             <ListView.ItemTemplate>

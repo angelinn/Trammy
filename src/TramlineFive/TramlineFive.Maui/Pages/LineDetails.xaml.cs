@@ -20,7 +20,9 @@ public partial class LineDetails : ContentPage
     private void LineDetails_BindingContextChanged(object sender, EventArgs e)
     {
         if (BindingContext != null)
-            (BindingContext as BaseLineDetailsViewModel).LineMapService.Map = map.Map;
+        {
+            map.Map = (BindingContext as BaseLineDetailsViewModel).LineMapService.Map;
+        }
     }
 
     protected override bool OnBackButtonPressed()

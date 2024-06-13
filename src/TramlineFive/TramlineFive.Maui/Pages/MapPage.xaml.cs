@@ -54,21 +54,6 @@ namespace TramlineFive.Pages
             if (initialized)
                 return;
 
-            //map = new MapView();
-            //map.IsNorthingButtonVisible = false;
-            //map.IsMyLocationButtonVisible = false;
-            //map.IsZoomButtonVisible = false;
-            //map.MyLocationEnabled = false;
-
-            //map.VerticalOptions = LayoutOptions.StartAndExpand;
-            //map.HorizontalOptions = LayoutOptions.Fill;
-
-            //absLayout.SetLayoutBounds(map, new Rect(1, 1, 1, 1));
-            //absLayout.SetLayoutFlags(map, AbsoluteLayoutFlags.All);
-            //absLayout.Insert(0, map);
-
-            //await Task.Delay(100);
-
             initialized = true;
 
             _ = LoadDataAsync();

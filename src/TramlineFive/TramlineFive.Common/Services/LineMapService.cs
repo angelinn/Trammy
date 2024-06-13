@@ -27,7 +27,7 @@ public class LineMapService
     private SymbolStyle finishStyle;
 
     private Dictionary<string, IFeature> stops = new();
-    public Map Map { get; set; }
+    public Map Map { get; } = new Map();
     private MRect routeBox;
     private readonly PublicTransport publicTransport;
 
