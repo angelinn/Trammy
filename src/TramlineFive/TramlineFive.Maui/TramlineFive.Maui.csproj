@@ -31,34 +31,36 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
-	  <PublishTrimmed>False</PublishTrimmed>
-	  <RunAOTCompilation>False</RunAOTCompilation>
+		<PublishTrimmed>True</PublishTrimmed>
+		<RunAOTCompilation>True</RunAOTCompilation>
+		<JsonSerializerIsReflectionEnabledByDefault Condition="'$(JsonSerializerIsReflectionEnabledByDefault)' == ''">true</JsonSerializerIsReflectionEnabledByDefault>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|ne8.0-android|AnyCPU'">
-	  <ApplicationTitle>TramlineFive.Maui</ApplicationTitle>
-	  <ApplicationId>com.tramlinefive.maui</ApplicationId>
+		<ApplicationTitle>TramlineFive.Maui</ApplicationTitle>
+		<ApplicationId>com.tramlinefive.maui</ApplicationId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
-	  <AndroidUseAapt2>True</AndroidUseAapt2>
-	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-	  <ApplicationTitle>TramlineFive.Maui</ApplicationTitle>
-	  <ApplicationId>com.tramlinefive.maui</ApplicationId>
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
+		<AndroidUseAapt2>True</AndroidUseAapt2>
+		<AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+		<ApplicationTitle>TramlineFive.Maui</ApplicationTitle>
+		<ApplicationId>com.tramlinefive.maui</ApplicationId>
+		<TrimMode>link</TrimMode>
 	</PropertyGroup>
 
 	<PropertyGroup>
-	  <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.22621.0</TargetFrameworks>
-	  <DefaultLanguage>bg-BG</DefaultLanguage>
-	  <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-	  <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-	  <PackageCertificateThumbprint>8907B7F856999BA7C79896A8AC2C467B9E86ACC8</PackageCertificateThumbprint>
-	  <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-	  <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-	  <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-	  <GenerateTestArtifacts>True</GenerateTestArtifacts>
-	  <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.22621.0</TargetFrameworks>
+		<DefaultLanguage>bg-BG</DefaultLanguage>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+		<PackageCertificateThumbprint>8907B7F856999BA7C79896A8AC2C467B9E86ACC8</PackageCertificateThumbprint>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -80,79 +82,86 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Remove="Platforms\Android\Resources\drawable-ldpi\**" />
-	  <Compile Remove="Platforms\Android\Resources\drawable-ldpi\**" />
-	  <EmbeddedResource Remove="Platforms\Android\Resources\drawable-ldpi\**" />
-	  <MauiCss Remove="Platforms\Android\Resources\drawable-ldpi\**" />
-	  <MauiXaml Remove="Platforms\Android\Resources\drawable-ldpi\**" />
-	  <None Remove="Platforms\Android\Resources\drawable-ldpi\**" />
+		<AndroidResource Remove="Platforms\Android\Resources\drawable-ldpi\**" />
+		<Compile Remove="Platforms\Android\Resources\drawable-ldpi\**" />
+		<EmbeddedResource Remove="Platforms\Android\Resources\drawable-ldpi\**" />
+		<MauiCss Remove="Platforms\Android\Resources\drawable-ldpi\**" />
+		<MauiXaml Remove="Platforms\Android\Resources\drawable-ldpi\**" />
+		<None Remove="Platforms\Android\Resources\drawable-ldpi\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Platforms\Android\Resources\drawable-hdpi\icon.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-hdpi\screen.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-hdpi\tramsplash.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-mdpi\icon.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-mdpi\screen.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-mdpi\tramsplash.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-xhdpi\icon.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-xhdpi\screen.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-xhdpi\tramsplash.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-xxhdpi\icon.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-xxhdpi\screen.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-xxhdpi\tramsplash.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-xxxhdpi\icon.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-xxxhdpi\screen.png" />
-	  <None Remove="Platforms\Android\Resources\drawable-xxxhdpi\tramsplash.png" />
-	  <None Remove="Platforms\Android\Resources\drawable\Bus64.png" />
-	  <None Remove="Platforms\Android\Resources\drawable\D2s.gif" />
-	  <None Remove="Platforms\Android\Resources\drawable\green_rails.jpg" />
-	  <None Remove="Platforms\Android\Resources\drawable\icon.png" />
-	  <None Remove="Platforms\Android\Resources\drawable\icon_beta.png" />
-	  <None Remove="Platforms\Android\Resources\drawable\mylocation.png" />
-	  <None Remove="Platforms\Android\Resources\drawable\my_location.xml" />
-	  <None Remove="Platforms\Android\Resources\drawable\splash.xml" />
-	  <None Remove="Platforms\Android\Resources\drawable\Tram64.png" />
-	  <None Remove="Platforms\Android\Resources\drawable\Trolley64.png" />
-	  <None Remove="Platforms\Android\Resources\layout\appwidgetprovider.xml" />
-	  <None Remove="Platforms\Android\Resources\layout\Tabbar.axml" />
-	  <None Remove="Platforms\Android\Resources\layout\Toolbar.axml" />
-	  <None Remove="Platforms\Android\Resources\layout\Widget.axml" />
-	  <None Remove="Platforms\Android\Resources\mipmap-anydpi-v26\tramline.xml" />
-	  <None Remove="Platforms\Android\Resources\mipmap-anydpi-v26\tramline_round.xml" />
-	  <None Remove="Platforms\Android\Resources\mipmap-hdpi\tramline.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-hdpi\tramline_foreground.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-hdpi\tramline_round.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-mdpi\tramline.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-mdpi\tramline_foreground.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-mdpi\tramline_round.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-xhdpi\tramline.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-xhdpi\tramline_foreground.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-xhdpi\tramline_round.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-xxhdpi\tramline.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-xxhdpi\tramline_foreground.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-xxhdpi\tramline_round.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-xxxhdpi\tramline.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-xxxhdpi\tramline_foreground.png" />
-	  <None Remove="Platforms\Android\Resources\mipmap-xxxhdpi\tramline_round.png" />
-	  <None Remove="Platforms\Android\Resources\values\styles.xml" />
-	  <None Remove="Platforms\Android\Resources\values\tramline_background.xml" />
-	  <None Remove="Resources\FontAwesome6BrandsRegular400.otf" />
-	  <None Remove="Resources\FontAwesome6FreeRegular400.otf" />
-	  <None Remove="Resources\FontAwesome6FreeSolid900.otf" />
-	  <None Remove="Resources\MaterialIconsOutlinedRegular.otf" />
-	  <None Remove="Resources\MaterialIconsRegular.ttf" />
-	  <None Remove="Resources\MaterialIconsRoundRegular.otf" />
-	  <None Remove="Resources\MaterialIconsSharpRegular.otf" />
-	  <None Remove="Resources\MaterialIconsTwoToneRegular.otf" />
-	  <None Remove="Resources\Splash\splash.svg" />
+		<None Remove="Platforms\Android\Resources\drawable-hdpi\icon.png" />
+		<None Remove="Platforms\Android\Resources\drawable-hdpi\screen.png" />
+		<None Remove="Platforms\Android\Resources\drawable-hdpi\tramsplash.png" />
+		<None Remove="Platforms\Android\Resources\drawable-mdpi\icon.png" />
+		<None Remove="Platforms\Android\Resources\drawable-mdpi\screen.png" />
+		<None Remove="Platforms\Android\Resources\drawable-mdpi\tramsplash.png" />
+		<None Remove="Platforms\Android\Resources\drawable-xhdpi\icon.png" />
+		<None Remove="Platforms\Android\Resources\drawable-xhdpi\screen.png" />
+		<None Remove="Platforms\Android\Resources\drawable-xhdpi\tramsplash.png" />
+		<None Remove="Platforms\Android\Resources\drawable-xxhdpi\icon.png" />
+		<None Remove="Platforms\Android\Resources\drawable-xxhdpi\screen.png" />
+		<None Remove="Platforms\Android\Resources\drawable-xxhdpi\tramsplash.png" />
+		<None Remove="Platforms\Android\Resources\drawable-xxxhdpi\icon.png" />
+		<None Remove="Platforms\Android\Resources\drawable-xxxhdpi\screen.png" />
+		<None Remove="Platforms\Android\Resources\drawable-xxxhdpi\tramsplash.png" />
+		<None Remove="Platforms\Android\Resources\drawable\Bus64.png" />
+		<None Remove="Platforms\Android\Resources\drawable\D2s.gif" />
+		<None Remove="Platforms\Android\Resources\drawable\green_rails.jpg" />
+		<None Remove="Platforms\Android\Resources\drawable\icon.png" />
+		<None Remove="Platforms\Android\Resources\drawable\icon_beta.png" />
+		<None Remove="Platforms\Android\Resources\drawable\mylocation.png" />
+		<None Remove="Platforms\Android\Resources\drawable\my_location.xml" />
+		<None Remove="Platforms\Android\Resources\drawable\splash.xml" />
+		<None Remove="Platforms\Android\Resources\drawable\Tram64.png" />
+		<None Remove="Platforms\Android\Resources\drawable\Trolley64.png" />
+		<None Remove="Platforms\Android\Resources\layout\appwidgetprovider.xml" />
+		<None Remove="Platforms\Android\Resources\layout\Tabbar.axml" />
+		<None Remove="Platforms\Android\Resources\layout\Toolbar.axml" />
+		<None Remove="Platforms\Android\Resources\layout\Widget.axml" />
+		<None Remove="Platforms\Android\Resources\mipmap-anydpi-v26\tramline.xml" />
+		<None Remove="Platforms\Android\Resources\mipmap-anydpi-v26\tramline_round.xml" />
+		<None Remove="Platforms\Android\Resources\mipmap-hdpi\tramline.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-hdpi\tramline_foreground.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-hdpi\tramline_round.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-mdpi\tramline.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-mdpi\tramline_foreground.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-mdpi\tramline_round.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-xhdpi\tramline.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-xhdpi\tramline_foreground.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-xhdpi\tramline_round.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-xxhdpi\tramline.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-xxhdpi\tramline_foreground.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-xxhdpi\tramline_round.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-xxxhdpi\tramline.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-xxxhdpi\tramline_foreground.png" />
+		<None Remove="Platforms\Android\Resources\mipmap-xxxhdpi\tramline_round.png" />
+		<None Remove="Platforms\Android\Resources\values\styles.xml" />
+		<None Remove="Platforms\Android\Resources\values\tramline_background.xml" />
+		<None Remove="Resources\FontAwesome6BrandsRegular400.otf" />
+		<None Remove="Resources\FontAwesome6FreeRegular400.otf" />
+		<None Remove="Resources\FontAwesome6FreeSolid900.otf" />
+		<None Remove="Resources\MaterialIconsOutlinedRegular.otf" />
+		<None Remove="Resources\MaterialIconsRegular.ttf" />
+		<None Remove="Resources\MaterialIconsRoundRegular.otf" />
+		<None Remove="Resources\MaterialIconsSharpRegular.otf" />
+		<None Remove="Resources\MaterialIconsTwoToneRegular.otf" />
+		<None Remove="Resources\Splash\splash.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#1e90ff" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#1e90ff" />
 	</ItemGroup>
-	
-	
+
+	<ItemGroup>
+		<TrimmerRootAssembly Include="TramlineFive.DataAccess" RootMode="library" />
+		<TrimmerRootAssembly Include="TramlineFive.Common" RootMode="library" />
+		<TrimmerRootAssembly Include="SkgtService" RootMode="library" />
+		<TrimmerRootAssembly Include="OpenMeteo" RootMode="library" />
+		<TrimmerRootAssembly Include="Octokit" RootMode="library" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
@@ -165,130 +174,130 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\TramlineFive.Common\TramlineFive.Common.csproj" />
+		<ProjectReference Include="..\TramlineFive.Common\TramlineFive.Common.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\AboutPage.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\LinesTab.xaml.cs">
-	    <DependentUpon>LinesTab.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\FavouritesPage.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\HistoryPage.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\LicensesPage.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\LocationPromptPage.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\MapPage.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\SettingsPage.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\VirtualTablesPage.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Platforms\Windows\Services\PathService.cs">
-	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
-	  </Compile>
-	  <Compile Update="Platforms\Windows\Services\PermissionService.cs">
-	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
-	  </Compile>
-	  <Compile Update="Platforms\Windows\Services\PushService.cs">
-	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
-	  </Compile>
-	  <Compile Update="Platforms\Windows\Services\VersionCheckingService.cs">
-	    <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
-	  </Compile>
-	  <Compile Update="Themes\DarkTheme.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
-	  <Compile Update="Themes\LightTheme.xaml.cs">
-	    <DependentUpon>%(Filename)</DependentUpon>
-	  </Compile>
+		<Compile Update="Pages\AboutPage.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\LinesTab.xaml.cs">
+			<DependentUpon>LinesTab.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\FavouritesPage.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\HistoryPage.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\LicensesPage.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\LocationPromptPage.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\MapPage.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\SettingsPage.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\VirtualTablesPage.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Platforms\Windows\Services\PathService.cs">
+			<ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+		</Compile>
+		<Compile Update="Platforms\Windows\Services\PermissionService.cs">
+			<ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+		</Compile>
+		<Compile Update="Platforms\Windows\Services\PushService.cs">
+			<ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+		</Compile>
+		<Compile Update="Platforms\Windows\Services\VersionCheckingService.cs">
+			<ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+		</Compile>
+		<Compile Update="Themes\DarkTheme.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Themes\LightTheme.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiFont Update="Resources\Fonts\FontAwesome6BrandsRegular400.otf">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </MauiFont>
-	  <MauiFont Update="Resources\Fonts\FontAwesome6FreeRegular400.otf">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </MauiFont>
-	  <MauiFont Update="Resources\Fonts\FontAwesome6FreeSolid900.otf">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </MauiFont>
+		<MauiFont Update="Resources\Fonts\FontAwesome6BrandsRegular400.otf">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</MauiFont>
+		<MauiFont Update="Resources\Fonts\FontAwesome6FreeRegular400.otf">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</MauiFont>
+		<MauiFont Update="Resources\Fonts\FontAwesome6FreeSolid900.otf">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</MauiFont>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\AboutPage.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\Directions.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\LineDetails.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\LinesTab.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\FavouritesPage.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\HistoryPage.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\LicensesPage.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\LocationPromptPage.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\MapPage.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\SettingsPage.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\VirtualTablesPage.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Themes\DarkTheme.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Themes\LightTheme.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\StopsList.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\VirtualTablesViewCell.xaml">
-	    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-	  </MauiXaml>
+		<MauiXaml Update="Pages\AboutPage.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\Directions.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\LineDetails.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\LinesTab.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\FavouritesPage.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\HistoryPage.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\LicensesPage.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\LocationPromptPage.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\MapPage.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\SettingsPage.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\VirtualTablesPage.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Themes\DarkTheme.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Themes\LightTheme.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\StopsList.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\VirtualTablesViewCell.xaml">
+			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="Resources\Splash\tramsplash.png" Color="Blue" />
-	  <None Update="Resources\Splash\tramsplash.svg" BaseSize="64,64" Color="DodgerBlue" />
+		<None Update="Resources\Splash\tramsplash.png" Color="Blue" />
+		<None Update="Resources\Splash\tramsplash.svg" BaseSize="64,64" Color="DodgerBlue" />
 	</ItemGroup>
 
 </Project>
