@@ -207,9 +207,9 @@ public class MapService
                         MaxVisible = map.Navigator.Resolutions[MaxTextZoom],
                         Text = $"{location.PublicName} ({location.Code})",
                         Offset = offset,
-                        Font = new Font { Size = 11 }
+                        Font = new Font { Size = 11 },
+                        BackColor = new Brush(new Color(255, 255, 255, 200)),
                         
-                        //Opacity = 0.7f,
                     }
                 }
             };
