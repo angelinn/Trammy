@@ -33,6 +33,8 @@ namespace TramlineFive.Common.ViewModels
 
         partial void OnSelectedLineChanged(LineViewModel value)
         {
+            SelectedLine = null;
+
             if (value != null)
                 OpenDetails(value);
         }

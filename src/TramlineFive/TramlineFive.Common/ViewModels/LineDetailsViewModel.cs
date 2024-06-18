@@ -123,7 +123,7 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
         }
     }
 
-    public string TargetStop => Route?.Last;
+    public string TargetStop => Route?.First;
 
     [ObservableProperty]
     private RouteViewModel route;
