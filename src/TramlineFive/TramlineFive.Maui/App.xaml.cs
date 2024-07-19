@@ -12,18 +12,24 @@ using TramlineFive.Pages;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using TramlineFive.Services.Main;
 using CommunityToolkit.Mvvm.Messaging;
+using SkgtService.Parsers;
 
 namespace TramlineFive.Maui
 {
     public partial class App : Application
     {
         private readonly PathService dbPathService;
-        public App(PathService dbPathService)
+        public App(PathService dbPathService, SofiaHttpClient sofiaHttpClient)
         {
             InitializeComponent();
 
             this.dbPathService = dbPathService;
             TramlineFiveContext.DatabasePath = dbPathService.GetDBPath();
+
+            //File.Delete(TramlineFiveContext.DatabasePath);
+            //StopsLoader.ClearData();
+
+            StopsLoader.Initialize(dbPathService.GetBaseFilePath(), sofiaHttpClient);
 
             MainPage = new AppShell();
         }
@@ -58,7 +64,7 @@ namespace TramlineFive.Maui
 
         protected override void OnStart()
         {
-            StopsLoader.Initialize(dbPathService.GetBaseFilePath());
+            base.OnStart();
 
             string theme = Preferences.Get(Settings.Theme, Names.SystemDefault);
 

@@ -7,13 +7,13 @@ namespace SkgtService.Models.Json
 {
     public class StopLocation
     {
-        [JsonProperty("y")]
+        [JsonProperty("latitude")]
         public double Lat { get; set; }
-        [JsonProperty("x")]
+        [JsonProperty("longitude")]
         public double Lon { get; set; }
-        [JsonProperty("n")]
+        [JsonProperty("name")]
         public string PublicName { get; set; }
-        [JsonProperty("c")]
+        [JsonProperty("code")]
         public string Code { get; set; }
     }
 }

@@ -76,7 +76,7 @@ public class WatchService : Service
             var res = await arrivals.GetByStopCodeAsync(stop);
             NotificationManager mNotificationManager = (NotificationManager)GetSystemService(Context.NotificationService);
 
-            int mins = res.Arrivals.First(a => a.LineName == line).Minutes;
+            int mins = res.Arrivals.First(a => a.LineName == line).Arrivals[0].Minutes;
             int ma = lastMinutes;
             var a = this;
             if (lastMinutes < 1 && mins > lastMinutes)

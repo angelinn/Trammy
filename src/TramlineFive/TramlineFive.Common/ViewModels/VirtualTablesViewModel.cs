@@ -96,6 +96,7 @@ namespace TramlineFive.Common.ViewModels
             }
             catch (Exception ex)
             {
+                SentrySdk.CaptureException(ex);
                 await ApplicationService.DisplayAlertAsync("exception", ex.InnerException.Message, "ok");
             }
         }
@@ -125,8 +126,9 @@ namespace TramlineFive.Common.ViewModels
                 Messenger.Send(new ShowMapMessage(true, StopInfo.Arrivals.Count, sw.ElapsedMilliseconds));
                 await HistoryDomain.AddAsync(stopCode, StopInfo.PublicName);
             }
-            catch (StopNotFoundException)
+            catch (StopNotFoundException e)
             {
+                SentrySdk.CaptureException(e);
                 ApplicationService.DisplayToast($"Няма данни за спирка {stopCode}.");
                 IsLoading = false;
             }

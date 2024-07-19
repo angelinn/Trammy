@@ -31,9 +31,9 @@ public class StopResponse
     public List<ArrivalInformation> Arrivals { get; set; } = new();
     public bool IsFavourite { get; set; }
 
-    public StopResponse(StopInfo stop)
+    public StopResponse(string stopCode, string name)
     {
-        Code = stop.Code;
-        PublicName = stop.Name;
+        Code = stopCode;
+        PublicName = name;
     }
 }

@@ -16,7 +16,7 @@ public static class TileServerFactory
 
     public static TileLayer CreateTileLayer(string name, IDataFetchStrategy dataFetchStrategy)
     {
-        return new TileLayer(CreateTileSource(name), dataFetchStrategy: dataFetchStrategy, renderFetchStrategy: new MinimalRenderFetchStrategy()) { Name = name };
+        return new TileLayer(CreateTileSource(name), dataFetchStrategy: dataFetchStrategy, renderFetchStrategy: new RenderFetchStrategy()) { Name = name };
     }
 
     private static HttpTileSource CreateTileSource(string name)

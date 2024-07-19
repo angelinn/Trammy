@@ -26,16 +26,14 @@ namespace TramlineFive.Pages
         private bool isOpened;
 
         private MapService mapService;
-        private Map nativeMap;
-        //MapView map;
-        //View slideMenu;
-
-        //private MapView map;
 
         public MapPage()
         {
             InitializeComponent();
+            mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
+            mapService.LoadInitialMap(map.Map).Wait();
 
+            //map.Map?.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
 
             WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await ToggleMap(m));
             //Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
@@ -81,13 +79,13 @@ namespace TramlineFive.Pages
         {
             if (e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Released)
             {
-                await mapService.ShowNearbyStops(new MPoint(nativeMap.Navigator.Viewport.CenterX, nativeMap.Navigator.Viewport.CenterY), true);
+                await mapService.ShowNearbyStops(new MPoint(map.Map.Navigator.Viewport.CenterX, map.Map.Navigator.Viewport.CenterY), true);
                 //map.Refresh();
 
                 System.Diagnostics.Debug.WriteLine($"Show stops");
             }
 
-            System.Diagnostics.Debug.WriteLine($"Touch: {e.ActionType} {nativeMap.Navigator.Viewport.CenterX} {nativeMap.Navigator.Viewport.CenterY}");
+            System.Diagnostics.Debug.WriteLine($"Touch: {e.ActionType} {map.Map.Navigator.Viewport.CenterX} {map.Map.Navigator.Viewport.CenterY}");
         }
 
         private async Task ShowVirtualTables(int linesCount)
@@ -142,16 +140,9 @@ namespace TramlineFive.Pages
 
         private async Task LoadMapAsync()
         {
-            nativeMap = new Map
-            {
-                BackColor = Mapsui.Styles.Color.White,
-                CRS = "EPSG:3857"
-            };
-
             mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
-            await (BindingContext as MapViewModel).Initialize(nativeMap, nativeMap.Navigator);
+            await (BindingContext as MapViewModel).Initialize(map.Map);
 
-            map.Map = nativeMap;
             map.TouchAction += OnMapTouchAction;
 
             await (BindingContext as MapViewModel).LoadAsync();

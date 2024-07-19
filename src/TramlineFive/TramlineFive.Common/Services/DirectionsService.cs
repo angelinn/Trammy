@@ -77,47 +77,47 @@ public class DirectionsService
 
     public void Build()
     {
-        foreach (var type in publicTransport.Lines)
-        {
-            foreach (var line in type.Value)
-            {
-                foreach (var route in line.Value.Routes)
-                {
-                    for (int i = 0; i < route.Codes.Count; ++i)
-                    {
-                        if (i + 1 < route.Codes.Count)
-                        {
-                            var stop = publicTransport.FindStop(route.Codes[i]);
-                            var anotherStopInfo = publicTransport.FindStop(route.Codes[i + 1]);
+        //foreach (var type in publicTransport.Lines)
+        //{
+        //    foreach (var line in type.Value)
+        //    {
+        //        foreach (var route in line.Value.Routes)
+        //        {
+        //            for (int i = 0; i < route.Codes.Count; ++i)
+        //            {
+        //                if (i + 1 < route.Codes.Count)
+        //                {
+        //                    var stop = publicTransport.FindStop(route.Codes[i]);
+        //                    var anotherStopInfo = publicTransport.FindStop(route.Codes[i + 1]);
 
-                            List<Node> localNodesStop = BuildNode(stop);
-                            List<Node> localNodesAnotherStop = BuildNode(anotherStopInfo);
+        //                    List<Node> localNodesStop = BuildNode(stop);
+        //                    List<Node> localNodesAnotherStop = BuildNode(anotherStopInfo);
                             
-                            // build nodes for every route of every line
-                            foreach (var currentStop in localNodesStop)
-                            {
-                                foreach (var anotherStop in localNodesAnotherStop)
-                                {
-                                    // line not null means not starting or ending trip or walking 
-                                    if (currentStop.Line != null && anotherStop.Line != null && currentStop.Line.Name == anotherStop.Line.Name)
-                                    {
-                                        var edge = new Edge<Node>(currentStop, anotherStop);
-                                        float distance = (float)Math.Sqrt(math.DistanceSquaredBetweenPoints(new float[] { (float)stop.Lat, (float)stop.Lon }, 
-                                            new float[] { (float)anotherStopInfo.Lat, (float)anotherStopInfo.Lon }));
+        //                    // build nodes for every route of every line
+        //                    foreach (var currentStop in localNodesStop)
+        //                    {
+        //                        foreach (var anotherStop in localNodesAnotherStop)
+        //                        {
+        //                            // line not null means not starting or ending trip or walking 
+        //                            if (currentStop.Line != null && anotherStop.Line != null && currentStop.Line.Name == anotherStop.Line.Name)
+        //                            {
+        //                                var edge = new Edge<Node>(currentStop, anotherStop);
+        //                                float distance = (float)Math.Sqrt(math.DistanceSquaredBetweenPoints(new float[] { (float)stop.Lat, (float)stop.Lon }, 
+        //                                    new float[] { (float)anotherStopInfo.Lat, (float)anotherStopInfo.Lon }));
 
-                                        graph.AddVerticesAndEdge(edge);
+        //                                graph.AddVerticesAndEdge(edge);
 
-                                        // cost is the distance between the stops
-                                        costs.Add(edge, distance);
-                                    }
-                                }
-                            }
-                        }
+        //                                // cost is the distance between the stops
+        //                                costs.Add(edge, distance);
+        //                            }
+        //                        }
+        //                    }
+        //                }
 
-                    }
-                }
-            }
-        }
+        //            }
+        //        }
+        //    }
+        //}
 
         // build nodes for when you walk from one stop to a different one to catch a different bus
         foreach (StopInformation stop in publicTransport.Stops)

@@ -39,7 +39,6 @@ public class MapService
     private KdTree<float, IFeature> stopsTree;
     private Dictionary<string, IFeature> stopsDictionary;
     private readonly List<Style> activeStyles = new List<Style>();
-    private Navigator navigator;
 
     private readonly LocationService locationService;
     private readonly PublicTransport publicTransport;
@@ -53,13 +52,16 @@ public class MapService
         this.publicTransport = publicTransport;
     }
 
-    public async Task Initialize(Map map, Navigator navigator, string tileServer, string fetchStrategy)
-    {
-        this.map = map;
-        this.navigator = navigator;
-
+    public async Task LoadInitialMap(Map map)
+    {        
         await TileServerSettings.LoadTileServersAsync();
 
+        map.Layers.Add(TileServerFactory.CreateTileLayer("carto-light", new DataFetchStrategy()));
+    }
+
+    public async Task Initialize(Map map, string tileServer, string fetchStrategy)
+    {
+        this.map = map;
 
         await SetupMapAsync(tileServer, fetchStrategy);
     }
@@ -84,9 +86,9 @@ public class MapService
             _ => new DataFetchStrategy()
         };
 
-        map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light", fetchStrategy));
+        //map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light", fetchStrategy));
 
-        await Task.Delay(100);
+        //await Task.Delay(100);
 
         LoadPinStyles();
         ILayer stopsLayer = await LoadStops();
@@ -96,13 +98,16 @@ public class MapService
         locationLayer.Enabled = true;
         map.Layers.Add(locationLayer);
 
-        WeakReferenceMessenger.Default.Register<UpdateLocationMessage>(this, (r, m) =>
+        if (!WeakReferenceMessenger.Default.IsRegistered<UpdateLocationMessage>(this))
         {
-            var point = SphericalMercator.FromLonLat(m.Position.Longitude, m.Position.Latitude).ToMPoint();
-            locationLayer.UpdateMyLocation(point);
-        });
+            WeakReferenceMessenger.Default.Register<UpdateLocationMessage>(this, (r, m) =>
+            {
+                var point = SphericalMercator.FromLonLat(m.Position.Longitude, m.Position.Latitude).ToMPoint();
+                locationLayer.UpdateMyLocation(point);
+            });
+        }
 
-        navigator.ViewportChanged += (sender, args) => SendMapRefreshMessage();
+        map.Navigator.ViewportChanged += (sender, args) => SendMapRefreshMessage();
     }
 
     public void MoveTo(MPoint position, int zoom, bool home = false)
@@ -112,7 +117,7 @@ public class MapService
         if (home)
             map.Home = n => n.CenterOn(point);
 
-        navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
+        map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
     }
 
     public void MoveToUser(Position position, bool home = false)
@@ -121,9 +126,9 @@ public class MapService
 
         MPoint userLocationMap = new MPoint(x, y);
 
-        navigator.CenterOnAndZoomTo(userLocationMap, map.Navigator.Resolutions[17], ANIMATION_MS, home ? null : Easing.Linear);
+        map.Navigator.CenterOnAndZoomTo(userLocationMap, map.Navigator.Resolutions[17], ANIMATION_MS, home ? null : Easing.Linear);
 
-        ShowNearbyStops(userLocationMap);
+        _ = ShowNearbyStops(userLocationMap);
     }
 
     private void SendMapRefreshMessage()

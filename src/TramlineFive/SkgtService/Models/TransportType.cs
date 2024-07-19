@@ -6,10 +6,12 @@ namespace SkgtService.Models;
 
 public enum TransportType
 {
-    MissingNo = -1,
-    Tram,
-    Bus,
-    Trolley,
-    Electrobus,
-    Additional
+    MissingNo = 0,
+    Bus = 1,
+    Tram = 2,
+    Subway = 3,
+    Trolley = 4,
+    NightBus = 5,
+    Electrobus = 6,
+    Additional = 7
 }

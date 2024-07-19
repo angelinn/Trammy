@@ -26,13 +26,13 @@ public class NavigationService : INavigationService
     public void GoToDetails(ArrivalInformation line, string stop)
     {
         PublicTransport publicTransport = ServiceContainer.ServiceProvider.GetService<PublicTransport>();
-        LineInformation lineInformation = publicTransport.FindByTypeAndLine(line.VehicleType, line.LineName);
+        Line lineInformation = publicTransport.FindByTypeAndLine(line.VehicleType, line.LineName);
         if (lineInformation != null)
         {
             LineViewModel lineViewModel = new LineViewModel
             {
                 Name = line.LineName,
-                Routes = lineInformation,
+                Routes = null,
                 Type = line.VehicleType
             };
 

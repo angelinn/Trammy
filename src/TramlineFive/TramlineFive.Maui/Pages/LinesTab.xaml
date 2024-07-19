@@ -25,7 +25,7 @@
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <SearchBar x:Name="search" Placeholder="Търси линия..." Margin="0" Text="{Binding SearchText}">
             <SearchBar.Behaviors>
                 <mct:EventToCommandBehavior EventName="TextChanged" Command="{Binding FilterLinesCommand}" />
@@ -45,8 +45,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="{Binding BindingContext.Icon, Source={x:Reference Page}}" 
-                                       TextColor="{Binding BindingContext.IconColor, Source={x:Reference Page}, Converter={StaticResource Color}}" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" />   
-                                
+                                       TextColor="{Binding BindingContext.IconColor, Source={x:Reference Page}, Converter={StaticResource Color}}" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center" />
+
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                                     <HorizontalStackLayout>
                                         <Label Text="{Binding BindingContext.Type, Source={x:Reference Page}}" />

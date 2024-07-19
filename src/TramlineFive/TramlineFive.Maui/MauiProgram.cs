@@ -78,14 +78,14 @@ namespace TramlineFive.Maui
             services.AddSingleton<IApplicationService, ApplicationService>();
             services.AddSingleton<INavigationService, NavigationService>();
 
-
+            services.AddSingleton<WeatherService>();
+            services.AddSingleton<SofiaHttpClient>();
             services.AddSingleton<PublicTransport>();
             services.AddSingleton<DirectionsService>();
             services.AddSingleton<ArrivalsService>();
             services.AddSingleton<LocationService>();
             services.AddSingleton<MapService>();
             services.AddSingleton<VersionService>();
-            services.AddSingleton<WeatherService>();
             services.AddViewModels();
 
             services.AddSingleton<PathService>();

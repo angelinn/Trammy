@@ -6,6 +6,7 @@ using Mapsui.Layers;
 using Mapsui.Projections;
 using Mapsui.Styles;
 using Mapsui.UI;
+using Sentry;
 using SkgtService;
 using SkgtService.Models;
 using System;
@@ -61,15 +62,16 @@ namespace TramlineFive.Common.ViewModels
             Messenger.Register<MapLoadedMessage>(this, async (r, m) => await CheckForHistory());
         }
 
-        public async Task Initialize(Map nativeMap, Navigator navigator)
+        public async Task Initialize(Map nativeMap)
         {
             try
             {
-                await mapService.Initialize(nativeMap, navigator,
+                await mapService.Initialize(nativeMap,
                     ApplicationService.GetStringSetting(Settings.SelectedTileServer, null), ApplicationService.GetStringSetting(Settings.FetchingStrategy, null));
             }
             catch (Exception ex)
             {
+                SentrySdk.CaptureException(ex);
                 ApplicationService.DisplayToast(ex.Message);
             }
 

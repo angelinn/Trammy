@@ -30,7 +30,7 @@
                 <mct:EventToCommandBehavior EventName="Info" Command="{Binding MapInfoCommand}" x:TypeArguments="mapsuipl:MapInfoEventArgs" />
             </mapsui:MapControl.Behaviors>
         </mapsui:MapControl>
-        
+
         <ActivityIndicator AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"                                            BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" IsRunning="{Binding IsLoading}" HeightRequest="64" Color="DodgerBlue" Margin="0,100,0,0" />
 
         <Grid x:Name="grid" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">

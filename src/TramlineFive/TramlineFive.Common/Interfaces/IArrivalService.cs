@@ -9,5 +9,5 @@ namespace TramlineFive.Common.Interfaces;
 
 public interface IArrivalService
 {
-    Task<StopInfo> GetByStopCodeAsync(string stopCode);
+    Task<LineArrivalInfo> GetByStopCodeAsync(string stopCode);
 }

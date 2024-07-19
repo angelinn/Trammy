@@ -5,6 +5,7 @@ using NetTopologySuite.Index.HPRtree;
 using Octokit;
 using SkgtService;
 using SkgtService.Models;
+using SkgtService.Models.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,7 +39,7 @@ namespace TramlineFive.Common.ViewModels
             if (value != null)
                 OpenDetails(value);
         }
-        
+
 
         public LinesViewModel(PublicTransport publicTransport)
         {
@@ -52,9 +53,17 @@ namespace TramlineFive.Common.ViewModels
             if (allLines != null)
                 return;
 
-            await StopsLoader.LoadRoutesAsync();
+            await publicTransport.LoadLinesAsync();
 
-            allLines = new(publicTransport.FindByType(type).Select(p => new LineViewModel { Type = type, Routes = p, Name = p.Name }));
+            allLines = new(publicTransport.FindByType(type)
+                .Select(p => new LineViewModel { Type = type, Routes = null, Name = p.Name })
+                .OrderBy(l => {
+                    if (Int32.TryParse(l.Name, out int numberName))
+                        return numberName;
+
+                    return int.MaxValue;
+                    }));
+
             Lines = new(allLines);
         }
 

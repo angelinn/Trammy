@@ -1,4 +1,7 @@
-﻿using SkgtService.Exceptions;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Sentry;
+using SkgtService.Exceptions;
 using SkgtService.Models;
 using SkgtService.Models.Json;
 using System;
@@ -13,9 +16,11 @@ namespace SkgtService;
 public class PublicTransport
 {
     private Dictionary<string, StopInformation> stopsHash = new();
-    private Dictionary<string, Dictionary<string, LineInformation>> lines = new();
+    private Dictionary<string, Dictionary<string, Line>> lines = new();
+    private Dictionary<string, List<Route>> routes = new();
 
     private List<StopInformation> stops;
+
     public List<StopInformation> Stops
     {
         get
@@ -27,7 +32,30 @@ public class PublicTransport
         }
     }
 
-    public Dictionary<string, Dictionary<string, LineInformation>> Lines => lines;
+    public Dictionary<string, Dictionary<string, Line>> Lines => lines;
+
+
+    public async Task LoadLinesAsync()
+    {
+        var newLines = await StopsLoader.LoadLinesAsync();
+
+        if (lines.Count > 0)
+            return;
+
+        Lines.Add("bus", new Dictionary<string, Line>());
+        Lines.Add("tram", new Dictionary<string, Line>());
+        Lines.Add("trolley", new Dictionary<string, Line>());
+        Lines.Add("subway", new Dictionary<string, Line>());
+        Lines.Add("nightbus", new Dictionary<string, Line>());
+
+        foreach (Line line in newLines)
+        {
+            if (line.Name.StartsWith('E'))
+                line.Type = TransportType.Bus;
+
+            Lines[EnumToType(line.Type)].Add(line.Name, line);
+        }
+    }
 
     public async Task LoadData()
     {
@@ -35,32 +63,47 @@ public class PublicTransport
             return;
 
         List<StopLocation> stops = await StopsLoader.LoadStopsAsync();
+        SentrySdk.CaptureMessage($"Loaded {stops.Count} stops.");
 
         foreach (var stop in stops)
         {
-            stopsHash.Add(stop.Code, new StopInformation(stop));
-        }
-
-        var loadedRoutes = await StopsLoader.LoadRoutesAsync();
-        foreach (Routes route in loadedRoutes)
-        {
-            Dictionary<string, LineInformation> singleLineRoutes = new();
-            foreach (Route line in route.Lines)
+            try
             {
-                LineInformation lineInformation = new LineInformation(line.Name, route.Type, line.Routes);
-                singleLineRoutes.Add(line.Name, lineInformation);
-                foreach (Way way in line.Routes)
-                {
-                    foreach (string code in way.Codes)
-                    {
-                        stopsHash[code].Lines.Add(lineInformation);
-                        stopsHash[code].Lines = stopsHash[code].Lines.DistinctBy(line => line.Name).ToList();
-                    }
-                }
+                if (!string.IsNullOrEmpty(stop.Code))
+                    stopsHash.Add(stop.Code, new StopInformation(stop));
             }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureMessage($"id: {stop.Code}, object: {JsonConvert.SerializeObject(stop)}");
 
-            lines.Add(route.Type, singleLineRoutes);
+                SentrySdk.CaptureException(ex);
+            }
         }
+
+        //var loadedRoutes = await StopsLoader.LoadRoutesAsync();
+
+        //foreach (Routes route in loadedRoutes)
+        //{
+        //    Dictionary<string, LineInformation> singleLineRoutes = new();
+        //    foreach (Route line in route.Lines)
+        //    {
+        //        LineInformation lineInformation = new LineInformation(line.Name, route.Type, line.Routes);
+        //        singleLineRoutes.Add(line.Name, lineInformation);
+        //        foreach (Way way in line.Routes)
+        //        {
+        //            foreach (string code in way.Codes)
+        //            {
+        //                if (stopsHash.ContainsKey(code))
+        //                {
+        //                    stopsHash[code].Lines.Add(lineInformation);
+        //                    stopsHash[code].Lines = stopsHash[code].Lines.DistinctBy(line => line.Name).ToList();
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    lines.Add(route.Type, singleLineRoutes);
+        //}
     }
 
     public StopInformation FindStop(string code)
@@ -70,12 +113,12 @@ public class PublicTransport
 
         return null;
     }
-    public LineInformation FindByTypeAndLine(TransportType type, string line)
+    public Line FindByTypeAndLine(TransportType type, string line)
     {
         return FindByTypeAndLine(EnumToType(type), line);
     }
 
-    public LineInformation FindByTypeAndLine(string type, string line)
+    public Line FindByTypeAndLine(string type, string line)
     {
         if (line.StartsWith("E"))
         {
@@ -85,7 +128,7 @@ public class PublicTransport
 
         if (lines.TryGetValue(type, out var linesInfo))
         {
-            if (linesInfo.TryGetValue(line, out LineInformation routeInformation))
+            if (linesInfo.TryGetValue(line, out Line routeInformation))
                 return routeInformation;
         }
 
@@ -98,16 +141,18 @@ public class PublicTransport
         {
             TransportType.Tram => "tram",
             TransportType.Trolley => "trolley",
+            TransportType.Bus => "bus",
+            TransportType.Subway => "subway",
             _ => "bus"
         };
     }
 
-    public List<LineInformation> FindByType(TransportType type)
+    public List<Line> FindByType(TransportType type)
     {
         return FindByType(EnumToType(type));
     }
 
-    public List<LineInformation> FindByType(string type)
+    public List<Line> FindByType(string type)
     {
         if (lines.TryGetValue(type, out var linesInfo))
         {
@@ -119,22 +164,23 @@ public class PublicTransport
 
     public List<LineInformation> FindLineByTwoStops(string one, string other)
     {
-        List<LineInformation> result = new List<LineInformation>();
-        foreach (var allLines in lines.Values)
-        {
-            var currentLines = allLines.Values.Where(v => v.Routes.Any(r => r.Codes.Contains(one) && r.Codes.Contains(other)));
-            if (currentLines.Any())
-                result.AddRange(currentLines);
-        }
+        return null;
+        //List<LineInformation> result = new List<LineInformation>();
+        //foreach (var allLines in lines.Values)
+        //{
+        //    var currentLines = allLines.Values.Where(v => v.Routes.Any(r => r.Codes.Contains(one) && r.Codes.Contains(other)));
+        //    if (currentLines.Any())
+        //        result.AddRange(currentLines);
+        //}
 
-        return result;
+        //return result;
     }
 
-    public LineInformation FindStopsByLine(string line, string type)
+    public Line FindStopsByLine(string line, string type)
     {
-        if (lines.TryGetValue(type, out Dictionary<string, LineInformation> route))
+        if (lines.TryGetValue(type, out Dictionary<string, Line> route))
         {
-            if (route.TryGetValue(line, out LineInformation routes))
+            if (route.TryGetValue(line, out Line routes))
             {
                 return routes;
             }

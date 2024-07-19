@@ -22,4 +22,10 @@ namespace SkgtService.Models.Json
         public string Type { get; set; }
         public List<Route> Lines { get; set; }
     }
+
+    public class Line
+    {
+        public string Name { get; set; }
+        public TransportType Type { get; set; }
+    }
 }

@@ -14,62 +14,37 @@ public class ArrivalInformation
     public string Start { get; set; }
     public string Direction { get; set; }
     public TransportType VehicleType { get; set; }
-    public List<Arrival> Arrivals { get; set; } 
+    public List<Arrival> Arrivals { get; set; }
+    public int Minutes => Arrivals[0].Minutes;
 
-    public ArrivalInformation(Line line)
+    public ArrivalInformation(LineArrivalInfo line)
     {
         LineName = line.Name;
-        Start = line.Start;
-        Direction = line.Direction;
-        Arrivals = line.Arrivals;
+        //Start = line.Start;
+        string[] route = line.RouteName.Split('-');
+        if (route.Length > 1)
+            Direction = route[1].Trim();
+        else
+            Direction = line.RouteName;
+
+        Arrivals = line.Details;
 
         if (LineName[0] == 'E')
             VehicleType = Models.TransportType.Electrobus;
         if (LineName.Length == 3 && LineName[0] == '8' && VehicleType == Models.TransportType.Bus)
             VehicleType = Models.TransportType.Additional;
 
-        char[] vehicleType = line.VehicleType.ToCharArray();
-        vehicleType[0] = char.ToUpper(vehicleType[0]);
-
-        Enum.TryParse(typeof(TransportType), vehicleType, out object type);
-        VehicleType = (TransportType)type;
+        VehicleType = line.Type;
     }
 
-    public string LastTimings => "Следващи: " + String.Join(", ", Arrivals.Take(3).Select(t => t.Time));
+    public string LastTimings => "Следващи: " + String.Join(", ", Arrivals.Take(3).Select(t => t.Minutes));
 
 
     public string LastCalculated => Arrivals.Skip(1).Count() > 0 ? "Следващи: " + String.Join(", ", Arrivals.Skip(1).Take(3).Select(t =>
     {
-        TimeSpan arrival = DateTime.Parse(t.Time) - DateTime.Now;
-        int minutes = arrival.Minutes;
-
-        if (arrival.Hours > 0)
-            minutes += arrival.Hours * 60;
-
-        return minutes + " мин";
+        return t.Minutes + " мин";
     })) : "Последен";
 
-    public int Minutes
-    {
-        get
-        {
-            DateTime closest = DateTime.Parse(Arrivals[0].Time);
-
-            int minutes = (int)Math.Round((closest - DateTime.Now).TotalMinutes);
-            if (minutes < 0)
-            {
-                if (Arrivals.Count > 1)
-                {
-                    closest = DateTime.Parse(Arrivals[1].Time);
-                    minutes = (int)Math.Round((closest - DateTime.Now).TotalMinutes);
-                }
-                else
-                    minutes = 0;
-            }
-
-            return minutes;
-        }
-    }
     public string TransportType
     {
         get
