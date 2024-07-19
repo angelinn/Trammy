@@ -36,13 +36,13 @@ public class LineMapService
         this.publicTransport = publicTransport;
     }
 
-    public async Task SetupMapAsync(LineRoute route, TransportType transportType, string tileServer = null)
+    public void SetupMap(List<string> stopCodes, TransportType transportType, string tileServer = null)
     {
         Map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light", null));
         Map.Home = (h) => ZoomToBox(h, routeBox);
         LoadPinStyles();
 
-        ILayer stopsLayer = LoadStops(route, transportType);
+        ILayer stopsLayer = LoadStops(stopCodes, transportType);
         Map.Layers.Add(stopsLayer);
     }
 
@@ -73,7 +73,7 @@ public class LineMapService
         };
     }
 
-    private ILayer LoadStops(LineRoute route, TransportType transportType)
+    private ILayer LoadStops(List<string> stopCodes, TransportType transportType)
     {
         List<IFeature> features = new List<IFeature>();
 
@@ -98,9 +98,9 @@ public class LineMapService
             SymbolScale = 0.3f
         };
 
-        for (int i = 0; i < route.Codes.Count; ++i)
+        for (int i = 0; i < stopCodes.Count; ++i)
         {
-            StopInformation location = publicTransport.FindStop(route.Codes[i]);
+            StopInformation location = publicTransport.FindStop(stopCodes[i]);
             MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(location.Lon, location.Lat));
 
             if (stopMapLocation.Y > maxLon)
@@ -122,7 +122,7 @@ public class LineMapService
 
             if (i == 0)
                 style = startStyle;
-            else if (i == route.Codes.Count - 1)
+            else if (i == stopCodes.Count - 1)
                 style = finishStyle;
 
             IFeature feature = new PointFeature(stopMapLocation)

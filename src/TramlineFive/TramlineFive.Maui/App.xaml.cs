@@ -90,7 +90,7 @@ namespace TramlineFive.Maui
                     System.Diagnostics.Debug.WriteLine($"Updating stops {DateTime.Now - updated} time old");
 
                     _ = StopsLoader.UpdateStopsAsync();
-                    _ = StopsLoader.UpdateRoutesAsync();
+                    //_ = StopsLoader.UpdateRoutesAsync();
 
                     applicationService.DisplayNotification("Trammy", "Спирките са обновени");
                 }

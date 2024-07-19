@@ -10,6 +10,6 @@ namespace TramlineFive.Common.Services;
 public interface INavigationService
 {
     void ChangePage(string pageName);
-    void GoToDetails(LineViewModel line, string stop = "");
+    void GoToDetails(Line line, string stop = "");
     void GoToDetails(ArrivalInformation line, string stop);
 }

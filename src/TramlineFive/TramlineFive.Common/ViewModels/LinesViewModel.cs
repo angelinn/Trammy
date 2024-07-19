@@ -23,16 +23,19 @@ namespace TramlineFive.Common.ViewModels
         private readonly PublicTransport publicTransport;
 
         [ObservableProperty]
-        private ObservableCollection<LineViewModel> lines;
+        private ObservableCollection<Line> lines;
 
-        private List<LineViewModel> allLines;
+        private List<Line> allLines;
 
         public string SearchText { get; set; }
 
         [ObservableProperty]
-        private LineViewModel selectedLine;
+        private Line selectedLine;
 
-        partial void OnSelectedLineChanged(LineViewModel value)
+        [ObservableProperty]
+        private bool isLoading;
+
+        partial void OnSelectedLineChanged(Line value)
         {
             SelectedLine = null;
 
@@ -53,10 +56,12 @@ namespace TramlineFive.Common.ViewModels
             if (allLines != null)
                 return;
 
-            await publicTransport.LoadLinesAsync();
+            IsLoading = true;
+
+            if (publicTransport.Lines.Count == 0)
+                await publicTransport.LoadLinesAsync();
 
             allLines = new(publicTransport.FindByType(type)
-                .Select(p => new LineViewModel { Type = type, Routes = null, Name = p.Name })
                 .OrderBy(l => {
                     if (Int32.TryParse(l.Name, out int numberName))
                         return numberName;
@@ -65,9 +70,11 @@ namespace TramlineFive.Common.ViewModels
                     }));
 
             Lines = new(allLines);
+
+            IsLoading = false;
         }
 
-        private void OpenDetails(LineViewModel selected)
+        private void OpenDetails(Line selected)
         {
             NavigationService.GoToDetails(selected);
         }
@@ -75,7 +82,7 @@ namespace TramlineFive.Common.ViewModels
         [RelayCommand]
         private void FilterLines()
         {
-            Lines = new ObservableCollection<LineViewModel>(allLines.Where(t => t.Name.Contains(SearchText)));
+            Lines = new ObservableCollection<Line>(allLines.Where(t => t.Name.Contains(SearchText)));
         }
 
     }

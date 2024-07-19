@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace SkgtService.Models.Json
@@ -27,5 +28,14 @@ namespace SkgtService.Models.Json
     {
         public string Name { get; set; }
         public TransportType Type { get; set; }
+        public string Color { get; set; }
+        [JsonProperty("ext_id")]
+        public string ExtId { get; set; }
+        public string Icon { get; set; }
+        public int IsWeekend { get; set; }
+        [JsonProperty("line_id")]
+        public int LineID { get; set; }
+
+
     }
 }

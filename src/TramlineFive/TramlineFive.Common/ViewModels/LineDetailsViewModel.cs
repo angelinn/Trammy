@@ -6,6 +6,7 @@ using Mapsui;
 using Newtonsoft.Json.Linq;
 using SkgtService;
 using SkgtService.Models;
+using SkgtService.Models.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,11 +38,11 @@ public partial class CodeViewModel : BaseViewModel
 
 public class RouteViewModel
 {
-    public RouteViewModel(LineRoute route, string first, string last)
+    public RouteViewModel(List<string> codes, string first, string last)
     {
         First = first;
         Last = last;
-        Codes = route.Codes.Select(code => new CodeViewModel { Code = code }).ToList();
+        Codes = codes.Select(code => new CodeViewModel { Code = code }).ToList();
     }
 
     public string First { get; set; }
@@ -62,7 +63,10 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
     public LineMapService LineMapService => lineMapService;
 
     [ObservableProperty]
-    private LineViewModel line;
+    private Line line;
+
+    [ObservableProperty]
+    private List<CodeViewModel> codes;
 
     public BaseLineDetailsViewModel(PublicTransport publicTransport)
     {
@@ -90,12 +94,18 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
         }
     }
 
-    public void Load(LineViewModel line, LineRoute route)
+    public async Task Load(Line line)
     {
-        Line = line;
-        Route = new RouteViewModel(route, publicTransport.FindStop(route.Codes[0]).PublicName, publicTransport.FindStop(route.Codes[^1]).PublicName);
+        if (!publicTransport.Schedules.ContainsKey(line))
+            await publicTransport.LoadSchedule(line);
 
-        lineMapService.SetupMapAsync(route, line.Type);
+        ScheduleResponse schedule = publicTransport.Schedules[line];
+        List<string> stringCodes = schedule.Routes[0].Segments.Select(s => s.Stop.Code).ToList();
+
+        Codes = stringCodes.Select(c => new CodeViewModel() { Code = c }).ToList();
+        Line = line;
+
+        lineMapService.SetupMap(stringCodes, line.Type);
     }
 
     [ObservableProperty]
@@ -105,7 +115,7 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
     {
         if (value != null)
         {
-            foreach (CodeViewModel codeVm in route.Codes)
+            foreach (CodeViewModel codeVm in Codes)
             {
                 if (codeVm.Code == value.Code && codeVm.IsHighlighted)
                 {

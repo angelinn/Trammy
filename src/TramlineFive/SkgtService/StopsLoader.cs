@@ -21,7 +21,8 @@ public static class StopsLoader
 {
     private const string STOPS_URL = "https://sofiatraffic.bg/bg/trip/getAllStops";
     private const string LINES_URL = "https://sofiatraffic.bg/bg/trip/getLines";
-    private const string ROUTES_URL = "https://routes.sofiatraffic.bg/resources/routes.json";
+    //private const string ROUTES_URL = "https://routes.sofiatraffic.bg/resources/routes.json";
+    private const string GET_SCHEDULE_URL = "https://sofiatraffic.bg/bg/trip/getSchedule";
     private static string PATH = String.Empty;
     private static string ROUTES_PATH = String.Empty;
     private static string LINES_PATH = String.Empty;
@@ -53,18 +54,18 @@ public static class StopsLoader
 
     }
 
-    public static async Task<List<Routes>> LoadRoutesAsync()
-    {
-        if (!File.Exists(ROUTES_PATH))
-        {
-            await UpdateRoutesAsync();
-        }
+    //public static async Task<List<Routes>> LoadRoutesAsync()
+    //{
+    //    if (!File.Exists(ROUTES_PATH))
+    //    {
+    //        await UpdateRoutesAsync();
+    //    }
 
-        string json = File.ReadAllText(ROUTES_PATH);
-        List<Routes> routes = JsonConvert.DeserializeObject<List<Routes>>(json);
+    //    string json = File.ReadAllText(ROUTES_PATH);
+    //    List<Routes> routes = JsonConvert.DeserializeObject<List<Routes>>(json);
 
-        return routes;
-    }
+    //    return routes;
+    //}
 
     public static List<StopLocation> LoadStops(Stream stream)
     {
@@ -88,22 +89,22 @@ public static class StopsLoader
         OnStopsUpdated?.Invoke(null, new EventArgs());
     }
 
-    public static async Task UpdateRoutesAsync()
-    {
-        using HttpClient client = new HttpClient();
+    //public static async Task UpdateRoutesAsync()
+    //{
+    //    using HttpClient client = new HttpClient();
 
-        byte[] stops = await client.GetByteArrayAsync(ROUTES_URL);
-        File.WriteAllBytes(ROUTES_PATH, stops);
+    //    byte[] stops = await client.GetByteArrayAsync(ROUTES_URL);
+    //    File.WriteAllBytes(ROUTES_PATH, stops);
 
-        //OnStopsUpdated?.Invoke(null, new EventArgs());
-    }
+    //    //OnStopsUpdated?.Invoke(null, new EventArgs());
+    //}
 
     public static async Task GetLinesAsync()
     {
         HttpResponseMessage response = await sofiaHttpClient.PostAsync(LINES_URL, new StringContent("", null, "application/json"));
         string lines = await response.Content.ReadAsStringAsync();
         SentrySdk.CaptureMessage($"update lines: {response.StatusCode}, length: {lines.Length}");
-        
+
         File.WriteAllText(LINES_PATH, lines);
     }
 
@@ -120,6 +121,16 @@ public static class StopsLoader
         return lines;
     }
 
+
+    public static async Task<ScheduleResponse> GetSchedule(Line line)
+    {
+        string payload = JsonConvert.SerializeObject(line);
+        HttpResponseMessage response = await sofiaHttpClient.PostAsync(GET_SCHEDULE_URL, new StringContent(payload, Encoding.UTF8, "application/json"));
+
+        string responseJson = await response.Content.ReadAsStringAsync();
+        ScheduleResponse schedule = JsonConvert.DeserializeObject<ScheduleResponse>(responseJson);
+        return schedule;
+    }
 
     public static void ClearData()
     {

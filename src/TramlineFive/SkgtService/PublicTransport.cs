@@ -7,6 +7,7 @@ using SkgtService.Models.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Formats.Asn1.AsnWriter;
@@ -18,6 +19,7 @@ public class PublicTransport
     private Dictionary<string, StopInformation> stopsHash = new();
     private Dictionary<string, Dictionary<string, Line>> lines = new();
     private Dictionary<string, List<Route>> routes = new();
+    private Dictionary<Line, ScheduleResponse> schedules = new();
 
     private List<StopInformation> stops;
 
@@ -33,6 +35,7 @@ public class PublicTransport
     }
 
     public Dictionary<string, Dictionary<string, Line>> Lines => lines;
+    public Dictionary<Line, ScheduleResponse> Schedules => schedules;
 
 
     public async Task LoadLinesAsync()
@@ -189,5 +192,11 @@ public class PublicTransport
         }
 
         throw new TramlineFiveException($"Could not find type {type}");
+    }
+
+    public async Task LoadSchedule(Line line)
+    {
+        ScheduleResponse schedule = await StopsLoader.GetSchedule(line);
+        schedules.Add(line, schedule);
     }
 }

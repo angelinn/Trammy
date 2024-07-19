@@ -32,6 +32,8 @@
             </SearchBar.Behaviors>
         </SearchBar>
 
+        <ActivityIndicator Grid.Row="1" IsVisible="{Binding IsLoading}" IsEnabled="{Binding IsLoading}" />
+
         <ListView Grid.Row="1" ItemsSource="{Binding Lines}" SelectedItem="{Binding SelectedLine, Mode=TwoWay}" RowHeight="60" SeparatorVisibility="None">
 
             <ListView.ItemTemplate>

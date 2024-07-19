@@ -32,7 +32,7 @@
 
         <mapsui:MapControl x:Name="map" />
 
-        <ListView x:Name="stopsList" ItemsSource="{Binding Route.Codes}" RowHeight="60" SeparatorVisibility="None" SelectedItem="{Binding SelectedStop, Mode=TwoWay}" Grid.Row="1">
+        <ListView x:Name="stopsList" ItemsSource="{Binding Codes}" RowHeight="60" SeparatorVisibility="None" SelectedItem="{Binding SelectedStop, Mode=TwoWay}" Grid.Row="1">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>

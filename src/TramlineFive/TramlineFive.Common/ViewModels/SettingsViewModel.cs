@@ -152,7 +152,7 @@ namespace TramlineFive.Common.ViewModels
             IsUpdatingStops = true;
 
             await StopsLoader.UpdateStopsAsync();
-            await StopsLoader.UpdateRoutesAsync();
+            //await StopsLoader.UpdateRoutesAsync();
 
             //MessengerInstance.Send<RefreshStopsMessage>();
 
