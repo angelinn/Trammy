@@ -111,6 +111,10 @@ public class PublicTransport
 
     public StopInformation FindStop(string code)
     {
+        string zeroes = new string('0', 4 - code.Length);
+        if (zeroes.Length > 0)
+            code = zeroes + code;
+
         if (stopsHash.TryGetValue(code, out StopInformation stopInformation))
             return stopInformation;
 
@@ -198,5 +202,23 @@ public class PublicTransport
     {
         ScheduleResponse schedule = await StopsLoader.GetSchedule(line);
         schedules.Add(line, schedule);
+
+        foreach (var route in schedule.Routes)
+        {
+            foreach (var stop in route.Segments)
+            {
+                if (!stopsHash.ContainsKey(stop.Stop.Code))
+                {
+                    string zeroes = new string('0', 4 - stop.Stop.Code.Length);
+                    stopsHash[zeroes + stop.Stop.Code] = new StopInformation
+                    {
+                        Code = zeroes + stop.Stop.Code,
+                        Lat = double.Parse(stop.Stop.Latitude),
+                        Lon = double.Parse(stop.Stop.Longitude),
+                        PublicName = stop.Stop.Name
+                    };
+                }
+            }
+        }
     }
 }

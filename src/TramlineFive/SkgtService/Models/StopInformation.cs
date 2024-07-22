@@ -15,6 +15,11 @@ public class StopInformation
     public string PublicName { get; set; }
     public List<LineInformation> Lines { get; set; } = new();
 
+    public StopInformation()
+    {
+
+    }
+
     public StopInformation(StopLocation stop)
     {
         Lat = stop.Lat;

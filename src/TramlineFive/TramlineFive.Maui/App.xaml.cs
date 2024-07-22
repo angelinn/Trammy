@@ -13,6 +13,7 @@ using Microsoft.Maui.Controls.PlatformConfiguration;
 using TramlineFive.Services.Main;
 using CommunityToolkit.Mvvm.Messaging;
 using SkgtService.Parsers;
+using System.Diagnostics;
 
 namespace TramlineFive.Maui
 {
@@ -22,6 +23,7 @@ namespace TramlineFive.Maui
         public App(PathService dbPathService, SofiaHttpClient sofiaHttpClient)
         {
             InitializeComponent();
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
 
             this.dbPathService = dbPathService;
             TramlineFiveContext.DatabasePath = dbPathService.GetDBPath();
@@ -32,6 +34,11 @@ namespace TramlineFive.Maui
             StopsLoader.Initialize(dbPathService.GetBaseFilePath(), sofiaHttpClient);
 
             MainPage = new AppShell();
+        }
+
+        private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        {
+            Debug.WriteLine($"***** Handling Unhandled Exception *****: {e.Exception.Message}");
         }
 
         private void OnThemeChanged(ChangeThemeMessage m)

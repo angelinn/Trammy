@@ -81,6 +81,13 @@
                     </DataTemplate>
                 </ShellContent.ContentTemplate>
             </ShellContent>
+            <ShellContent Route="Subway" Title="Метро">
+                <ShellContent.ContentTemplate>
+                    <DataTemplate>
+                        <pages:LinesTab BindingContext="{Binding SubwayLinesViewModel, Source={StaticResource Locator}}" />
+                    </DataTemplate>
+                </ShellContent.ContentTemplate>
+            </ShellContent>
         </Tab>
     </FlyoutItem>
 

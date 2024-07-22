@@ -23,6 +23,13 @@ using YamlDotNet.Core.Tokens;
 
 namespace TramlineFive.Common.ViewModels;
 
+public enum RouteType
+{
+    None = -1,
+    Forward,
+    Backward
+}
+
 public class ZoomToLineStopMessage
 {
     public string Code { get; set; }
@@ -58,7 +65,7 @@ public class ScrollToHighlightedStopMessage
 public abstract partial class BaseLineDetailsViewModel : BaseViewModel
 {
     private readonly LineMapService lineMapService;
-    private readonly PublicTransport publicTransport;
+    protected readonly PublicTransport publicTransport;
 
     public LineMapService LineMapService => lineMapService;
 
@@ -83,7 +90,7 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
 
     public async void SetHighlightedStop(string stop)
     {
-        CodeViewModel code = route.Codes.FirstOrDefault(code => code.Code == stop);
+        CodeViewModel code = Codes.FirstOrDefault(code => code.Code == stop);
         if (code != null)
         {
             code.IsHighlighted = true;
@@ -99,14 +106,18 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
         if (!publicTransport.Schedules.ContainsKey(line))
             await publicTransport.LoadSchedule(line);
 
-        ScheduleResponse schedule = publicTransport.Schedules[line];
-        List<string> stringCodes = schedule.Routes[0].Segments.Select(s => s.Stop.Code).ToList();
+        Line = line;
+        List<string> stringCodes = LoadOwnLinesFromDb();
 
         Codes = stringCodes.Select(c => new CodeViewModel() { Code = c }).ToList();
-        Line = line;
+        StopInformation stop = publicTransport.FindStop(Codes.First().Code);
+        if (stop != null)
+            TargetStop = stop.PublicName;
 
         lineMapService.SetupMap(stringCodes, line.Type);
     }
+
+    protected abstract List<string> LoadOwnLinesFromDb();
 
     [ObservableProperty]
     private CodeViewModel selectedStop;
@@ -133,25 +144,30 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
         }
     }
 
-    public string TargetStop => Route?.First;
-
     [ObservableProperty]
-    private RouteViewModel route;
-
-    partial void OnRouteChanged(RouteViewModel value)
-    {
-        OnPropertyChanged(nameof(TargetStop));
-    }
+    private string targetStop;
 }
 
 public class ForwardLineDetailsViewModel : BaseLineDetailsViewModel
 {
     public ForwardLineDetailsViewModel(PublicTransport publicTransport) : base(publicTransport)
     { }
+
+    protected override List<string> LoadOwnLinesFromDb()
+    {
+        ScheduleResponse schedule = publicTransport.Schedules[Line];
+        return schedule.Routes[0].Segments.Select(s => s.Stop.Code).ToList();
+    }
 }
 
 public class LineDetailsViewModel : BaseLineDetailsViewModel
 {
     public LineDetailsViewModel(PublicTransport publicTransport) : base(publicTransport)
     { }
+
+    protected override List<string> LoadOwnLinesFromDb()
+    {
+        ScheduleResponse schedule = publicTransport.Schedules[Line];
+        return schedule.Routes[^1].Segments.Select(s => s.Stop.Code).ToList();
+    }
 }
