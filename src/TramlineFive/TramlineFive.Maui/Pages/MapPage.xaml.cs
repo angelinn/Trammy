@@ -4,6 +4,7 @@ using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.Layers;
 using Mapsui.Projections;
+using Mapsui.UI;
 using Mapsui.UI.Maui;
 using Mapsui.Widgets;
 using Mapsui.Widgets.ScaleBar;
@@ -32,6 +33,7 @@ namespace TramlineFive.Pages
             InitializeComponent();
             mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
             mapService.LoadInitialMap(map.Map).Wait();
+            map.UpdateInterval = 8;
 
             //map.Map?.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
 
