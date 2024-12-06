@@ -55,7 +55,7 @@
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="history" />
             </ShellContent.Icon>
         </ShellContent>
-        <Tab Route="Lines" Shell.TabBarTitleColor="{DynamicResource IconsColor}" Shell.TabBarForegroundColor="{DynamicResource IconsColor}"  Title="Линии" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True">
+        <Tab Route="Lines" Shell.TabBarTitleColor="{DynamicResource IconsColor}" Shell.TabBarForegroundColor="{DynamicResource IconsColor}"  Title="Линии" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" IsVisible="False">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="departure_board" />
             </Tab.Icon>
