@@ -9,6 +9,7 @@ using TramlineFive.Common.ViewModels.Locator;
 using TramlineFive.Maui.Services;
 using TramlineFive.Services.Main;
 using SkgtService;
+using Plugin.LocalNotification;
 
 namespace TramlineFive.Maui
 {
@@ -56,7 +57,8 @@ namespace TramlineFive.Maui
                     fonts.AddFont("MaterialIconsTwoToneRegular.otf", "mit");
                 })
                 .UseMauiCommunityToolkit()
-                .UseMauiCompatibility();
+                .UseMauiCompatibility()
+                .UseLocalNotification();
 
 #if ANDROID
             Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (handler, view) =>

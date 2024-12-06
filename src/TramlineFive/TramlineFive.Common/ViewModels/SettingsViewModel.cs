@@ -158,7 +158,7 @@ namespace TramlineFive.Common.ViewModels
 
             RefreshStopsUpdatedTime();
 
-            ApplicationService.DisplayNotification("Tramline 5", "Спирките са обновени");
+            await ApplicationService.DisplayNotification("Trammy", "Спирките са обновени");
 
             IsUpdatingStops = false;
             OnPropertyChanged(nameof(Updated));

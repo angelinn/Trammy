@@ -25,7 +25,7 @@ public interface IApplicationService
     Task<bool> DisplayAlertAsync(string title, string message, string ok, string cancel = "");
     void DisplayToast(string message);
     void MakeSnack(string message);
-    void DisplayNotification(string title, string message);
+    Task<int> DisplayNotification(string title, string message);
     void VibrateShort();
     void OpenLocationUI();
     Task<bool> RequestLocationPermissions();

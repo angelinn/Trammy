@@ -39,8 +39,8 @@ namespace TramlineFive.Maui.Services
                 notificationChannel.Description = "Channel description";
                 notificationChannel.EnableLights(true);
                 notificationChannel.LightColor = Android.Graphics.Color.AliceBlue;
-                notificationChannel.SetVibrationPattern(new long[] { 0, 1000, 500, 1000 });
-                notificationChannel.EnableVibration(true);
+                //notificationChannel.SetVibrationPattern(new long[] { 0, 1000, 500, 1000 });
+                //notificationChannel.EnableVibration(true);
                 manager.CreateNotificationChannel(notificationChannel);
             }
 

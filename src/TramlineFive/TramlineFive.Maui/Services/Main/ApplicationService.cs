@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using Plugin.LocalNotification;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -141,9 +142,18 @@ public class ApplicationService : IApplicationService
         snack.Show();
     }
 
-    public void DisplayNotification(string title, string message)
+    public async Task<int> DisplayNotification(string title, string message)
     {
-        pushService.PushNotification(title, message);
+        int id = new Random().Next();
+        var notification = new NotificationRequest
+        {
+            NotificationId = id,
+            Title = title,
+            Description = message
+        };
+
+        await LocalNotificationCenter.Current.Show(notification);
+        return id;
     }
 
     public int GetIntSetting(string key, int defaultValue)

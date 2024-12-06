@@ -14,6 +14,7 @@ using TramlineFive.Services.Main;
 using CommunityToolkit.Mvvm.Messaging;
 using SkgtService.Parsers;
 using System.Diagnostics;
+using Plugin.LocalNotification;
 
 namespace TramlineFive.Maui
 {
@@ -69,7 +70,7 @@ namespace TramlineFive.Maui
             System.Diagnostics.Debug.WriteLine("theme set");
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
             base.OnStart();
 
@@ -99,7 +100,7 @@ namespace TramlineFive.Maui
                     _ = StopsLoader.UpdateStopsAsync();
                     //_ = StopsLoader.UpdateRoutesAsync();
 
-                    applicationService.DisplayNotification("Trammy", "Спирките са обновени");
+                    _ = applicationService.DisplayNotification("Trammy", "Спирките са обновени");
                 }
             }
 
