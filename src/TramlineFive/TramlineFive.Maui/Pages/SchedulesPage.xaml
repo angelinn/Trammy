@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TramlineFive.Maui.Pages.SchedulesPage"
+             Title="SchedulesPage"
+             BindingContext="{Binding ScheduleViewModel, Source={StaticResource Locator}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <VerticalStackLayout>
+            <Label Text="{Binding StopName}" HorizontalOptions="Center" Margin="0,10,0,20" FontSize="24" />
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Label Text="Делник" VerticalOptions="Center" FontSize="18" />
+                <Switch VerticalOptions="Center" Margin="10,5,15,0" IsToggled="{Binding IsWeekend}" />
+                <Label Text="Празник" VerticalOptions="Center" FontSize="18" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <ListView Grid.Row="1" ItemsSource="{Binding ScheduleArrivals}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <Label Text="{Binding Time}" HorizontalOptions="Center" HorizontalTextAlignment="Center" VerticalOptions="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Secondary}" Value="True">
+                                        <Setter Property="TextColor" Value="Red" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </ViewCell.View>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>

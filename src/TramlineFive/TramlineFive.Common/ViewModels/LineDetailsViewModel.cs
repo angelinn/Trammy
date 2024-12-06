@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Mapsui;
+using NetTopologySuite.Triangulate;
 using Newtonsoft.Json.Linq;
 using SkgtService;
 using SkgtService.Models;
@@ -84,8 +85,9 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
     [RelayCommand]
     public void CheckStop(CodeViewModel code)
     {
-        Messenger.Send(new ChangePageMessage("//Map"));
-        Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(code.Code, true)));
+        NavigationService.GoToSchedule(currentRoute, code.Code);
+        //Messenger.Send(new ChangePageMessage("//Map"));
+        //Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(code.Code, true)));
     }
 
     public async void SetHighlightedStop(string stop)
@@ -107,7 +109,9 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
             await publicTransport.LoadSchedule(line);
 
         Line = line;
-        List<string> stringCodes = LoadOwnLinesFromDb();
+
+        currentRoute = LoadOwnLinesFromDb();
+        List<string> stringCodes = currentRoute.Segments.Select(s => s.Stop.Code).ToList();
 
         Codes = stringCodes.Select(c => new CodeViewModel() { Code = c }).ToList();
         StopInformation stop = publicTransport.FindStop(Codes.First().Code);
@@ -117,7 +121,8 @@ public abstract partial class BaseLineDetailsViewModel : BaseViewModel
         lineMapService.SetupMap(stringCodes, line.Type);
     }
 
-    protected abstract List<string> LoadOwnLinesFromDb();
+    protected RouteResponse currentRoute;
+    protected abstract RouteResponse LoadOwnLinesFromDb();
 
     [ObservableProperty]
     private CodeViewModel selectedStop;
@@ -153,10 +158,12 @@ public class ForwardLineDetailsViewModel : BaseLineDetailsViewModel
     public ForwardLineDetailsViewModel(PublicTransport publicTransport) : base(publicTransport)
     { }
 
-    protected override List<string> LoadOwnLinesFromDb()
+    protected override RouteResponse LoadOwnLinesFromDb()
     {
         ScheduleResponse schedule = publicTransport.Schedules[Line];
-        return schedule.Routes[0].Segments.Select(s => s.Stop.Code).ToList();
+        List<RouteResponse> maxRoutes = schedule.Routes.OrderByDescending(r => r.Segments.Count).ToList();
+
+        return maxRoutes[0];
     }
 }
 
@@ -165,9 +172,11 @@ public class LineDetailsViewModel : BaseLineDetailsViewModel
     public LineDetailsViewModel(PublicTransport publicTransport) : base(publicTransport)
     { }
 
-    protected override List<string> LoadOwnLinesFromDb()
+    protected override RouteResponse LoadOwnLinesFromDb()
     {
         ScheduleResponse schedule = publicTransport.Schedules[Line];
-        return schedule.Routes[^1].Segments.Select(s => s.Stop.Code).ToList();
+        List<RouteResponse> maxRoutes = schedule.Routes.OrderByDescending(r => r.Segments.Count).ToList();
+
+        return maxRoutes[1];
     }
 }

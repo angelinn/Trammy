@@ -13,7 +13,6 @@ public class StopInformation
     public double Lon { get; set; }
     public string Code { get; set; }
     public string PublicName { get; set; }
-    public List<LineInformation> Lines { get; set; } = new();
 
     public StopInformation()
     {

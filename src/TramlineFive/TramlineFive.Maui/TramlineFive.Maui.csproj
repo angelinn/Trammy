@@ -275,6 +275,9 @@
 			<SubType>Designer</SubType>
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Pages\SchedulesPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Pages\SettingsPage.xaml">
 			<SubType>Designer</SubType>
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>

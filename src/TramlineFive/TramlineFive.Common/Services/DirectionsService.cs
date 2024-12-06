@@ -127,8 +127,8 @@ public class DirectionsService
                 // if the stop is different, that means the user has to walk from one stop to another
                 if (anotherStop != stop)
                 {
-                    if (anotherStop.Lines.Count == 0)
-                        continue;
+                    //if (anotherStop.Lines.Count == 0)
+                    //    continue;
 
                     float distance = (float)Math.Sqrt(math.DistanceSquaredBetweenPoints(new float[] { (float)stop.Lat, (float)stop.Lon }, new float[] { (float)anotherStop.Lat, (float)anotherStop.Lon }));
 
@@ -225,25 +225,25 @@ public class DirectionsService
     private List<Node> BuildNode(StopInformation stop)
     {
         List<Node> result = new List<Node>();
-        foreach (var line in stop.Lines)
-        {
-            if (line.Name[0] == 'N')
-                continue;
+        //foreach (var line in stop.Lines)
+        //{
+        //    if (line.Name[0] == 'N')
+        //        continue;
 
-            // 800 lines do not work on weekends
-            if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
-            {
-                if (line.VehicleType == TransportType.Additional)
-                    continue;
-            }
-            // 103 does only work on weekends
-            else if (line.Name == "103")
-                continue;
+        //    // 800 lines do not work on weekends
+        //    if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+        //    {
+        //        if (line.VehicleType == TransportType.Additional)
+        //            continue;
+        //    }
+        //    // 103 does only work on weekends
+        //    else if (line.Name == "103")
+        //        continue;
 
-            result.Add(new Node(stop, line));
-        }
+        //    result.Add(new Node(stop, line));
+        //}
 
-        result.Add(new Node(stop, null));
+        //result.Add(new Node(stop, null));
 
         return result;
     }

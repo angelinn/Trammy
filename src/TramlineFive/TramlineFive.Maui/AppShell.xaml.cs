@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using TramlineFive.Common.Messages;
+using TramlineFive.Maui.Pages;
 using TramlineFive.Pages;
 
 namespace TramlineFive.Maui
@@ -27,6 +28,7 @@ namespace TramlineFive.Maui
             });
 
             WeakReferenceMessenger.Default.Register<ChangePageMessage>(this, (r, m) => GoToAsync($"{m.Page}"));
+            Routing.RegisterRoute("schedule", typeof(SchedulesPage));
         }
     }
 }

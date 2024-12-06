@@ -1,5 +1,5 @@
 {
-  "carto-light": "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+  "carto-light": "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png",
   "wikimedia": "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png",
   "osm": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
   "humanitarian": "https://b.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",

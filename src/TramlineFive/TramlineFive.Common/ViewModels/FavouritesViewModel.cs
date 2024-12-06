@@ -87,7 +87,7 @@ namespace TramlineFive.Common.ViewModels
 
         private void OnFavouriteAdded(FavouriteDomain favourite)
         {
-            favourite.Lines = publicTransport.FindStop(favourite.StopCode).Lines;
+            //favourite.Lines = publicTransport.FindStop(favourite.StopCode).Lines;
             Favourites.Add(favourite);
 
             OnPropertyChanged(nameof(HasFavourites));
@@ -118,8 +118,8 @@ namespace TramlineFive.Common.ViewModels
             IsLoading = true;
 
             Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).OrderByDescending(f => f.TimesClicked));
-            foreach (FavouriteDomain favourite in Favourites)
-                favourite.Lines = publicTransport.FindStop(favourite.StopCode).Lines;
+            //foreach (FavouriteDomain favourite in Favourites)
+                //favourite.Lines = publicTransport.FindStop(favourite.StopCode).Lines;
 
             IsLoading = false;
 

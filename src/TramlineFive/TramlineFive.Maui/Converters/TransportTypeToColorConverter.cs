@@ -21,6 +21,7 @@ namespace TramlineFive.Converters
                 {
                     TransportType.Tram => "tram",
                     TransportType.Trolley => "trolley",
+                    TransportType.Subway => "subway",
                     _ => "bus"
                 }; ;
             }
@@ -32,9 +33,10 @@ namespace TramlineFive.Converters
             {
                 "Автобус" => isLightTheme ? Colors.Red : Colors.Crimson,
                 "Трамвай" => isLightTheme ? Colors.Orange : Colors.DarkOrange,
-                "Тролей" => isLightTheme ? Colors.Blue : Colors.DarkBlue,
+                "Тролей" => isLightTheme ? Color.FromArgb("2aa9e0") : Colors.DarkBlue,
                 "Електробус" =>  isLightTheme ? Colors.Green : Colors.DarkGreen,
                 "Допълнителна" => isLightTheme ? Color.FromArgb("13b79d") : Color.FromArgb("13b79d"),
+                "Метро" => Colors.Blue,
                 "bus" => Colors.Crimson,
                 "tram" => Colors.DarkOrange,
                 "trolley" => Colors.RoyalBlue,

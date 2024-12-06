@@ -19,6 +19,7 @@ public class TransportTypeToTextConverter : IValueConverter
             {
                 TransportType.Tram => "tram",
                 TransportType.Trolley => "trolley",
+                TransportType.Subway => "subway",
                 _ => "bus"
             }; ;
         }
@@ -31,6 +32,7 @@ public class TransportTypeToTextConverter : IValueConverter
             "bus" => "Автобус",
             "tram" => "Твамвай",
             "trolley" => "Тролей",
+            "subway" => "Метро",
             _ => "Транспорт",
         };
     }

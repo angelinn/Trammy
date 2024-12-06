@@ -21,7 +21,7 @@ public static class TileServerFactory
 
     private static HttpTileSource CreateTileSource(string name)
     {
-        return new HttpTileSource(new GlobalSphericalMercator(0, 18),
+        return new HttpTileSource(new GlobalSphericalMercator(0, 19),
             TileServerSettings.TileServers[name],
             //"https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png",
             new[] { "a", "b", "c" }, name: name,

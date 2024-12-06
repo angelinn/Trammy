@@ -35,6 +35,15 @@ public class NavigationService : INavigationService
             Toast.Make($"Не може да се отиде на спирка {stop} за {line.LineName}").Show();
     }
 
+    public async Task GoToSchedule(RouteResponse route, string stopCode)
+    {
+        await Shell.Current.GoToAsync("schedule", new Dictionary<string, object>
+        {
+            ["route"] = route,
+            ["stopCode"] = stopCode
+        });
+    }
+
     public async Task GoToDetails(Line line, string stop)
     {
         LineDetailsViewModel vm = ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>();

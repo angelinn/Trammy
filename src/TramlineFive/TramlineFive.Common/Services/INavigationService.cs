@@ -13,4 +13,5 @@ public interface INavigationService
     void ChangePage(string pageName);
     Task GoToDetails(Line line, string stop = "");
     void GoToDetails(ArrivalInformation line, string stop);
+    Task GoToSchedule(RouteResponse route, string stopCode);
 }

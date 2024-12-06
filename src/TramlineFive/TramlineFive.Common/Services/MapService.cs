@@ -186,13 +186,14 @@ public class MapService
 
             SymbolStyle symbolStyle = pinStyle;
             Offset offset = new Offset(0, -32);
-            if (location.Lines.Any(line => line.VehicleType == TransportType.Trolley))
-                symbolStyle = trolleyPinStyle;
-            else if (location.Lines.Any(line => line.VehicleType == TransportType.Tram))
-            {
-                symbolStyle = tramPinStyle;
-                offset = new Offset(0, -40);
-            }
+
+            //if (location.Lines.Any(line => line.VehicleType == TransportType.Trolley))
+            //    symbolStyle = trolleyPinStyle;
+            //else if (location.Lines.Any(line => line.VehicleType == TransportType.Tram))
+            //{
+            //    symbolStyle = tramPinStyle;
+            //    offset = new Offset(0, -40);
+            //}
 
             IFeature feature = new PointFeature(stopMapLocation)
             {
