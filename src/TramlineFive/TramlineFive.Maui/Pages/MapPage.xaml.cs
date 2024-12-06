@@ -159,5 +159,12 @@ namespace TramlineFive.Pages
             if (map != null)
                 map.HeightRequest = Height;
         }
+
+        protected override void OnNavigatedTo(NavigatedToEventArgs args)
+        {
+            base.OnNavigatedTo(args);
+            if (map != null)
+                map.HeightRequest -= 1;
+        }
     }
 }

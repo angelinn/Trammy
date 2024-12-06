@@ -70,6 +70,7 @@ namespace TramlineFive.Maui
 		    builder.Logging.AddDebug();
 #endif
 
+            Mapsui.UI.Maui.MapControl.UseGPU = true;
             return builder.Build();
         }
 
