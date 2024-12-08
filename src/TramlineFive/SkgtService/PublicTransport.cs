@@ -111,9 +111,9 @@ public class PublicTransport
 
     public StopInformation FindStop(string code)
     {
-        string zeroes = new string('0', 4 - code.Length);
-        if (zeroes.Length > 0)
-            code = zeroes + code;
+        //string zeroes = new string('0', 4 - code.Length);
+        //if (zeroes.Length > 0)
+        //    code = zeroes + code;
 
         if (stopsHash.TryGetValue(code, out StopInformation stopInformation))
             return stopInformation;

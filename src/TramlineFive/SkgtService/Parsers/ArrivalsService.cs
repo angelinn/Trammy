@@ -28,9 +28,13 @@ public class ArrivalsService
         this.sofiaHttpClient = sofiaHttpClient;
     }
 
-    public async Task<StopResponse> GetByStopCodeAsync(string stopCode)
+    public async Task<StopResponse> GetByStopCodeAsync(string stopCode, TransportType? type = null)
     {
-        string payload = $"{{ \"stop\": \"{stopCode}\" }}";
+        string payload = String.Empty;
+        if (type.HasValue)
+            payload = $"{{ \"stop\": \"{stopCode}\", \"type\": {(int)type.Value} }}";
+        else
+            payload = $"{{ \"stop\": \"{stopCode}\" }}";
         
         HttpResponseMessage response = await sofiaHttpClient.PostAsync(ARRIVALS_API_URL, new StringContent(payload, Encoding.UTF8, "application/json"));
 

@@ -13,6 +13,7 @@ public class StopInformation
     public double Lon { get; set; }
     public string Code { get; set; }
     public string PublicName { get; set; }
+    public TransportType Type { get; set; }
 
     public StopInformation()
     {
@@ -25,6 +26,7 @@ public class StopInformation
         Lon = stop.Lon;
         Code = stop.Code;
         PublicName = stop.PublicName;
+        Type = stop.Type;
     }
 }
 

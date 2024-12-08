@@ -23,6 +23,37 @@ namespace SkgtService.Parsers
             httpClient = new HttpClient(clientHandler);
         }
 
+        public async Task<HttpResponseMessage> GetAsync(string url, Dictionary<string, string> headers = null)
+        {
+            if (cookies.Count == 0)
+            {
+                await httpClient.GetAsync(BASE_URL);
+            }
+
+            Cookie token = cookies.GetAllCookies()["XSRF-TOKEN"];
+            if (token == null)
+            {
+                return null;
+            }
+
+            HttpRequestMessage request = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(url)
+            };
+
+            if (headers != null)
+            {
+                foreach (KeyValuePair<string, string> header in headers)
+                {
+                    request.Headers.Add(header.Key, header.Value);
+                }
+            }
+
+            request.Headers.Add("X-Xsrf-Token", Uri.UnescapeDataString(token.Value));
+            return await httpClient.SendAsync(request);
+        }
+
         public async Task<HttpResponseMessage> PostAsync(string url, HttpContent content)
         {
             if (cookies.Count == 0)

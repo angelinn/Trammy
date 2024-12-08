@@ -28,13 +28,15 @@ namespace TramlineFive.Common.ViewModels
 
         private readonly ArrivalsService arrivalsService;
         private readonly VersionService versionService;
+        private readonly PublicTransport publicTransport;
 
         private string stopCode;
 
-        public VirtualTablesViewModel(ArrivalsService arrivalsService, VersionService versionService)
+        public VirtualTablesViewModel(ArrivalsService arrivalsService, VersionService versionService, PublicTransport publicTransport)
         {
             this.arrivalsService = arrivalsService;
             this.versionService = versionService;
+            this.publicTransport = publicTransport;
 
 
             Messenger.Register<StopSelectedMessage>(this, async (r, sc) =>
@@ -110,7 +112,9 @@ namespace TramlineFive.Common.ViewModels
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
 
-                StopResponse info = await arrivalsService.GetByStopCodeAsync(stopCode);
+                StopInformation stopInformation = publicTransport.FindStop(stopCode);
+
+                StopResponse info = await arrivalsService.GetByStopCodeAsync(stopCode, stopInformation?.Type);
 
                 IsLoading = false;
 

@@ -59,6 +59,8 @@ public class ArrivalInformation
                 Models.TransportType.Bus => "Автобус",
                 Models.TransportType.Tram => "Трамвай",
                 Models.TransportType.Trolley => "Тролей",
+                Models.TransportType.Subway => "Метро",
+                Models.TransportType.NightBus => "Нощен",
                 _ => string.Empty
             };
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Sentry;
 using Sentry.Protocol;
 using SkgtService.Exceptions;
@@ -19,7 +20,7 @@ namespace SkgtService;
 
 public static class StopsLoader
 {
-    private const string STOPS_URL = "https://sofiatraffic.bg/bg/trip/getAllStops";
+    private const string STOPS_URL = "https://sofiatraffic.bg/bg/public-transport";
     private const string LINES_URL = "https://sofiatraffic.bg/bg/trip/getLines";
     //private const string ROUTES_URL = "https://routes.sofiatraffic.bg/resources/routes.json";
     private const string GET_SCHEDULE_URL = "https://sofiatraffic.bg/bg/trip/getSchedule";
@@ -49,8 +50,8 @@ public static class StopsLoader
         }
 
         string json = File.ReadAllText(PATH);
-
-        return JsonConvert.DeserializeObject<List<StopLocation>>(json);
+        string stopsArray = JObject.Parse(json)["props"]["stops"].ToString();
+        return JsonConvert.DeserializeObject<List<StopLocation>>(stopsArray);
 
     }
 
@@ -78,8 +79,13 @@ public static class StopsLoader
 
     public static async Task UpdateStopsAsync()
     {
-        HttpResponseMessage response = await sofiaHttpClient.PostAsync(STOPS_URL, new StringContent("", null, "application/json"));
+        Dictionary<string, string> headers = new Dictionary<string, string>
+        {
+            { "x-inertia", "true" },
+            {  "x-inertia-version", "71cd55a5934e0cc54a86b740873377e4" }
+        };
 
+        HttpResponseMessage response = await sofiaHttpClient.GetAsync(STOPS_URL, headers);
 
         string stops = await response.Content.ReadAsStringAsync();
         SentrySdk.CaptureMessage($"updatestops: {response.StatusCode}, length: {stops.Length}");
