@@ -166,7 +166,10 @@ namespace TramlineFive.Pages
         {
             base.OnNavigatedTo(args);
             if (map != null)
-                map.HeightRequest -= 1;
+            {
+                map.IsVisible = false;
+                map.IsVisible = true;
+            }
         }
     }
 }

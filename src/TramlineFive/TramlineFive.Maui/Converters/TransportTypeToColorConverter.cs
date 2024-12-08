@@ -32,15 +32,16 @@ namespace TramlineFive.Converters
             return (textValue as string) switch
             {
                 "Автобус" => isLightTheme ? Colors.Red : Colors.Crimson,
-                "Трамвай" => isLightTheme ? Colors.Orange : Colors.DarkOrange,
+                "Трамвай" => isLightTheme ? Color.FromArgb("F7941F") : Colors.DarkOrange,
                 "Тролей" => isLightTheme ? Color.FromArgb("2aa9e0") : Colors.DarkBlue,
                 "Електробус" =>  isLightTheme ? Colors.Green : Colors.DarkGreen,
                 "Допълнителна" => isLightTheme ? Color.FromArgb("13b79d") : Color.FromArgb("13b79d"),
-                "Метро" => Colors.Blue,
+                "Метро" => Color.FromArgb("0e6abc"),
+                "Нощен" => Color.FromArgb("2B3C8F"),
                 "bus" => Colors.Crimson,
                 "tram" => Colors.DarkOrange,
                 "trolley" => Colors.RoyalBlue,
-                _ => Colors.White,
+                _ => Colors.Red,
             };
 
         }

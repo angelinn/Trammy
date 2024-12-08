@@ -138,6 +138,8 @@ public class MapService
 
     private SymbolStyle trolleyPinStyle;
     private SymbolStyle tramPinStyle;
+    private SymbolStyle subwayStyle;
+    private SymbolStyle nightStyle;
 
     private void LoadPinStyles()
     {
@@ -167,6 +169,25 @@ public class MapService
             Enabled = false,
             SymbolScale = 0.4f
         };
+
+
+        int subwayId = typeof(MapService).LoadSvgId("subway_icon.svg");
+
+        subwayStyle = new SymbolStyle
+        {
+            BitmapId = subwayId,
+            Enabled = false,
+            SymbolScale = 0.4f
+        };
+
+        int nightId = typeof(MapService).LoadSvgId("MTS_Bus_icon_night.svg");
+
+        nightStyle = new SymbolStyle
+        {
+            BitmapId = nightId,
+            Enabled = false,
+            SymbolScale = 0.4f
+        };
     }
 
     private async Task<ILayer> LoadStops()
@@ -184,16 +205,33 @@ public class MapService
             MPoint stopLocation = new MPoint(location.Lon, location.Lat);
             MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(stopLocation.X, stopLocation.Y));
 
-            SymbolStyle symbolStyle = pinStyle;
-            Offset offset = new Offset(0, -32);
+            SymbolStyle symbolStyle = null;
+            Offset offset = null;
 
-            //if (location.Lines.Any(line => line.VehicleType == TransportType.Trolley))
-            //    symbolStyle = trolleyPinStyle;
-            //else if (location.Lines.Any(line => line.VehicleType == TransportType.Tram))
-            //{
-            //    symbolStyle = tramPinStyle;
-            //    offset = new Offset(0, -40);
-            //}
+            switch (location.Type)
+               {
+                case TransportType.Trolley:
+                    symbolStyle = trolleyPinStyle;
+                    offset = new Offset(0, -32);
+                    break;
+                case TransportType.Tram:
+                    symbolStyle = tramPinStyle;
+                    offset = new Offset(0, -40);
+                    break;
+                case TransportType.Subway:
+                    symbolStyle = subwayStyle;
+                    offset = new Offset(0, -40);
+                    break;
+                case TransportType.NightBus:
+                    symbolStyle = nightStyle;
+                    offset = new Offset(0, -32);
+                    break;
+                case TransportType.Bus:
+                default:
+                    symbolStyle = pinStyle;
+                    offset = new Offset(0, -32);
+                    break;                    
+            }
 
             IFeature feature = new PointFeature(stopMapLocation)
             {

@@ -19,6 +19,7 @@
     <None Remove="licenses.yaml" />
     <None Remove="MTS_Bus_icon.svg" />
     <None Remove="MTS_Bus_icon_finish.svg" />
+    <None Remove="MTS_Bus_icon_night.svg" />
     <None Remove="MTS_Bus_icon_start.svg" />
     <None Remove="MTS_Tram_icon.svg" />
     <None Remove="MTS_TrolleyBus_icon.svg" />
@@ -27,11 +28,13 @@
     <None Remove="pin.svg" />
     <None Remove="stops-bg.json" />
     <None Remove="stops.json" />
+    <None Remove="subway_icon.svg" />
     <None Remove="tileservers.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="licenses.yaml" />
+    <EmbeddedResource Include="MTS_Bus_icon_night.svg" />
     <EmbeddedResource Include="MTS_Tram_icon.svg" />
     <EmbeddedResource Include="MTS_Bus_icon_finish.svg" />
     <EmbeddedResource Include="MTS_Bus_icon_start.svg" />
@@ -43,6 +46,7 @@
     <EmbeddedResource Include="pin.svg" />
     <EmbeddedResource Include="stops-bg.json" />
     <EmbeddedResource Include="stops.json" />
+    <EmbeddedResource Include="subway_icon.svg" />
     <EmbeddedResource Include="tileservers.json" />
   </ItemGroup>
 
