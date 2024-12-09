@@ -13,6 +13,8 @@ namespace TramlineFive.Pages
 {
 	public partial class VirtualTablesPage : Grid
 	{
+        private bool isLoaded = false;
+
         public VirtualTablesPage()
         {
             InitializeComponent();
@@ -27,7 +29,11 @@ namespace TramlineFive.Pages
 
         private void OnLoaded(object sender, EventArgs e)
         {
-            Task _ = AnimateText();
+            if (!isLoaded)
+            {
+                isLoaded = true;
+                Task _ = AnimateText();
+            }
         }
 
         private async Task AnimateText()
@@ -36,12 +42,24 @@ namespace TramlineFive.Pages
             {
                 if (txtStopName.Width > 0)
                 {
-                    await txtStopName.TranslateTo(-txtStopName.Width, 0, 5000);
+                    SizeRequest size = txtStopName.Measure(Width, Height);
+
+                    System.Diagnostics.Debug.WriteLine("TRANSLATING OUT OF VIEW");
+                    await txtStopName.TranslateTo(-size.Request.Width, 0, 3000);
+
+                    System.Diagnostics.Debug.WriteLine("WAITING OUT OF VIEW");
+                    await Task.Delay(1000);
+
+                    if (txtStopName.TranslationX == 0)
+                        continue;
+
                     txtStopName.TranslationX = Width;
 
+                    System.Diagnostics.Debug.WriteLine("TRANSLATING IN VIEW");
                     await txtStopName.TranslateTo(0, 0, 5000);
                 }
 
+                System.Diagnostics.Debug.WriteLine("WAITING IN VIEW");
                 await Task.Delay(5000);
             }
         }
