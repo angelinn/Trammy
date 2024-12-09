@@ -21,7 +21,7 @@ public class ArrivalInformation
     {
         LineName = line.Name;
         //Start = line.Start;
-        string[] route = line.RouteName.Split('-');
+        string[] route = line.RouteName.Split(" - ");
         if (route.Length > 1)
             Direction = route[1].Trim();
         else
