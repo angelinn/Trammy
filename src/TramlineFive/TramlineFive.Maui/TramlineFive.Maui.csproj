@@ -146,6 +146,7 @@
 		<None Remove="Resources\FontAwesome6BrandsRegular400.otf" />
 		<None Remove="Resources\FontAwesome6FreeRegular400.otf" />
 		<None Remove="Resources\FontAwesome6FreeSolid900.otf" />
+		<None Remove="Resources\Images\bus_icon.svg" />
 		<None Remove="Resources\MaterialIconsOutlinedRegular.otf" />
 		<None Remove="Resources\MaterialIconsRegular.ttf" />
 		<None Remove="Resources\MaterialIconsRoundRegular.otf" />

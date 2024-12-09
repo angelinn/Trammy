@@ -14,6 +14,7 @@
             <cv:ImageSourceConverter x:Key="ImageSource" />
             <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
             <cv:BoolToFavouriteColorConverter x:Key="BoolToFavourite" />
+            <cv:TransportTypeToImageConverter x:Key="TransportToImage" />
         </ResourceDictionary>
     </Grid.Resources>
 
@@ -42,7 +43,7 @@
                         </StackLayout>
 
                         <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}">
-                            <Label Background="{DynamicResource VirtualTablesTopBarColor}"   FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe570;" FontSize="40" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Image Source="{Binding StopInfo.Code, Converter={StaticResource TransportToImage}}" Margin="10,10,10,10" HeightRequest="40" WidthRequest="40" />
                         </Grid>
 
                         <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource VirtualTablesTopBarColor}">
