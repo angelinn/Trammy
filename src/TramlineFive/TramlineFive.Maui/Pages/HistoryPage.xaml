@@ -1,10 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
              x:Class="TramlineFive.Pages.HistoryPage"
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}"
              Shell.NavBarIsVisible="True" 
              Shell.FlyoutBehavior="Disabled">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:TransportTypeToImageConverter x:Key="TransportToImage" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid BackgroundColor="{DynamicResource PageBackground}" >
         <!--<Grid.RowDefinitions>
@@ -33,13 +40,13 @@
                                         <RoundRectangle CornerRadius="30" />
                                     </Border.StrokeShape>
                                     
-                                    <Grid> 
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="60" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="history" TextColor="{DynamicResource IconsColor}" FontSize="26" VerticalOptions="Center" HorizontalOptions="Center"  />
+                                        <Image Source="{Binding StopCode, Converter={StaticResource TransportToImage}}" HeightRequest="30" WidthRequest="30" />
 
                                         <StackLayout Spacing="0" VerticalOptions="Center" Grid.Column="1">
                                             <StackLayout Orientation="Horizontal">

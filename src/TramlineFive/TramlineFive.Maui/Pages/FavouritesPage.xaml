@@ -10,6 +10,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
+            <cv:TransportTypeToImageConverter x:Key="TransportToImage" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -107,7 +108,10 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <StackLayout VerticalOptions="Center">
-                                                    <Label FontFamily="mir" Text="tram" TextColor="{DynamicResource IconsColor}" FontSize="31" VerticalOptions="Center" HorizontalOptions="Center" />
+
+                                                    <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}">
+                                                        <Image Source="{Binding StopCode, Converter={StaticResource TransportToImage}}" HeightRequest="30" WidthRequest="30" />
+                                                    </Grid>
                                                     <Label Text="{Binding StopCode, StringFormat='{0}'}" Background="Transparent" TextColor="{DynamicResource DetailsTextColor}" HorizontalOptions="Center" Margin="0,3,0,0" FontSize="Caption" />
                                                 </StackLayout>
 
