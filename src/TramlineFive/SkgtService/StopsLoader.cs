@@ -28,7 +28,9 @@ public static class StopsLoader
     private static string ROUTES_PATH = String.Empty;
     private static string LINES_PATH = String.Empty;
 
-    public static event EventHandler OnStopsUpdated;
+    public static string Version { get; set; }
+
+    public static event EventHandler<string> OnStopsUpdated;
 
     private static Dictionary<string, List<Arrival>> stopLines = new();
     private static SofiaHttpClient sofiaHttpClient;
@@ -50,6 +52,11 @@ public static class StopsLoader
         }
 
         string json = File.ReadAllText(PATH);
+        if (string.IsNullOrEmpty(json))
+        {
+            File.Delete(PATH);
+            return await LoadStopsAsync();
+        }
         string stopsArray = JObject.Parse(json)["props"]["stops"].ToString();
         return JsonConvert.DeserializeObject<List<StopLocation>>(stopsArray);
 
@@ -82,17 +89,33 @@ public static class StopsLoader
         Dictionary<string, string> headers = new Dictionary<string, string>
         {
             { "x-inertia", "true" },
-            {  "x-inertia-version", "71cd55a5934e0cc54a86b740873377e4" }
+            {  "x-inertia-version", Version }
         };
 
         HttpResponseMessage response = await sofiaHttpClient.GetAsync(STOPS_URL, headers);
+        if (response.StatusCode == HttpStatusCode.Conflict)
+        {
+            response = await sofiaHttpClient.GetAsync(STOPS_URL);
+        }
 
-        string stops = await response.Content.ReadAsStringAsync();
-        SentrySdk.CaptureMessage($"updatestops: {response.StatusCode}, length: {stops.Length}");
+        string body = await response.Content.ReadAsStringAsync();
+        if (body.Contains("<!DOCTYPE html>"))
+        {
+            int index = body.IndexOf("&quot;version&quot;:&quot;");
 
-        File.WriteAllText(PATH, stops);
+            Version = body.Substring(index + "&quot;version&quot;:&quot;".Length, 32);
+            headers["x-inertia-version"] = Version;
 
-        OnStopsUpdated?.Invoke(null, new EventArgs());
+            response = await sofiaHttpClient.GetAsync(STOPS_URL, headers);
+
+            body = await response.Content.ReadAsStringAsync();
+        }
+
+        SentrySdk.CaptureMessage($"updatestops: {response.StatusCode}, length: {body.Length}");
+
+        File.WriteAllText(PATH, body);
+
+        OnStopsUpdated?.Invoke(null, Version);
     }
 
     //public static async Task UpdateRoutesAsync()

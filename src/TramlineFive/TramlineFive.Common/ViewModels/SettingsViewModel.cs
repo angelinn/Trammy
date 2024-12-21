@@ -129,6 +129,7 @@ namespace TramlineFive.Common.ViewModels
         private string selectedTileServer;
         partial void OnSelectedTileServerChanged(string value)
         {
+            return;
             ApplicationService.SetStringSetting(Settings.SelectedTileServer, value);
             Messenger.Send(new SettingChanged<string>(Settings.SelectedTileServer, value));
         }

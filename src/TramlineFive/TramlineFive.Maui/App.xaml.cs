@@ -97,6 +97,8 @@ namespace TramlineFive.Maui
                 {
                     System.Diagnostics.Debug.WriteLine($"Updating stops {DateTime.Now - updated} time old");
 
+
+                    StopsLoader.Version = applicationService.GetStringSetting("APIVersion", "");
                     _ = StopsLoader.UpdateStopsAsync();
                     //_ = StopsLoader.UpdateRoutesAsync();
 
@@ -153,8 +155,9 @@ namespace TramlineFive.Maui
             });
         }
 
-        private void OnStopsUpdated(object sender, EventArgs e)
+        private void OnStopsUpdated(object sender, string newVersion)
         {
+            ServiceContainer.ServiceProvider.GetService<IApplicationService>().SetStringSetting("APIVersion", newVersion);
             ServiceContainer.ServiceProvider.GetService<IApplicationService>().SetStringSetting(Settings.StopsUpdated, DateTime.Now.ToString());
         }
     }

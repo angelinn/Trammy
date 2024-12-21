@@ -65,6 +65,7 @@ public class PublicTransport
         if (stopsHash.Count > 0)
             return;
 
+
         List<StopLocation> stops = await StopsLoader.LoadStopsAsync();
         SentrySdk.CaptureMessage($"Loaded {stops.Count} stops.");
 
