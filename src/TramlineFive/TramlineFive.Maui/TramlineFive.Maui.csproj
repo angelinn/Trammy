@@ -209,13 +209,7 @@
 		<Compile Update="Pages\VirtualTablesPage.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Platforms\Windows\Services\PathService.cs">
-			<ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
-		</Compile>
 		<Compile Update="Platforms\Windows\Services\PermissionService.cs">
-			<ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
-		</Compile>
-		<Compile Update="Platforms\Windows\Services\PushService.cs">
 			<ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
 		</Compile>
 		<Compile Update="Platforms\Windows\Services\VersionCheckingService.cs">

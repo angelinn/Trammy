@@ -93,10 +93,8 @@ namespace TramlineFive.Maui
             services.AddSingleton<VersionService>();
             services.AddViewModels();
 
-            services.AddSingleton<PathService>();
             services.AddSingleton<VersionCheckingService>();
             services.AddSingleton<PermissionService>();
-            services.AddSingleton<PushService>();
         }
     }
 }

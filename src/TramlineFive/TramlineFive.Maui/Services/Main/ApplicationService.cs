@@ -14,12 +14,10 @@ namespace TramlineFive.Services.Main;
 public class ApplicationService : IApplicationService
 {
     private readonly PermissionService permissionService;
-    private readonly PushService pushService;
 
-    public ApplicationService(PermissionService permissionService, PushService pushService)
+    public ApplicationService(PermissionService permissionService)
     {
         this.permissionService = permissionService;
-        this.pushService = pushService;
     }
 
     public string GetStringSetting(string key, string defaultValue)

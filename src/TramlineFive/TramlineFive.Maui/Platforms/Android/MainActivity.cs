@@ -52,7 +52,6 @@ namespace TramlineFive.Maui
         //Xamarin.Essentials.Platform.Init(this, bundle); // add this line to your code, it may also be called: bundle
 
             PermissionService.Init(this);
-            PushService.SetContext(this);
 
             InitFontScale();
             WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, OnThemeChanged);
