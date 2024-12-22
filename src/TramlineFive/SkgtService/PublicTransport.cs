@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static System.Formats.Asn1.AsnWriter;
 
@@ -20,6 +21,8 @@ public class PublicTransport
     private Dictionary<string, Dictionary<string, Line>> lines = new();
     private Dictionary<string, List<Route>> routes = new();
     private Dictionary<Line, ScheduleResponse> schedules = new();
+
+    public ManualResetEvent StopsReadyEvent = new(false);
 
     private List<StopInformation> stops;
 
@@ -36,11 +39,17 @@ public class PublicTransport
 
     public Dictionary<string, Dictionary<string, Line>> Lines => lines;
     public Dictionary<Line, ScheduleResponse> Schedules => schedules;
+ 
+    private readonly StopsLoader stopsLoader;
 
+    public PublicTransport(StopsLoader stopsLoader)
+    {
+        this.stopsLoader = stopsLoader;
+    }
 
     public async Task LoadLinesAsync()
     {
-        var newLines = await StopsLoader.LoadLinesAsync();
+        var newLines = await stopsLoader.LoadLinesAsync();
 
         if (lines.Count > 0)
             return;
@@ -66,7 +75,7 @@ public class PublicTransport
             return;
 
 
-        List<StopLocation> stops = await StopsLoader.LoadStopsAsync();
+        List<StopLocation> stops = await stopsLoader.LoadStopsAsync();
         SentrySdk.CaptureMessage($"Loaded {stops.Count} stops.");
 
         foreach (var stop in stops)
@@ -84,6 +93,7 @@ public class PublicTransport
             }
         }
 
+        StopsReadyEvent.Set();
         //var loadedRoutes = await StopsLoader.LoadRoutesAsync();
 
         //foreach (Routes route in loadedRoutes)
@@ -201,7 +211,7 @@ public class PublicTransport
 
     public async Task LoadSchedule(Line line)
     {
-        ScheduleResponse schedule = await StopsLoader.GetSchedule(line);
+        ScheduleResponse schedule = await stopsLoader.GetSchedule(line);
         schedules.Add(line, schedule);
 
         foreach (var route in schedule.Routes)

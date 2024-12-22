@@ -52,11 +52,16 @@ public class MapService
         this.publicTransport = publicTransport;
     }
 
-    public async Task LoadInitialMap(Map map)
+    public void LoadInitialMap(Map map)
     {        
-        await TileServerSettings.LoadTileServersAsync();
+        map.Layers.Add(TileServerFactory.CreateTileLayer(new DataFetchStrategy()));
 
-        map.Layers.Add(TileServerFactory.CreateTileLayer("carto-light", new DataFetchStrategy()));
+        MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
+        map.Home = n =>
+        {
+            n.CenterOn(point);
+            n.ZoomTo(map.Navigator.Resolutions[17]);
+        };
     }
 
     public async Task Initialize(Map map, string tileServer, string fetchStrategy)
@@ -69,14 +74,6 @@ public class MapService
     public async Task SetupMapAsync(string tileServer, string fetchingStrategy)
     {
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
-        map.Home = n =>
-        {
-            n.CenterOn(point);
-            n.ZoomTo(map.Navigator.Resolutions[17]);
-            _ = ShowNearbyStops(point);
-
-            WeakReferenceMessenger.Default.Send(new MapLoadedMessage());
-        };
 
         IDataFetchStrategy fetchStrategy = fetchingStrategy switch
         {
@@ -86,14 +83,15 @@ public class MapService
             _ => new DataFetchStrategy()
         };
 
-        //map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light", fetchStrategy));
-
-        //await Task.Delay(100);
-
         LoadPinStyles();
-        ILayer stopsLayer = await LoadStops();
-        map.Layers.Add(stopsLayer);
 
+        publicTransport.StopsReadyEvent.WaitOne();
+
+        map.Layers.Add(BuildStopsLayer());
+
+        WeakReferenceMessenger.Default.Send(new MapLoadedMessage());
+
+        await ShowNearbyStops(point);
         MyLocationLayer locationLayer = new MyLocationLayer(map);
         locationLayer.Enabled = true;
         map.Layers.Add(locationLayer);
@@ -190,13 +188,11 @@ public class MapService
         };
     }
 
-    private async Task<ILayer> LoadStops()
+    private ILayer BuildStopsLayer()
     {
         List<IFeature> features = new List<IFeature>();
         stopsTree = new KdTree<float, IFeature>(2, new KdTree.Math.GeoMath());
         stopsDictionary = new Dictionary<string, IFeature>();
-
-        await publicTransport.LoadData();
 
         Stops = publicTransport.Stops;
 

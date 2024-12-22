@@ -12,17 +12,17 @@ namespace TramlineFive.Common.Maps;
 public static class TileServerFactory
 {
     private static readonly BruTile.Attribution OpenStreetMap = new BruTile.Attribution(
-            "© OpenStreetMap contributors", "http://www.openstreetmap.org/copyright");
+            "© OpenStreetMap", "http://www.openstreetmap.org/copyright");
 
-    public static TileLayer CreateTileLayer(string name, IDataFetchStrategy dataFetchStrategy)
+    public static TileLayer CreateTileLayer(IDataFetchStrategy dataFetchStrategy)
     {
-        return new TileLayer(CreateTileSource(name), dataFetchStrategy: dataFetchStrategy, renderFetchStrategy: new RenderFetchStrategy()) { Name = name };
+        return new TileLayer(CreateTileSource("https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png"), dataFetchStrategy: dataFetchStrategy, renderFetchStrategy: new RenderFetchStrategy());
     }
 
     private static HttpTileSource CreateTileSource(string name)
     {
         return new HttpTileSource(new GlobalSphericalMercator(0, 19),
-            TileServerSettings.TileServers[name],
+            name,
             //"https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png",
             new[] { "a", "b", "c" }, name: name,
             attribution: OpenStreetMap);
