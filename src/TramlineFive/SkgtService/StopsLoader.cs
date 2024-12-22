@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Sentry;
 using Sentry.Protocol;
 using SkgtService.Exceptions;
+using SkgtService.Models;
 using SkgtService.Models.Json;
 using SkgtService.Parsers;
 using System;
@@ -14,55 +15,62 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace SkgtService;
 
-public static class StopsLoader
+public class StopsLoader
 {
     private const string STOPS_URL = "https://sofiatraffic.bg/bg/public-transport";
     private const string LINES_URL = "https://sofiatraffic.bg/bg/trip/getLines";
     //private const string ROUTES_URL = "https://routes.sofiatraffic.bg/resources/routes.json";
     private const string GET_SCHEDULE_URL = "https://sofiatraffic.bg/bg/trip/getSchedule";
-    private static string PATH = String.Empty;
-    private static string ROUTES_PATH = String.Empty;
-    private static string LINES_PATH = String.Empty;
+    private string PATH = String.Empty;
+    private string ROUTES_PATH = String.Empty;
+    private string LINES_PATH = String.Empty;
 
-    public static string Version { get; set; }
+    public string Version { get; set; }
 
     public static event EventHandler<string> OnStopsUpdated;
 
-    private static Dictionary<string, List<Arrival>> stopLines = new();
-    private static SofiaHttpClient sofiaHttpClient;
+    private Dictionary<string, List<Arrival>> stopLines = new();
+    private SofiaHttpClient sofiaHttpClient;
 
-    public static void Initialize(string basePath, SofiaHttpClient httpClient)
+    public StopsLoader(SofiaHttpClient sofiaHttpClient, StopsConfigurator stopsConfigurator)
     {
-        PATH = Path.Combine(basePath, "stops.json");
-        ROUTES_PATH = Path.Combine(basePath, "routes.json");
-        LINES_PATH = Path.Combine(basePath, "lines.json");
+        PATH = Path.Combine(stopsConfigurator.DatabasePath, "stops.json");
+        ROUTES_PATH = Path.Combine(stopsConfigurator.DatabasePath, "routes.json");
+        LINES_PATH = Path.Combine(stopsConfigurator.DatabasePath, "lines.json");
 
-        sofiaHttpClient = httpClient;
+        this.sofiaHttpClient = sofiaHttpClient;
     }
 
-    public static async Task<List<StopLocation>> LoadStopsAsync()
+    public async Task<List<StopLocation>> LoadStopsAsync()
     {
         if (!File.Exists(PATH))
         {
             await UpdateStopsAsync();
         }
 
-        string json = File.ReadAllText(PATH);
-        if (string.IsNullOrEmpty(json))
+        try
+        {
+            string json = File.ReadAllText(PATH);
+            if (string.IsNullOrEmpty(json))
+            {
+                File.Delete(PATH);
+                return await LoadStopsAsync();
+            }
+
+            return JsonConvert.DeserializeObject<List<StopLocation>>(json);
+        }
+        catch (Exception ex)
         {
             File.Delete(PATH);
             return await LoadStopsAsync();
         }
-        string stopsArray = JObject.Parse(json)["props"]["stops"].ToString();
-        return JsonConvert.DeserializeObject<List<StopLocation>>(stopsArray);
 
     }
 
-    //public static async Task<List<Routes>> LoadRoutesAsync()
+    //public  async Task<List<Routes>> LoadRoutesAsync()
     //{
     //    if (!File.Exists(ROUTES_PATH))
     //    {
@@ -75,7 +83,7 @@ public static class StopsLoader
     //    return routes;
     //}
 
-    public static List<StopLocation> LoadStops(Stream stream)
+    public List<StopLocation> LoadStops(Stream stream)
     {
         string json = String.Empty;
         using StreamReader reader = new StreamReader(stream);
@@ -84,7 +92,7 @@ public static class StopsLoader
         return JsonConvert.DeserializeObject<List<StopLocation>>(json);
     }
 
-    public static async Task UpdateStopsAsync()
+    public async Task UpdateStopsAsync()
     {
         Dictionary<string, string> headers = new Dictionary<string, string>
         {
@@ -113,12 +121,21 @@ public static class StopsLoader
 
         SentrySdk.CaptureMessage($"updatestops: {response.StatusCode}, length: {body.Length}");
 
-        File.WriteAllText(PATH, body);
+        try
+        {
+            string stopsArray = JObject.Parse(body)["props"]["stops"].ToString();
+            File.WriteAllText(PATH, stopsArray);
+        }
+        catch (Exception ex)
+        {
+            SentrySdk.CaptureException(ex);
+            throw;
+        }
 
         OnStopsUpdated?.Invoke(null, Version);
     }
 
-    //public static async Task UpdateRoutesAsync()
+    //public  async Task UpdateRoutesAsync()
     //{
     //    using HttpClient client = new HttpClient();
 
@@ -128,7 +145,7 @@ public static class StopsLoader
     //    //OnStopsUpdated?.Invoke(null, new EventArgs());
     //}
 
-    public static async Task GetLinesAsync()
+    public async Task GetLinesAsync()
     {
         HttpResponseMessage response = await sofiaHttpClient.PostAsync(LINES_URL, new StringContent("", null, "application/json"));
         string lines = await response.Content.ReadAsStringAsync();
@@ -137,7 +154,7 @@ public static class StopsLoader
         File.WriteAllText(LINES_PATH, lines);
     }
 
-    public static async Task<List<Line>> LoadLinesAsync()
+    public async Task<List<Line>> LoadLinesAsync()
     {
         if (!File.Exists(LINES_PATH))
         {
@@ -151,7 +168,7 @@ public static class StopsLoader
     }
 
 
-    public static async Task<ScheduleResponse> GetSchedule(Line line)
+    public async Task<ScheduleResponse> GetSchedule(Line line)
     {
         string payload = JsonConvert.SerializeObject(line);
         HttpResponseMessage response = await sofiaHttpClient.PostAsync(GET_SCHEDULE_URL, new StringContent(payload, Encoding.UTF8, "application/json"));
@@ -161,7 +178,7 @@ public static class StopsLoader
         return schedule;
     }
 
-    public static void ClearData()
+    public void ClearData()
     {
         if (File.Exists(PATH))
             File.Delete(PATH);

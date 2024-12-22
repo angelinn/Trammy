@@ -10,6 +10,7 @@ using TramlineFive.Maui.Services;
 using TramlineFive.Services.Main;
 using SkgtService;
 using Plugin.LocalNotification;
+using SkgtService.Models;
 
 namespace TramlineFive.Maui
 {
@@ -25,27 +26,19 @@ namespace TramlineFive.Maui
                 .UseSentry(options =>
                 {
                     // The DSN is the only required setting.
-                    options.Dsn = "https://692bacbf5e2846da6b7aeeb741412f4a@o4507219539394560.ingest.de.sentry.io/4507219541950544";
-
-                    // Use debug mode if you want to see what the SDK is doing.
-                    // Debug messages are written to stdout with Console.Writeline,
-                    // and are viewable in your IDE's debug console or with 'adb logcat', etc.
-                    // This option is not recommended when deploying your application.
-                    options.Debug = true;
-
-                    // Set TracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-                    // We recommend adjusting this value in production.
-                    options.TracesSampleRate = 1.0;
-
-                    // Sample rate for profiling, applied on top of othe TracesSampleRate,
-                    // e.g. 0.2 means we want to profile 20 % of the captured transactions.
-                    // We recommend adjusting this value in production.
-                    options.ProfilesSampleRate = 1.0;
+                    //options.Dsn = "https://692bacbf5e2846da6b7aeeb741412f4a@o4507219539394560.ingest.de.sentry.io/4507219541950544";
+                    //options.Debug = false;
+                    options.Dsn = string.Empty;
+                    options.InitializeSdk = false;
+                    //options.AutoSessionTracking = false;
+                    //options.SendDefaultPii = false;
+                    //options.TracesSampleRate = 0;
+                    //options.ProfilesSampleRate = 0;
                 })
                 .UseSkiaSharp(true)
                 .ConfigureFonts(fonts =>
                 {
-                    //fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     //fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("FontAwesome6BrandsRegular400.otf", "FAB");
                     fonts.AddFont("FontAwesome6FreeRegular400.otf", "FAR");
@@ -57,7 +50,7 @@ namespace TramlineFive.Maui
                     fonts.AddFont("MaterialIconsTwoToneRegular.otf", "mit");
                 })
                 .UseMauiCommunityToolkit()
-                .UseMauiCompatibility()
+                //.UseMauiCompatibility()
                 .UseLocalNotification();
 
 #if ANDROID
@@ -73,7 +66,10 @@ namespace TramlineFive.Maui
 #endif
 
             Mapsui.UI.Maui.MapControl.UseGPU = true;
-            return builder.Build();
+            MauiApp app = builder.Build();
+
+            ServiceContainer.ServiceProvider = app.Services;
+            return app;
         }
 
         public static void ConfigureServices(IServiceCollection services)
@@ -83,6 +79,12 @@ namespace TramlineFive.Maui
 
             services.AddSingleton<WeatherService>();
             services.AddSingleton<SofiaHttpClient>();
+            services.AddSingleton(provider =>
+            {
+                return new StopsConfigurator(FileSystem.AppDataDirectory, Preferences.Get("APIVersion", ""));
+            });
+
+            services.AddSingleton<StopsLoader>();
             services.AddSingleton<PublicTransport>();
             services.AddSingleton<DirectionsService>();
             services.AddSingleton<ArrivalsService>();
@@ -95,10 +97,6 @@ namespace TramlineFive.Maui
             services.AddSingleton<VersionCheckingService>();
             services.AddSingleton<PermissionService>();
             services.AddSingleton<PushService>();
-
-
-            ServiceProvider = services.BuildServiceProvider();
-            ServiceContainer.ServiceProvider = ServiceProvider;
         }
     }
 }
