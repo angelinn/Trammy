@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="TramlineFive.Maui.Views.SearchBar"
+        xmlns:cv="clr-namespace:TramlineFive.Converters"
+            Stroke="Transparent"  Background="white" Opacity="0.9" Padding="5,0,5,0" HeightRequest="50" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
+
+    <Border.Resources>
+        <ResourceDictionary>
+            <cv:InverseBoolConverter x:Key="InverseBool" />
+        </ResourceDictionary>
+    </Border.Resources>
+    
+    <Border.StrokeShape>
+        <RoundRectangle CornerRadius="30" />
+    </Border.StrokeShape>
+    <Border.Shadow>
+        <Shadow Brush="gray" Radius="30" Opacity="0.6" Offset="0,5" />
+    </Border.Shadow>
+
+    <StackLayout Orientation="Horizontal">
+        <StackLayout VerticalOptions="Center" WidthRequest="50">
+            <StackLayout.Behaviors>
+                <mct:TouchBehavior DefaultAnimationDuration="250"
+                                DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                PressedOpacity="0.6"
+                                PressedScale="0.8"
+                                Command="{Binding OpenHamburgerCommand}" />
+            </StackLayout.Behaviors>
+
+            <Image Margin="5,0,0,0" HorizontalOptions="Center" VerticalOptions="Center" >
+                <Image.Source>
+                    <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="&#xe5d2;" Size="25" Color="{DynamicResource IconsColor}" />
+                </Image.Source>
+            </Image>
+        </StackLayout>
+
+        <Entry Grid.Column="1" TextColor="{DynamicResource LabelTextColor}" Placeholder="Код/име на спирка..." PlaceholderColor="{DynamicResource PlaceholderTextColor}" 
+                                       FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
+            <Entry.Behaviors>
+                <mct:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
+                <mct:EventToCommandBehavior EventName="Focused" Command="{Binding SearchFocusedCommand}" />
+                <mct:EventToCommandBehavior EventName="Unfocused" Command="{Binding SearchUnfocusedCommand}" />
+            </Entry.Behaviors>
+        </Entry>
+    </StackLayout>
+</Border>

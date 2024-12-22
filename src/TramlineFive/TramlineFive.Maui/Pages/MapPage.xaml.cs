@@ -31,50 +31,36 @@ namespace TramlineFive.Pages
         public MapPage()
         {
             InitializeComponent();
-            mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
-            mapService.LoadInitialMap(map.Map).Wait();
-            map.UpdateInterval = 8;
 
-            //map.Map?.Layers.Add(Mapsui.Tiling.OpenStreetMap.CreateTileLayer());
+            mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
+            mapService.LoadInitialMap(map.Map);
+            map.UpdateInterval = 8;
 
             WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await ToggleMap(m));
             //Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
         }
 
-        private async Task LoadDataAsync()
+        protected override void OnAppearing()
         {
-            _ = LoadMapAsync();
+            base.OnAppearing();
 
-            await ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync();
-            await ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync();
-        }
-
-        protected override async void OnAppearing()
-        {
             if (initialized)
                 return;
 
             initialized = true;
 
-            _ = LoadDataAsync();
-
-            DateTime versionCheckTime = Preferences.Get("VersionCheckDate", DateTime.MinValue);
-            if (DateTime.Now - versionCheckTime < TimeSpan.FromDays(1))
-                return;
-
-            NewVersion version = await ServiceContainer.ServiceProvider.GetService<VersionService>().CheckForUpdates();
-            if (version != null)
+            _ = Task.Run(async () =>
             {
-                bool result = await DisplayAlert("Нова версия", $"{AppInfo.Name} има нова версия {version.VersionNumber} 🎉", "СВАЛЯНЕ", "ОТКАЗ");
-                if (result)
+                await Task.Delay(200);
+
+                _ = LoadMapAsync();
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    Uri url = new Uri(version.ReleaseUrl);
-                    await Browser.Default.OpenAsync(url);
-                }
-            }
-
-            Preferences.Set("VersionCheckDate", DateTime.Now);
-
+                    LazySearchBar.LoadViewAsync();
+                    LazyVirtualTablesView.LoadViewAsync();
+                    LazyFab.LoadViewAsync();
+                });
+            });
         }
 
         private async void OnMapTouchAction(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)
@@ -93,14 +79,14 @@ namespace TramlineFive.Pages
         private async Task ShowVirtualTables(int linesCount)
         {
             int coef = linesCount > 2 ? 2 : linesCount;
-            slideMenu.HeightRequest = Height * (coef + 1) * 0.20;
+            LazyVirtualTablesView.HeightRequest = Height * (coef + 1) * 0.20;
 
 
             //Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height - slideMenu.HeightRequest + 30);
 
-            await slideMenu.TranslateTo(0, 0, 400);
+            await LazyVirtualTablesView.TranslateTo(0, 0, 400);
             //await map.LayoutTo(new Rect(0, 0, Width, Height - slideMenu.HeightRequest + 30));
-            map.HeightRequest = Height - slideMenu.HeightRequest + 30;
+            map.HeightRequest = Height - LazyVirtualTablesView.HeightRequest + 30;
             //AbsoluteLayout.SetLayoutFlags(map, AbsoluteLayoutFlags.PositionProportional | AbsoluteLayoutFlagks.WidthProportional);
             //AbsoluteLayout.SetLayoutBounds(map, new Rect(1, 1, 1, Height - slideMenu.HeightRequest + 30));
             //animation.Commit(map, "ShowMap", 256, 400);
@@ -115,7 +101,7 @@ namespace TramlineFive.Pages
             //AbsoluteLayout.SetLayoutFlags(map, AbsoluteLayoutFlags.All);
             //AbsoluteLayout.SetLayoutBounds(map, new Rect(1, 1, 1, 1));
             //await map.LayoutTo(new Rect(0, 0, Width, Height));
-            await slideMenu.TranslateTo(0, Height, 400);
+            await LazyVirtualTablesView.TranslateTo(0, Height, 400);
             //animation.Commit(map, "Expand", 16, 400);
         }
 
@@ -156,7 +142,7 @@ namespace TramlineFive.Pages
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
-            slideMenu.TranslationY = isOpened ? 0 : Height;
+            LazyVirtualTablesView.TranslationY = isOpened ? 0 : Height;
 
             if (map != null)
                 map.HeightRequest = Height;

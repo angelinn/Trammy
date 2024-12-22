@@ -5,7 +5,7 @@
              xmlns:v="clr-namespace:TramlineFive.Views"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              xmlns:pages="clr-namespace:TramlineFive.Pages"
-             xmlns:views="clr-namespace:TramlineFive.Views"
+             xmlns:views="clr-namespace:TramlineFive.Maui.Views"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              xmlns:mapsuipl="clr-namespace:Mapsui;assembly=Mapsui"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -33,100 +33,6 @@
 
         <ActivityIndicator AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"                                            BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" IsRunning="{Binding IsLoading}" HeightRequest="64" Color="DodgerBlue" Margin="0,100,0,0" />
 
-        <Grid x:Name="grid" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="180" />
-                <RowDefinition Height="45" />
-                <RowDefinition Height="47" />
-                <RowDefinition Height="20" />
-            </Grid.RowDefinitions>
-        </Grid>
-
-        <StackLayout AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.95,1,47">
-            <Border x:Name="searchBar" Stroke="Transparent"  BackgroundColor="{DynamicResource BackgroundColor}" Opacity="0.9" Margin="15,0,15,0" Padding="5,0,5,0" HeightRequest="50" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="30" />
-                </Border.StrokeShape>
-                <Border.Shadow>
-                    <Shadow Brush="gray" Radius="30" Opacity="0.6" Offset="0,5" />
-                </Border.Shadow>
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid HorizontalOptions="FillAndExpand">
-                        <Grid.Behaviors>
-                            <mct:TouchBehavior DefaultAnimationDuration="250"
-                                DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
-                                PressedOpacity="0.6"
-                                PressedScale="0.8"
-                                Command="{Binding OpenHamburgerCommand}" />
-                        </Grid.Behaviors>
-
-                        <Image Margin="5,0,0,0" HorizontalOptions="Center" VerticalOptions="Center" >
-                            <Image.Source>
-                                <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="&#xe5d2;" Size="25" Color="{DynamicResource IconsColor}" />
-                            </Image.Source>
-                        </Image>
-                    </Grid>
-                    <Entry Grid.Column="1" TextColor="{DynamicResource LabelTextColor}" Placeholder="Код/име на спирка..." PlaceholderColor="{DynamicResource PlaceholderTextColor}"
-                                       FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
-                        <Entry.Behaviors>
-                            <mct:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
-                            <mct:EventToCommandBehavior EventName="Focused" Command="{Binding SearchFocusedCommand}" />
-                            <mct:EventToCommandBehavior EventName="Unfocused" Command="{Binding SearchUnfocusedCommand}" />
-                        </Entry.Behaviors>
-                    </Entry>
-                    <ActivityIndicator Grid.Column="1" HorizontalOptions="End" Scale=".5"
-                                           BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}"
-                                           IsVisible="{Binding IsLoading}"
-                                           IsRunning="{Binding IsLoading}"
-                                           IsEnabled="{Binding IsLoading}"/>
-                </Grid>
-            </Border>
-        </StackLayout>
-        <!--<CollectionView EmptyView="No items" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,45" Grid.Row="2" Margin="17,5,17,0" ItemsSource="{Binding RecommendedStops}" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
-        -->
-        <!--<CollectionView AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.87,1,50" ItemsSource="{Binding RecommendedStops}">-->
-        <!--
-            <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="0,2,0,2" WidthRequest="145" HeightRequest="42">
-                            <Border Stroke="Transparent" Padding="10,8,5,10" Opacity="0.9" Background="white">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
-                                
-                                <Border.Shadow>
-                                    <Shadow Radius="20" Brush="gray" Offset="0,5" Opacity="0.6" />
-                                </Border.Shadow>
-
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}" Command="{Binding SearchByCodeCommand}" CommandParameter="{Binding BindingContext.StopCode, Source={RelativeSource AncestorType={x:Type Border}, AncestorLevel=1}}" />
-                                </Border.GestureRecognizers>
-
-                                <Grid ColumnSpacing="0" Background="{DynamicResource BackgroundColor}" VerticalOptions="CenterAndExpand">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="20" />
-                                        <ColumnDefinition Width="40" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Label FontFamily="mir" Text="&#xe530;" FontSize="17" VerticalOptions="Center" Margin="0,1,0,0" TextColor="Crimson" />
-                                    <Label Grid.Column="1" Text="{Binding StopCode, StringFormat='({0})'}" FontSize="12"  HorizontalOptions="Start" />
-                                    <Label Grid.Column="2" Text="{Binding Name}" LineBreakMode="TailTruncation" FontSize="12" HorizontalOptions="Start" />
-                                </Grid>
-                            </Border>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>-->
 
         <Border Stroke="Transparent" AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" BackgroundColor="{DynamicResource BackgroundColor}" Margin="15,-5,15,0" Opacity="0.9" VerticalOptions="End" Padding="0" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
             <Border.StrokeShape>
@@ -154,44 +60,13 @@
             </ListView>
         </Border>
 
-        <Border Stroke="Transparent" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="1,0.80,1,58" Grid.Row="1" Margin="0,0,10,0" BackgroundColor="{DynamicResource BackgroundColor}"  Opacity="0.9" Padding="0" HorizontalOptions="End" VerticalOptions="End" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="50" />
-            </Border.StrokeShape>
-            <Border.Behaviors>
-                <mct:TouchBehavior DefaultAnimationDuration="250"
-                                DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
-                                PressedOpacity="0.6"
-                                PressedScale="0.8"
-                                Command="{Binding MyLocationCommand}" />
-            </Border.Behaviors>
+        <mct:LazyView x:Name="LazyFab" x:TypeArguments="views:CustomFloatingActionButton"
+                       AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="1,0.80,1,58" Grid.Row="1"  HorizontalOptions="End" VerticalOptions="End" 
+             Margin="0,0,10,0" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" BindingContext="{Binding}" />
 
-            <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="{Binding HasLocation, Converter={StaticResource LocationConverter}}" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="25" />
-        </Border>
-        <!--<views:FloatingActionButton Grid.RowSpan="5" Command="{Binding MyLocationCommand}" HorizontalOptions="End" VerticalOptions="End" ButtonColor="White" IsVisible="{Binding IsMyLocationVisible}" Margin="0,0,0,20">
-                <views:FloatingActionButton.Image>
-                    <OnPlatform x:TypeArguments="FileImageSource">
-                        <OnPlatform.Android>
-                            <FileImageSource File="Resources/drawable/my_location.xml" />
-                        </OnPlatform.Android>
-                        <OnPlatform.WinPhone>
-                            <FileImageSource File="assets/mylocation.png" />
-                        </OnPlatform.WinPhone>
-                    </OnPlatform>
-                </views:FloatingActionButton.Image>
-                <views:FloatingActionButton.BackgroundColor>
-                    <OnPlatform x:TypeArguments="Color" WinPhone="White" />
-                </views:FloatingActionButton.BackgroundColor>
-            </views:FloatingActionButton>-->
-        <!--<Grid x:Name="overlay" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All" InputTransparent="True" Opacity="0">
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding ShowMapCommand}" />
-            </Grid.GestureRecognizers>
-        </Grid>-->
-
-        <Grid x:Name="slideMenu" Padding="0" VerticalOptions="End" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional">
-            <pages:VirtualTablesPage />
-        </Grid>
+        <mct:LazyView x:Name="LazySearchBar" x:TypeArguments="views:SearchBar" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.95,1,47" Margin="15,0,15,0" />
+        
+        <mct:LazyView Background="Transparent" x:Name="LazyVirtualTablesView"  Padding="0" VerticalOptions="End" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" x:TypeArguments="pages:VirtualTablesPage" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" />
     </AbsoluteLayout>
 </ContentPage>
     

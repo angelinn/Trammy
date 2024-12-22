@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TramlineFive.Maui.Views.CustomFloatingActionButton"
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+        BackgroundColor="{DynamicResource BackgroundColor}"  Opacity="0.9" Padding="0" Stroke="Transparent">
+
+    <Border.Resources>
+        <ResourceDictionary>
+            <cv:LocationConverter x:Key="LocationConverter" />
+        </ResourceDictionary>
+    </Border.Resources>
+
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="50" />
+        </Border.StrokeShape>
+        <Border.Behaviors>
+            <mct:TouchBehavior DefaultAnimationDuration="250"
+                                DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
+                                PressedOpacity="0.6"
+                                PressedScale="0.8"
+                                Command="{Binding MyLocationCommand}" />
+        </Border.Behaviors>
+
+    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="{Binding HasLocation, Converter={StaticResource LocationConverter}}" TextColor="{DynamicResource IconsColor}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="25" />
+</Border>
+    
