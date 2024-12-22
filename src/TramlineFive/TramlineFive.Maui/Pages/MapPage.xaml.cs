@@ -59,6 +59,7 @@ namespace TramlineFive.Pages
                     LazySearchBar.LoadViewAsync();
                     LazyVirtualTablesView.LoadViewAsync();
                     LazyFab.LoadViewAsync();
+                    LazySuggestions.LoadViewAsync();
                 });
             });
         }

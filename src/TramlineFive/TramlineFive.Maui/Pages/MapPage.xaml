@@ -33,32 +33,7 @@
 
         <ActivityIndicator AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"                                            BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" IsRunning="{Binding IsLoading}" HeightRequest="64" Color="DodgerBlue" Margin="0,100,0,0" />
 
-
-        <Border Stroke="Transparent" AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" BackgroundColor="{DynamicResource BackgroundColor}" Margin="15,-5,15,0" Opacity="0.9" VerticalOptions="End" Padding="0" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="30" />
-            </Border.StrokeShape>
-            <ListView SeparatorColor="Transparent" ItemsSource="{Binding FilteredStops}" SelectedItem="{Binding SelectedSuggestion}" >
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.View>
-                                <Grid ColumnSpacing="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe8b6;" FontSize="23" VerticalOptions="Center" Margin="5,7,0,0" HorizontalOptions="Center" TextColor="#9aa0a6" />
-
-                                    <Label Grid.Column="1" Text="{Binding}" VerticalOptions="Center" Margin="0,5,0,0" FontSize="15" />
-                                </Grid>
-                            </ViewCell.View>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Border>
+        <mct:LazyView x:Name="LazySuggestions" x:TypeArguments="views:SuggestionsView"  AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" Margin="15,-5,15,0"  VerticalOptions="End" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}" BindingContext="{Binding}" />
 
         <mct:LazyView x:Name="LazyFab" x:TypeArguments="views:CustomFloatingActionButton"
                        AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="1,0.80,1,58" Grid.Row="1"  HorizontalOptions="End" VerticalOptions="End" 

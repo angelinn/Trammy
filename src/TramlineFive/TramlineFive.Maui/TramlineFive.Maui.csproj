@@ -221,6 +221,9 @@
 		<Compile Update="Themes\LightTheme.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
+		<Compile Update="Views\SuggestionsView.xaml.cs">
+		  <DependentUpon>SuggestionsView.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Views\CustomFloatingActionButton.xaml.cs">
 		  <DependentUpon>CustomFloatingActionButton.xaml</DependentUpon>
 		</Compile>
@@ -290,6 +293,9 @@
 		<MauiXaml Update="Themes\LightTheme.xaml">
 			<SubType>Designer</SubType>
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SuggestionsView.xaml">
+		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\SearchBar.xaml">
 		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>

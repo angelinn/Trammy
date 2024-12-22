@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TramlineFive.Maui.Views.SuggestionsView"
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+        BackgroundColor="{DynamicResource BackgroundColor}"  Opacity="0.9" Padding="0" Stroke="Transparent">
+
+    <Border.StrokeShape>
+        <RoundRectangle CornerRadius="30" />
+    </Border.StrokeShape>
+    <CollectionView ItemsSource="{Binding FilteredStops}" SelectionMode="Single" SelectedItem="{Binding SelectedSuggestion}" >
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Grid ColumnSpacing="0" HeightRequest="48">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe8b6;" FontSize="23" VerticalOptions="Center" Margin="5,7,0,0" HorizontalOptions="Center" TextColor="#9aa0a6" />
+
+                    <Label Grid.Column="1" Text="{Binding}" VerticalOptions="Center" Margin="0,5,0,0" FontSize="15" />
+                </Grid>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</Border>
+    
