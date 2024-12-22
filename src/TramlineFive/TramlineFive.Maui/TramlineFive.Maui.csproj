@@ -64,7 +64,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
-	  <RunAOTCompilation>True</RunAOTCompilation>
+	  <RunAOTCompilation>False</RunAOTCompilation>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -171,7 +171,6 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.21" />
 		<PackageReference Include="Mapsui.Maui" Version="4.1.6" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Plugin.LocalNotification" Version="11.1.2" />
@@ -227,6 +226,9 @@
 		</Compile>
 		<Compile Update="Themes\LightTheme.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Views\CustomFloatingActionButton.xaml.cs">
+		  <DependentUpon>CustomFloatingActionButton.xaml</DependentUpon>
 		</Compile>
 	</ItemGroup>
 
@@ -295,8 +297,14 @@
 			<SubType>Designer</SubType>
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\SearchBar.xaml">
+		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\StopsList.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\CustomFloatingActionButton.xaml">
+		  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\VirtualTablesViewCell.xaml">
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -306,6 +314,9 @@
 	<ItemGroup>
 		<None Update="Resources\Splash\tramsplash.png" Color="Blue" />
 		<None Update="Resources\Splash\tramsplash.svg" BaseSize="64,64" Color="DodgerBlue" />
+		<None Update="Views\SearchBar.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</None>
 	</ItemGroup>
 
 </Project>

@@ -39,7 +39,7 @@
         <FlyoutItem.Icon>
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="home" Color="{DynamicResource IconsColor}" />
         </FlyoutItem.Icon>
-
+       
         <ShellContent Style="{StaticResource TabStyle}" Route="Map" Title="Карта" ContentTemplate="{DataTemplate pages:MapPage}">
             <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="fmd_good" />
@@ -55,7 +55,7 @@
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="history" />
             </ShellContent.Icon>
         </ShellContent>
-        <Tab Route="Lines" Shell.TabBarTitleColor="{DynamicResource IconsColor}" Shell.TabBarForegroundColor="{DynamicResource IconsColor}"  Title="Линии" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" IsVisible="False">
+        <!--<Tab Route="Lines" Shell.TabBarTitleColor="{DynamicResource IconsColor}" Shell.TabBarForegroundColor="{DynamicResource IconsColor}"  Title="Линии" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" IsVisible="False">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="departure_board" />
             </Tab.Icon>
@@ -88,10 +88,10 @@
                     </DataTemplate>
                 </ShellContent.ContentTemplate>
             </ShellContent>
-        </Tab>
+        </Tab>-->
     </FlyoutItem>
-
-    <Tab Route="LineDetails" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False">
+    
+    <!--<Tab Route="LineDetails" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False">
         <ShellContent Route="Forward" BindingContext="{Binding LineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
             <ShellContent.ContentTemplate>
                 <DataTemplate>
@@ -107,7 +107,12 @@
                 </DataTemplate>
             </ShellContent.ContentTemplate>
         </ShellContent>
-    </Tab>
+    </Tab>-->
+    <ShellContent Route="About" Title="Информация" ContentTemplate="{DataTemplate pages:AboutPage}">
+        <ShellContent.Icon>
+            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="{DynamicResource IconsColor}" Glyph="info" />
+        </ShellContent.Icon>
+    </ShellContent>
 
 
     <ShellContent Style="{StaticResource TabStyle}" Route="Settings" Title="Настройки" Shell.FlyoutBehavior="Disabled" ContentTemplate="{DataTemplate pages:SettingsPage}">
@@ -123,11 +128,7 @@
     </ShellContent>
 
 
-    <ShellContent Route="About" Title="Информация" ContentTemplate="{DataTemplate pages:AboutPage}">
-        <ShellContent.Icon>
-            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="{DynamicResource IconsColor}" Glyph="info" />
-        </ShellContent.Icon>
-    </ShellContent>
+
 
     <ShellContent FlyoutItemIsVisible="False" Route="Location" ContentTemplate="{DataTemplate pages:LocationPromptPage}" />
 </Shell>
