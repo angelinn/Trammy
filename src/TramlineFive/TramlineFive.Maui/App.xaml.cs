@@ -33,6 +33,9 @@ namespace TramlineFive.Maui
             this.stopsLoader = stopsLoader;
             this.publicTransport = publicTransport;
 
+            string theme = Preferences.Get(Settings.Theme, Names.SystemDefault);
+            OnThemeChanged(new ChangeThemeMessage(theme));
+
             MainPage = new AppShell();
         }
 
@@ -79,9 +82,7 @@ namespace TramlineFive.Maui
             {
                 IApplicationService applicationService = ServiceContainer.ServiceProvider.GetService<IApplicationService>();
 
-                string theme = Preferences.Get(Settings.Theme, Names.SystemDefault);
                 WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, (r, m) => OnThemeChanged(m));
-                WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(theme));
                 Current.RequestedThemeChanged += (s, a) =>
                 {
                     if (Preferences.Get(Settings.Theme, Names.SystemDefault) == Names.SystemDefault)
@@ -92,11 +93,8 @@ namespace TramlineFive.Maui
 
                 _ = publicTransport.LoadData();
 
-                _ = App.Current.Handler.MauiContext.Services.GetService<HistoryViewModel>().LoadHistoryAsync();
-                _ = App.Current.Handler.MauiContext.Services.GetService<FavouritesViewModel>().LoadFavouritesAsync();
-
-                //_ = ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync();
-                //_ = ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync();
+                _ = ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync();
+                _ = ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync();
 
                 _ = UpdateStopsIfOlderThanAsync(TimeSpan.FromDays(7));
 
