@@ -4,8 +4,7 @@
              xmlns:cv="clr-namespace:TramlineFive.Converters" 
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TramlineFive.Pages.VirtualTablesPage"
-             xmlns:views="clr-namespace:TramlineFive.Maui.Views"
-             BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
+             xmlns:views="clr-namespace:TramlineFive.Maui.Views">
 
     <Grid.Resources>
         <ResourceDictionary>
@@ -18,7 +17,7 @@
         </ResourceDictionary>
     </Grid.Resources>
 
-    <Border>
+    <Border Background="Transparent">
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="30,30,0,0" />
         </Border.StrokeShape>
@@ -26,7 +25,7 @@
         <Grid BackgroundColor="{DynamicResource BackgroundColor}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}" >
@@ -63,20 +62,17 @@
                 </Grid>
             </Grid>
 
-            <ListView IsPullToRefreshEnabled="True" RefreshCommand="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}" RefreshControlColor="{DynamicResource BlueAccentColor}" Margin="3,0,3,0" Grid.Row="1" SeparatorVisibility="None" BackgroundColor="{DynamicResource BackgroundColor}" ItemsSource="{Binding StopInfo.Arrivals}" HorizontalOptions="FillAndExpand" RowHeight="120" SelectedItem="{Binding Selected, Mode=TwoWay}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.ContextActions>
-                                <MenuItem Text="Запиши известия" Command="{Binding BindingContext.SubscribeCommand, Source={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding}" />
-                            </ViewCell.ContextActions>
-
-                            <views:VirtualTablesViewCell BindingContext="{Binding}" />
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
+            <RefreshView x:Name="refreshView" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" Margin="3,0,3,0" Grid.Row="1" RefreshColor="{DynamicResource BlueAccentColor}" Background="{DynamicResource BackgroundColor}">
+                <StackLayout>
+                    <CollectionView ItemsSource="{Binding StopInfo.Arrivals}" SelectedItem="{Binding Selected, Mode=TwoWay}" VerticalOptions="FillAndExpand">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <views:VirtualTablesViewCell BindingContext="{Binding}" HeightRequest="110" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </RefreshView>
         </Grid>
     </Border>
 </Grid>

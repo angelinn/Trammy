@@ -36,6 +36,14 @@ namespace TramlineFive.Pages
             }
         }
 
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+
+            // workaround for collection view not appearing inside refresh view
+            refreshView.HeightRequest = Height - 80;
+        }
+
         private async Task AnimateText()
         {
             while (true)
