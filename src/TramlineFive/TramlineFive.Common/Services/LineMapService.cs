@@ -38,7 +38,7 @@ public class LineMapService
 
     public void SetupMap(List<string> stopCodes, TransportType transportType, string tileServer = null)
     {
-        Map.Layers.Add(TileServerFactory.CreateTileLayer(tileServer ?? "carto-light", null));
+        Map.Layers.Add(TileServerFactory.CreateTileLayer(null));
         Map.Home = (h) => ZoomToBox(h, routeBox);
         LoadPinStyles();
 

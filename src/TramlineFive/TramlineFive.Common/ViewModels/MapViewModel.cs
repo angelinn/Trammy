@@ -161,7 +161,7 @@ namespace TramlineFive.Common.ViewModels
             topFavourites.Clear();
             topFavourites.AddRange(message.Favourites.Take(4).Select(f => new ArrivalStopModel(f.StopCode, f.Name)));
 
-            BuildRecommendedStops();
+            //BuildRecommendedStops();
         }
 
         private void OnNearbyStops(NearbyStopsMessage message)
@@ -169,7 +169,7 @@ namespace TramlineFive.Common.ViewModels
             nearbyStops.Clear();
             nearbyStops.AddRange(message.NearbyStops.Take(4).Select(f => new ArrivalStopModel(f.Code, f.PublicName)));
 
-            BuildRecommendedStops();
+            //BuildRecommendedStops();
         } 
 
         private async Task CheckForHistory()
