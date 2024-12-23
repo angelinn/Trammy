@@ -69,11 +69,16 @@ public class PublicTransport
         }
     }
 
-    public async Task LoadData()
+    public async Task LoadData(bool update = false)
     {
-        if (stopsHash.Count > 0)
+        if (stopsHash.Count > 0 && !update)
             return;
 
+        if (update)
+        {
+            stopsHash.Clear();
+            await stopsLoader.UpdateStopsAsync();
+        }
 
         List<StopLocation> stops = await stopsLoader.LoadStopsAsync();
         SentrySdk.CaptureMessage($"Loaded {stops.Count} stops.");

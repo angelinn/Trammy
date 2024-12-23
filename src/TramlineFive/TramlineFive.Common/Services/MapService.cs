@@ -58,6 +58,8 @@ public class MapService
     {
         this.locationService = locationService;
         this.publicTransport = publicTransport;
+
+        WeakReferenceMessenger.Default.Register<RefreshStopsMessage>(this, async (r, m) => await OnStopsRefreshed());
     }
 
     public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy)
@@ -112,6 +114,14 @@ public class MapService
             savedTileServer = tileServer;
 
         map.Layers.Insert(0, TileServerFactory.CreateTileLayer(savedTileServer, dataStrategy, renderStrategy));
+    } 
+
+    private async Task OnStopsRefreshed()
+    {
+        map.Layers.Remove(map.Layers[1]);
+        map.Layers.Insert(1, BuildStopsLayer());
+
+        await ShowNearbyStops(new MPoint( map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY));
     }
 
     public async Task SetupMapAsync()

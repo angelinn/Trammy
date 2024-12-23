@@ -44,14 +44,14 @@ namespace TramlineFive.Common.ViewModels
         private Func<string, string, string, string[], Task<string>> displayActionSheet;
 
         private readonly VersionService versionService;
-        private readonly StopsLoader stopsLoader;
+        private readonly PublicTransport publicTransport;
 
-        public SettingsViewModel(VersionService versionService, StopsLoader stopsLoader)
+        public SettingsViewModel(VersionService versionService, PublicTransport publicTransport)
         {
             RefreshStopsUpdatedTime();
 
             this.versionService = versionService;
-            this.stopsLoader = stopsLoader;
+            this.publicTransport = publicTransport;
             ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, false);
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
@@ -176,10 +176,9 @@ namespace TramlineFive.Common.ViewModels
         {
             IsUpdatingStops = true;
 
-            await stopsLoader.UpdateStopsAsync();
-            //await StopsLoader.UpdateRoutesAsync();
+            await publicTransport.LoadData(true);
 
-            //MessengerInstance.Send<RefreshStopsMessage>();
+            Messenger.Send(new RefreshStopsMessage());
 
             RefreshStopsUpdatedTime();
 
