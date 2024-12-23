@@ -126,9 +126,4 @@
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="route" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
         </ShellContent.Icon>
     </ShellContent>
-
-
-
-
-    <ShellContent FlyoutItemIsVisible="False" Route="Location" ContentTemplate="{DataTemplate pages:LocationPromptPage}" />
 </Shell>
