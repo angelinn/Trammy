@@ -41,17 +41,22 @@ namespace TramlineFive.Pages
             map.UpdateInterval = 8;
 
             WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await ToggleMap(m));
+            
             //Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
         }
 
         protected override void OnAppearing()
         {
+           
             base.OnAppearing();
 
             if (initialized)
                 return;
 
             initialized = true;
+
+            if (VersionTracking.IsFirstLaunchEver)
+                Navigation.PushAsync(new LocationPromptPage());
 
             _ = Task.Run(async () =>
             {
@@ -120,7 +125,7 @@ namespace TramlineFive.Pages
             }
 
 
-            Dispatcher.Dispatch(async () =>
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
                 isOpened = message.Show;
 
@@ -139,9 +144,6 @@ namespace TramlineFive.Pages
             map.TouchAction += OnMapTouchAction;
 
             await (BindingContext as MapViewModel).LoadAsync();
-
-            if (VersionTracking.IsFirstLaunchEver)
-                WeakReferenceMessenger.Default.Send(new ChangePageMessage("//Location"));
         }
 
         protected override void OnSizeAllocated(double width, double height)
