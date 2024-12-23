@@ -33,7 +33,11 @@ namespace TramlineFive.Pages
             InitializeComponent();
 
             mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
-            mapService.LoadInitialMap(map.Map);
+            mapService.LoadInitialMap(map.Map, 
+                Preferences.Get(Settings.SelectedTileServerUrl, Defaults.TileServerUrl),
+                Preferences.Get(Settings.FetchingStrategy, Defaults.DataFetchStrategy),
+                Preferences.Get(Settings.RenderStrategy, Defaults.RenderFetchStrategy));
+
             map.UpdateInterval = 8;
 
             WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await ToggleMap(m));

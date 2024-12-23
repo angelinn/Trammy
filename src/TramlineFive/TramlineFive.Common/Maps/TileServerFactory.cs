@@ -14,9 +14,9 @@ public static class TileServerFactory
     private static readonly BruTile.Attribution OpenStreetMap = new BruTile.Attribution(
             "© OpenStreetMap", "http://www.openstreetmap.org/copyright");
 
-    public static TileLayer CreateTileLayer(IDataFetchStrategy dataFetchStrategy)
+    public static TileLayer CreateTileLayer(string tileServer, IDataFetchStrategy dataFetchStrategy, IRenderFetchStrategy renderFetchStrategy)
     {
-        return new TileLayer(CreateTileSource("https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png"), dataFetchStrategy: dataFetchStrategy, renderFetchStrategy: new RenderFetchStrategy());
+        return new TileLayer(CreateTileSource(tileServer), dataFetchStrategy: dataFetchStrategy, renderFetchStrategy: renderFetchStrategy);
     }
 
     private static HttpTileSource CreateTileSource(string name)

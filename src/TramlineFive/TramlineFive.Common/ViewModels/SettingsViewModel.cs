@@ -23,12 +23,20 @@ namespace TramlineFive.Common.ViewModels
     {
         public DateTime Updated { get; private set; }
 
-        public List<string> TileServers => TileServerSettings.TileServers.Keys.ToList();
+        public List<string> TileServers { get; private set; }
         public List<string> FetchingStrategies => new List<string>()
         {
             "None",
-            "Minimal",
-            "Full"
+            "MinimalDataFetchStrategy",
+            "DataFetchStrategy"
+        };
+
+        public List<string> RenderStrategies => new List<string>()
+        {
+            "None",
+            "RenderFetchStrategy",
+            "MinimalRenderFetchStrategy",
+            "TilingRenderFetchStrategy"
         };
 
         public List<Theme> Themes => new() { new Theme("Светла", Names.LightTheme), new Theme("Тъмна", Names.DarkTheme), new Theme("Следвай системата", Names.SystemDefault) };
@@ -47,8 +55,9 @@ namespace TramlineFive.Common.ViewModels
             ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, false);
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
-            SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, TileServers.First());
             SelectedFetchingStrategy = ApplicationService.GetStringSetting(Settings.FetchingStrategy, "Full");
+            SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, Defaults.TileServer);
+            SelectedRenderStrategy = ApplicationService.GetStringSetting(Settings.RenderStrategy, "Default");
 
             string theme = ApplicationService.GetStringSetting(Settings.Theme, Names.SystemDefault);
             SelectedTheme = theme switch
@@ -60,10 +69,12 @@ namespace TramlineFive.Common.ViewModels
             };
         }
 
-        public void Initialize(Func<string, string, string, string[], Task<string>> displayActionSheet)
+        public async Task Initialize(Func<string, string, string, string[], Task<string>> displayActionSheet)
         {
             this.displayActionSheet = displayActionSheet;
-            TileServerSettings.LoadTileServersAsync();
+
+            await TileServerSettings.LoadTileServersAsync();
+            TileServers = TileServerSettings.TileServers.Keys.ToList();
         }
 
         [RelayCommand]
@@ -98,9 +109,17 @@ namespace TramlineFive.Common.ViewModels
         [RelayCommand]
         private async Task ChooseFetchingStrategy()
         {
-            string result = await displayActionSheet("Избор на стратегия", String.Empty, String.Empty, FetchingStrategies.ToArray());
+            string result = await displayActionSheet("Избор на стратегия за Fetch", String.Empty, String.Empty, FetchingStrategies.ToArray());
             if (!String.IsNullOrEmpty(result))
                 SelectedFetchingStrategy = result;
+        }
+
+        [RelayCommand]
+        private async Task ChooseRenderStrategy()
+        {
+            string result = await displayActionSheet("Избор на стратегия за Render", String.Empty, String.Empty, RenderStrategies.ToArray());
+            if (!String.IsNullOrEmpty(result))
+                SelectedRenderStrategy = result;
         }
 
         [RelayCommand]
@@ -129,11 +148,14 @@ namespace TramlineFive.Common.ViewModels
 
         [ObservableProperty]
         private string selectedTileServer;
-        partial void OnSelectedTileServerChanged(string value)
+        partial void OnSelectedTileServerChanging(string oldValue, string newValue)
         {
-            return;
-            ApplicationService.SetStringSetting(Settings.SelectedTileServer, value);
-            Messenger.Send(new SettingChanged<string>(Settings.SelectedTileServer, value));
+            if (!string.IsNullOrEmpty(oldValue))
+            {
+                ApplicationService.SetStringSetting(Settings.SelectedTileServer, newValue);
+                ApplicationService.SetStringSetting(Settings.SelectedTileServerUrl, TileServerSettings.TileServers[newValue]);
+                Messenger.Send(new SettingChanged<string>(Settings.SelectedTileServer, TileServerSettings.TileServers[newValue]));
+            }
         }
 
         [RelayCommand]
@@ -199,10 +221,25 @@ namespace TramlineFive.Common.ViewModels
 
         [ObservableProperty]
         private string selectedFetchingStrategy;
-        partial void OnSelectedFetchingStrategyChanged(string value)
+        partial void OnSelectedFetchingStrategyChanging(string oldValue, string newValue)
         {
-            ApplicationService.SetStringSetting(Settings.FetchingStrategy, value);
-            Messenger.Send(new SettingChanged<string>(Settings.FetchingStrategy, value));
+            if (!string.IsNullOrEmpty(oldValue))
+            {
+                ApplicationService.SetStringSetting(Settings.FetchingStrategy, newValue);
+                Messenger.Send(new SettingChanged<string>(Settings.FetchingStrategy, newValue));
+            }
+        }
+
+
+        [ObservableProperty]
+        private string selectedRenderStrategy;
+        partial void OnSelectedRenderStrategyChanging(string oldValue, string newValue)
+        {
+            if (!string.IsNullOrEmpty(oldValue))
+            {
+                ApplicationService.SetStringSetting(Settings.RenderStrategy, newValue);
+                Messenger.Send(new SettingChanged<string>(Settings.RenderStrategy, newValue));
+            }
         }
     }
 

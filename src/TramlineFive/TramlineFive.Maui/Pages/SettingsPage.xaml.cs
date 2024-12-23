@@ -14,8 +14,15 @@ namespace TramlineFive.Pages
 		public SettingsPage ()
 		{
 			InitializeComponent (); 
-			(BindingContext as SettingsViewModel).Initialize(DisplayActionSheet);
 		}
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            await Task.Delay(200);
+            _ = (BindingContext as SettingsViewModel).Initialize(DisplayActionSheet);
+        }
 
         protected override bool OnBackButtonPressed()
         {

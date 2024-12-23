@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" package="com.openbulgariasoftware.trammy" android:versionName="3.35" android:versionCode="55" android:allowBackup="false" android:fullBackupOnly="false">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" package="com.openbulgariasoftware.trammy" android:versionName="3.36" android:versionCode="56" android:allowBackup="false" android:fullBackupOnly="false">
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />

@@ -11,6 +11,17 @@ public static class Settings
     public const string MaxPinsZoom = "MaxPinsZoom";
     public const string StopsUpdated = "StopsUpdated";
     public const string SelectedTileServer = "SelectedTileServer";
+    public const string SelectedTileServerUrl = "SelectedTileServerUrl";
     public const string Theme = "Theme";
     public const string FetchingStrategy = "FetchingStrategy";
+    public const string RenderStrategy = "RenderStrategy";
+}
+
+public static class Defaults
+{
+    public const string TileServer = "carto-voyager";
+    public const string TileServerUrl = "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png";
+    public const string DataFetchStrategy = "DataFetchStrategy";
+    public const string RenderFetchStrategy = "RenderFetchStrategy";
+
 }

@@ -24,6 +24,8 @@ using SkgtService.Models;
 using CommunityToolkit.Mvvm.Messaging;
 using Mapsui.Tiling.Fetcher;
 using Mapsui.Extensions;
+using Mapsui.Tiling.Rendering;
+using RTools_NTS.Util;
 
 namespace TramlineFive.Common.Services;
 
@@ -40,6 +42,12 @@ public class MapService
     private Dictionary<string, IFeature> stopsDictionary;
     private readonly List<Style> activeStyles = new List<Style>();
 
+    private ManualResetEvent stopsFinishedLoadingEvent = new(false);
+
+    private IDataFetchStrategy dataStrategy;
+    private IRenderFetchStrategy renderStrategy;
+    private string savedTileServer;
+
     private readonly LocationService locationService;
     private readonly PublicTransport publicTransport;
 
@@ -52,9 +60,10 @@ public class MapService
         this.publicTransport = publicTransport;
     }
 
-    public void LoadInitialMap(Map map)
-    {        
-        map.Layers.Add(TileServerFactory.CreateTileLayer(new DataFetchStrategy()));
+    public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy)
+    {
+        this.map = map;
+        ChangeTileServer(tileServer, dataFetchStrategy, renderFetchStrategy);   
 
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
         map.Home = n =>
@@ -64,30 +73,59 @@ public class MapService
         };
     }
 
-    public async Task Initialize(Map map, string tileServer, string fetchStrategy)
+    public async Task Initialize(Map map)
     {
         this.map = map;
 
-        await SetupMapAsync(tileServer, fetchStrategy);
+        await SetupMapAsync();
     }
 
-    public async Task SetupMapAsync(string tileServer, string fetchingStrategy)
+    public void ChangeTileServer(string tileServer, string dataFetchStrategy, string renderFetchStrategy)
+    {
+        if (dataFetchStrategy != null)
+        {
+            dataStrategy = dataFetchStrategy switch
+            {
+                "None" => null,
+                "MinimalDataFetchStrategy" => new MinimalDataFetchStrategy(),
+                "DataFetchStrategy" => new DataFetchStrategy(),
+                _ => new DataFetchStrategy()
+            };
+        }
+
+        if (renderFetchStrategy != null)
+        {
+            renderStrategy = renderFetchStrategy switch
+            {
+                "None" => null,
+                "MinimalRenderFetchStrategy" => new MinimalRenderFetchStrategy(),
+                "RenderFetchStrategy" => new RenderFetchStrategy(),
+                "TilingRenderFetchStrategy" => new TilingRenderFetchStrategy(null),
+                _ => new RenderFetchStrategy()
+            };
+        }
+
+        if (map.Layers.Count > 1)
+            map.Layers.Remove(map.Layers.First());
+
+        if (!string.IsNullOrEmpty(tileServer))
+            savedTileServer = tileServer;
+
+        map.Layers.Insert(0, TileServerFactory.CreateTileLayer(savedTileServer, dataStrategy, renderStrategy));
+    }
+
+    public async Task SetupMapAsync()
     {
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
 
-        IDataFetchStrategy fetchStrategy = fetchingStrategy switch
-        {
-            "None" => null,
-            "Minimal" => new MinimalDataFetchStrategy(),
-            "Full" => new DataFetchStrategy(),
-            _ => new DataFetchStrategy()
-        };
-
+       
         LoadPinStyles();
 
         publicTransport.StopsReadyEvent.WaitOne();
 
         map.Layers.Add(BuildStopsLayer());
+
+        stopsFinishedLoadingEvent.Set();
 
         WeakReferenceMessenger.Default.Send(new MapLoadedMessage());
 
@@ -309,6 +347,8 @@ public class MapService
     {
         await Task.Run(() =>
         {
+            stopsFinishedLoadingEvent.WaitOne();
+
             List<KeyValuePair<double, StopInformation>> nearbyStops = new();
 
             MPoint pointLan = SphericalMercator.ToLonLat(position);
