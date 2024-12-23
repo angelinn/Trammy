@@ -14,14 +14,14 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid BackgroundColor="{DynamicResource PageBackground}">
+    <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource PageBackground}, Dark={DynamicResource DarkPageBackground}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
 
         <Grid Padding="15">
-            <Border Background="{DynamicResource CardColor}" Stroke="Transparent">
+            <Border Background="{AppThemeBinding Light={DynamicResource CardColor}, Dark={DynamicResource DarkCardColor}}" Stroke="Transparent">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
@@ -34,15 +34,15 @@
 
                         <StackLayout Grid.Row="0">
                             <HorizontalStackLayout>
-                                <Label Text="fmd_good" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="24" TextColor="{DynamicResource BlueAccentColor}" VerticalOptions="Center" Margin="0,10,5,5" Opacity="0.7" />
+                                <Label Text="fmd_good" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="24" TextColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" VerticalOptions="Center" Margin="0,10,5,5" Opacity="0.7" />
                                 <Label Text="София" VerticalOptions="Center" FontSize="Medium"/>
                             </HorizontalStackLayout>
                             <HorizontalStackLayout Margin="0,20,0,0" Grid.Row="1">
-                                <Label Text="wb_sunny" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="25" TextColor="{DynamicResource BlueAccentColor}" HorizontalOptions="Center"  Opacity="0.7" VerticalOptions="Center" />
+                                <Label Text="wb_sunny" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="25" TextColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" HorizontalOptions="Center"  Opacity="0.7" VerticalOptions="Center" />
                                 <Label Text="{Binding Forecast.Current, StringFormat='Температура: {0}° C'}" FontSize="Default" VerticalOptions="Center" Margin="5,0,0,0" />
                             </HorizontalStackLayout>
                             <HorizontalStackLayout Grid.Row="2">
-                                <Label Text="water_drop" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="25" TextColor="{DynamicResource BlueAccentColor}" HorizontalOptions="Center"  Opacity="0.7" VerticalOptions="Center" />
+                                <Label Text="water_drop" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="25" TextColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" HorizontalOptions="Center"  Opacity="0.7" VerticalOptions="Center" />
                                 <Label Text="{Binding Forecast.RH, StringFormat='Относителна влажност: {0}%'}" VerticalOptions="Center" FontSize="Default" HorizontalTextAlignment="Start" Margin="5,0,0,0" />
 
                             </HorizontalStackLayout>
@@ -58,7 +58,7 @@
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
             <StackLayout HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding HasFavourites}" Padding="10">
                 <Label Text="Списъкът е празен. Потърсете спирка и я добавете към любими." TextColor="Gray"  FontSize="21" HorizontalTextAlignment="Center" />
-                <Label Text="tram" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="105" TextColor="{DynamicResource BlueAccentColor}" HorizontalOptions="Center" Margin="0,10,0,0" Opacity="0.7" />
+                <Label Text="tram" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="105" TextColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" HorizontalOptions="Center" Margin="0,10,0,0" Opacity="0.7" />
             </StackLayout>
 
             <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="90" SeparatorVisibility="None" VerticalOptions="Fill" CachingStrategy="RecycleElement" >
@@ -95,7 +95,7 @@
                                                     PressedScale="0.8" />
                                         </Grid.Behaviors>
 
-                                        <Border Background="{DynamicResource BackgroundColor}" Stroke="Transparent">
+                                        <Border Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" Stroke="Transparent">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="20" />
                                             </Border.StrokeShape>
@@ -109,10 +109,10 @@
 
                                                 <StackLayout VerticalOptions="Center">
 
-                                                    <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}">
+                                                    <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}">
                                                         <Image Source="{Binding StopCode, Converter={StaticResource TransportToImage}}" HeightRequest="30" WidthRequest="30" />
                                                     </Grid>
-                                                    <Label Text="{Binding StopCode, StringFormat='{0}'}" Background="Transparent" TextColor="{DynamicResource DetailsTextColor}" HorizontalOptions="Center" Margin="0,3,0,0" FontSize="Caption" />
+                                                    <Label Text="{Binding StopCode, StringFormat='{0}'}" Background="Transparent" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" HorizontalOptions="Center" Margin="0,3,0,0" FontSize="Caption" />
                                                 </StackLayout>
 
                                                 <StackLayout VerticalOptions="Center" Grid.Column="1" Spacing="0">
@@ -145,7 +145,7 @@
 
                                                 <StackLayout Orientation="Horizontal" Grid.Column="2" Spacing="0" Margin="0,0,5,0">
                                                     <Label Text="{Binding TimesClicked, StringFormat='{0}'}" FontSize="Small" VerticalOptions="Center" />
-                                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="search" FontSize="20" Margin="5,0,0,0" TextColor="{DynamicResource DetailsTextColor}" VerticalOptions="Center" />
+                                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="search" FontSize="20" Margin="5,0,0,0" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" VerticalOptions="Center" />
                                                 </StackLayout>
                                             </Grid>
                                         </Border>

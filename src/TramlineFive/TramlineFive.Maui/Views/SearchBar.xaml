@@ -4,7 +4,7 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TramlineFive.Maui.Views.SearchBar"
         xmlns:cv="clr-namespace:TramlineFive.Converters"
-            Stroke="Transparent"  Background="white" Opacity="0.9" Padding="5,0,5,0" HeightRequest="50" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" >
+            Stroke="Transparent" BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" Opacity="0.9" Padding="5,0,5,0" HeightRequest="50" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
 
     <Border.Resources>
         <ResourceDictionary>
@@ -31,12 +31,12 @@
 
             <Image Margin="5,0,0,0" HorizontalOptions="Center" VerticalOptions="Center" >
                 <Image.Source>
-                    <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="&#xe5d2;" Size="25" Color="{DynamicResource IconsColor}" />
+                    <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="&#xe5d2;" Size="25" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
                 </Image.Source>
             </Image>
         </StackLayout>
 
-        <Entry Grid.Column="1" TextColor="{DynamicResource LabelTextColor}" Placeholder="Код/име на спирка..." PlaceholderColor="{DynamicResource PlaceholderTextColor}" 
+        <Entry Grid.Column="1" TextColor="{AppThemeBinding Light={DynamicResource LabelTextColor}, Dark={DynamicResource DarkLabelTextColor}}" Placeholder="Код/име на спирка..." PlaceholderColor="{AppThemeBinding Light={DynamicResource PlaceholderTextColor}, Dark={DynamicResource DarkPlaceholderTextColor}}" 
                                        FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
             <Entry.Behaviors>
                 <mct:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />

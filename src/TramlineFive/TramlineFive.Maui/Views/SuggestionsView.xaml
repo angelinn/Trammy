@@ -4,7 +4,7 @@
              x:Class="TramlineFive.Maui.Views.SuggestionsView"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-        BackgroundColor="{DynamicResource BackgroundColor}"  Opacity="0.9" Padding="0" Stroke="Transparent">
+        BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}"  Opacity="0.9" Padding="0" Stroke="Transparent">
 
     <Border.StrokeShape>
         <RoundRectangle CornerRadius="30" />

@@ -13,13 +13,13 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid BackgroundColor="{DynamicResource PageBackground}" >
+    <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource PageBackground}, Dark={DynamicResource DarkPageBackground}}" >
         <!--<Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>--> 
 
-        <!--<Grid BackgroundColor="{DynamicResource BarBackgroundColor}">
+        <!--<Grid BackgroundColor="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkBarBackgroundColor}}">
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal" BackgroundColor="Transparent">
                 <Label Text="История" HorizontalTextAlignment="Center" TextColor="White" FontSize="30" Margin="5,40,0,0" />
             </StackLayout>
@@ -35,7 +35,7 @@
                     <DataTemplate>
                         <ViewCell> 
                             <ViewCell.View>
-                                <Border Padding="0"  Margin="15,0,15,10" Stroke="Transparent" Background="{DynamicResource BackgroundColor}">
+                                <Border Padding="0"  Margin="15,0,15,10" Stroke="Transparent" Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="30" />
                                     </Border.StrokeShape>
@@ -54,7 +54,7 @@
                                                 <Label Text="{Binding StopCode, StringFormat=' ({0})'}" />
                                             </StackLayout>
 
-                                            <Label Text="{Binding TimeString}" TextColor="{DynamicResource DetailsTextColor}" Margin="0,5,0,0" />
+                                            <Label Text="{Binding TimeString}" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" Margin="0,5,0,0" />
                                         </StackLayout>
                                     </Grid>
                                 </Border>

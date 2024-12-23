@@ -12,17 +12,17 @@
                 <ResourceDictionary>
                     <!-- Application resource dictionary -->
                     <Style TargetType="NavigationPage">
-                        <Setter Property="BarBackgroundColor" Value="{DynamicResource BarBackgroundColor}"/>
-                        <Setter Property="BarTextColor" Value="{DynamicResource BarTextColor}"/>
+                        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkBarBackgroundColor}}"/>
+                        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={AppThemeBinding Light={DynamicResource BarTextColor}, Dark={DynamicResource DarkBarTextColor}}, Dark={DynamicResource DarkBarTextColor}}"/>
                     </Style>
 
                     <Style TargetType="Label">
-                        <Setter Property="TextColor" Value="{DynamicResource LabelTextColor}" />
+                        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource LabelTextColor}, Dark={DynamicResource DarkLabelTextColor}}" />
                         <Setter Property="FontAutoScalingEnabled" Value="False" />
                     </Style>
 
                     <Style TargetType="Picker">
-                        <Setter Property="TextColor" Value="{DynamicResource LabelTextColor}" />
+                        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource LabelTextColor}, Dark={DynamicResource DarkLabelTextColor}}" />
                     </Style>
                     
                     <vm:ViewModelLocator x:Key="Locator" />

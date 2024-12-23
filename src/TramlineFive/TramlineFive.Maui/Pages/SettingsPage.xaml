@@ -14,7 +14,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView BackgroundColor="{DynamicResource BackgroundColor}" >
+    <ScrollView BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" >
         <StackLayout Padding="10">
             <Grid Margin="0,10,0,0" HeightRequest="40">
                 <Grid.ColumnDefinitions>
@@ -30,7 +30,7 @@
                                         PressedScale="0.8"/>
                 </Grid.Behaviors>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="delete" FontSize="24" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="10,0,0,0"/>
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="delete" FontSize="24" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalOptions="Center" Margin="10,0,0,0"/>
                 <Label Grid.Column="1" Text="Изчистване на история" FontSize="16" VerticalTextAlignment="Center" />
                 <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HeightRequest="10"
                                    HorizontalOptions="{OnPlatform Android=StartAndExpand, WinUI=FillAndExpand}" />
@@ -48,10 +48,10 @@
                                         PressedScale="0.8"/>
                 </Grid.Behaviors>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="refresh" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="10,0,0,0"/>
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="refresh" FontSize="26" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalOptions="Center" Margin="10,0,0,0"/>
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="Презареди спирки" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="{Binding Updated, StringFormat='Последно обновено: {0:MM/dd/yyyy hh:mm}'}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" />
+                    <Label Text="{Binding Updated, StringFormat='Последно обновено: {0:MM/dd/yyyy hh:mm}'}" FontSize="Small" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" />
                 </StackLayout>
                 <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}" HeightRequest="10"
                                    HorizontalOptions="{OnPlatform Android=StartAndExpand, WinUI=FillAndExpand}">
@@ -71,7 +71,7 @@
                                         PressedScale="0.8"/>
                 </Grid.Behaviors>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="upgrade" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalOptions="Center" Margin="10,0,0,0"/>
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="upgrade" FontSize="26" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalOptions="Center" Margin="10,0,0,0"/>
 
                 <Label Grid.Column="1" Text="Проверка за нова версия" FontSize="16" VerticalTextAlignment="Center" />
             </Grid>
@@ -83,14 +83,14 @@
                     <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="history" FontSize="26" TextColor="{DynamicResource IconsColor}" VerticalTextAlignment="Center" Margin="10,0,0,0" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="history" FontSize="26" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalTextAlignment="Center" Margin="10,0,0,0" />
 
                 <StackLayout Grid.Column="1" Spacing="3">
 
                     <Label Text="Най-близка спирка при стартиране" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="Тестово" TextColor="{DynamicResource DetailsTextColor}" />
+                    <Label Text="Тестово" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" />
                 </StackLayout>
-                <Switch Grid.ColumnSpan="3" Margin="0,0,-15,0" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="End" OnColor="{DynamicResource IconsColor}" ThumbColor="{DynamicResource IconsColor}" VerticalOptions="Center" />
+                <Switch Grid.ColumnSpan="3" Margin="0,0,-15,0" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="End" OnColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" ThumbColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalOptions="Center" />
             </Grid>
 
             <Grid Margin="0,20,0,0">
@@ -103,10 +103,10 @@
                     <TapGestureRecognizer Command="{Binding ChooseTileServerCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{DynamicResource IconsColor}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="Tile сървър" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="{Binding SelectedTileServer}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{DynamicResource DetailsTextColor}"/>
+                    <Label Text="{Binding SelectedTileServer}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}"/>
                 </StackLayout>
             </Grid>
 
@@ -119,11 +119,11 @@
                     <TapGestureRecognizer Command="{Binding ChooseThemeCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="brightness_6" TextColor="{DynamicResource IconsColor}" FontSize="24" VerticalOptions="Center" Margin="10,0,0,0" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="brightness_6" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" FontSize="24" VerticalOptions="Center" Margin="10,0,0,0" />
 
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Grid.Column="1" Text="Тема" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Grid.Column="1" Text="{Binding SelectedTheme.Name}" FontSize="Small" TextColor="{DynamicResource DetailsTextColor}" VerticalTextAlignment="Center" />
+                    <Label Grid.Column="1" Text="{Binding SelectedTheme.Name}" FontSize="Small" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" VerticalTextAlignment="Center" />
                 </StackLayout>
             </Grid>
 
@@ -137,10 +137,10 @@
                     <TapGestureRecognizer Command="{Binding ChooseRenderStrategyCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{DynamicResource IconsColor}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="RenderFetchStrategy" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="{Binding SelectedRenderStrategy}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{DynamicResource DetailsTextColor}"/>
+                    <Label Text="{Binding SelectedRenderStrategy}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}"/>
                 </StackLayout>
             </Grid>
 
@@ -154,10 +154,10 @@
                     <TapGestureRecognizer Command="{Binding ChooseFetchingStrategyCommand}" />
                 </Grid.GestureRecognizers>
 
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{DynamicResource IconsColor}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Text="DataFetchStrategy" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="{Binding SelectedFetchingStrategy}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{DynamicResource DetailsTextColor}"/>
+                    <Label Text="{Binding SelectedFetchingStrategy}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}"/>
                 </StackLayout>
             </Grid>
 

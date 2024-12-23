@@ -13,11 +13,11 @@
             <Setter Property="Shell.TitleColor"
                         Value="White" />
             <Setter Property="Shell.TabBarTitleColor"
-              Value="{DynamicResource IconsColor}" />
+              Value="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
             <Setter Property="Shell.BackgroundColor"
-              Value="{DynamicResource BarBackgroundColor}" />
+              Value="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkBarBackgroundColor}}" />
             <Setter Property="Shell.TabBarForegroundColor" 
-              Value="{DynamicResource IconsColor}" />
+              Value="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
         </Style>
 
         <Style Class="FlyoutItemLabelStyle" TargetType="Label">
@@ -37,7 +37,7 @@
 
     <FlyoutItem Route="Main" Title="Начало" FlyoutDisplayOptions="AsSingleItem">
         <FlyoutItem.Icon>
-            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="home" Color="{DynamicResource IconsColor}" />
+            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="home" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
         </FlyoutItem.Icon>
        
         <ShellContent Style="{StaticResource TabStyle}" Route="Map" Title="Карта" ContentTemplate="{DataTemplate pages:MapPage}">
@@ -55,7 +55,7 @@
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="history" />
             </ShellContent.Icon>
         </ShellContent>
-        <!--<Tab Route="Lines" Shell.TabBarTitleColor="{DynamicResource IconsColor}" Shell.TabBarForegroundColor="{DynamicResource IconsColor}"  Title="Линии" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" IsVisible="False">
+        <!--<Tab Route="Lines" Shell.TabBarTitleColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" Shell.TabBarForegroundColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}"  Title="Линии" Shell.BackgroundColor="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkBarBackgroundColor}}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" IsVisible="False">
             <Tab.Icon>
                 <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="departure_board" />
             </Tab.Icon>
@@ -91,7 +91,7 @@
         </Tab>-->
     </FlyoutItem>
     
-    <!--<Tab Route="LineDetails" Shell.BackgroundColor="{DynamicResource BarBackgroundColor}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False">
+    <!--<Tab Route="LineDetails" Shell.BackgroundColor="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkBarBackgroundColor}}" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="True" Shell.TabBarIsVisible="False">
         <ShellContent Route="Forward" BindingContext="{Binding LineDetailsViewModel, Source={StaticResource Locator}}" Title="{Binding TargetStop, Mode=OneWay}">
             <ShellContent.ContentTemplate>
                 <DataTemplate>
@@ -110,20 +110,20 @@
     </Tab>-->
     <ShellContent Route="About" Title="Информация" ContentTemplate="{DataTemplate pages:AboutPage}">
         <ShellContent.Icon>
-            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="{DynamicResource IconsColor}" Glyph="info" />
+            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" Glyph="info" />
         </ShellContent.Icon>
     </ShellContent>
 
 
     <ShellContent Style="{StaticResource TabStyle}" Route="Settings" Title="Настройки" Shell.FlyoutBehavior="Disabled" ContentTemplate="{DataTemplate pages:SettingsPage}">
         <ShellContent.Icon>
-            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="{DynamicResource IconsColor}" Glyph="settings" />
+            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" Glyph="settings" />
         </ShellContent.Icon>
     </ShellContent>
 
     <ShellContent Style="{StaticResource TabStyle}" Route="Directions" Title="Пътуване (Експериментално)" ContentTemplate="{DataTemplate pages:Directions}">
         <ShellContent.Icon>
-            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="route" Color="{DynamicResource IconsColor}" />
+            <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Glyph="route" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
         </ShellContent.Icon>
     </ShellContent>
 

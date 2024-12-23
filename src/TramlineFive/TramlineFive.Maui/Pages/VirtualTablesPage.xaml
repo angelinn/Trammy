@@ -22,13 +22,13 @@
             <RoundRectangle CornerRadius="30,30,0,0" />
         </Border.StrokeShape>
 
-        <Grid BackgroundColor="{DynamicResource BackgroundColor}">
+        <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}" >
+            <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}" >
                 <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -38,14 +38,14 @@
 
                         <StackLayout x:Name="txtStopName" Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
                             <Label Text="{Binding StopInfo.PublicName}" FontSize="Default" />
-                            <Label Text="{Binding StopInfo.Code, StringFormat=' ({0})'}" TextColor="{DynamicResource IconsColor}" FontSize="Small" />
+                            <Label Text="{Binding StopInfo.Code, StringFormat=' ({0})'}" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" FontSize="Small" />
                         </StackLayout>
 
-                        <Grid BackgroundColor="{DynamicResource VirtualTablesTopBarColor}">
+                        <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}">
                             <Image Source="{Binding StopInfo.Code, Converter={StaticResource TransportToImage}}" Margin="10,10,10,10" HeightRequest="40" WidthRequest="40" />
                         </Grid>
 
-                        <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{DynamicResource VirtualTablesTopBarColor}">
+                        <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}">
                             <Grid.Behaviors>
                                 <mct:TouchBehavior DefaultAnimationDuration="350"
                                             PressedOpacity="0.6"
@@ -57,12 +57,12 @@
                             <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe838;" Margin="10,10,15,10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
                         </Grid>
 
-                        <BoxView Grid.ColumnSpan="2" HeightRequest="1" Color="{DynamicResource BackgroundColor}" VerticalOptions="End" />
+                        <BoxView Grid.ColumnSpan="2" HeightRequest="1" Color="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" VerticalOptions="End" />
                     </Grid>
                 </Grid>
             </Grid>
 
-            <RefreshView x:Name="refreshView" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" Margin="3,0,3,0" Grid.Row="1" RefreshColor="{DynamicResource BlueAccentColor}" Background="{DynamicResource BackgroundColor}">
+            <RefreshView x:Name="refreshView" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" Margin="3,0,3,0" Grid.Row="1" RefreshColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
                 <StackLayout>
                     <CollectionView ItemsSource="{Binding StopInfo.Arrivals}" SelectedItem="{Binding Selected, Mode=TwoWay}" VerticalOptions="FillAndExpand">
                         <CollectionView.ItemTemplate>

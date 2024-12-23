@@ -6,7 +6,6 @@ using TramlineFive.Common.ViewModels;
 using TramlineFive.DataAccess;
 using TramlineFive.Services;
 using TramlineFive.Common.Services;
-using TramlineFive.Themes;
 using TramlineFive.Maui.Services;
 using TramlineFive.Pages;
 using Microsoft.Maui.Controls.PlatformConfiguration;
@@ -21,20 +20,23 @@ namespace TramlineFive.Maui
 {
     public partial class App : Application
     {
-        private readonly StopsLoader stopsLoader;
         private readonly PublicTransport publicTransport;
 
-        public App(StopsLoader stopsLoader, PublicTransport publicTransport)
+        public App(PublicTransport publicTransport)
         {
             InitializeComponent();
 
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
 
-            this.stopsLoader = stopsLoader;
             this.publicTransport = publicTransport;
 
             string theme = Preferences.Get(Settings.Theme, Names.SystemDefault);
-            OnThemeChanged(new ChangeThemeMessage(theme));
+            Application.Current.UserAppTheme = theme switch
+            {
+                Names.LightTheme => AppTheme.Light,
+                Names.DarkTheme => AppTheme.Dark,
+                _ => AppTheme.Unspecified
+            };
 
             MainPage = new AppShell();
         }
@@ -46,30 +48,12 @@ namespace TramlineFive.Maui
 
         private void OnThemeChanged(ChangeThemeMessage m)
         {
-            System.Diagnostics.Debug.WriteLine("setting theme");
-            ResourceDictionary themeDictionary = Current.Resources.MergedDictionaries.FirstOrDefault(d => d.ContainsKey("PrimaryColor"));
-            if (themeDictionary != null)
-                Current.Resources.MergedDictionaries.Remove(themeDictionary);
-
-            if (m.Name == Names.SystemDefault)
+            Application.Current.UserAppTheme = m.Name switch
             {
-                //Current.UserAppTheme = Current.RequestedTheme;
-                if (Current.RequestedTheme == AppTheme.Light)
-                    Current.Resources.MergedDictionaries.Add(new LightTheme());
-                else if (Current.RequestedTheme == AppTheme.Dark)
-                    Current.Resources.MergedDictionaries.Add(new DarkTheme());
-            }
-            else if (m.Name == Names.LightTheme)
-            {
-                //Current.UserAppTheme = AppTheme.Light;
-                Current.Resources.MergedDictionaries.Add(new LightTheme());
-            }
-            else
-            {
-                //Current.UserAppTheme = AppTheme.Dark;
-                Current.Resources.MergedDictionaries.Add(new DarkTheme());
-            }
-            System.Diagnostics.Debug.WriteLine("theme set");
+                Names.LightTheme => AppTheme.Light,
+                Names.DarkTheme => AppTheme.Dark,
+                _ => AppTheme.Unspecified
+            };
         }
 
         protected override void OnStart()
@@ -83,12 +67,7 @@ namespace TramlineFive.Maui
                 IApplicationService applicationService = ServiceContainer.ServiceProvider.GetService<IApplicationService>();
 
                 WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, (r, m) => OnThemeChanged(m));
-                Current.RequestedThemeChanged += (s, a) =>
-                {
-                    if (Preferences.Get(Settings.Theme, Names.SystemDefault) == Names.SystemDefault)
-                        WeakReferenceMessenger.Default.Send(new ChangeThemeMessage(a.RequestedTheme == AppTheme.Light ? Names.LightTheme : Names.DarkTheme));
-                };
-
+     
                 StopsLoader.OnStopsUpdated += OnStopsUpdated;
 
                 publicTransport.Initialize(applicationService.GetStringSetting(Settings.StopsUpdated, null), TimeSpan.FromMinutes(1));

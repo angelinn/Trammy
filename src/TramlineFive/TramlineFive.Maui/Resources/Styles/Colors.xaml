@@ -41,4 +41,48 @@
     <Color x:Key="Blue200Accent">#72ACF1</Color>
     <Color x:Key="Blue300Accent">#A7CBF6</Color>
 
+    <Color x:Key="BarBackgroundColor">DodgerBlue</Color>
+    <Color x:Key="DarkBarBackgroundColor">##1f1f1f</Color>
+
+    <Color x:Key="BarTextColor">White</Color>
+    <Color x:Key="DarkBarTextColor">White</Color>
+
+    <Color x:Key="LabelTextColor">Black</Color>
+    <Color x:Key="DarkLabelTextColor">White</Color>
+
+    <Color x:Key="DetailsTextColor">#737373</Color>
+    <Color x:Key="DarkDetailsTextColor">#bfbfbf</Color>
+
+    <Color x:Key="PrimaryColor">DodgerBlue</Color>
+    <Color x:Key="DarkPrimaryColor">#1e90ff</Color>
+
+    <Color x:Key="BackgroundColor">White</Color>
+    <Color x:Key="DarkBackgroundColor">#22272e</Color>
+
+    <Color x:Key="PlaceholderTextColor">#C7C7CD</Color>
+    <Color x:Key="DarkPlaceholderTextColor">white</Color>
+
+    <Color x:Key="VirtualTablesTopBarColor">White</Color>
+    <Color x:Key="DarkVirtualTablesTopBarColor">#2d333b</Color>
+
+    <Color x:Key="MenuTextColor">#717578</Color>
+    <Color x:Key="DarkMenuTextColor">#bfbfbf</Color>
+
+    <Color x:Key="RedAccentColor">Red</Color>
+    <Color x:Key="DarkRedAccentColor">Crimson</Color>
+
+    <Color x:Key="BlueAccentColor">DodgerBlue</Color>
+    <Color x:Key="DarkBlueAccentColor">#1e90ff</Color>
+
+    <Color x:Key="IconsColor">DodgerBlue</Color>
+    <Color x:Key="DarkIconsColor">White</Color>
+
+    <Color x:Key="CardColor">#d2e9ff</Color>
+    <Color x:Key="DarkCardColor">#2d333b</Color>
+
+    <Color x:Key="PageBackground">#f5f0f0</Color>
+    <Color x:Key="DarkPageBackground">#121212</Color>
+
+    <Color x:Key="TopBarColor">DodgerBlue</Color>
+    <Color x:Key="DarkTopBarColor">#22272e</Color>
 </ResourceDictionary>

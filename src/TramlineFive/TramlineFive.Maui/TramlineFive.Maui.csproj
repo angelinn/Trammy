@@ -215,12 +215,6 @@
 		<Compile Update="Platforms\Windows\Services\VersionCheckingService.cs">
 			<ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
 		</Compile>
-		<Compile Update="Themes\DarkTheme.xaml.cs">
-			<DependentUpon>%(Filename)</DependentUpon>
-		</Compile>
-		<Compile Update="Themes\LightTheme.xaml.cs">
-			<DependentUpon>%(Filename)</DependentUpon>
-		</Compile>
 		<Compile Update="Views\SuggestionsView.xaml.cs">
 		  <DependentUpon>SuggestionsView.xaml</DependentUpon>
 		</Compile>
@@ -283,14 +277,6 @@
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Pages\VirtualTablesPage.xaml">
-			<SubType>Designer</SubType>
-			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Themes\DarkTheme.xaml">
-			<SubType>Designer</SubType>
-			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Themes\LightTheme.xaml">
 			<SubType>Designer</SubType>
 			<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
 		</MauiXaml>

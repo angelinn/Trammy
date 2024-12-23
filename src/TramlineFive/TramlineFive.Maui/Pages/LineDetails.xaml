@@ -49,14 +49,14 @@
                                     </DataTrigger>
                                 </Border.Triggers>
                                 
-                                <Grid VerticalOptions="Center" HeightRequest="60" Background="{DynamicResource BackgroundColor}" >
+                                <Grid VerticalOptions="Center" HeightRequest="60" Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" >
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="60" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="100" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="{DynamicResource IconsColor}" Text="share_location" FontSize="32" VerticalOptions="Center" HorizontalOptions="Center" />
+                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" Text="share_location" FontSize="32" VerticalOptions="Center" HorizontalOptions="Center" />
 
                                     <VerticalStackLayout  Grid.Column="1" VerticalOptions="Center">
                                         <Label Text="{Binding Code, Converter={StaticResource CodeToText}}" FontSize="14" VerticalOptions="Center" />
