@@ -70,12 +70,13 @@ namespace TramlineFive.Maui
      
                 StopsLoader.OnStopsUpdated += OnStopsUpdated;
 
-                publicTransport.Initialize(applicationService.GetStringSetting(Settings.StopsUpdated, null), TimeSpan.FromMinutes(1));
+                publicTransport.Initialize(applicationService.GetStringSetting(Settings.StopsUpdated, null), TimeSpan.FromDays(3));
 
                 _ = publicTransport.LoadData();
 
-                _ = ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync();
-                _ = ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync();
+                ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync().ContinueWith(
+                    _ => ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync()
+                );
 
                 _ = CheckForUpdateAsync();
             });
