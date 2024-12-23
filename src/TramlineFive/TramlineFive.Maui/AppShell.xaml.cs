@@ -22,6 +22,7 @@ namespace TramlineFive.Maui
                     FlyoutBehavior = FlyoutBehavior.Flyout;
 
                     opened = true;
+                    FlyoutIsPresented = false;
                 }
 
                 FlyoutIsPresented = !FlyoutIsPresented;
