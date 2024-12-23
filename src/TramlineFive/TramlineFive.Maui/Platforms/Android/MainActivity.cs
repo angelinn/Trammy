@@ -65,10 +65,10 @@ namespace TramlineFive.Maui
                 new AlertDialog.Builder(this).SetMessage(args.Exception.Message).Create().Show();
             };
 
-            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.PostNotifications) != Permission.Granted)
-            {
-                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.PostNotifications }, 0);
-            }
+            //if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.PostNotifications) != Permission.Granted)
+            //{
+            //    ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.PostNotifications }, 0);
+            //}
         }
 
         //protected override void OnResume()
