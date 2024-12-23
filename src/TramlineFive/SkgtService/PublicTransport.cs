@@ -6,6 +6,8 @@ using SkgtService.Models;
 using SkgtService.Models.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -39,12 +41,22 @@ public class PublicTransport
 
     public Dictionary<string, Dictionary<string, Line>> Lines => lines;
     public Dictionary<Line, ScheduleResponse> Schedules => schedules;
- 
+
     private readonly StopsLoader stopsLoader;
+    private DateTime lastUpdated;
+    private TimeSpan updateFrequency;
 
     public PublicTransport(StopsLoader stopsLoader)
     {
         this.stopsLoader = stopsLoader;
+    }
+
+    public void Initialize(string lastUpdatedString, TimeSpan updateFrequency)
+    {
+        if (DateTime.TryParse(lastUpdatedString, out DateTime updated))
+            lastUpdated = updated;
+
+        this.updateFrequency = updateFrequency;
     }
 
     public async Task LoadLinesAsync()
@@ -69,12 +81,18 @@ public class PublicTransport
         }
     }
 
+    private bool ShouldUpdateStops()
+    {
+        return (DateTime.Now - lastUpdated > updateFrequency);
+    }
+
+
     public async Task LoadData(bool update = false)
     {
         if (stopsHash.Count > 0 && !update)
             return;
 
-        if (update)
+        if (update || ShouldUpdateStops())
         {
             stopsHash.Clear();
             await stopsLoader.UpdateStopsAsync();

@@ -91,14 +91,13 @@ namespace TramlineFive.Maui
 
                 StopsLoader.OnStopsUpdated += OnStopsUpdated;
 
+                publicTransport.Initialize(applicationService.GetStringSetting(Settings.StopsUpdated, null), TimeSpan.FromMinutes(1));
+
                 _ = publicTransport.LoadData();
 
                 _ = ServiceContainer.ServiceProvider.GetService<HistoryViewModel>().LoadHistoryAsync();
                 _ = ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().LoadFavouritesAsync();
 
-                _ = UpdateStopsIfOlderThanAsync(TimeSpan.FromDays(7));
-
-              
                 _ = CheckForUpdateAsync();
             });
         }
@@ -173,29 +172,14 @@ namespace TramlineFive.Maui
         //            });
         //}
 
-        private async Task UpdateStopsIfOlderThanAsync(TimeSpan timespan)
+        private async void OnStopsUpdated(object sender, string newVersion)
         {
             IApplicationService applicationService = ServiceContainer.ServiceProvider.GetService<IApplicationService>();
 
-            // Update stops every some time
-            if (DateTime.TryParse(applicationService.GetStringSetting(Settings.StopsUpdated, null), out DateTime updated))
-            {
-                if (DateTime.Now - updated > timespan)
-                {
-                    Debug.WriteLine($"Updating stops {DateTime.Now - updated} time old");
+            applicationService.SetStringSetting("APIVersion", newVersion);
+            applicationService.SetStringSetting(Settings.StopsUpdated, DateTime.Now.ToString());
 
-                    await stopsLoader.UpdateStopsAsync();
-                    //_ = StopsLoader.UpdateRoutesAsync();
-
-                    await applicationService.DisplayNotification("Trammy", "Спирките са обновени");
-                }
-            }
-        }
-
-        private void OnStopsUpdated(object sender, string newVersion)
-        {
-            ServiceContainer.ServiceProvider.GetService<IApplicationService>().SetStringSetting("APIVersion", newVersion);
-            ServiceContainer.ServiceProvider.GetService<IApplicationService>().SetStringSetting(Settings.StopsUpdated, DateTime.Now.ToString());
+            await applicationService.DisplayNotification("Trammy", "Спирките са обновени");
         }
     }
 }
