@@ -50,7 +50,7 @@ public class ArrivalInformation
     public string LastCalculated => Arrivals.Skip(1).Count() > 0 ? "Следващи: " + String.Join(", ", Arrivals.Skip(1).Take(3).Select(t =>
     {
         return t.Minutes + " мин";
-    })) : "Последен";
+    })) : "60+ мин или последен";
 
     public string TransportType
     {

@@ -60,7 +60,10 @@ public class ArrivalsService
             stopsInfos.Add(info);
         }
 
-        StopResponse stopResponse = new StopResponse(stopCode, publicTransport.FindStop(stopCode).PublicName);
+        StopInformation currentStop = publicTransport.FindStop(stopCode);
+        StopResponse stopResponse = new StopResponse(stopCode, currentStop != null ? 
+            currentStop.PublicName :
+            string.Empty);
 
         stopResponse.Arrivals.AddRange(stopsInfos.Select(s => new ArrivalInformation(s)));
 
