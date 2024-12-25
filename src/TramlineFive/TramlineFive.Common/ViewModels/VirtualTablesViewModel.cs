@@ -109,6 +109,9 @@ namespace TramlineFive.Common.ViewModels
 
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
                 StopInformation stopInformation = publicTransport.FindStop(stopCode);
 
                 StopResponse info = await arrivalsService.GetByStopCodeAsync(stopCode, stopInformation?.Type);
@@ -119,6 +122,8 @@ namespace TramlineFive.Common.ViewModels
                 info.IsFavourite = favourite != null;
 
                 StopInfo = info;
+
+                sw.Stop();
 
                 Messenger.Send(new ShowMapMessage(true, StopInfo.Arrivals.Count, sw.ElapsedMilliseconds));
                 await HistoryDomain.AddAsync(stopCode, StopInfo.PublicName);

@@ -98,9 +98,14 @@ public class PublicTransport
             await stopsLoader.UpdateStopsAsync();
         }
 
-        List<StopLocation> stops = await stopsLoader.LoadStopsAsync();
-        SentrySdk.CaptureMessage($"Loaded {stops.Count} stops.");
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
 
+        List<StopLocation> stops = await stopsLoader.LoadStopsAsync();
+
+        sw.Stop();
+        Debug.WriteLine($"Loaded stops in {sw.ElapsedMilliseconds} ms");
+        sw.Restart();
         foreach (var stop in stops)
         {
             try
@@ -116,6 +121,8 @@ public class PublicTransport
             }
         }
 
+        sw.Stop();
+        Debug.WriteLine($"Parsed stops in {sw.ElapsedMilliseconds} ms");
         StopsReadyEvent.Set();
         //var loadedRoutes = await StopsLoader.LoadRoutesAsync();
 

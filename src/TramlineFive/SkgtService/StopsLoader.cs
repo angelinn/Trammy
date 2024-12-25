@@ -10,9 +10,11 @@ using SkgtService.Parsers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,14 +55,19 @@ public class StopsLoader
 
         try
         {
-            string json = File.ReadAllText(PATH);
-            if (string.IsNullOrEmpty(json))
+            using var fileStream = new FileStream(PATH, FileMode.Open, FileAccess.Read);
+
+            if (fileStream.Length == 0)
             {
                 File.Delete(PATH);
                 return await LoadStopsAsync();
             }
 
-            return JsonConvert.DeserializeObject<List<StopLocation>>(json);
+            using var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress);
+            using var streamReader = new StreamReader(gzipStream);
+            using var jsonReader = new JsonTextReader(streamReader);
+
+            return JsonSerializer.Create().Deserialize<List<StopLocation>>(jsonReader);
         }
         catch (Exception ex)
         {
@@ -69,7 +76,6 @@ public class StopsLoader
         }
 
     }
-
     //public  async Task<List<Routes>> LoadRoutesAsync()
     //{
     //    if (!File.Exists(ROUTES_PATH))
@@ -123,8 +129,13 @@ public class StopsLoader
 
         try
         {
-            string stopsArray = JObject.Parse(body)["props"]["stops"].ToString();
-            File.WriteAllText(PATH, stopsArray);
+            var stopsArray = JObject.Parse(body)["props"]["stops"].ToObject<List<StopLocation>>();
+            using var fileStream = new FileStream(PATH, FileMode.Create, FileAccess.Write);
+            using var gzipStream = new GZipStream(fileStream, CompressionLevel.Optimal);
+            using var streamWriter = new StreamWriter(gzipStream);
+            using var jsonWriter = new JsonTextWriter(streamWriter);
+
+            JsonSerializer.Create().Serialize(jsonWriter, stopsArray);
         }
         catch (Exception ex)
         {

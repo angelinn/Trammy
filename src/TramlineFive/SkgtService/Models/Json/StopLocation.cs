@@ -7,9 +7,9 @@ namespace SkgtService.Models.Json
 {
     public class StopLocation
     {
-        //[JsonProperty("latitude")]
+        [JsonIgnore]
         public double Lat => Position[0];
-        //[JsonProperty("longitude")]
+        [JsonIgnore]
         public double Lon => Position[1];
         [JsonProperty("name")]
         public string PublicName { get; set; }

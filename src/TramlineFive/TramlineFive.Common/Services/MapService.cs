@@ -26,6 +26,7 @@ using Mapsui.Tiling.Fetcher;
 using Mapsui.Extensions;
 using Mapsui.Tiling.Rendering;
 using RTools_NTS.Util;
+using System.Diagnostics;
 
 namespace TramlineFive.Common.Services;
 
@@ -127,19 +128,26 @@ public class MapService
     public async Task SetupMapAsync()
     {
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
-
        
         LoadPinStyles();
 
         publicTransport.StopsReadyEvent.WaitOne();
 
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
         map.Layers.Add(BuildStopsLayer());
+        stopwatch.Stop();
+        Debug.WriteLine($"Built stops layer in {stopwatch.ElapsedMilliseconds} ms");
 
         stopsFinishedLoadingEvent.Set();
 
         WeakReferenceMessenger.Default.Send(new MapLoadedMessage());
 
+        stopwatch.Restart();
         await ShowNearbyStops(point);
+        stopwatch.Stop();
+        Debug.WriteLine($"Showed nearby stops in {stopwatch.ElapsedMilliseconds} ms");
+
         MyLocationLayer locationLayer = new MyLocationLayer(map);
         locationLayer.Enabled = true;
         map.Layers.Add(locationLayer);
