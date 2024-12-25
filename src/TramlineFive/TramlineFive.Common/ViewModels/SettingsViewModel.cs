@@ -55,9 +55,9 @@ namespace TramlineFive.Common.ViewModels
             ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, false);
             MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
             MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
-            SelectedFetchingStrategy = ApplicationService.GetStringSetting(Settings.FetchingStrategy, "Full");
+            SelectedFetchingStrategy = ApplicationService.GetStringSetting(Settings.FetchingStrategy, Defaults.DataFetchStrategy);
             SelectedTileServer = ApplicationService.GetStringSetting(Settings.SelectedTileServer, Defaults.TileServer);
-            SelectedRenderStrategy = ApplicationService.GetStringSetting(Settings.RenderStrategy, "Default");
+            SelectedRenderStrategy = ApplicationService.GetStringSetting(Settings.RenderStrategy, Defaults.RenderFetchStrategy);
 
             string theme = ApplicationService.GetStringSetting(Settings.Theme, Names.SystemDefault);
             SelectedTheme = theme switch
