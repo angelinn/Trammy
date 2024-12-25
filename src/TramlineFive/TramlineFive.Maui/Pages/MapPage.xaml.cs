@@ -12,11 +12,13 @@ using Mapsui.Widgets.Zoom;
 using Microsoft.Maui.Layouts;
 using SkgtService.Models.Json;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using TramlineFive.Common;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
+using TramlineFive.Maui;
 using Map = Mapsui.Map;
 
 namespace TramlineFive.Pages
@@ -60,15 +62,21 @@ namespace TramlineFive.Pages
 
             _ = Task.Run(async () =>
             {
-                await Task.Delay(200);
+                await LoadMapAsync();
+                await Task.Delay(500);
 
-                _ = LoadMapAsync();
-                MainThread.BeginInvokeOnMainThread(() =>
+                _ = (BindingContext as MapViewModel).LocalizeAsync(true);
+
+                await Dispatcher.DispatchAsync(() =>
                 {
+                    var sw = new Stopwatch();
+                    sw.Start();
                     LazySearchBar.LoadViewAsync();
                     LazyVirtualTablesView.LoadViewAsync();
                     LazyFab.LoadViewAsync();
                     LazySuggestions.LoadViewAsync();
+                    sw.Stop();
+                    Debug.WriteLine($"Lazy load time: {sw.ElapsedMilliseconds}");
                 });
             });
         }
@@ -142,8 +150,6 @@ namespace TramlineFive.Pages
             await (BindingContext as MapViewModel).Initialize(map.Map);
 
             map.TouchAction += OnMapTouchAction;
-
-            await (BindingContext as MapViewModel).LoadAsync();
         }
 
         protected override void OnSizeAllocated(double width, double height)

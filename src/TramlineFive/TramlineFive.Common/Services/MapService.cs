@@ -161,7 +161,7 @@ public class MapService
             });
         }
 
-        map.Navigator.ViewportChanged += (sender, args) => SendMapRefreshMessage();
+        //map.Navigator.ViewportChanged += (sender, args) => SendMapRefreshMessage();
     }
 
     public void MoveTo(MPoint position, int zoom, bool home = false)
@@ -389,6 +389,7 @@ public class MapService
                     style.Enabled = true;
                 }
             }
+
 
             //FilterStops(neighbours);
 

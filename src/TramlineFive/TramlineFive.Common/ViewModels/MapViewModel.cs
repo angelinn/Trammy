@@ -76,14 +76,6 @@ namespace TramlineFive.Common.ViewModels
 
         } 
 
-        public async Task LoadAsync()
-        {
-            locationStatus = await LocalizeAsync(true);
-
-            IsMapVisible = true;
-            IsMyLocationVisible = true;
-        }
-
         [RelayCommand]
         private async Task MyLocation()
         {
@@ -91,7 +83,7 @@ namespace TramlineFive.Common.ViewModels
                 ApplicationService.OpenLocationUI();
         }
 
-        private async Task<LocationStatus> LocalizeAsync(bool first = false)
+        public async Task<LocationStatus> LocalizeAsync(bool first = false)
         {
             bool isAnimating = true;
             Task _ = Task.Run(async () =>
@@ -112,7 +104,8 @@ namespace TramlineFive.Common.ViewModels
                         isAnimating = false;
                         HasLocation = false;
 
-                        return LocationStatus.NoPermissions;
+                        locationStatus = LocationStatus.NoPermissions;
+                        return locationStatus;
                     }
 
 
@@ -121,7 +114,8 @@ namespace TramlineFive.Common.ViewModels
                         isAnimating = false;
                         HasLocation = false;
 
-                        return LocationStatus.NoPermissions;
+                        locationStatus = LocationStatus.NoPermissions;
+                        return locationStatus;
                     }
                 }
 
@@ -137,12 +131,16 @@ namespace TramlineFive.Common.ViewModels
 
                     isAnimating = false;
                     HasLocation = true;
-                    return LocationStatus.Allowed;
+
+
+                    locationStatus = LocationStatus.Allowed;
+                    return locationStatus;
                 }
 
                 isAnimating = false;
                 HasLocation = false; 
-                return LocationStatus.TurnedOff;
+                locationStatus = LocationStatus.TurnedOff;
+                return locationStatus;
             }
             catch (Exception ex)
             {
@@ -151,7 +149,9 @@ namespace TramlineFive.Common.ViewModels
 
                 isAnimating = false;
                 HasLocation = false;
-                return LocationStatus.TurnedOff;
+
+                locationStatus = LocationStatus.TurnedOff;
+                return locationStatus;
             }
         }
 
@@ -343,11 +343,5 @@ namespace TramlineFive.Common.ViewModels
                 FilterStops();
             }
         }
-
-        [ObservableProperty]
-        private bool isMapVisible;
-
-        [ObservableProperty]
-        private bool isMyLocationVisible;
     }
 }
