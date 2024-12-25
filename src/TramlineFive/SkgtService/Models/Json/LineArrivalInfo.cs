@@ -16,4 +16,7 @@ public class LineArrivalInfo
     [JsonProperty("st_name")]
     public string StName { get; set; }
     public List<Arrival> Details { get; set; }
+    [JsonProperty("last_stop")]
+    public string LastStop { get; set; }
+    public string LastStopName { get; set; }
 }

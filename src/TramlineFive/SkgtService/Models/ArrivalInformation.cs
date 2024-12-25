@@ -20,12 +20,19 @@ public class ArrivalInformation
     public ArrivalInformation(LineArrivalInfo line)
     {
         LineName = line.Name;
-        //Start = line.Start;
-        string[] route = line.RouteName.Split(" - ");
-        if (route.Length > 1)
-            Direction = route[1].Trim();
+
+        if (!string.IsNullOrEmpty(line.LastStopName))
+        {
+            Direction = line.LastStopName;
+        }
         else
-            Direction = line.RouteName;
+        {
+            string[] route = line.RouteName.Split(" - ");
+            if (route.Length > 1)
+                Direction = route[1].Trim();
+            else
+                Direction = line.RouteName;
+        }
 
         Arrivals = line.Details;
 
