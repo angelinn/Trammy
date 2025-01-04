@@ -32,7 +32,7 @@
 
                 <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="delete" FontSize="24" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalOptions="Center" Margin="10,0,0,0"/>
                 <Label Grid.Column="1" Text="Изчистване на история" FontSize="16" VerticalTextAlignment="Center" />
-                <ActivityIndicator Grid.ColumnSpan="2" IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"  HeightRequest="25" HorizontalOptions="End" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
+                <ActivityIndicator Grid.ColumnSpan="2" IsRunning="{Binding IsLoading}" HeightRequest="25" HorizontalOptions="End" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
             </Grid>
             <Grid Margin="0,20,0,0" HeightRequest="40" IsEnabled="{Binding IsUpdatingStops, Converter={StaticResource InverseBool}}">
                 <Grid.ColumnDefinitions>
@@ -52,7 +52,7 @@
                     <Label Text="Презареди спирки" FontSize="16" VerticalTextAlignment="Center" />
                     <Label Text="{Binding Updated, StringFormat='Последно обновено: {0:MM/dd/yyyy hh:mm}'}" FontSize="Small" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" />
                 </StackLayout>
-                <ActivityIndicator Grid.ColumnSpan="2" IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}"  HeightRequest="25" HorizontalOptions="End" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
+                <ActivityIndicator Grid.ColumnSpan="2" IsRunning="{Binding IsUpdatingStops}"  HeightRequest="25" HorizontalOptions="End" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
             </Grid>
 
             <Grid Margin="0,20,0,0" HeightRequest="40" IsEnabled="{Binding IsCheckingForUpdate, Converter={StaticResource InverseBool}}">
@@ -71,7 +71,7 @@
                 <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="upgrade" FontSize="26" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalOptions="Center" Margin="10,0,0,0"/>
 
                 <Label Grid.Column="1" Text="Проверка за нова версия" FontSize="16" VerticalTextAlignment="Center" />
-                <ActivityIndicator Grid.ColumnSpan="2" IsEnabled="{Binding IsCheckingForUpdate}" IsRunning="{Binding IsCheckingForUpdate}" IsVisible="{Binding IsCheckingForUpdate}"  HeightRequest="25" HorizontalOptions="End" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
+                <ActivityIndicator Grid.ColumnSpan="2" IsRunning="{Binding IsCheckingForUpdate}"   HeightRequest="25" HorizontalOptions="End" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
             </Grid>
 
 
