@@ -45,7 +45,7 @@
                             <Image Source="{Binding StopInfo.Code, Converter={StaticResource TransportToImage}}" Margin="10,10,10,10" HeightRequest="40" WidthRequest="40" />
                         </Grid>
 
-                        <Grid Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}">
+                        <Grid x:Name="starView" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}">
                             <Grid.Behaviors>
                                 <mct:TouchBehavior DefaultAnimationDuration="350"
                                             PressedOpacity="0.6"

@@ -52,22 +52,17 @@ namespace TramlineFive.Pages
                 {
                     SizeRequest size = txtStopName.Measure(Width, Height);
 
-                    System.Diagnostics.Debug.WriteLine("TRANSLATING OUT OF VIEW");
                     await txtStopName.TranslateTo(-size.Request.Width, 0, 3000);
-
-                    System.Diagnostics.Debug.WriteLine("WAITING OUT OF VIEW");
-                    await Task.Delay(1000);
+                    await Task.Delay(100);
 
                     if (txtStopName.TranslationX == 0)
                         continue;
 
-                    txtStopName.TranslationX = Width;
+                    txtStopName.TranslationX = Width - starView.Width;
 
-                    System.Diagnostics.Debug.WriteLine("TRANSLATING IN VIEW");
                     await txtStopName.TranslateTo(0, 0, 5000);
                 }
 
-                System.Diagnostics.Debug.WriteLine("WAITING IN VIEW");
                 await Task.Delay(5000);
             }
         }
