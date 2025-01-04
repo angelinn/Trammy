@@ -81,6 +81,8 @@ namespace TramlineFive.Common.ViewModels
         private async Task CheckForUpdates()
         {
 
+            IsCheckingForUpdate = true;
+
             NewVersion version = await versionService.CheckForUpdates();
             if (version != null)
             {
@@ -95,6 +97,8 @@ namespace TramlineFive.Common.ViewModels
             {
                 await ApplicationService.DisplayAlertAsync("", "Инсталирана е последна версия на Trammy! 🎉", "ОК");
             }
+
+            IsCheckingForUpdate = false;
         }
 
         [RelayCommand]
@@ -199,6 +203,9 @@ namespace TramlineFive.Common.ViewModels
 
         [ObservableProperty]
         private bool isUpdatingStops;
+
+        [ObservableProperty]
+        private bool isCheckingForUpdate;
 
         [ObservableProperty]
         private bool showNearestStop;

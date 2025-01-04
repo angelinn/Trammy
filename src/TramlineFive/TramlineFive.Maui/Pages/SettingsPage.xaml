@@ -16,10 +16,10 @@
 
     <ScrollView BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" >
         <StackLayout Padding="10">
-            <Grid Margin="0,10,0,0" HeightRequest="40">
+            <Grid Margin="0,10,0,0" HeightRequest="40"  IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <Grid.Behaviors>
@@ -32,13 +32,12 @@
 
                 <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="delete" FontSize="24" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalOptions="Center" Margin="10,0,0,0"/>
                 <Label Grid.Column="1" Text="Изчистване на история" FontSize="16" VerticalTextAlignment="Center" />
-                <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HeightRequest="10"
-                                   HorizontalOptions="{OnPlatform Android=StartAndExpand, WinUI=FillAndExpand}" />
+                <ActivityIndicator Grid.ColumnSpan="2" IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"  HeightRequest="25" HorizontalOptions="End" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
             </Grid>
-            <Grid Margin="0,20,0,0" HeightRequest="40">
+            <Grid Margin="0,20,0,0" HeightRequest="40" IsEnabled="{Binding IsUpdatingStops, Converter={StaticResource InverseBool}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.Behaviors>
                     <mct:TouchBehavior Command="{Binding UpdateStopsCommand}" 
@@ -53,15 +52,13 @@
                     <Label Text="Презареди спирки" FontSize="16" VerticalTextAlignment="Center" />
                     <Label Text="{Binding Updated, StringFormat='Последно обновено: {0:MM/dd/yyyy hh:mm}'}" FontSize="Small" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" />
                 </StackLayout>
-                <ActivityIndicator IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}" HeightRequest="10"
-                                   HorizontalOptions="{OnPlatform Android=StartAndExpand, WinUI=FillAndExpand}">
-                </ActivityIndicator>
+                <ActivityIndicator Grid.ColumnSpan="2" IsEnabled="{Binding IsUpdatingStops}" IsRunning="{Binding IsUpdatingStops}" IsVisible="{Binding IsUpdatingStops}"  HeightRequest="25" HorizontalOptions="End" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
             </Grid>
 
-            <Grid Margin="0,20,0,0" HeightRequest="40">
+            <Grid Margin="0,20,0,0" HeightRequest="40" IsEnabled="{Binding IsCheckingForUpdate, Converter={StaticResource InverseBool}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="55" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.Behaviors>
                     <mct:TouchBehavior Command="{Binding CheckForUpdatesCommand}" 
@@ -74,41 +71,9 @@
                 <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="upgrade" FontSize="26" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalOptions="Center" Margin="10,0,0,0"/>
 
                 <Label Grid.Column="1" Text="Проверка за нова версия" FontSize="16" VerticalTextAlignment="Center" />
+                <ActivityIndicator Grid.ColumnSpan="2" IsEnabled="{Binding IsCheckingForUpdate}" IsRunning="{Binding IsCheckingForUpdate}" IsVisible="{Binding IsCheckingForUpdate}"  HeightRequest="25" HorizontalOptions="End" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
             </Grid>
 
-            <Grid Margin="0,20,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="55" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="50" />
-                </Grid.ColumnDefinitions>
-
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="history" FontSize="26" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalTextAlignment="Center" Margin="10,0,0,0" />
-
-                <StackLayout Grid.Column="1" Spacing="3">
-
-                    <Label Text="Най-близка спирка при стартиране" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="Тестово" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" />
-                </StackLayout>
-                <Switch Grid.ColumnSpan="3" Margin="0,0,-15,0" IsToggled="{Binding ShowNearestStop}" HorizontalOptions="End" OnColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" ThumbColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" VerticalOptions="Center" />
-            </Grid>
-
-            <Grid Margin="0,20,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="55" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ChooseTileServerCommand}" />
-                </Grid.GestureRecognizers>
-
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
-                <StackLayout Grid.Column="1" Spacing="3">
-                    <Label Text="Tile сървър" FontSize="16" VerticalTextAlignment="Center" />
-                    <Label Text="{Binding SelectedTileServer}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}"/>
-                </StackLayout>
-            </Grid>
 
             <Grid Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
@@ -124,6 +89,26 @@
                 <StackLayout Grid.Column="1" Spacing="3">
                     <Label Grid.Column="1" Text="Тема" FontSize="16" VerticalTextAlignment="Center" />
                     <Label Grid.Column="1" Text="{Binding SelectedTheme.Name}" FontSize="Small" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" VerticalTextAlignment="Center" />
+                </StackLayout>
+            </Grid>
+
+            <BoxView HeightRequest="1" Margin="0,20,0,10" Color="Gray" Opacity="0.5" />
+            <Label Text="Технически настройки" FontSize="16" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}"  />
+
+            <Grid Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="55" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ChooseTileServerCommand}" />
+                </Grid.GestureRecognizers>
+
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="map" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" FontSize="26" VerticalOptions="Center" Margin="10,0,0,0" />
+                <StackLayout Grid.Column="1" Spacing="3">
+                    <Label Text="Tile сървър" FontSize="16" VerticalTextAlignment="Center" />
+                    <Label Text="{Binding SelectedTileServer}" FontSize="Small" VerticalTextAlignment="Center" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}"/>
                 </StackLayout>
             </Grid>
 

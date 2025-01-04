@@ -38,14 +38,6 @@ namespace TramlineFive.Common.ViewModels
             Messenger.Register<FavouriteAddedMessage>(this, (r, f) => OnFavouriteAdded(f.Value));
 
             Messenger.Register<StopSelectedMessage>(this, async (r, sc) => await OnStopSelected(sc.Value.Selected));
-            Messenger.Register<UpdateLocationMessage>(this, async (r, message) =>
-            {
-                if (firstLocalization && ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, false))
-                {
-                    firstLocalization = false;
-                    await OnNearestFavouriteRequested(message.Position);
-                }
-            });
 
             this.locationService = locationService;
             this.publicTransport = publicTransport;
