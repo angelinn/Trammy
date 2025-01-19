@@ -19,7 +19,7 @@
         <!--<Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="3*" />
-        </Grid.RowDefinitions>--> 
+        </Grid.RowDefinitions>-->
 
         <!--<Grid BackgroundColor="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkBarBackgroundColor}}">
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal" BackgroundColor="Transparent">
@@ -32,39 +32,35 @@
 
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
 
-            <ListView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="90" SeparatorVisibility="None" CachingStrategy="RecycleElement" Margin="0,10,0,0">
-                <ListView.ItemTemplate>
+            <CollectionView ItemsSource="{Binding History}" SelectedItem="{Binding Selected, Mode=TwoWay}" SelectionMode="Single" Margin="0,10,0,0">
+                <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Null}">
-                        <ViewCell> 
-                            <ViewCell.View>
-                                <Border Padding="0"  Margin="15,0,15,10" Stroke="Transparent" Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="30" />
-                                    </Border.StrokeShape>
-                                    
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="60" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
+                        <Border HeightRequest="80" Padding="0"  Margin="15,0,15,10" Stroke="Transparent" Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="30" />
+                            </Border.StrokeShape>
 
-                                        <Image Source="{Binding StopCode, Converter={StaticResource TransportToImage}}" HeightRequest="30" WidthRequest="30" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                                        <StackLayout Spacing="0" VerticalOptions="Center" Grid.Column="1">
-                                            <StackLayout Orientation="Horizontal">
-                                                <Label Text="{Binding Name}" />
-                                                <Label Text="{Binding StopCode, StringFormat=' ({0})'}" />
-                                            </StackLayout>
+                                <Image Source="{Binding StopCode, Converter={StaticResource TransportToImage}}" HeightRequest="30" WidthRequest="30" />
 
-                                            <Label Text="{Binding TimeString}" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" Margin="0,5,0,0" />
-                                        </StackLayout>
-                                    </Grid>
-                                </Border>
-                            </ViewCell.View>
-                        </ViewCell>
+                                <StackLayout Spacing="0" VerticalOptions="Center" Grid.Column="1">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding Name}" />
+                                        <Label Text="{Binding StopCode, StringFormat=' ({0})'}" />
+                                    </StackLayout>
+
+                                    <Label Text="{Binding TimeString}" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" Margin="0,5,0,0" />
+                                </StackLayout>
+                            </Grid>
+                        </Border>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Grid>
     </Grid>
 </ContentPage>
