@@ -165,18 +165,21 @@ public class MapService
         //map.Navigator.ViewportChanged += (sender, args) => SendMapRefreshMessage();
     }
 
-    public void MoveTo(MPoint position, int zoom, bool home = false)
+    public void MoveTo(MPoint position, int zoom, bool home = false, bool ignoreOverlayHeight = false)
     {
         MPoint point = SphericalMercator.FromLonLat(position);
 
         if (home)
             map.Home = n => n.CenterOn(point);
 
-        // Center only on the visible part of the screen
-        double overlayHeightInWorld = map.Navigator.Viewport.ScreenToWorld(new MPoint(0, VisibleMapHeightInPixels)).Y -
-            map.Navigator.Viewport.ScreenToWorld(new MPoint(0, 0)).Y;
+        if (!ignoreOverlayHeight)
+        {
+            // Center only on the visible part of the screen
+            double overlayHeightInWorld = map.Navigator.Viewport.ScreenToWorld(new MPoint(0, VisibleMapHeightInPixels)).Y -
+                map.Navigator.Viewport.ScreenToWorld(new MPoint(0, 0)).Y;
 
-        point.Y += overlayHeightInWorld;
+            point.Y += overlayHeightInWorld;
+        }
 
         map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
     }
@@ -332,13 +335,13 @@ public class MapService
         };
     }
 
-    public void MoveAroundStop(string code)
+    public void MoveAroundStop(string code, bool ignoreOverlayHeight)
     {
         if (!stopsDictionary.TryGetValue(code, out IFeature feature))
             return;
         StopInformation location = feature["stopObject"] as StopInformation;
         MPoint point = new MPoint(location.Lon, location.Lat);
-        MoveTo(point, 17);
+        MoveTo(point, 17, false, ignoreOverlayHeight);
 
         MPoint localPoint = SphericalMercator.FromLonLat(point);
 

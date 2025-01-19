@@ -178,7 +178,7 @@ namespace TramlineFive.Common.ViewModels
                 HistoryDomain history = await HistoryDomain.GetMostFrequentStopForCurrentHour();
                 if (history != null)
                 {
-                    mapService.MoveAroundStop(history.StopCode);
+                    mapService.MoveAroundStop(history.StopCode, true);
                 }
             }
         }
