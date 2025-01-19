@@ -140,6 +140,18 @@ namespace TramlineFive.Pages
 
             mapService.VisibleMapHeightInPixels = (Height - Height * (1 + 1) * 0.20) / 2;
 
+#if ANDROID
+            int statusBarHeight = 0;
+            int resourceId = Android.Content.Res.Resources.System.GetIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0)
+            {
+                statusBarHeight = Android.Content.Res.Resources.System.GetDimensionPixelSize(resourceId);
+                double statusBarHeightDip = statusBarHeight / Android.Content.Res.Resources.System.DisplayMetrics.Density;
+
+                mapService.VisibleMapHeightInPixels -= statusBarHeightDip / 2;
+            }
+#endif
+
             if (map != null)
                 map.HeightRequest = Height;
         }
