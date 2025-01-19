@@ -7,7 +7,7 @@ using System;
 using System.Text;
 using TramlineFive.Common.Services;
 
-namespace TramlineFive.Common.Maps;
+namespace TramlineFive.Common.Services.Maps;
 
 public static class TileServerFactory
 {

@@ -15,6 +15,7 @@ using SkgtService.Parsers;
 using System.Diagnostics;
 using Plugin.LocalNotification;
 using SkgtService.Models.Json;
+using TramlineFive.Common.Services.Interfaces;
 
 namespace TramlineFive.Maui
 {

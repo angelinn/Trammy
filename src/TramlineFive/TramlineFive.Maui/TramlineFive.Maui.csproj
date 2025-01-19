@@ -305,4 +305,8 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Platforms\Android\Renderers\" />
+	</ItemGroup>
+
 </Project>

@@ -28,7 +28,6 @@ namespace TramlineFive.Common.ViewModels.Locator
         public FavouritesViewModel FavouritesViewModel => ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>(); // => ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>(); // SimpleIoc.Default.GetInstance<FavouritesViewModel>();
         public LicensesViewModel LicensesViewModel => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // SimpleIoc.Default.GetInstance<LicensesViewModel>();
         public MapViewModel MapViewModel => ServiceContainer.ServiceProvider.GetService<MapViewModel>();
-        public MainViewModel MainViewModel => ServiceContainer.ServiceProvider.GetService<MainViewModel>();// => ServiceContainer.ServiceProvider.GetService<MainViewModel>(); // SimpleIoc.Default.GetInstance<MainViewModel>();
         public LineViewModel LinesViewModel => ServiceContainer.ServiceProvider.GetService<LineViewModel>();
         public LineDetailsViewModel LineDetailsViewModel => ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>(); 
         public BusLinesViewModel BusLinesViewModel => ServiceContainer.ServiceProvider.GetService<BusLinesViewModel>();
@@ -55,7 +54,6 @@ namespace TramlineFive.Common.ViewModels.Locator
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<FavouritesViewModel>();
             services.AddSingleton<LicensesViewModel>();
-            services.AddSingleton<MainViewModel>();
             services.AddSingleton<BusLinesViewModel>();
             services.AddSingleton<TramLinesViewModel>();
             services.AddSingleton<TrolleyLinesViewModel>();

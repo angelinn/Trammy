@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using TramlineFive.Common.Services;
+using TramlineFive.Common.Services.Interfaces;
 
 namespace TramlineFive.Common.ViewModels
 {

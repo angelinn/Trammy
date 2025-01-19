@@ -16,6 +16,7 @@ using SkgtService.Models;
 using SkgtService.Models.Json;
 using TramlineFive.Common;
 using TramlineFive.Common.Services;
+using TramlineFive.Common.Services.Interfaces;
 using TramlineFive.Services.Main;
 
 namespace TramlineFive.Droid.Services

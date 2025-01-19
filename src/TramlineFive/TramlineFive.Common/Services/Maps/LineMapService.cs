@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TramlineFive.Common.Maps;
 using SkgtService;
 using SkgtService.Models;
 using KdTree;
@@ -18,7 +17,7 @@ using ExCSS;
 using Mapsui.Animations;
 using SkgtService.Models.Json;
 
-namespace TramlineFive.Common.Services;
+namespace TramlineFive.Common.Services.Maps;
 
 public class LineMapService
 {
@@ -154,7 +153,7 @@ public class LineMapService
     }
 
     private void ZoomToBox(Navigator navigator, MRect box, long duration = -1, Easing easing = null)
-    { 
+    {
         navigator.ZoomToBox(box.Grow(box.Width * 0.1, box.Height * 0.1), MBoxFit.Fit, duration, easing);
     }
 

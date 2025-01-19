@@ -13,7 +13,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using TramlineFive.Common.Maps;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using Mapsui.Projections;
@@ -28,7 +27,7 @@ using Mapsui.Tiling.Rendering;
 using RTools_NTS.Util;
 using System.Diagnostics;
 
-namespace TramlineFive.Common.Services;
+namespace TramlineFive.Common.Services.Maps;
 
 public class MapService
 {
@@ -66,7 +65,7 @@ public class MapService
     public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy)
     {
         this.map = map;
-        ChangeTileServer(tileServer, dataFetchStrategy, renderFetchStrategy);   
+        ChangeTileServer(tileServer, dataFetchStrategy, renderFetchStrategy);
 
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
         map.Home = n =>
@@ -115,20 +114,20 @@ public class MapService
             savedTileServer = tileServer;
 
         map.Layers.Insert(0, TileServerFactory.CreateTileLayer(savedTileServer, dataStrategy, renderStrategy));
-    } 
+    }
 
     private async Task OnStopsRefreshed()
     {
         map.Layers.Remove(map.Layers[1]);
         map.Layers.Insert(1, BuildStopsLayer());
 
-        await ShowNearbyStops(new MPoint( map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY));
+        await ShowNearbyStops(new MPoint(map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY));
     }
 
     public async Task SetupMapAsync()
     {
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
-       
+
         LoadPinStyles();
 
         publicTransport.StopsReadyEvent.WaitOne();
@@ -261,7 +260,7 @@ public class MapService
             Offset offset = null;
 
             switch (location.Type)
-               {
+            {
                 case TransportType.Trolley:
                     symbolStyle = trolleyPinStyle;
                     offset = new Offset(0, -32);
@@ -282,7 +281,7 @@ public class MapService
                 default:
                     symbolStyle = pinStyle;
                     offset = new Offset(0, -32);
-                    break;                    
+                    break;
             }
 
             IFeature feature = new PointFeature(stopMapLocation)
@@ -305,7 +304,7 @@ public class MapService
                         Offset = offset,
                         Font = new Font { Size = 11 },
                         BackColor = new Brush(new Color(255, 255, 255, 200)),
-                        
+
                     }
                 }
             };
@@ -414,7 +413,7 @@ public class MapService
                 {
                     activeStyles.Add(style);
 
-                    System.Diagnostics.Debug.WriteLine($"Enabling all styles for {location.Code}");
+                    Debug.WriteLine($"Enabling all styles for {location.Code}");
                     style.Enabled = true;
                 }
 
@@ -434,13 +433,13 @@ public class MapService
                             {
                                 activeStyles.Remove(style);
                                 style.Enabled = false;
-                                System.Diagnostics.Debug.WriteLine($"Disabling label style for {location.Code}");
+                                Debug.WriteLine($"Disabling label style for {location.Code}");
                             }
                             else
                             {
                                 activeStyles.Add(style);
                                 style.Enabled = true;
-                                System.Diagnostics.Debug.WriteLine($"Enabling symbol style for {location.Code}");
+                                Debug.WriteLine($"Enabling symbol style for {location.Code}");
                             }
                         }
                     }

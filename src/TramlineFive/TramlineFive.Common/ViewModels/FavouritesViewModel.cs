@@ -19,6 +19,7 @@ using System.Windows.Input;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
+using TramlineFive.Common.Services.Maps;
 using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels

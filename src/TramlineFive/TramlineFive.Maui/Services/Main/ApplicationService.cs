@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Common.Models;
-using TramlineFive.Common.Services;
+using TramlineFive.Common.Services.Interfaces;
 using TramlineFive.Maui.Services;
 
 namespace TramlineFive.Services.Main;

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TramlineFive.Common.Services;
+namespace TramlineFive.Common.Services.Maps;
 
 public static class TileServerSettings
 {
@@ -21,5 +21,5 @@ public static class TileServerSettings
         string json = await reader.ReadToEndAsync();
 
         TileServers = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-    } 
+    }
 }

@@ -11,6 +11,8 @@ using TramlineFive.Services.Main;
 using SkgtService;
 using Plugin.LocalNotification;
 using SkgtService.Models;
+using TramlineFive.Common.Services.Maps;
+using TramlineFive.Common.Services.Interfaces;
 
 namespace TramlineFive.Maui
 {

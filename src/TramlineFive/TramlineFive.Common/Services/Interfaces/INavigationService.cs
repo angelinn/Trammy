@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Common.Models;
 
-namespace TramlineFive.Common.Services;
+namespace TramlineFive.Common.Services.Interfaces;
 
 public interface INavigationService
 {
