@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using TramlineFive.Common;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
+using TramlineFive.Common.Services.Maps;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.Maui;
 using Map = Mapsui.Map;
@@ -43,13 +44,11 @@ namespace TramlineFive.Pages
             map.UpdateInterval = 8;
 
             WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await ToggleMap(m));
-            
-            //Messenger.Default.Register<RefreshMapMessage>(this, m => map.Refresh());
+            WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables(1));
         }
 
         protected override void OnAppearing()
         {
-           
             base.OnAppearing();
 
             if (initialized)
@@ -86,12 +85,10 @@ namespace TramlineFive.Pages
             if (e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Released)
             {
                 await mapService.ShowNearbyStops(new MPoint(map.Map.Navigator.Viewport.CenterX, map.Map.Navigator.Viewport.CenterY), true);
-                //map.Refresh();
-
-                System.Diagnostics.Debug.WriteLine($"Show stops");
+                Debug.WriteLine($"Show stops");
             }
 
-            System.Diagnostics.Debug.WriteLine($"Touch: {e.ActionType} {map.Map.Navigator.Viewport.CenterX} {map.Map.Navigator.Viewport.CenterY}");
+            Debug.WriteLine($"Touch: {e.ActionType} {map.Map.Navigator.Viewport.CenterX} {map.Map.Navigator.Viewport.CenterY}");
         }
 
         private async Task ShowVirtualTables(int linesCount)
@@ -99,28 +96,12 @@ namespace TramlineFive.Pages
             int coef = linesCount > 2 ? 2 : linesCount;
             LazyVirtualTablesView.HeightRequest = Height * (coef + 1) * 0.20;
 
-
-            //Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height - slideMenu.HeightRequest + 30);
-
             await LazyVirtualTablesView.TranslateTo(0, 0, 400);
-            //await map.LayoutTo(new Rect(0, 0, Width, Height - slideMenu.HeightRequest + 30));
-            map.HeightRequest = Height - LazyVirtualTablesView.HeightRequest + 30;
-            //AbsoluteLayout.SetLayoutFlags(map, AbsoluteLayoutFlags.PositionProportional | AbsoluteLayoutFlagks.WidthProportional);
-            //AbsoluteLayout.SetLayoutBounds(map, new Rect(1, 1, 1, Height - slideMenu.HeightRequest + 30));
-            //animation.Commit(map, "ShowMap", 256, 400);
         }
 
         private async Task HideVirtualTables()
         {
-            //Animation animation = new Animation((h) => map.HeightRequest = h, map.HeightRequest, Height);
-
-            map.HeightRequest = Height;
-
-            //AbsoluteLayout.SetLayoutFlags(map, AbsoluteLayoutFlags.All);
-            //AbsoluteLayout.SetLayoutBounds(map, new Rect(1, 1, 1, 1));
-            //await map.LayoutTo(new Rect(0, 0, Width, Height));
             await LazyVirtualTablesView.TranslateTo(0, Height, 400);
-            //animation.Commit(map, "Expand", 16, 400);
         }
 
         private async Task ToggleMap(ShowMapMessage message)
@@ -156,6 +137,8 @@ namespace TramlineFive.Pages
         {
             base.OnSizeAllocated(width, height);
             LazyVirtualTablesView.TranslationY = isOpened ? 0 : Height;
+
+            mapService.VisibleMapHeightInPixels = (Height - Height * (1 + 1) * 0.20) / 2;
 
             if (map != null)
                 map.HeightRequest = Height;

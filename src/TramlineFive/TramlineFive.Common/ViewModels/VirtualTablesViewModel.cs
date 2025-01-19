@@ -136,6 +136,7 @@ namespace TramlineFive.Common.ViewModels
                 SentrySdk.CaptureException(e);
                 ApplicationService.DisplayToast($"Няма данни за спирка {stopCode}.");
                 IsLoading = false;
+                IsRefreshing = false;
             }
             catch (Exception e)
             {

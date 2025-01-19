@@ -51,6 +51,8 @@ public class MapService
     private readonly LocationService locationService;
     private readonly PublicTransport publicTransport;
 
+    public double VisibleMapHeightInPixels { get; set; }
+
     public int MaxPinsZoom { get; set; } = 15;
     public int MaxTextZoom { get; set; } = 17;
 
@@ -170,6 +172,12 @@ public class MapService
         if (home)
             map.Home = n => n.CenterOn(point);
 
+        // Center only on the visible part of the screen
+        double overlayHeightInWorld = map.Navigator.Viewport.ScreenToWorld(new MPoint(0, VisibleMapHeightInPixels)).Y -
+            map.Navigator.Viewport.ScreenToWorld(new MPoint(0, 0)).Y;
+
+        point.Y += overlayHeightInWorld;
+
         map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
     }
 
@@ -178,7 +186,6 @@ public class MapService
         (double x, double y) = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
 
         MPoint userLocationMap = new MPoint(x, y);
-
         map.Navigator.CenterOnAndZoomTo(userLocationMap, map.Navigator.Resolutions[17], ANIMATION_MS, home ? null : Easing.Linear);
 
         _ = ShowNearbyStops(userLocationMap);
