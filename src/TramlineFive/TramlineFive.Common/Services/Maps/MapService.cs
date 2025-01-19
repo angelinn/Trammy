@@ -162,6 +162,8 @@ public class MapService
             });
         }
 
+        await publicTransport.ReloadDataIfNeededAsync();
+
         //map.Navigator.ViewportChanged += (sender, args) => SendMapRefreshMessage();
     }
 

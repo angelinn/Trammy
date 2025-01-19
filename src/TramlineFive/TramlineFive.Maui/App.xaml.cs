@@ -16,6 +16,7 @@ using System.Diagnostics;
 using Plugin.LocalNotification;
 using SkgtService.Models.Json;
 using TramlineFive.Common.Services.Interfaces;
+using CommunityToolkit.Maui.Alerts;
 
 namespace TramlineFive.Maui
 {
@@ -153,14 +154,17 @@ namespace TramlineFive.Maui
         //            });
         //}
 
-        private async void OnStopsUpdated(object sender, string newVersion)
+        private void OnStopsUpdated(object sender, string newVersion)
         {
             IApplicationService applicationService = ServiceContainer.ServiceProvider.GetService<IApplicationService>();
 
             applicationService.SetStringSetting("APIVersion", newVersion);
             applicationService.SetStringSetting(Settings.StopsUpdated, DateTime.Now.ToString());
 
-            await applicationService.DisplayNotification("Trammy", "Спирките са обновени");
+            Dispatcher.Dispatch(() => Toast.Make("Спирките са обновени").Show());
+            WeakReferenceMessenger.Default.Send(new RefreshStopsMessage());
+
+            //await applicationService.DisplayNotification("Trammy", "Спирките са обновени");
         }
     }
 }

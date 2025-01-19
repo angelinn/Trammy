@@ -86,13 +86,22 @@ public class PublicTransport
         return (DateTime.Now - lastUpdated > updateFrequency);
     }
 
+    public async Task ReloadDataIfNeededAsync()
+    {
+        if (ShouldUpdateStops())
+        {
+            await LoadData(true);
+            lastUpdated = DateTime.Now;
+        }
+    }
+
 
     public async Task LoadData(bool update = false)
     {
         if (stopsHash.Count > 0 && !update)
             return;
 
-        if (update || ShouldUpdateStops())
+        if (update)
         {
             stopsHash.Clear();
             await stopsLoader.UpdateStopsAsync();
