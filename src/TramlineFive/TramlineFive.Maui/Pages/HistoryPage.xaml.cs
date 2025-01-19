@@ -11,6 +11,8 @@ namespace TramlineFive.Pages
 {
 	public partial class HistoryPage : ContentPage
 	{
+		private bool initialized;
+
 		public HistoryPage ()
 		{
 			InitializeComponent ();
@@ -18,7 +20,11 @@ namespace TramlineFive.Pages
 
         protected override async void OnAppearing()
         {
-			await Task.Delay(500);
+			if (!initialized)
+			{
+				initialized = true;
+				await Task.Delay(500);
+			}
         }
     }
 }

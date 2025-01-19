@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Plugin.LocalNotification;
+using Plugin.LocalNotification.AndroidOption;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -147,7 +148,12 @@ public class ApplicationService : IApplicationService
         {
             NotificationId = id,
             Title = title,
-            Description = message
+            Description = message,
+            Android = new AndroidOptions
+            {
+                AutoCancel = true,
+                VibrationPattern = null
+            }
         };
 
         await LocalNotificationCenter.Current.Show(notification);

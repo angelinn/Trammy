@@ -8,7 +8,9 @@ namespace TramlineFive.Pages
 {
 	public partial class FavouritesPage : ContentPage
 	{
-		public FavouritesPage ()
+        private bool initialized;
+
+        public FavouritesPage ()
 		{
 			InitializeComponent ();
 		}
@@ -16,7 +18,11 @@ namespace TramlineFive.Pages
 
         protected override async void OnAppearing()
         {
-            await Task.Delay(500);
+            if (!initialized)
+            {
+                initialized = true;
+                await Task.Delay(500);
+            }
         }
     }
 }
