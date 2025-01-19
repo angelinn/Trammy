@@ -5,6 +5,8 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              Shell.NavBarIsVisible="True"
+             xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
+             x:DataType="local:FavouritesViewModel"
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
     <ContentPage.Resources>
@@ -63,13 +65,13 @@
 
             <ListView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" RowHeight="90" SeparatorVisibility="None" VerticalOptions="Fill" CachingStrategy="RecycleElement" >
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="{x:Null}">
                         <ViewCell>
                             <ViewCell.View>
                                 <SwipeView Padding="15,0,15,0" Margin="0,10,0,0" Background="Transparent">
                                     <SwipeView.RightItems>
                                         <SwipeItems>
-                                            <SwipeItemView WidthRequest="100" Command="{Binding FavouritesViewModel.RemoveCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}">
+                                            <SwipeItemView WidthRequest="100" Command="{Binding FavouritesViewModel.RemoveFavouriteCommand, Source={StaticResource Locator}}" CommandParameter="{Binding}">
                                                 <Grid BackgroundColor="Red">
                                                     <Grid.Behaviors>
                                                         <mct:TouchBehavior DefaultAnimationDuration="250"

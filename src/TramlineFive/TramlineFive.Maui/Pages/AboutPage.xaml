@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.AboutPage"
              Title="Информация"
+             xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
+             x:DataType="local:AboutViewModel"
              BindingContext="{Binding AboutViewModel, Source={StaticResource Locator}}" BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" >
 
     <StackLayout Padding="10">
@@ -14,7 +16,7 @@
 
         <Label Margin="0,20,0,10" Text="Това приложение е open source.&#x0a;&#x0a;Създадено е с цел улесняване на проверката на пристиганията на градския транспорт в България.&#x0a;&#x0a;Приложението не генерира печалба." />
 
-        <Button Text="Open source лицензи" Command="{Binding OpenLicensesPage}" />
+        <Button Text="Open source лицензи" Command="{Binding OpenLicensesPageCommand}" />
     </StackLayout>
 </ContentPage>
     

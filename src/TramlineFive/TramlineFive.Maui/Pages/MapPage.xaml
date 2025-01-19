@@ -8,7 +8,9 @@
              xmlns:views="clr-namespace:TramlineFive.Maui.Views"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              xmlns:mapsuipl="clr-namespace:Mapsui;assembly=Mapsui"
-             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" 
+             xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
+             x:DataType="local:MapViewModel"
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}"
              Padding="0">
 
@@ -30,9 +32,7 @@
                 <mct:EventToCommandBehavior EventName="Info" Command="{Binding MapInfoCommand}" x:TypeArguments="mapsuipl:MapInfoEventArgs" />
             </mapsui:MapControl.Behaviors>
         </mapsui:MapControl>
-
-        <ActivityIndicator AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"                                            BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" IsRunning="{Binding IsLoading}" HeightRequest="64" Color="DodgerBlue" Margin="0,100,0,0" />
-
+        
         <mct:LazyView x:Name="LazySuggestions" x:TypeArguments="views:SuggestionsView"  AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" Margin="15,-5,15,0"  VerticalOptions="End" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}" BindingContext="{Binding}" />
 
         <mct:LazyView x:Name="LazyFab" x:TypeArguments="views:CustomFloatingActionButton"
