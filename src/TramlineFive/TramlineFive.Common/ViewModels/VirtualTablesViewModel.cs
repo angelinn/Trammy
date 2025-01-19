@@ -106,6 +106,7 @@ namespace TramlineFive.Common.ViewModels
         public async Task SearchByStopCodeAsync(string stopCode)
         {
             IsLoading = true;
+            IsRefreshing = true;
 
             try
             {
@@ -113,10 +114,12 @@ namespace TramlineFive.Common.ViewModels
                 sw.Start();
 
                 StopInformation stopInformation = publicTransport.FindStop(stopCode);
+                StopInfo = new StopResponse(stopCode, stopInformation.PublicName);
 
                 StopResponse info = await arrivalsService.GetByStopCodeAsync(stopCode, stopInformation?.Type);
 
                 IsLoading = false;
+                IsRefreshing = false;
 
                 FavouriteDomain favourite = await FavouriteDomain.FindAsync(info.Code);
                 info.IsFavourite = favourite != null;
