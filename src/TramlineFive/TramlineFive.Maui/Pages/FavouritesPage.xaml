@@ -81,7 +81,7 @@
                                                     </Grid.Behaviors>
                                                     <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="0">
                                                         <Label Text="delete" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="30" TextColor="White" HorizontalOptions="Center" />
-                                                        <Label Text="Изтрий" TextColor="White" Margin="0,1,0,0" />
+                                                        <Label Text="Изтрий" TextColor="White" Margin="0,0,0,0" />
                                                     </StackLayout>
                                                 </Grid>
                                             </SwipeItemView>
@@ -111,7 +111,7 @@
 
                                                 <StackLayout VerticalOptions="Center">
 
-                                                    <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}">
+                                                    <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
                                                         <Image Source="{Binding StopCode, Converter={StaticResource TransportToImage}}" HeightRequest="30" WidthRequest="30" />
                                                     </Grid>
                                                     <Label Text="{Binding StopCode, StringFormat='{0}'}" Background="Transparent" TextColor="{AppThemeBinding Light={DynamicResource DetailsTextColor}, Dark={DynamicResource DarkDetailsTextColor}}" HorizontalOptions="Center" Margin="0,3,0,0" FontSize="Caption" />
