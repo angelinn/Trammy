@@ -12,5 +12,11 @@ namespace TramlineFive.Pages
 		{
 			InitializeComponent ();
 		}
-	}
+
+
+        protected override async void OnAppearing()
+        {
+            await Task.Delay(500);
+        }
+    }
 }
