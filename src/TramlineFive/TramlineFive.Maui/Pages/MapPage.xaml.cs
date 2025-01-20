@@ -136,9 +136,6 @@ namespace TramlineFive.Pages
                 mapService.OverlayHeightInPixels -= statusBarHeightDip;
             }
 #endif
-
-            if (map != null)
-                map.HeightRequest = Height;
         }
 
         protected override void OnNavigatedTo(NavigatedToEventArgs args)
