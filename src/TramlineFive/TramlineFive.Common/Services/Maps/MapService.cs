@@ -51,7 +51,7 @@ public class MapService
     private readonly LocationService locationService;
     private readonly PublicTransport publicTransport;
 
-    public double VisibleMapHeightInPixels { get; set; }
+    public double OverlayHeightInPixels { get; set; }
 
     public int MaxPinsZoom { get; set; } = 15;
     public int MaxTextZoom { get; set; } = 17;
@@ -177,10 +177,10 @@ public class MapService
         if (!ignoreOverlayHeight)
         {
             // Center only on the visible part of the screen
-            double overlayHeightInWorld = map.Navigator.Viewport.ScreenToWorld(new MPoint(0, VisibleMapHeightInPixels)).Y -
-                map.Navigator.Viewport.ScreenToWorld(new MPoint(0, 0)).Y;
+            double overlayHeightInWorld = map.Navigator.Viewport.ScreenToWorld(new MPoint(0, 0)).Y - 
+                map.Navigator.Viewport.ScreenToWorld(new MPoint(0, OverlayHeightInPixels / 2)).Y;
 
-            point.Y += overlayHeightInWorld;
+            point.Y -= overlayHeightInWorld;
         }
 
         map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);

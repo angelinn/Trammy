@@ -36,15 +36,15 @@ namespace TramlineFive.Pages
             InitializeComponent();
 
             mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
-            mapService.LoadInitialMap(map.Map, 
+            mapService.LoadInitialMap(map.Map,
                 Preferences.Get(Settings.SelectedTileServerUrl, Defaults.TileServerUrl),
                 Preferences.Get(Settings.FetchingStrategy, Defaults.DataFetchStrategy),
                 Preferences.Get(Settings.RenderStrategy, Defaults.RenderFetchStrategy));
 
             map.UpdateInterval = 8;
 
-            WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await ToggleMap(m));
-            WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables(1));
+            WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await OnShowMapMessage(m));
+            WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables());
         }
 
         protected override void OnAppearing()
@@ -91,11 +91,8 @@ namespace TramlineFive.Pages
             Debug.WriteLine($"Touch: {e.ActionType} {map.Map.Navigator.Viewport.CenterX} {map.Map.Navigator.Viewport.CenterY}");
         }
 
-        private async Task ShowVirtualTables(int linesCount)
+        private async Task ShowVirtualTables()
         {
-            int coef = linesCount > 2 ? 2 : linesCount;
-            LazyVirtualTablesView.HeightRequest = Height * (coef + 1) * 0.20;
-
             await LazyVirtualTablesView.TranslateTo(0, 0, 400);
         }
 
@@ -104,25 +101,12 @@ namespace TramlineFive.Pages
             await LazyVirtualTablesView.TranslateTo(0, Height, 400);
         }
 
-        private async Task ToggleMap(ShowMapMessage message)
+        private async Task OnShowMapMessage(ShowMapMessage message)
         {
-            if (message.ElapsedMilliseconds > 0)
-            {
-                long difference = 400 - message.ElapsedMilliseconds;
-                if (difference > 0)
-                    await Task.Delay((int)difference);
-            }
+            isOpened = message.Show;
 
-
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                isOpened = message.Show;
-
-                if (!message.Show)
-                    await HideVirtualTables();
-                else if (message.Show)
-                    await ShowVirtualTables(message.ArrivalsCount);
-            });
+            if (!message.Show)
+                await HideVirtualTables();
         }
 
         private async Task LoadMapAsync()
@@ -136,9 +120,10 @@ namespace TramlineFive.Pages
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
-            LazyVirtualTablesView.TranslationY = isOpened ? 0 : Height;
 
-            mapService.VisibleMapHeightInPixels = (Height - Height * (1 + 1) * 0.20) / 2;
+            LazyVirtualTablesView.TranslationY = isOpened ? 0 : Height;
+            LazyVirtualTablesView.HeightRequest = Height * 0.60;
+            mapService.OverlayHeightInPixels = LazyVirtualTablesView.HeightRequest;
 
 #if ANDROID
             int statusBarHeight = 0;
@@ -148,7 +133,7 @@ namespace TramlineFive.Pages
                 statusBarHeight = Android.Content.Res.Resources.System.GetDimensionPixelSize(resourceId);
                 double statusBarHeightDip = statusBarHeight / Android.Content.Res.Resources.System.DisplayMetrics.Density;
 
-                mapService.VisibleMapHeightInPixels -= statusBarHeightDip / 2;
+                mapService.OverlayHeightInPixels -= statusBarHeightDip;
             }
 #endif
 
