@@ -18,10 +18,11 @@ public class NavigationService : INavigationService
 {
     public async void ChangePage(string pageName)
     {
-        NavigationPage main = Application.Current.MainPage as NavigationPage;
+        //NavigationPage main = Application.Current.MainPage as NavigationPage;
 
-        await main.PushAsync(Activator.CreateInstance(Type.GetType($"TramlineFive.Pages.{pageName}Page")) as Page);
+        //await main.PushAsync(Activator.CreateInstance(Type.GetType($"TramlineFive.Pages.{pageName}Page")) as Page);
         //await (main.RootPage as MainPage).ToggleHamburgerAsync();
+        await Shell.Current.GoToAsync(pageName);
     }
 
     public void GoToDetails(ArrivalInformation line, string stop)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,20 +14,34 @@ namespace TramlineFive.Common.ViewModels;
 
 public class LicensesViewModel : BaseViewModel
 {
-    public List<IGrouping<string, Project>> Licenses { get; private set; }
+    public class LicenseInfo
+    {
+        public string PackageId { get; set; }
+        public string License { get; set; }
+    }
+
+    public List<LicenseInfo> Licenses { get; private set; } = new();
 
     public async Task Initialize()
     {
-        using Stream licensesStream = typeof(SettingsViewModel).Assembly.GetManifestResourceStream("TramlineFive.Common.licenses.yaml");
-        using StreamReader reader = new StreamReader(licensesStream);
+        if (Licenses.Count > 0)
+            return;
 
-        string yaml = await reader.ReadToEndAsync();
+        await AppendLicenseFile("Licenses.MAUI.json");
+        await AppendLicenseFile("Licenses.Common.json");
+        await AppendLicenseFile("Licenses.Data.json");
+        await AppendLicenseFile("Licenses.Service.json");
 
-        IDeserializer deserializer = new DeserializerBuilder()
-            .WithNamingConvention(LowerCaseNamingConvention.Instance)
-            .Build();
+        OnPropertyChanged(nameof(Licenses));
+    }
 
-        Licenses = deserializer.Deserialize<Projects>(yaml).Licenses.GroupBy(l => l.License).ToList();
-        OnPropertyChanged("Licenses");
+    private async Task AppendLicenseFile(string file)
+    {
+        using Stream mauiLicenses = await ApplicationService.OpenResourceFileAsync(file);
+        using StreamReader reader = new StreamReader(mauiLicenses);
+
+        string json = await reader.ReadToEndAsync();
+
+        Licenses.AddRange(JsonConvert.DeserializeObject<List<LicenseInfo>>(json));
     }
 }

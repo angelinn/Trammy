@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Common.Models;
@@ -32,4 +33,6 @@ public interface IApplicationService
     void ChangeNavigationBarColor(string color);
     void ChangeStatusBarColor(string color);
     string GetAppDataDirectory();
+    Task<Stream> OpenResourceFileAsync(string fileName);
+
 }

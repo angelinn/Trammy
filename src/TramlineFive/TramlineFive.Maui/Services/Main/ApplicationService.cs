@@ -184,4 +184,9 @@ public class ApplicationService : IApplicationService
     {
         return FileSystem.Current.AppDataDirectory;
     }
+
+    public async Task<Stream> OpenResourceFileAsync(string fileName)
+    {
+        return await FileSystem.OpenAppPackageFileAsync(fileName);
+    }
 }

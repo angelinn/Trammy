@@ -309,4 +309,8 @@
 	  <Folder Include="Platforms\Android\Renderers\" />
 	</ItemGroup>
 
+	<Target Name="GenerateLicenses" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
+	  <Exec Command="nuget-license -i TramlineFive.Maui.csproj -o Json -fo Resources/Raw/Licenses.MAUI.json&#xD;&#xA;nuget-license -i ../TramlineFive.Common/TramlineFive.Common.csproj -o Json -fo Resources/Raw/Licenses.Common.json&#xD;&#xA;nuget-license -i ../TramlineFive.DataAccess/TramlineFive.DataAccess.csproj -o Json -fo Resources/Raw/Licenses.Data.json&#xD;&#xA;nuget-license -i ../SkgtService/SkgtService.csproj -o Json -fo Resources/Raw/Licenses.Service.json" />
+	</Target>
+
 </Project>
