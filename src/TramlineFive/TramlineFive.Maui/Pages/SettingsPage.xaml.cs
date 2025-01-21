@@ -20,7 +20,7 @@ namespace TramlineFive.Pages
         {
             base.OnAppearing();
 
-            await Task.Delay(200);
+            await Task.Delay(500);
             _ = (BindingContext as SettingsViewModel).Initialize(DisplayActionSheet);
         }
 

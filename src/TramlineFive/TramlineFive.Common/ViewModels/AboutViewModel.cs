@@ -30,5 +30,11 @@ namespace TramlineFive.Common.ViewModels
             Task _ = licensesViewModel.Initialize();
             NavigationService.ChangePage("Licenses");
         }
+
+        [RelayCommand]
+        public void OpenReport()
+        {
+            ApplicationService.OpenUri("https://github.com/angelinn/Trammy/issues/");
+        }
     }
 }

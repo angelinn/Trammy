@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TramlineFive.Maui.Views.SearchBar"
-        xmlns:cv="clr-namespace:TramlineFive.Converters"
+        xmlns:cv="clr-namespace:TramlineFive.Converters"             
+        xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common" 
+        x:DataType="local:MapViewModel"
             Stroke="Transparent" BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" Opacity="0.9" Padding="5,0,5,0" HeightRequest="50" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}">
 
     <Border.Resources>
