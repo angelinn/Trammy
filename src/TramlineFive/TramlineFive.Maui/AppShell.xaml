@@ -27,13 +27,11 @@
 
     <Shell.FlyoutHeader>
         <Grid BackgroundColor="DodgerBlue" HeightRequest="200">
-
+            <Image Source="logo.png" HorizontalOptions="Center" Margin="0,20,0,0" VerticalOptions="Center" HeightRequest="80"  />
+            <Label VerticalOptions="End" BindingContext="{Binding AboutViewModel, Source={StaticResource Locator}}" TextColor="White" Padding="15,0,0,5" Text="{Binding Version, StringFormat='Trammy {0}'}" />
         </Grid>
     </Shell.FlyoutHeader>
 
-    <Shell.FlyoutFooter>
-        <Label Padding="15,0,0,0" Text="TramlineFive 1.0.0" />
-    </Shell.FlyoutFooter>
 
     <FlyoutItem Route="Main" Title="Начало" FlyoutDisplayOptions="AsSingleItem">
         <FlyoutItem.Icon>
@@ -108,7 +106,7 @@
             </ShellContent.ContentTemplate>
         </ShellContent>
     </Tab>-->
-    <ShellContent Route="About" Title="Информация" ContentTemplate="{DataTemplate pages:AboutPage}">
+    <ShellContent Route="About" Style="{StaticResource TabStyle}" Shell.FlyoutBehavior="Disabled" Title="Информация" ContentTemplate="{DataTemplate pages:AboutPage}">
         <ShellContent.Icon>
             <FontImageSource FontFamily="MaterialIconsOutlinedRegular.otf" Color="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" Glyph="info" />
         </ShellContent.Icon>
