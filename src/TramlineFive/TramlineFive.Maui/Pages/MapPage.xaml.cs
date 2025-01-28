@@ -4,6 +4,7 @@ using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.Layers;
 using Mapsui.Projections;
+using Mapsui.Styles;
 using Mapsui.UI;
 using Mapsui.UI.Maui;
 using Mapsui.Widgets;
@@ -21,6 +22,7 @@ using TramlineFive.Common.Services;
 using TramlineFive.Common.Services.Maps;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.Maui;
+using Color = Microsoft.Maui.Graphics.Color;
 using Map = Mapsui.Map;
 
 namespace TramlineFive.Pages
@@ -57,6 +59,9 @@ namespace TramlineFive.Pages
                 return;
 
             initialized = true;
+
+            if (Application.Current.RequestedTheme == AppTheme.Dark)
+                themeOverlay.Opacity = 0.3;
 
             if (VersionTracking.IsFirstLaunchEver)
                 Navigation.PushAsync(new LocationPromptPage());
@@ -101,7 +106,7 @@ namespace TramlineFive.Pages
         private async Task HideVirtualTables()
         {
             await LazyVirtualTablesView.TranslateTo(0, Height, 400);
-            CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Colors.DodgerBlue);
+            CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"));
         }
 
         private async Task OnShowMapMessage(ShowMapMessage message)
@@ -144,16 +149,15 @@ namespace TramlineFive.Pages
         protected override void OnNavigatedTo(NavigatedToEventArgs args)
         {
             base.OnNavigatedTo(args);
+
+            CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"));
+            CommunityToolkit.Maui.Core.Platform.StatusBar.SetStyle(CommunityToolkit.Maui.Core.StatusBarStyle.LightContent);
+
             if (map != null)
             {
                 map.IsVisible = false;
                 map.IsVisible = true;
             }
-        }
-
-        protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
-        {
-            CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Colors.DodgerBlue);
         }
 
         private void OnStopDataLoaded(StopDataLoadedMessage m)

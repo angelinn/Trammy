@@ -12,8 +12,8 @@
                 <ResourceDictionary>
                     <!-- Application resource dictionary -->
                     <Style TargetType="NavigationPage">
-                        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkBarBackgroundColor}}"/>
-                        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={AppThemeBinding Light={DynamicResource BarTextColor}, Dark={DynamicResource DarkBarTextColor}}, Dark={DynamicResource DarkBarTextColor}}"/>
+                        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}"/>
+                        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={DynamicResource BarTextColor}, Dark={DynamicResource DarkBarTextColor}}"/>
                     </Style>
 
                     <Style TargetType="Label">

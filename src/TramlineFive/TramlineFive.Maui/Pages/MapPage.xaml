@@ -13,10 +13,6 @@
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}"
              Padding="0,0,0,0">
 
-    <ContentPage.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="DodgerBlue" StatusBarStyle="LightContent" />
-    </ContentPage.Behaviors>
-
     <ContentPage.Resources>
         <ResourceDictionary>
             <cv:ColorConverter x:Key="ColorConverter" />
@@ -31,7 +27,9 @@
                 <mct:EventToCommandBehavior EventName="Info" Command="{Binding MapInfoCommand}" x:TypeArguments="mapsuipl:MapInfoEventArgs" />
             </mapsui:MapControl.Behaviors>
         </mapsui:MapControl>
-        
+
+        <Grid x:Name="themeOverlay" Background="Black" Opacity="0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"/>
+
         <mct:LazyView x:Name="LazySuggestions" x:TypeArguments="views:SuggestionsView"  AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" Margin="15,-5,15,0"  VerticalOptions="End" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}" BindingContext="{Binding}" />
 
         <mct:LazyView x:Name="LazyFab" x:TypeArguments="views:CustomFloatingActionButton"
