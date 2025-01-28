@@ -24,5 +24,11 @@ namespace TramlineFive.Pages
                 await Task.Delay(500);
             }
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            Shell.Current.GoToAsync("//Map");
+            return true;
+        }
     }
 }

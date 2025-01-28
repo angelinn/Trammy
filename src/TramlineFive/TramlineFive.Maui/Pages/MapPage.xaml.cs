@@ -30,7 +30,7 @@ namespace TramlineFive.Pages
     public partial class MapPage : ContentPage
     {
         private bool initialized;
-        private bool isOpened;
+        private bool isVirtualTablesShown;
 
         private MapService mapService;
 
@@ -100,19 +100,19 @@ namespace TramlineFive.Pages
 
         private async Task ShowVirtualTables()
         {
+            isVirtualTablesShown = true;
             await LazyVirtualTablesView.TranslateTo(0, 0, 400);
         }
 
         private async Task HideVirtualTables()
         {
+            isVirtualTablesShown = false;
             await LazyVirtualTablesView.TranslateTo(0, Height, 400);
             CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"));
         }
 
         private async Task OnShowMapMessage(ShowMapMessage message)
         {
-            isOpened = message.Show;
-
             if (!message.Show)
                 await HideVirtualTables();
         }
@@ -129,7 +129,7 @@ namespace TramlineFive.Pages
         {
             base.OnSizeAllocated(width, height);
 
-            LazyVirtualTablesView.TranslationY = isOpened ? 0 : Height;
+            LazyVirtualTablesView.TranslationY = isVirtualTablesShown ? 0 : Height;
             LazyVirtualTablesView.HeightRequest = Height * 0.60;
             mapService.OverlayHeightInPixels = LazyVirtualTablesView.HeightRequest;
 
@@ -172,6 +172,17 @@ namespace TramlineFive.Pages
                 string color = TransportConvertеr.TypeToColor(mostFrequentType, Application.Current.RequestedTheme == AppTheme.Light);
                 CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(color));
             }
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            if (isVirtualTablesShown)
+            {
+                _ = HideVirtualTables();
+                return true;
+            }
+
+            return false;
         }
     }
 }
