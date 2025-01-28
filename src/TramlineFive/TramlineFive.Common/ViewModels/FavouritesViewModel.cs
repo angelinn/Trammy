@@ -106,6 +106,15 @@ namespace TramlineFive.Common.ViewModels
             }
         }
 
+        public async Task RemoveFavouriteAsync(string code)
+        {
+            FavouriteDomain favourite = Favourites.FirstOrDefault(f => f.StopCode == code);
+            if (favourite != null)
+            {
+                await RemoveFavouriteAsync(favourite);
+            }
+        }
+
         public async Task LoadFavouritesAsync()
         {
             IsLoading = true;

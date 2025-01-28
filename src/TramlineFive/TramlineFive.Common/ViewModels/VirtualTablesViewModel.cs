@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using Sentry;
 using SkgtService;
 using SkgtService.Exceptions;
@@ -78,10 +79,8 @@ namespace TramlineFive.Common.ViewModels
             }
             else
             {
-                ApplicationService.DisplayToast($"Спирката вече съществува в любими");
+                await ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>().RemoveFavouriteAsync(StopInfo.Code);
             }
-
-            //AnimateFavouriteCommand.Execute(null);
         }
 
         public async Task CheckStopAsync(string selected)
