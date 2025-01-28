@@ -53,7 +53,9 @@ public class ArrivalsService
         foreach (JToken child in jsonO.Children().Values())
         {
             LineArrivalInfo info = JsonConvert.DeserializeObject<LineArrivalInfo>(child.ToString());
-            StopInformation lastStop = publicTransport.FindStop(info.LastStop[1..]);
+
+            string lastStopId = new string(info.LastStop.Where(s => char.IsDigit(s)).ToArray());
+            StopInformation lastStop = publicTransport.FindStop(lastStopId);
             if (lastStop != null)
                 info.LastStopName = lastStop.PublicName;
 
