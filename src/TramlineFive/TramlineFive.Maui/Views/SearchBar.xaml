@@ -38,7 +38,7 @@
             </Image>
         </StackLayout>
 
-        <Entry Grid.Column="1" TextColor="{AppThemeBinding Light={DynamicResource LabelTextColor}, Dark={DynamicResource DarkLabelTextColor}}" Placeholder="Код/име на спирка..." PlaceholderColor="{AppThemeBinding Light={DynamicResource PlaceholderTextColor}, Dark={DynamicResource DarkPlaceholderTextColor}}" 
+        <Entry Grid.Column="1" x:Name="txtSearch"  TextColor="{AppThemeBinding Light={DynamicResource LabelTextColor}, Dark={DynamicResource DarkLabelTextColor}}" Placeholder="Код/име на спирка..." PlaceholderColor="{AppThemeBinding Light={DynamicResource PlaceholderTextColor}, Dark={DynamicResource DarkPlaceholderTextColor}}" 
                                        FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
             <Entry.Behaviors>
                 <mct:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
