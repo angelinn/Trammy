@@ -12,7 +12,14 @@ public class StopInformation
     public double Lat { get; set; }
     public double Lon { get; set; }
     public string Code { get; set; }
-    public string PublicName { get; set; }
+
+    private string publicName;
+    public string PublicName
+    {
+        get => publicName.ToUpper();
+        set => publicName = value;
+    }
+
     public TransportType Type { get; set; }
 
     public StopInformation()
