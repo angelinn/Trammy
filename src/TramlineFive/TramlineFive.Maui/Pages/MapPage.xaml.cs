@@ -94,6 +94,10 @@ namespace TramlineFive.Pages
                 await mapService.ShowNearbyStops(new MPoint(map.Map.Navigator.Viewport.CenterX, map.Map.Navigator.Viewport.CenterY), true);
                 Debug.WriteLine($"Show stops");
             }
+            else if (isVirtualTablesShown && e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Pressed)
+            {
+                    await HideVirtualTables();
+            }
 
             Debug.WriteLine($"Touch: {e.ActionType} {map.Map.Navigator.Viewport.CenterX} {map.Map.Navigator.Viewport.CenterY}");
         }

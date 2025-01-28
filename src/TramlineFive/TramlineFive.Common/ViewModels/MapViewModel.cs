@@ -74,7 +74,7 @@ namespace TramlineFive.Common.ViewModels
                 ApplicationService.DisplayToast(ex.Message);
             }
 
-        } 
+        }
 
         [RelayCommand]
         private async Task MyLocation()
@@ -138,7 +138,7 @@ namespace TramlineFive.Common.ViewModels
                 }
 
                 isAnimating = false;
-                HasLocation = false; 
+                HasLocation = false;
                 locationStatus = LocationStatus.TurnedOff;
                 return locationStatus;
             }
@@ -169,7 +169,7 @@ namespace TramlineFive.Common.ViewModels
             nearbyStops.AddRange(message.NearbyStops.Take(4).Select(f => new ArrivalStopModel(f.Code, f.PublicName)));
 
             //BuildRecommendedStops();
-        } 
+        }
 
         private async Task CheckForHistory()
         {
@@ -230,12 +230,9 @@ namespace TramlineFive.Common.ViewModels
             if (IsVirtualTablesUp)
             {
                 IsVirtualTablesUp = false;
-                Messenger.Send(new ShowMapMessage(false));
             }
-            else
-            {
-                mapService.OnMapInfo(e);
-            }
+
+            mapService.OnMapInfo(e);
         }
 
         private async Task OnIntSettingChangedAsync(SettingChanged<int> m)

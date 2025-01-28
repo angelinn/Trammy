@@ -34,7 +34,7 @@
 
         <mct:LazyView x:Name="LazyFab" x:TypeArguments="views:CustomFloatingActionButton"
                        AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="1,0.80,1,58" Grid.Row="1"  HorizontalOptions="End" VerticalOptions="End" 
-             Margin="0,0,10,0" HeightRequest="58" WidthRequest="58" IsVisible="{Binding IsVirtualTablesUp, Converter={StaticResource InverseBool}}" BindingContext="{Binding}" />
+             Margin="0,0,10,0" HeightRequest="58" WidthRequest="58" BindingContext="{Binding}" />
 
         <mct:LazyView x:Name="LazySearchBar" x:TypeArguments="views:SearchBar" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.95,1,47" Margin="15,0,15,0" />
         
