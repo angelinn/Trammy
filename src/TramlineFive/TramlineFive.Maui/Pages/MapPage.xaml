@@ -11,7 +11,7 @@
              xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
              x:DataType="local:MapViewModel"
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}"
-             Padding="0">
+             Padding="0,0,0,0">
 
     <ContentPage.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="DodgerBlue" StatusBarStyle="LightContent" />

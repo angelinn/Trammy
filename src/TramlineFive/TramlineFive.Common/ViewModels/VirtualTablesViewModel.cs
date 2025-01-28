@@ -129,6 +129,7 @@ namespace TramlineFive.Common.ViewModels
                 sw.Stop();
 
                 await HistoryDomain.AddAsync(stopCode, StopInfo.PublicName);
+                Messenger.Send(new StopDataLoadedMessage(StopInfo));                
             }
             catch (StopNotFoundException e)
             {

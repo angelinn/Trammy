@@ -15,7 +15,7 @@
             </ResourceDictionary>
         </Border.Resources>
 
-        <Grid Padding="5" BackgroundColor="{Binding TransportType, Converter={StaticResource TransportToColor}}">
+        <Grid Padding="5" BackgroundColor="{Binding VehicleType, Converter={StaticResource TransportToColor}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="100" />

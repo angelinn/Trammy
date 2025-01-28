@@ -10,6 +10,7 @@ using Mapsui.Widgets;
 using Mapsui.Widgets.ScaleBar;
 using Mapsui.Widgets.Zoom;
 using Microsoft.Maui.Layouts;
+using SkgtService.Models;
 using SkgtService.Models.Json;
 using System;
 using System.Diagnostics;
@@ -45,6 +46,7 @@ namespace TramlineFive.Pages
 
             WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await OnShowMapMessage(m));
             WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables());
+            WeakReferenceMessenger.Default.Register<StopDataLoadedMessage>(this, (r, m) => OnStopDataLoaded(m));
         }
 
         protected override void OnAppearing()
@@ -99,6 +101,7 @@ namespace TramlineFive.Pages
         private async Task HideVirtualTables()
         {
             await LazyVirtualTablesView.TranslateTo(0, Height, 400);
+            CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Colors.DodgerBlue);
         }
 
         private async Task OnShowMapMessage(ShowMapMessage message)
@@ -145,6 +148,25 @@ namespace TramlineFive.Pages
             {
                 map.IsVisible = false;
                 map.IsVisible = true;
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
+        {
+            CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Colors.DodgerBlue);
+        }
+
+        private void OnStopDataLoaded(StopDataLoadedMessage m)
+        {
+            if (m.stopInfo.Arrivals.Count > 0)
+            {
+                TransportType mostFrequentType = m.stopInfo.Arrivals
+                    .GroupBy(a => a.VehicleType)
+                    .OrderByDescending(g => g.Count())
+                    .First()!.Key;
+
+                string color = TransportConvertеr.TypeToColor(mostFrequentType, Application.Current.RequestedTheme == AppTheme.Light);
+                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(color));
             }
         }
     }

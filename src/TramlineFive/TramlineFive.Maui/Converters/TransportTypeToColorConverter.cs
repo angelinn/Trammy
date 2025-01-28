@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using TramlineFive.Common.Services;
 
 
 namespace TramlineFive.Converters
@@ -12,38 +13,10 @@ namespace TramlineFive.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool isLightTheme = Application.Current.RequestedTheme == AppTheme.Light;
-
-            string textValue = string.Empty;
             if (value is TransportType type)
-            {
-                textValue = type switch
-                {
-                    TransportType.Tram => "tram",
-                    TransportType.Trolley => "trolley",
-                    TransportType.Subway => "subway",
-                    _ => "bus"
-                }; ;
-            }
+                return Color.FromArgb(TransportConvertеr.TypeToColor(type, Application.Current.RequestedTheme == AppTheme.Light));
 
-            if (value is string)
-                textValue = value as string;
-
-            return (textValue as string) switch
-            {
-                "Автобус" => isLightTheme ? Colors.Red : Colors.Crimson,
-                "Трамвай" => isLightTheme ? Color.FromArgb("F7941F") : Colors.DarkOrange,
-                "Тролей" => isLightTheme ? Color.FromArgb("2aa9e0") : Colors.DarkBlue,
-                "Електробус" =>  isLightTheme ? Colors.Green : Colors.DarkGreen,
-                "Допълнителна" => isLightTheme ? Color.FromArgb("13b79d") : Color.FromArgb("13b79d"),
-                "Метро" => Color.FromArgb("0e6abc"),
-                "Нощен" => Color.FromArgb("2B3C8F"),
-                "bus" => Colors.Crimson,
-                "tram" => Colors.DarkOrange,
-                "trolley" => Colors.RoyalBlue,
-                _ => Colors.Red,
-            };
-
+            return TransportConvertеr.DEFAULT_COLOR;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

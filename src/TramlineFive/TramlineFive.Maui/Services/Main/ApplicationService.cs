@@ -177,7 +177,7 @@ public class ApplicationService : IApplicationService
 
     public void ChangeStatusBarColor(string color)
     {
-        permissionService.ChangeStatusBarColor(color);
+        CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(color));
     }
 
     public string GetAppDataDirectory()
