@@ -117,6 +117,19 @@ namespace TramlineFive.Common.ViewModels
                 StopInfo = new StopResponse(stopCode, stopInformation.PublicName);
 
                 StopResponse info = await arrivalsService.GetByStopCodeAsync(stopCode, stopInformation?.Type);
+                info.Arrivals = info.Arrivals
+                    .OrderBy(a => a.TransportType)
+                    .ThenBy(a =>
+                    {
+                        if (a.LineName.Any(i => !char.IsDigit(i)))
+                            return int.MaxValue;
+
+                        char[] lineNumber = a.LineName.Where(i => char.IsDigit(i)).ToArray();
+                        if (int.TryParse(new string(lineNumber), out int lineInt))
+                            return lineInt;
+
+                        return int.MaxValue;
+                    }).ToList();
 
                 IsLoading = false;
                 IsRefreshing = false;
@@ -129,7 +142,7 @@ namespace TramlineFive.Common.ViewModels
                 sw.Stop();
 
                 await HistoryDomain.AddAsync(stopCode, StopInfo.PublicName);
-                Messenger.Send(new StopDataLoadedMessage(StopInfo));                
+                Messenger.Send(new StopDataLoadedMessage(StopInfo));
             }
             catch (StopNotFoundException e)
             {
