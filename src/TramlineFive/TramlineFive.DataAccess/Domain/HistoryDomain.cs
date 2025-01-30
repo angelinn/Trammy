@@ -4,14 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using TramlineFive.DataAccess.Entities;
 
 namespace TramlineFive.DataAccess.Domain
 {
     public class HistoryDomain
     {
-        public static event EventHandler HistoryAdded;
-        
         public string StopCode { get; set; }
         public string Name { get; set; }
         public DateTime TimeStamp { get; set; }
@@ -34,7 +33,19 @@ namespace TramlineFive.DataAccess.Domain
             };
 
             await TramlineFiveContext.AddAsync(history);
-            HistoryAdded?.Invoke(new HistoryDomain(history), new EventArgs());
+        }
+
+        public static async Task<History> AddOrUpdateHistoryAsync(string stopCode, string name)
+        {
+            History history = new History
+            {
+                StopCode = stopCode,
+                Name = name,
+                TimeStamp = DateTime.Now
+            };
+
+            await TramlineFiveContext.AddOrUpdateHistoryAsync(history);
+            return history;
         }
 
         //public static void Remove(History history)

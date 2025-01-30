@@ -54,6 +54,22 @@ namespace TramlineFive.DataAccess
             await db.InsertAsync(entity);
         }
 
+        public static async Task AddOrUpdateHistoryAsync(History history)
+        {
+            await EnsureCreatedAsync();
+
+            SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+
+            History exists = await db.FindAsync<History>(h => h.StopCode == history.StopCode);
+            if (exists is null)
+                await AddAsync(history);
+            else
+            {
+                exists.TimeStamp = DateTime.Now;
+                await db.UpdateAsync(exists);
+            }
+        }
+
         public static async Task IncrementFavouriteAsync(string stopCode)
         {
             await EnsureCreatedAsync();

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 
 using Microsoft.Extensions.DependencyInjection;
+using SkgtService.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,6 +22,7 @@ namespace TramlineFive.Common.ViewModels
         public HistoryViewModel()
         {
             Messenger.Register<HistoryClearedMessage>(this, (r, h) => OnHistoryCleared());
+            Messenger.Register<StopDataLoadedMessage>(this, async (r, s) => await OnStopDataLoadedAsync(s.stopInfo));
         }
 
         public bool HasHistory => (History == null || History.Count == 0) && !IsLoading;
@@ -48,17 +50,23 @@ namespace TramlineFive.Common.ViewModels
             IsLoading = true;
 
             History = new ObservableCollection<HistoryDomain>(await HistoryDomain.TakeAsync());
+
             OnPropertyChanged(nameof(History));
             OnPropertyChanged(nameof(HasHistory));
 
             IsLoading = false;
-
-            HistoryDomain.HistoryAdded += OnHistoryAdded;
         }
 
-        private void OnHistoryAdded(object sender, EventArgs e)
+        private async Task OnStopDataLoadedAsync(StopResponse stopInfo)
         {
-            History.Insert(0, sender as HistoryDomain);
+            HistoryDomain newHistory = new HistoryDomain(await HistoryDomain.AddOrUpdateHistoryAsync(stopInfo.Code, stopInfo.PublicName));
+            HistoryDomain existing = History.FirstOrDefault(h => h.StopCode == newHistory.StopCode);
+
+            if (existing is not null)
+                History.Remove(existing);
+
+            History.Insert(0, newHistory);
+
             OnPropertyChanged(nameof(HasHistory));
         }
 
