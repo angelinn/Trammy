@@ -31,6 +31,7 @@ namespace TramlineFive.Pages
     {
         private bool initialized;
         private bool isVirtualTablesShown;
+        private bool hasMoved;
 
         private MapService mapService;
 
@@ -91,12 +92,22 @@ namespace TramlineFive.Pages
         {
             if (e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Released)
             {
-                await mapService.ShowNearbyStops(new MPoint(map.Map.Navigator.Viewport.CenterX, map.Map.Navigator.Viewport.CenterY), true);
-                Debug.WriteLine($"Show stops");
+                if (hasMoved)
+                {
+                    await mapService.ShowNearbyStops(new MPoint(map.Map.Navigator.Viewport.CenterX, map.Map.Navigator.Viewport.CenterY), true);
+                    Debug.WriteLine($"Show stops");
+
+                    hasMoved = false;
+                }
+            }
+            else if (e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Moved)
+            {
+                if (!hasMoved)
+                    hasMoved = true;
             }
             else if (isVirtualTablesShown && e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Pressed)
             {
-                    await HideVirtualTables();
+                await HideVirtualTables();
             }
 
             Debug.WriteLine($"Touch: {e.ActionType} {map.Map.Navigator.Viewport.CenterX} {map.Map.Navigator.Viewport.CenterY}");

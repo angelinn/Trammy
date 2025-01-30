@@ -402,6 +402,10 @@ public class MapService
 
             WeakReferenceMessenger.Default.Send(new StopSelectedMessage(new StopSelectedMessagePayload(location.Code, true)));
         }
+        else
+        {
+            ShowNearbyStops(new MPoint(map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY), true);
+        }
     }
 
 }
