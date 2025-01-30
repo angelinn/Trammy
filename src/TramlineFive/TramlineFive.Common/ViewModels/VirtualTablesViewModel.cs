@@ -59,7 +59,6 @@ namespace TramlineFive.Common.ViewModels
         private async Task Refresh()
         {
             await SearchByStopCodeAsync(stopCode);
-            IsRefreshing = false;
         }
 
         [RelayCommand]
@@ -105,7 +104,6 @@ namespace TramlineFive.Common.ViewModels
         public async Task SearchByStopCodeAsync(string stopCode)
         {
             IsLoading = true;
-            IsRefreshing = true;
 
             try
             {
@@ -131,7 +129,6 @@ namespace TramlineFive.Common.ViewModels
                     }).ToList();
 
                 IsLoading = false;
-                IsRefreshing = false;
 
                 FavouriteDomain favourite = await FavouriteDomain.FindAsync(info.Code);
                 info.IsFavourite = favourite != null;
@@ -140,7 +137,6 @@ namespace TramlineFive.Common.ViewModels
 
                 sw.Stop();
 
-                await HistoryDomain.AddAsync(stopCode, StopInfo.PublicName);
                 Messenger.Send(new StopDataLoadedMessage(StopInfo));
             }
             catch (StopNotFoundException e)
@@ -148,7 +144,6 @@ namespace TramlineFive.Common.ViewModels
                 SentrySdk.CaptureException(e);
                 ApplicationService.DisplayToast($"Няма данни за спирка {stopCode}.");
                 IsLoading = false;
-                IsRefreshing = false;
             }
             catch (Exception e)
             {
@@ -180,8 +175,6 @@ namespace TramlineFive.Common.ViewModels
         [ObservableProperty]
         private bool isLoading;
 
-        [ObservableProperty]
-        private bool isRefreshing;
 
         //private string stopCode;
         //public string StopCode

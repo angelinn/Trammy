@@ -64,8 +64,9 @@
                 </Grid>
             </Grid>
 
-            <RefreshView x:Name="refreshView" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}" Margin="3,0,3,0" Grid.Row="1" RefreshColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
+            <RefreshView x:Name="refreshView" Command="{Binding RefreshCommand}" Margin="3,0,3,0" Grid.Row="1" RefreshColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
                 <StackLayout>
+                    <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Margin="0,20,0,0" />
                     <CollectionView ItemsSource="{Binding StopInfo.Arrivals}" SelectedItem="{Binding Selected, Mode=TwoWay}" VerticalOptions="FillAndExpand">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
