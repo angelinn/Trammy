@@ -171,11 +171,15 @@ public class MapService
 
         if (!ignoreOverlayHeight)
         {
-            // Center only on the visible part of the screen
-            double overlayHeightInWorld = map.Navigator.Viewport.ScreenToWorld(new MPoint(0, 0)).Y -
-                map.Navigator.Viewport.ScreenToWorld(new MPoint(0, OverlayHeightInPixels / 2)).Y;
+            MPoint worldPoint = map.Navigator.Viewport.WorldToScreen(point);
+            worldPoint.Y += OverlayHeightInPixels / 2;
 
-            point.Y -= overlayHeightInWorld;
+            point.Y = map.Navigator.Viewport.ScreenToWorld(worldPoint).Y;
+            // Center only on the visible part of the screen
+            //double overlayHeightInWorld = map.Navigator.Viewport.ScreenToWorld(new MPoint(0, 0)).Y -
+            //    map.Navigator.Viewport.ScreenToWorld(new MPoint(0, OverlayHeightInPixels / 2)).Y;
+
+            //point.Y -= overlayHeightInWorld;
         }
 
         map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
@@ -302,6 +306,8 @@ public class MapService
             style.Enabled = true;
         }
 
+        map.Navigator.RotateTo(0);
+        map.Navigator.ZoomTo(map.Navigator.Resolutions[17]);
         MoveTo(point, 17);
     }
 
