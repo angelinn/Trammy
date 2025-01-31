@@ -175,6 +175,14 @@ namespace TramlineFive.Pages
             }
         }
 
+        protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
+        {
+            base.OnNavigatedFrom(args);
+
+            CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"));
+            CommunityToolkit.Maui.Core.Platform.StatusBar.SetStyle(CommunityToolkit.Maui.Core.StatusBarStyle.LightContent);
+        }
+
         private void OnStopDataLoaded(StopDataLoadedMessage m)
         {
             if (m.stopInfo.Arrivals.Count > 0)
