@@ -85,4 +85,7 @@
 
     <Color x:Key="TopBarColor">DodgerBlue</Color>
     <Color x:Key="DarkTopBarColor">#22272e</Color>
-</ResourceDictionary>
+
+    <Color x:Key="BorderBackground">#f6f5f5</Color>
+    <Color x:Key="DarkBorderBackground">#677587</Color>
+    </ResourceDictionary>

@@ -47,16 +47,34 @@
                             <Image Source="{Binding StopInfo.Code, Converter={StaticResource TransportToImage}}" Margin="10,10,10,10" HeightRequest="40" WidthRequest="40" />
                         </Grid>
 
-                        <Grid x:Name="starView" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}">
-                            <Grid.Behaviors>
-                                <mct:TouchBehavior DefaultAnimationDuration="350"
+                        <Grid x:Name="starView" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}" >
+                            <Border Padding="5" Margin="0,0,15,0" StrokeThickness="2" Stroke="Transparent" Background="{AppThemeBinding Light={DynamicResource BorderBackground}, Dark={DynamicResource DarkBorderBackground}}">
+                                <Border.Behaviors>
+                                    <mct:TouchBehavior DefaultAnimationDuration="350"
                                             PressedOpacity="0.6"
                                             PressedScale="0.8"
                                             PressedRotationY="350"
                                             Command="{Binding FavouriteCommand}" />
-                            </Grid.Behaviors>
+                                </Border.Behaviors>
 
-                            <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe838;" Margin="10,10,15,10" FontSize="40" TextColor="{Binding StopInfo.IsFavourite, Converter={StaticResource BoolToFavourite}}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="40" />
+                                </Border.StrokeShape>
+
+                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding StopInfo.IsFavourite}" Value="True">
+                                            <Setter Property="Text" Value="&#xe838;" />
+                                            <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
+                                        </DataTrigger>
+
+                                        <DataTrigger TargetType="Label" Binding="{Binding StopInfo.IsFavourite}" Value="False">
+                                            <Setter Property="Text" Value="&#xE83A;" />
+                                            <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource LabelTextColor}, Dark={DynamicResource DarkLabelTextColor}}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
                         </Grid>
 
                         <BoxView Grid.ColumnSpan="2" HeightRequest="1" Color="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" VerticalOptions="End" />
