@@ -6,7 +6,7 @@
              x:Class="TramlineFive.Pages.VirtualTablesPage"
              xmlns:views="clr-namespace:TramlineFive.Maui.Views"
              xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
-             x:DataType="local:VirtualTablesViewModel" Padding="-2,0,-2,0">
+             x:DataType="local:VirtualTablesViewModel" Padding="-2,0,-2,-2">
 
     <Grid.Resources>
         <ResourceDictionary>
