@@ -77,15 +77,23 @@
                             </Border>
                         </Grid>
 
-                        <BoxView Grid.ColumnSpan="2" HeightRequest="1" Color="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" VerticalOptions="End" />
+                        <BoxView Grid.ColumnSpan="2" HeightRequest="1" 
+                                 Color="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" 
+                                 VerticalOptions="End" />
                     </Grid>
                 </Grid>
             </Grid>
 
-            <RefreshView x:Name="refreshView" Command="{Binding RefreshCommand}" Margin="3,0,3,0" Grid.Row="1" RefreshColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
+            <RefreshView x:Name="refreshView" Command="{Binding RefreshCommand}" 
+                         Margin="3,0,3,0" Grid.Row="1" IsRefreshing="{Binding IsRefreshing}"
+                         RefreshColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" 
+                         Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
                 <StackLayout>
-                    <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Margin="0,20,0,0" Color="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" />
-                    <CollectionView ItemsSource="{Binding StopInfo.Arrivals}" SelectedItem="{Binding Selected, Mode=TwoWay}" VerticalOptions="FillAndExpand">
+                    <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Margin="0,20,0,0" 
+                       Color="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" />
+                    <CollectionView ItemsSource="{Binding StopInfo.Arrivals}" 
+                                    SelectedItem="{Binding Selected, Mode=TwoWay}" 
+                                    SelectionMode="Single" VerticalOptions="FillAndExpand">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <views:VirtualTablesViewCell BindingContext="{Binding}" HeightRequest="110" />

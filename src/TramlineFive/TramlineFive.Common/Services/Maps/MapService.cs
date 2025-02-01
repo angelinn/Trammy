@@ -19,6 +19,14 @@ using Mapsui.Tiling.Fetcher;
 using Mapsui.Extensions;
 using Mapsui.Tiling.Rendering;
 using System.Diagnostics;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
+using Mapsui.Nts;
+using Mapsui.UI.Maui;
+using Mapsui.Nts.Extensions;
+using System.ComponentModel;
+using QuikGraph.Algorithms.Exploration;
+using NetTopologySuite.GeometriesGraph;
 
 namespace TramlineFive.Common.Services.Maps;
 
@@ -26,6 +34,8 @@ public class MapService
 {
     private readonly MPoint CENTER_OF_SOFIA = new(23.3196994, 42.6969899);
     private const int ANIMATION_MS = 600;
+    private const string ROUTE_LAYER = "Route Layer";
+    private const string STOPS_LAYER = "Stops layer";
 
     private Map map;
     private SymbolStyle busPinStyle;
@@ -46,10 +56,15 @@ public class MapService
     private readonly LocationService locationService;
     private readonly PublicTransport publicTransport;
 
+    private Stack<(MPoint, int)> navigationStack = new();
+
+    private bool isShowingRoute;
+
     public double OverlayHeightInPixels { get; set; }
 
     public int MaxPinsZoom { get; set; } = 15;
     public int MaxTextZoom { get; set; } = 17;
+
 
     public MapService(LocationService locationService, PublicTransport publicTransport)
     {
@@ -57,11 +72,89 @@ public class MapService
         this.publicTransport = publicTransport;
 
         WeakReferenceMessenger.Default.Register<RefreshStopsMessage>(this, async (r, m) => await OnStopsRefreshed());
+        WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, (r, m) => ShowRoute(m));
+    }
+
+    private void ShowRoute(ShowRouteMessage showRouteMessage)
+    {
+        IEnumerable<string> wkts = showRouteMessage.Direction.Segments.Select(s => s.Wkt);
+
+        WKTReader reader = new WKTReader();
+        List<GeometryFeature> features = new List<GeometryFeature>();
+
+        foreach (string wkt in wkts)
+        {
+            Geometry geometry = reader.Read(wkt);
+            Coordinate[] newcoords = (geometry as LineString).Coordinates.
+                Select(c => SphericalMercator.FromLonLat(c.Y, c.X)).
+                Select(c => new Coordinate(c.x, c.y)).
+                ToArray();
+
+            geometry = new LineString(newcoords);
+
+            GeometryFeature feature = new GeometryFeature { Geometry = geometry };
+            feature.Styles.Add(new VectorStyle
+            {
+                Line = new Pen
+                {
+                    Color = Color.FromString(TransportConvertеr.TypeToColor(showRouteMessage.TransportType)),
+                    Width = 5
+                }
+            });
+
+            features.Add(feature);
+        }
+
+        Layer wktLayer = new Layer
+        {
+            Name = ROUTE_LAYER,
+            DataSource = new MemoryProvider(features),
+            Style = null
+        };
+
+        int stopsLayerIndex = map.Layers.ToList().IndexOf(map.Layers.FindLayer(STOPS_LAYER).First());
+        map.Layers.Insert(stopsLayerIndex, wktLayer);
+
+        List<string> lineStops = showRouteMessage.Direction.Segments.Select(s => s.StartStop)
+            .Concat(showRouteMessage.Direction.Segments.Select(s => s.EndStop))
+            .Distinct()
+            .ToList();
+
+        activeStyles.ForEach(s => s.Enabled = false);
+        activeStyles.Clear();
+
+        foreach (string stop in lineStops)
+        {
+            string numberStop = new string(stop.Where(c => char.IsDigit(c)).ToArray());
+            if (!stopsDictionary.TryGetValue(numberStop, out IFeature feature))
+                continue;
+
+            foreach (IStyle style in feature.Styles)
+            {
+                activeStyles.Add(style as Style);
+                style.Enabled = true;
+                style.MaxVisible = style is SymbolStyle ? double.MaxValue : map.Navigator.Resolutions[MaxTextZoom - 3];
+            }
+        }
+
+        isShowingRoute = true;
+        map.Navigator.ZoomTo(map.Navigator.Resolutions[15], ANIMATION_MS, Easing.CubicOut);
+    }
+
+    public void HideRoutes()
+    {
+        if (isShowingRoute)
+        {
+            isShowingRoute = false;
+            map.Layers.Remove((l) => l.Name == ROUTE_LAYER);
+        }
     }
 
     public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy)
     {
         this.map = map;
+        this.map.Navigator.RotationLock = true;
+
         ChangeTileServer(tileServer, dataFetchStrategy, renderFetchStrategy);
 
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
@@ -164,6 +257,8 @@ public class MapService
 
     public void MoveTo(MPoint position, int zoom, bool home = false, bool ignoreOverlayHeight = false)
     {
+        HideRoutes();
+
         MPoint point = SphericalMercator.FromLonLat(position);
 
         if (home)
@@ -185,7 +280,7 @@ public class MapService
         map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
     }
 
-    public void MoveToUser(Position position, bool home = false)
+    public void MoveToUser(TramlineFive.Common.Models.Position position, bool home = false)
     {
         (double x, double y) = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
 
@@ -309,10 +404,20 @@ public class MapService
         map.Navigator.RotateTo(0);
         map.Navigator.ZoomTo(map.Navigator.Resolutions[17]);
         MoveTo(point, 17);
+
+        navigationStack.Push((point, 17));
     }
 
-    public async Task ShowNearbyStops(MPoint position, bool hideOthers = false)
+    public async Task ShowNearbyStops()
     {
+        await ShowNearbyStops(new MPoint(map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY));
+    }
+
+    public async Task ShowNearbyStops(MPoint position)
+    {
+        if (isShowingRoute)
+            return;
+
         await Task.Run(() =>
         {
             stopsFinishedLoadingEvent.WaitOne();
@@ -334,6 +439,7 @@ public class MapService
                 {
                     activeStyles.Add(style as Style);
                     style.Enabled = true;
+                    style.MaxVisible = map.Navigator.Resolutions[style is SymbolStyle ? MaxPinsZoom : MaxTextZoom];
                 }
             }
 
@@ -342,7 +448,7 @@ public class MapService
         });
     }
 
- 
+
     private void FilterStops(List<IFeature> features)
     {
         bool[] processed = new bool[features.Count];
@@ -410,8 +516,27 @@ public class MapService
         }
         else
         {
-            ShowNearbyStops(new MPoint(map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY), true);
+            _ = ShowNearbyStops();
         }
     }
 
+    public bool HandleGoBack()
+    {
+        if (isShowingRoute)
+            HideRoutes();
+
+        if (navigationStack.Count > 0)
+        {
+            (MPoint point, int zoom) = navigationStack.Pop();
+
+            MPoint transformed = SphericalMercator.FromLonLat(point);
+            map.Navigator.CenterOnAndZoomTo(transformed, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
+
+            _ = ShowNearbyStops(transformed);
+
+            return true;
+        }
+
+        return false;
+    }
 }

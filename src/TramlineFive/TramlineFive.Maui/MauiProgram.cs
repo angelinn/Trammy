@@ -88,6 +88,7 @@ namespace TramlineFive.Maui
 
             services.AddSingleton<StopsLoader>();
             services.AddSingleton<PublicTransport>();
+            services.AddSingleton<RoutesLoader>();
             services.AddSingleton<DirectionsService>();
             services.AddSingleton<ArrivalsService>();
             services.AddSingleton<LocationService>();

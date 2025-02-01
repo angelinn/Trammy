@@ -50,6 +50,7 @@ namespace TramlineFive.Pages
             WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await OnShowMapMessage(m));
             WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables());
             WeakReferenceMessenger.Default.Register<StopDataLoadedMessage>(this, (r, m) => OnStopDataLoaded(m));
+            WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, async (r, m) => await OnShowRouteAsync()); 
         }
 
         protected override void OnAppearing()
@@ -94,7 +95,7 @@ namespace TramlineFive.Pages
             {
                 if (hasMoved)
                 {
-                    await mapService.ShowNearbyStops(new MPoint(map.Map.Navigator.Viewport.CenterX, map.Map.Navigator.Viewport.CenterY), true);
+                    await mapService.ShowNearbyStops();
                     Debug.WriteLine($"Show stops");
 
                     hasMoved = false;
@@ -197,6 +198,11 @@ namespace TramlineFive.Pages
             }
         }
 
+        private async Task OnShowRouteAsync()
+        {
+            await HideVirtualTables();
+        }
+
         protected override bool OnBackButtonPressed()
         {
             if (isVirtualTablesShown)
@@ -205,7 +211,7 @@ namespace TramlineFive.Pages
                 return true;
             }
 
-            return false;
+            return mapService.HandleGoBack();
         }
     }
 }

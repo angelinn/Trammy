@@ -30,16 +30,15 @@ namespace TramlineFive.Common.ViewModels
         private readonly ArrivalsService arrivalsService;
         private readonly VersionService versionService;
         private readonly PublicTransport publicTransport;
-
+        private readonly RoutesLoader routesLoader;
         private string stopCode;
 
-        public VirtualTablesViewModel(ArrivalsService arrivalsService, VersionService versionService, PublicTransport publicTransport)
+        public VirtualTablesViewModel(ArrivalsService arrivalsService, VersionService versionService, PublicTransport publicTransport, RoutesLoader routesLoader)
         {
             this.arrivalsService = arrivalsService;
             this.versionService = versionService;
             this.publicTransport = publicTransport;
-
-
+            this.routesLoader = routesLoader;
             Messenger.Register<StopSelectedMessage>(this, async (r, sc) =>
             {
                 await CheckStopAsync(sc.Value.Selected);
@@ -59,6 +58,7 @@ namespace TramlineFive.Common.ViewModels
         private async Task Refresh()
         {
             await SearchByStopCodeAsync(stopCode);
+            IsRefreshing = false;
         }
 
         [RelayCommand]
@@ -157,7 +157,23 @@ namespace TramlineFive.Common.ViewModels
         partial void OnSelectedChanged(ArrivalInformation value)
         {
             if (value != null)
-                NavigationService.GoToDetails(value, stopCode);
+            {
+                routesLoader.LoadRoutes().ContinueWith(t =>
+                {
+                    Route1 route = routesLoader.GetRoute(value.LineName, value.VehicleType);
+                    if (route is null)
+                    {
+                        ApplicationService.RunOnUIThread(() =>
+                            ApplicationService.DisplayToast($"Не е намерен маршрут за {value.VehicleType} {value.LineName}")
+                        );
+                        
+                        return;
+                    }
+                    Messenger.Send(new ShowRouteMessage(route.Line, route.Direction0, value.VehicleType));
+                });
+
+                Selected = null;
+            }
         }
 
         [ObservableProperty]
@@ -175,6 +191,8 @@ namespace TramlineFive.Common.ViewModels
         [ObservableProperty]
         private bool isLoading;
 
+        [ObservableProperty]
+        private bool isRefreshing;
 
         //private string stopCode;
         //public string StopCode
