@@ -418,9 +418,6 @@ public class MapService
                     style.MaxVisible = map.Navigator.Resolutions[style is SymbolStyle ? MaxPinsZoom : MaxTextZoom];
                 }
             }
-
-            if (nearbyStops.Count > 0)
-                WeakReferenceMessenger.Default.Send(new NearbyStopsMessage(nearbyStops));
         });
     }
 
@@ -482,8 +479,6 @@ public class MapService
 
     public void OnMapInfo(MapInfoEventArgs e)
     {
-        WeakReferenceMessenger.Default.Send(new MapClickedMessage());
-
         MapInfo info = e.GetMapInfo(map.Layers.FindLayer(STOPS_LAYER));
         if (info.Feature != null && info.Feature.Styles.FirstOrDefault().Enabled)
         {
