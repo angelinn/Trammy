@@ -6,14 +6,8 @@
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
         x:Name="Page"
         Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}"  Opacity="0.9" Padding="0" Stroke="Transparent">
-
-    <Border.Resources>
-        <ResourceDictionary>
-            <cv:LocationConverter x:Key="LocationConverter" />
-        </ResourceDictionary>
-    </Border.Resources>
-
-        <Border.StrokeShape>
+    
+    <Border.StrokeShape>
             <RoundRectangle CornerRadius="50" />
         </Border.StrokeShape>
         <Border.Behaviors>
@@ -24,6 +18,16 @@
                                 Command="{Binding BindingContext.MyLocationCommand, Source={x:Reference Page}}" />
         </Border.Behaviors>
 
-    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="{Binding HasLocation, Converter={StaticResource LocationConverter}}" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="25" />
+    <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="25">
+        <Label.Triggers>
+            <DataTrigger TargetType="Label" Binding="{Binding HasLocation}" Value="True">
+                <Setter Property="Text" Value="my_location" />
+            </DataTrigger>
+
+            <DataTrigger TargetType="Label" Binding="{Binding HasLocation}" Value="False">
+                <Setter Property="Text" Value="location_searching" />
+            </DataTrigger>
+        </Label.Triggers>
+    </Label>
 </Border>
     

@@ -13,13 +13,6 @@
         </HorizontalStackLayout>
     </Shell.TitleView>
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <cv:ColorConverter x:Key="Color" />
-            <cv:CodeToTextConverter x:Key="CodeToText" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />

@@ -11,10 +11,7 @@
     <Grid.Resources>
         <ResourceDictionary>
             <cv:InverseBoolConverter x:Key="InverseBool" />
-            <cv:ReferenceToBoolConverter x:Key="ReferenceToBool" />
-            <cv:ImageSourceConverter x:Key="ImageSource" />
             <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
-            <cv:BoolToFavouriteColorConverter x:Key="BoolToFavourite" />
             <cv:TransportTypeToImageConverter x:Key="TransportToImage" />
         </ResourceDictionary>
     </Grid.Resources>
@@ -31,7 +28,7 @@
             </Grid.RowDefinitions>
 
             <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}" >
-                <Grid HeightRequest="80" Padding="0" VerticalOptions="Start" IsVisible="{Binding StopInfo, Converter={StaticResource ReferenceToBool}}" >
+                <Grid HeightRequest="80" Padding="0" VerticalOptions="Start">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="68" />
