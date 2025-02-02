@@ -2,14 +2,12 @@
 using Mapsui.Layers;
 using Mapsui.Providers;
 using Mapsui.Styles;
-using Mapsui.Utilities;
 using SkgtService;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TramlineFive.Common.Messages;
-using TramlineFive.Common.Models;
 using Mapsui.Projections;
 using KdTree;
 using Mapsui.Animations;
@@ -22,11 +20,7 @@ using System.Diagnostics;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Mapsui.Nts;
-using Mapsui.UI.Maui;
 using Mapsui.Nts.Extensions;
-using System.ComponentModel;
-using QuikGraph.Algorithms.Exploration;
-using NetTopologySuite.GeometriesGraph;
 using Mapsui.Manipulations;
 
 namespace TramlineFive.Common.Services.Maps;
@@ -48,7 +42,7 @@ public class MapService
 
     private KdTree<float, IFeature> stopsTree;
     private Dictionary<string, IFeature> stopsDictionary;
-    private ManualResetEvent stopsFinishedLoadingEvent = new(false);
+    private readonly ManualResetEvent stopsFinishedLoadingEvent = new(false);
 
     private IDataFetchStrategy dataStrategy;
     private IRenderFetchStrategy renderStrategy;
@@ -162,13 +156,6 @@ public class MapService
         map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[17]);
     }
 
-    public async Task Initialize(Map map)
-    {
-        this.map = map;
-
-        await SetupMapAsync();
-    }
-
     public void ChangeTileServer(string tileServer, string dataFetchStrategy, string renderFetchStrategy)
     {
         if (dataFetchStrategy != null)
@@ -248,8 +235,6 @@ public class MapService
         }
 
         await publicTransport.ReloadDataIfNeededAsync();
-
-        //map.Navigator.ViewportChanged += (sender, args) => SendMapRefreshMessage();
     }
 
     public void MoveTo(MPoint position, int zoom, bool home = false, bool ignoreOverlayHeight = false)
@@ -504,7 +489,7 @@ public class MapService
         {
             StopInformation location = info.Feature["stopObject"] as StopInformation;
 
-            WeakReferenceMessenger.Default.Send(new StopSelectedMessage(new StopSelectedMessagePayload(location.Code, true)));
+            WeakReferenceMessenger.Default.Send(new StopSelectedMessage(location.Code));
         }
         else
         {

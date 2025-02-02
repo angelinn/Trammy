@@ -13,20 +13,12 @@
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}"
              Padding="0,0,0,0">
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <cv:ColorConverter x:Key="ColorConverter" />
-            <cv:LocationConverter x:Key="LocationConverter" />
-            <cv:InverseBoolConverter x:Key="InverseBool" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
-
     <AbsoluteLayout x:Name="absLayout">
         <mapsui:MapControl x:Name="map" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" >
             <mapsui:MapControl.Behaviors>
                 <mct:EventToCommandBehavior EventName="Info" Command="{Binding BindingContext.MapInfoCommand, Source={x:Reference map}}" x:TypeArguments="mapsuipl:MapInfoEventArgs" />
             </mapsui:MapControl.Behaviors>
-            
+
             <mapsui:MapControl.GestureRecognizers>
                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                 <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated" />
@@ -42,7 +34,7 @@
              Margin="0,0,10,0" HeightRequest="58" WidthRequest="58" BindingContext="{Binding}" />
 
         <mct:LazyView x:Name="LazySearchBar" x:TypeArguments="views:SearchBar" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.95,1,47" Margin="15,0,15,0" />
-        
+
         <mct:LazyView Background="Transparent" x:Name="LazyVirtualTablesView"  Padding="0" VerticalOptions="End" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" x:TypeArguments="pages:VirtualTablesPage" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" />
     </AbsoluteLayout>
 </ContentPage>

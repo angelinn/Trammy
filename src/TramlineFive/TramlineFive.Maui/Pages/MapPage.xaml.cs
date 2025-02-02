@@ -34,21 +34,20 @@ namespace TramlineFive.Pages
         private bool isVirtualTablesShown;
         private bool hasMoved;
 
-        private MapService mapService;
+        private MapViewModel mapViewModel;
 
         public MapPage()
         {
             InitializeComponent();
 
-            mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
-            mapService.LoadInitialMap(map.Map,
+            mapViewModel = ServiceContainer.ServiceProvider.GetService<MapViewModel>();
+            mapViewModel.LoadInitialMap(map.Map,
                 Preferences.Get(Settings.SelectedTileServerUrl, Defaults.TileServerUrl),
                 Preferences.Get(Settings.FetchingStrategy, Defaults.DataFetchStrategy),
                 Preferences.Get(Settings.RenderStrategy, Defaults.RenderFetchStrategy));
 
             map.UpdateInterval = 8;
 
-            WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await OnShowMapMessage(m));
             WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables());
             WeakReferenceMessenger.Default.Register<StopDataLoadedMessage>(this, (r, m) => OnStopDataLoaded(m));
             WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, async (r, m) => await OnShowRouteAsync());
@@ -71,10 +70,10 @@ namespace TramlineFive.Pages
 
             _ = Task.Run(async () =>
             {
-                await LoadMapAsync();
+                await mapViewModel.SetupFullMapAsync();
                 await Task.Delay(500);
 
-                _ = (BindingContext as MapViewModel).LocalizeAsync(true);
+                _ = mapViewModel.LocalizeAsync(true);
 
                 await Dispatcher.DispatchAsync(() =>
                 {
@@ -106,27 +105,13 @@ namespace TramlineFive.Pages
             );
         }
 
-        private async Task OnShowMapMessage(ShowMapMessage message)
-        {
-            if (!message.Show)
-                await HideVirtualTables();
-        }
-
-        private async Task LoadMapAsync()
-        {
-            mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
-            await (BindingContext as MapViewModel).Initialize(map.Map);
-            //fix
-            //map.Map.Navigator. += OnMapTouchAction;
-        }
-
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
 
             LazyVirtualTablesView.TranslationY = isVirtualTablesShown ? 0 : Height;
             LazyVirtualTablesView.HeightRequest = Height * 0.60;
-            mapService.OverlayHeightInPixels = LazyVirtualTablesView.HeightRequest;
+            mapViewModel.OverlayHeightInPixels = LazyVirtualTablesView.HeightRequest;
 
 #if ANDROID
             int statusBarHeight = 0;
@@ -136,7 +121,7 @@ namespace TramlineFive.Pages
                 statusBarHeight = Android.Content.Res.Resources.System.GetDimensionPixelSize(resourceId);
                 double statusBarHeightDip = statusBarHeight / Android.Content.Res.Resources.System.DisplayMetrics.Density;
 
-                mapService.OverlayHeightInPixels -= statusBarHeightDip;
+                mapViewModel.OverlayHeightInPixels -= statusBarHeightDip;
             }
 #endif
         }
@@ -184,7 +169,7 @@ namespace TramlineFive.Pages
                 return true;
             }
 
-            return mapService.HandleGoBack();
+            return mapViewModel.NavigateBack();
         }
 
         private async void TapGestureRecognizer_Tapped(object sender, Microsoft.Maui.Controls.TappedEventArgs e)

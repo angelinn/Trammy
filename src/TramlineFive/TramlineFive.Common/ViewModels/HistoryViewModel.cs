@@ -38,7 +38,7 @@ namespace TramlineFive.Common.ViewModels
             if (value != null)
             {
                 Messenger.Send(new ChangePageMessage("//Map"));
-                Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(value.StopCode, true)));
+                Messenger.Send(new StopSelectedMessage(value.StopCode));
 
                 Selected = null;
                 OnPropertyChanged();

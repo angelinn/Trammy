@@ -38,7 +38,7 @@ namespace TramlineFive.Common.ViewModels
         {
             Messenger.Register<FavouriteAddedMessage>(this, (r, f) => OnFavouriteAdded(f.Value));
 
-            Messenger.Register<StopSelectedMessage>(this, async (r, sc) => await OnStopSelected(sc.Value.Selected));
+            Messenger.Register<StopSelectedMessage>(this, async (r, sc) => await OnStopSelected(sc.Selected));
 
             this.locationService = locationService;
             this.publicTransport = publicTransport;
@@ -65,7 +65,7 @@ namespace TramlineFive.Common.ViewModels
             }
 
             if (minDistanceFavourite != null)
-                Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(minDistanceFavourite.StopCode, true)));
+                Messenger.Send(new StopSelectedMessage(minDistanceFavourite.StopCode));
         }
 
         private async Task OnStopSelected(string stopCode)
@@ -150,7 +150,7 @@ namespace TramlineFive.Common.ViewModels
             {
 
                 Messenger.Send(new ChangePageMessage("//Map"));
-                Messenger.Send(new StopSelectedMessage(new StopSelectedMessagePayload(Selected.StopCode, true)));
+                Messenger.Send(new StopSelectedMessage(Selected.StopCode));
 
                 Selected = null;
                 OnPropertyChanged();

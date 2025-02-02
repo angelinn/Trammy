@@ -41,7 +41,7 @@ namespace TramlineFive.Common.ViewModels
             this.routesLoader = routesLoader;
             Messenger.Register<StopSelectedMessage>(this, async (r, sc) =>
             {
-                await CheckStopAsync(sc.Value.Selected);
+                await CheckStopAsync(sc.Selected);
             });
 
             Messenger.Register<FavouritesChangedMessage>(this, (r, m) =>
