@@ -3,8 +3,8 @@
 ![Made in Bulgaria](https://img.shields.io/static/v1?label=made%20in&message=Bulgaria&color=success)
 
 ![MAUI](https://img.shields.io/static/v1?label=.NET%20&message=MAUI&color=purple)
-![.NET 8](https://img.shields.io/static/v1?label=.NET&message=8.0&color=blue)
-![Mapsui](https://img.shields.io/static/v1?label=mapsui%20&message=4.1.0&color=blue) 
+![.NET 8](https://img.shields.io/static/v1?label=.NET&message=9.0&color=blue)
+![Mapsui](https://img.shields.io/static/v1?label=mapsui%20&message=5.0.0-beta.7&color=blue) 
 
 Trammy (старо име Tramline Five) е приложение за проверка на времената на пристигане на градския транспорт в София в реално време.
 
