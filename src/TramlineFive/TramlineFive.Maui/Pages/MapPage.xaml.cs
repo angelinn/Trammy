@@ -31,7 +31,6 @@ namespace TramlineFive.Pages
     public partial class MapPage : ContentPage
     {
         private bool initialized;
-        private bool isVirtualTablesShown;
         private bool hasMoved;
 
         private MapViewModel mapViewModel;
@@ -50,7 +49,8 @@ namespace TramlineFive.Pages
 
             WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables());
             WeakReferenceMessenger.Default.Register<StopDataLoadedMessage>(this, (r, m) => OnStopDataLoaded(m));
-            WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, async (r, m) => await OnShowRouteAsync());
+            WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, async (r, m) => await HideVirtualTables());
+            WeakReferenceMessenger.Default.Register<HideVirtualTablesMessage>(this, async (r, m) => await HideVirtualTables());
         }
 
         protected override void OnAppearing()
@@ -91,13 +91,11 @@ namespace TramlineFive.Pages
 
         private async Task ShowVirtualTables()
         {
-            isVirtualTablesShown = true;
             await LazyVirtualTablesView.TranslateTo(0, 0, 400);
         }
 
         private async Task HideVirtualTables()
         {
-            isVirtualTablesShown = false;
             await LazyVirtualTablesView.TranslateTo(0, Height, 400);
 
             Dispatcher.Dispatch(() =>
@@ -109,7 +107,7 @@ namespace TramlineFive.Pages
         {
             base.OnSizeAllocated(width, height);
 
-            LazyVirtualTablesView.TranslationY = isVirtualTablesShown ? 0 : Height;
+            LazyVirtualTablesView.TranslationY = mapViewModel.IsVirtualTablesUp ? 0 : Height;
             LazyVirtualTablesView.HeightRequest = Height * 0.60;
             mapViewModel.OverlayHeightInPixels = LazyVirtualTablesView.HeightRequest;
 
@@ -156,25 +154,14 @@ namespace TramlineFive.Pages
             }
         }
 
-        private async Task OnShowRouteAsync()
-        {
-            await HideVirtualTables();
-        }
-
         protected override bool OnBackButtonPressed()
         {
-            if (isVirtualTablesShown)
-            {
-                _ = HideVirtualTables();
-                return true;
-            }
-
             return mapViewModel.NavigateBack();
         }
 
         private async void TapGestureRecognizer_Tapped(object sender, Microsoft.Maui.Controls.TappedEventArgs e)
         {
-            if (isVirtualTablesShown)
+            if (mapViewModel.IsVirtualTablesUp)
             {
                 await HideVirtualTables();
             }

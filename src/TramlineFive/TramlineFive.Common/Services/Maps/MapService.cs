@@ -483,11 +483,13 @@ public class MapService
         if (info.Feature != null && info.Feature.Styles.FirstOrDefault().Enabled)
         {
             StopInformation location = info.Feature["stopObject"] as StopInformation;
+            MoveToStop(location.Code);
 
             WeakReferenceMessenger.Default.Send(new StopSelectedMessage(location.Code));
         }
         else
         {
+            WeakReferenceMessenger.Default.Send(new HideVirtualTablesMessage());
             _ = ShowNearbyStops();
         }
     }

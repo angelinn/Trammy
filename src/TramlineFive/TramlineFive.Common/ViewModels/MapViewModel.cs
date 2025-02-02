@@ -212,12 +212,18 @@ public partial class MapViewModel : BaseViewModel
     private void OnStopSelectedMessageReceived(StopSelectedMessage message)
     {
         IsVirtualTablesUp = true;
-
-        mapService.MoveToStop(message.Selected);
     }
 
     public bool NavigateBack()
     {
+        if (IsVirtualTablesUp)
+        {
+            IsVirtualTablesUp = false;
+            Messenger.Send(new HideVirtualTablesMessage());
+
+            return true;
+        }
+
         return mapService.HandleGoBack();
     }
 

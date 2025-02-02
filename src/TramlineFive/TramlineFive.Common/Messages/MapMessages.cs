@@ -4,3 +4,8 @@ public class MapLoadedMessage
 {
 
 }
+
+public class HideVirtualTablesMessage
+{
+
+}
