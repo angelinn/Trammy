@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.Models;
 using SkgtService;
+using TramlineFive.Common.ViewModels.Lines;
 
 namespace System.Runtime.CompilerServices
 {
@@ -22,7 +23,6 @@ namespace TramlineFive.Common.ViewModels.Locator
 
         public VirtualTablesViewModel VirtualTablesViewModel => ServiceContainer.ServiceProvider.GetService<VirtualTablesViewModel>(); // SimpleIoc.Default.GetInstance<VirtualTablesViewModel>();
         public HistoryViewModel HistoryViewModel => ServiceContainer.ServiceProvider.GetService<HistoryViewModel>(); // SimpleIoc.Default.GetInstance<HistoryViewModel>();
-        public HamburgerViewModel HamburgerViewModel => ServiceContainer.ServiceProvider.GetService<HamburgerViewModel>(); // SimpleIoc.Default.GetInstance<HamburgerViewModel>();
         public AboutViewModel AboutViewModel => ServiceContainer.ServiceProvider.GetService<AboutViewModel>(); // SimpleIoc.Default.GetInstance<AboutViewModel>();
         public SettingsViewModel SettingsViewModel => ServiceContainer.ServiceProvider.GetService<SettingsViewModel>(); // => ServiceContainer.ServiceProvider.GetService<SettingsViewModel>(); // SimpleIoc.Default.GetInstance<SettingsViewModel>();
         public FavouritesViewModel FavouritesViewModel => ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>(); // => ServiceContainer.ServiceProvider.GetService<FavouritesViewModel>(); // SimpleIoc.Default.GetInstance<FavouritesViewModel>();
@@ -49,7 +49,6 @@ namespace TramlineFive.Common.ViewModels.Locator
             services.AddSingleton<MapViewModel>();
             services.AddSingleton<VirtualTablesViewModel>();
             services.AddSingleton<HistoryViewModel>();
-            services.AddSingleton<HamburgerViewModel>();
             services.AddSingleton<AboutViewModel>();
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<FavouritesViewModel>();

@@ -12,19 +12,19 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TramlineFive.Common.Models;
 
-namespace TramlineFive.Common.ViewModels;
+namespace TramlineFive.Common.ViewModels.Lines;
 
-public class TrolleyLinesViewModel : LinesViewModel
+public class SubwayLinesViewModel : LinesViewModel
 {
-    public TrolleyLinesViewModel(PublicTransport publicTransport) : base(publicTransport)
-    {   }
+    public SubwayLinesViewModel(PublicTransport publicTransport) : base(publicTransport)
+    { }
 
-    public string Type => "Тролей";
+    public string Type => "Метро";
     public string Icon => "directions_bus";
     public string IconColor => "royalblue";
 
     public override async Task LoadAsync()
     {
-        await LoadTypeAsync(TransportType.Trolley);
+        await LoadTypeAsync(TransportType.Subway);
     }
 }

@@ -1,96 +1,59 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-
-
-using Mapsui;
-using Microsoft.Extensions.DependencyInjection;
-using SkgtService;
-using SkgtService.Models;
-using SkgtService.Models.Json;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using TramlineFive.Common.Messages;
-using TramlineFive.Common.Models;
 using TramlineFive.Common.Services;
-using TramlineFive.Common.Services.Maps;
 using TramlineFive.DataAccess.Domain;
 
-namespace TramlineFive.Common.ViewModels
+namespace TramlineFive.Common.ViewModels;
+
+public partial class FavouritesViewModel : BaseViewModel
 {
-    public partial class FavouritesViewModel : BaseViewModel
+    public ObservableCollection<FavouriteDomain> Favourites { get; private set; }
+
+    private readonly WeatherService weatherService;
+
+    public FavouritesViewModel(WeatherService weatherService)
     {
-        public ObservableCollection<FavouriteDomain> Favourites { get; private set; }
+        Messenger.Register<StopSelectedMessage>(this, async (r, sc) => await OnStopSelected(sc.Selected));
+        Messenger.Register<RequestAddFavouriteMessage>(this, async (r, m) => await AddFavouriteAsync(m.Name, m.StopCode));
+        Messenger.Register<RequestDeleteFavouriteMessage>(this, async (r, m) => await RemoveFavouriteAsync(m.StopCode));
 
-        private readonly LocationService locationService;
-        private readonly WeatherService weatherService;
-        private bool firstLocalization = true;
+        this.weatherService = weatherService;
+    }
 
-        private readonly PublicTransport publicTransport;
-
-        public FavouritesViewModel(LocationService locationService, PublicTransport publicTransport, WeatherService weatherService)
+    private async Task OnStopSelected(string stopCode)
+    {
+        FavouriteDomain favourite = Favourites.FirstOrDefault(f => f.StopCode == stopCode);
+        if (favourite != null)
         {
-            Messenger.Register<FavouriteAddedMessage>(this, (r, f) => OnFavouriteAdded(f.Value));
-
-            Messenger.Register<StopSelectedMessage>(this, async (r, sc) => await OnStopSelected(sc.Selected));
-
-            this.locationService = locationService;
-            this.publicTransport = publicTransport;
-            this.weatherService = weatherService;
+            await FavouriteDomain.IncrementAsync(favourite.StopCode);
+            ++favourite.TimesClicked;
         }
+    }
 
-        private async Task OnNearestFavouriteRequested(Position location)
-        {
-            double minDistance = double.MaxValue;
-            FavouriteDomain minDistanceFavourite = null;
+    public async Task<FavouriteDomain> AddFavouriteAsync(string name, string code)
+    {
+        FavouriteDomain favourite = await FavouriteDomain.AddAsync(name, code);
+        if (favourite is null)
+            return null;
 
-            while (Favourites == null)
-                await Task.Delay(100);
+        Favourites.Add(favourite);
 
-            foreach (FavouriteDomain favourite in Favourites)
-            {
-                StopInformation stop = publicTransport.Stops.FirstOrDefault(s => s.Code == favourite.StopCode);
-                double distance = locationService.GetDistance(location.Latitude, location.Longitude, stop.Lat, stop.Lon);
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    minDistanceFavourite = favourite;
-                }
-            }
+        OnPropertyChanged(nameof(HasFavourites));
 
-            if (minDistanceFavourite != null)
-                Messenger.Send(new StopSelectedMessage(minDistanceFavourite.StopCode));
-        }
+        ApplicationService.VibrateShort();
+        Messenger.Send(new FavouritesChangedMessage(Favourites.ToList()));
 
-        private async Task OnStopSelected(string stopCode)
-        {
-            FavouriteDomain favourite = Favourites.FirstOrDefault(f => f.StopCode == stopCode);
-            if (favourite != null)
-            {
-                await FavouriteDomain.IncrementAsync(favourite.StopCode);
-                ++favourite.TimesClicked;
-            }
-        }
+        return favourite;
+    }
 
-        private void OnFavouriteAdded(FavouriteDomain favourite)
-        {
-            //favourite.Lines = publicTransport.FindStop(favourite.StopCode).Lines;
-            Favourites.Add(favourite);
-
-            OnPropertyChanged(nameof(HasFavourites));
-
-            ApplicationService.VibrateShort();
-            Messenger.Send(new FavouritesChangedMessage(Favourites.ToList()));
-        }
-
-        [RelayCommand]
-        private async Task RemoveFavouriteAsync(FavouriteDomain favourite)
+    public async Task RemoveFavouriteAsync(string code)
+    {
+        FavouriteDomain favourite = Favourites.FirstOrDefault(f => f.StopCode == code);
+        if (favourite != null)
         {
             if (await ApplicationService.DisplayAlertAsync("", $"Премахване на {favourite.Name}?", "Да", "Не"))
             {
@@ -105,57 +68,46 @@ namespace TramlineFive.Common.ViewModels
                 Messenger.Send(new FavouritesChangedMessage(Favourites.ToList()));
             }
         }
-
-        public async Task RemoveFavouriteAsync(string code)
-        {
-            FavouriteDomain favourite = Favourites.FirstOrDefault(f => f.StopCode == code);
-            if (favourite != null)
-            {
-                await RemoveFavouriteAsync(favourite);
-            }
-        }
-
-        public async Task LoadFavouritesAsync()
-        {
-            IsLoading = true;
-
-            Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).OrderByDescending(f => f.TimesClicked));
-            //foreach (FavouriteDomain favourite in Favourites)
-                //favourite.Lines = publicTransport.FindStop(favourite.StopCode).Lines;
-
-            IsLoading = false;
-
-            OnPropertyChanged(nameof(Favourites));
-            OnPropertyChanged(nameof(HasFavourites));
-
-            Messenger.Send(new FavouritesChangedMessage(Favourites.ToList()));
-
-            Forecast = await weatherService.GetWeather("Sofia, Bulgaria");
-        }
-
-        public bool HasFavourites => (Favourites == null || Favourites.Count == 0) && !IsLoading;
-
-        [ObservableProperty]
-        private Forecast forecast;
-
-        [ObservableProperty]
-        private bool isLoading = true;
-
-        [ObservableProperty]
-        private FavouriteDomain selected;
-
-        partial void OnSelectedChanged(FavouriteDomain value)
-        {
-            if (value != null)
-            {
-
-                Messenger.Send(new ChangePageMessage("//Map"));
-                Messenger.Send(new StopSelectedMessage(Selected.StopCode));
-
-                Selected = null;
-                OnPropertyChanged();
-            }
-        }
-
     }
+
+    public async Task LoadFavouritesAsync()
+    {
+        IsLoading = true;
+
+        Favourites = new ObservableCollection<FavouriteDomain>((await FavouriteDomain.TakeAsync()).OrderByDescending(f => f.TimesClicked));
+
+        IsLoading = false;
+
+        OnPropertyChanged(nameof(Favourites));
+        OnPropertyChanged(nameof(HasFavourites));
+
+        Messenger.Send(new FavouritesChangedMessage(Favourites.ToList()));
+
+        Forecast = await weatherService.GetWeather("Sofia, Bulgaria");
+    }
+
+    public bool HasFavourites => (Favourites == null || Favourites.Count == 0) && !IsLoading;
+
+    [ObservableProperty]
+    private Forecast forecast;
+
+    [ObservableProperty]
+    private bool isLoading = true;
+
+    [ObservableProperty]
+    private FavouriteDomain selected;
+
+    partial void OnSelectedChanged(FavouriteDomain value)
+    {
+        if (value != null)
+        {
+
+            Messenger.Send(new ChangePageMessage("//Map"));
+            Messenger.Send(new StopSelectedMessage(Selected.StopCode));
+
+            Selected = null;
+            OnPropertyChanged();
+        }
+    }
+
 }

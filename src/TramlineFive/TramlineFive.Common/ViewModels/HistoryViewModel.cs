@@ -1,79 +1,72 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-
-using Microsoft.Extensions.DependencyInjection;
 using SkgtService.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Common.Messages;
-using TramlineFive.Common.Services;
 using TramlineFive.DataAccess.Domain;
 
-namespace TramlineFive.Common.ViewModels
+namespace TramlineFive.Common.ViewModels;
+
+public partial class HistoryViewModel : BaseViewModel
 {
-    public partial class HistoryViewModel : BaseViewModel
+    public ObservableCollection<HistoryDomain> History { get; private set; }
+
+    public HistoryViewModel()
     {
-        public ObservableCollection<HistoryDomain> History { get; private set; }
+        Messenger.Register<HistoryClearedMessage>(this, (r, h) => OnHistoryCleared());
+        Messenger.Register<StopDataLoadedMessage>(this, async (r, s) => await OnStopDataLoadedAsync(s.stopInfo));
+    }
 
-        public HistoryViewModel()
+    public bool HasHistory => (History == null || History.Count == 0) && !IsLoading;
+
+    [ObservableProperty]
+    private bool isLoading = true;
+
+    [ObservableProperty]
+    private HistoryDomain selected;
+
+    partial void OnSelectedChanged(HistoryDomain value)
+    {
+        if (value != null)
         {
-            Messenger.Register<HistoryClearedMessage>(this, (r, h) => OnHistoryCleared());
-            Messenger.Register<StopDataLoadedMessage>(this, async (r, s) => await OnStopDataLoadedAsync(s.stopInfo));
+            Messenger.Send(new ChangePageMessage("//Map"));
+            Messenger.Send(new StopSelectedMessage(value.StopCode));
+
+            Selected = null;
+            OnPropertyChanged();
         }
+    }
 
-        public bool HasHistory => (History == null || History.Count == 0) && !IsLoading;
+    public async Task LoadHistoryAsync()
+    {
+        IsLoading = true;
 
-        [ObservableProperty]
-        private bool isLoading = true;
+        History = new ObservableCollection<HistoryDomain>(await HistoryDomain.TakeAsync());
 
-        [ObservableProperty]
-        private HistoryDomain selected;
+        OnPropertyChanged(nameof(History));
+        OnPropertyChanged(nameof(HasHistory));
 
-        partial void OnSelectedChanged(HistoryDomain value)
-        {
-            if (value != null)
-            {
-                Messenger.Send(new ChangePageMessage("//Map"));
-                Messenger.Send(new StopSelectedMessage(value.StopCode));
+        IsLoading = false;
+    }
 
-                Selected = null;
-                OnPropertyChanged();
-            }
-        }
+    private async Task OnStopDataLoadedAsync(StopResponse stopInfo)
+    {
+        HistoryDomain newHistory = new HistoryDomain(await HistoryDomain.AddOrUpdateHistoryAsync(stopInfo.Code, stopInfo.PublicName));
+        HistoryDomain existing = History.FirstOrDefault(h => h.StopCode == newHistory.StopCode);
 
-        public async Task LoadHistoryAsync()
-        {
-            IsLoading = true;
+        if (existing is not null)
+            History.Remove(existing);
 
-            History = new ObservableCollection<HistoryDomain>(await HistoryDomain.TakeAsync());
+        History.Insert(0, newHistory);
 
-            OnPropertyChanged(nameof(History));
-            OnPropertyChanged(nameof(HasHistory));
+        OnPropertyChanged(nameof(HasHistory));
+    }
 
-            IsLoading = false;
-        }
-
-        private async Task OnStopDataLoadedAsync(StopResponse stopInfo)
-        {
-            HistoryDomain newHistory = new HistoryDomain(await HistoryDomain.AddOrUpdateHistoryAsync(stopInfo.Code, stopInfo.PublicName));
-            HistoryDomain existing = History.FirstOrDefault(h => h.StopCode == newHistory.StopCode);
-
-            if (existing is not null)
-                History.Remove(existing);
-
-            History.Insert(0, newHistory);
-
-            OnPropertyChanged(nameof(HasHistory));
-        }
-
-        private void OnHistoryCleared()
-        {
-            History.Clear();
-            OnPropertyChanged(nameof(HasHistory));
-        }
+    private void OnHistoryCleared()
+    {
+        History.Clear();
+        OnPropertyChanged(nameof(HasHistory));
     }
 }

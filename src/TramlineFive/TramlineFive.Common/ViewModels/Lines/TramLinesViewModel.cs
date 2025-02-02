@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TramlineFive.Common.Models;
 
-namespace TramlineFive.Common.ViewModels;
+namespace TramlineFive.Common.ViewModels.Lines;
 
 public class TramLinesViewModel : LinesViewModel
 {
     public TramLinesViewModel(PublicTransport publicTransport) : base(publicTransport)
-    {   }
+    { }
 
     public string Type => "Трамвай";
     public string Icon => "tram";

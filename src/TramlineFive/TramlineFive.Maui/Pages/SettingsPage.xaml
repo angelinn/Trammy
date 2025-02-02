@@ -7,7 +7,8 @@
              Title="Настройки"
              Shell.NavBarIsVisible="True"
              xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
-             x:DataType="local:SettingsViewModel"
+             x:DataType="local:SettingsViewModel" 
+             x:Name="Page"
              BindingContext="{Binding SettingsViewModel, Source={StaticResource Locator}}">
 
     <ContentPage.Resources>
@@ -25,7 +26,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.Behaviors>
-                    <mct:TouchBehavior Command="{Binding CleanHistoryCommand}" 
+                    <mct:TouchBehavior Command="{Binding BindingContext.CleanHistoryCommand, Source={x:Reference Page}}" 
                                        DefaultAnimationDuration="250"
                                         DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
                                         PressedOpacity="0.6"
@@ -42,7 +43,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.Behaviors>
-                    <mct:TouchBehavior Command="{Binding UpdateStopsCommand}" 
+                    <mct:TouchBehavior  Command="{Binding BindingContext.UpdateStopsCommand, Source={x:Reference Page}}"  
                                        DefaultAnimationDuration="250"
                                         DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
                                         PressedOpacity="0.6"
@@ -63,7 +64,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.Behaviors>
-                    <mct:TouchBehavior Command="{Binding CheckForUpdatesCommand}" 
+                    <mct:TouchBehavior  Command="{Binding BindingContext.CheckForUpdatesCommand, Source={x:Reference Page}}" 
                                        DefaultAnimationDuration="250"
                                         DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
                                         PressedOpacity="0.6"

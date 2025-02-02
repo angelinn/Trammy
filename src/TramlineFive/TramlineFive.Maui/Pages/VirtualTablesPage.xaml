@@ -54,7 +54,7 @@
                                             PressedOpacity="0.6"
                                             PressedScale="0.8"
                                             PressedRotationY="350"
-                                            Command="{Binding FavouriteCommand}" />
+                                            Command="{Binding BindingContext.FavouriteCommand, Source={x:Reference refreshView}}" />
                                 </Border.Behaviors>
 
                                 <Border.StrokeShape>
