@@ -47,29 +47,29 @@ public class NavigationService : INavigationService
 
     public async Task GoToDetails(Line line, string stop)
     {
-        LineDetailsViewModel vm = ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>();
-        ForwardLineDetailsViewModel fvm = ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>();
+        //LineDetailsViewModel vm = ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>();
+        //ForwardLineDetailsViewModel fvm = ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>();
 
-        await vm.Load(line);
-        await fvm.Load(line);
+        //await vm.Load(line);
+        //await fvm.Load(line);
 
-        string tab = string.Empty;
-        tab = "Forward";
+        //string tab = string.Empty;
+        //tab = "Forward";
 
-        if (!String.IsNullOrEmpty(stop))
-        {
-            if (vm.Codes.Any(c => c.Code == stop))
-            {
-                tab = "Forward";
-                ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().SetHighlightedStop(stop);
-            }
-            else if (fvm.Codes.Any(c => c.Code == stop))
-            {
-                tab = "Backward";
-                ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().SetHighlightedStop(stop);
-            }
-        }
+        //if (!String.IsNullOrEmpty(stop))
+        //{
+        //    if (vm.Codes.Any(c => c.Code == stop))
+        //    {
+        //        tab = "Forward";
+        //        ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>().SetHighlightedStop(stop);
+        //    }
+        //    else if (fvm.Codes.Any(c => c.Code == stop))
+        //    {
+        //        tab = "Backward";
+        //        ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>().SetHighlightedStop(stop);
+        //    }
+        //}
 
-        await Shell.Current.GoToAsync($"//LineDetails/{tab}");
+        //await Shell.Current.GoToAsync($"//LineDetails/{tab}");
     }
 }

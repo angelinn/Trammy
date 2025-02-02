@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TramlineFive.Pages.MapPage"
@@ -22,10 +22,15 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout x:Name="absLayout">
-        <mapsui:MapControl x:Name="map" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1">
+        <mapsui:MapControl x:Name="map" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" >
             <mapsui:MapControl.Behaviors>
-                <mct:EventToCommandBehavior EventName="Info" Command="{Binding MapInfoCommand}" x:TypeArguments="mapsuipl:MapInfoEventArgs" />
+                <mct:EventToCommandBehavior EventName="Info" Command="{Binding BindingContext.MapInfoCommand, Source={x:Reference map}}" x:TypeArguments="mapsuipl:MapInfoEventArgs" />
             </mapsui:MapControl.Behaviors>
+            
+            <mapsui:MapControl.GestureRecognizers>
+                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated" />
+            </mapsui:MapControl.GestureRecognizers>
         </mapsui:MapControl>
 
         <Grid x:Name="themeOverlay" Background="Black" Opacity="0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"/>

@@ -29,13 +29,13 @@ namespace TramlineFive.Common.ViewModels.Locator
         public LicensesViewModel LicensesViewModel => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // => ServiceContainer.ServiceProvider.GetService<LicensesViewModel>(); // SimpleIoc.Default.GetInstance<LicensesViewModel>();
         public MapViewModel MapViewModel => ServiceContainer.ServiceProvider.GetService<MapViewModel>();
         public LineViewModel LinesViewModel => ServiceContainer.ServiceProvider.GetService<LineViewModel>();
-        public LineDetailsViewModel LineDetailsViewModel => ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>(); 
+        //public LineDetailsViewModel LineDetailsViewModel => ServiceContainer.ServiceProvider.GetService<LineDetailsViewModel>(); 
         public BusLinesViewModel BusLinesViewModel => ServiceContainer.ServiceProvider.GetService<BusLinesViewModel>();
         public TramLinesViewModel TramLinesViewModel => ServiceContainer.ServiceProvider.GetService<TramLinesViewModel>();
         public TrolleyLinesViewModel TrolleyLinesViewModel => ServiceContainer.ServiceProvider.GetService<TrolleyLinesViewModel>();
         public SubwayLinesViewModel SubwayLinesViewModel => ServiceContainer.ServiceProvider.GetService<SubwayLinesViewModel>();
 
-        public ForwardLineDetailsViewModel ForwardLineDetailsViewModel => ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>();
+        //public ForwardLineDetailsViewModel ForwardLineDetailsViewModel => ServiceContainer.ServiceProvider.GetService<ForwardLineDetailsViewModel>();
         public DirectionsViewModel DirectionsViewModel => ServiceContainer.ServiceProvider.GetService<DirectionsViewModel>();
         public ScheduleViewModel ScheduleViewModel => ServiceContainer.ServiceProvider.GetService<ScheduleViewModel>();
 
@@ -58,8 +58,8 @@ namespace TramlineFive.Common.ViewModels.Locator
             services.AddSingleton<TramLinesViewModel>();
             services.AddSingleton<TrolleyLinesViewModel>();
             services.AddSingleton<SubwayLinesViewModel>();
-            services.AddSingleton<LineDetailsViewModel>();
-            services.AddSingleton<ForwardLineDetailsViewModel>();
+            //services.AddSingleton<LineDetailsViewModel>();
+            //services.AddSingleton<ForwardLineDetailsViewModel>();
             services.AddSingleton<DirectionsViewModel>();
             services.AddSingleton<ScheduleViewModel>();
         }

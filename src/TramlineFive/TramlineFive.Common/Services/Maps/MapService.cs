@@ -27,6 +27,7 @@ using Mapsui.Nts.Extensions;
 using System.ComponentModel;
 using QuikGraph.Algorithms.Exploration;
 using NetTopologySuite.GeometriesGraph;
+using Mapsui.Manipulations;
 
 namespace TramlineFive.Common.Services.Maps;
 
@@ -158,11 +159,7 @@ public class MapService
         ChangeTileServer(tileServer, dataFetchStrategy, renderFetchStrategy);
 
         MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
-        map.Home = n =>
-        {
-            n.CenterOn(point);
-            n.ZoomTo(map.Navigator.Resolutions[17]);
-        };
+        map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[17]);
     }
 
     public async Task Initialize(Map map)
@@ -208,7 +205,7 @@ public class MapService
 
     private async Task OnStopsRefreshed()
     {
-        map.Layers.Remove(map.Layers[1]);
+        map.Layers.Remove(map.Layers.Get(1));
         map.Layers.Insert(1, BuildStopsLayer());
 
         await ShowNearbyStops(new MPoint(map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY));
@@ -262,11 +259,11 @@ public class MapService
         MPoint point = SphericalMercator.FromLonLat(position);
 
         if (home)
-            map.Home = n => n.CenterOn(point);
+            map.Navigator.CenterOn(point);
 
         if (!ignoreOverlayHeight)
         {
-            MPoint worldPoint = map.Navigator.Viewport.WorldToScreen(point);
+            ScreenPosition worldPoint = map.Navigator.Viewport.WorldToScreen(point);
             worldPoint.Y += OverlayHeightInPixels / 2;
 
             point.Y = map.Navigator.Viewport.ScreenToWorld(worldPoint).Y;
@@ -293,20 +290,15 @@ public class MapService
 
     private void LoadPinStyles()
     {
-        int bitmapId = typeof(MapService).LoadSvgId("MTS_Bus_icon.svg");
-        busPinStyle = new SymbolStyle { BitmapId = bitmapId, Enabled = false, SymbolScale = 0.14f };
+        busPinStyle = new SymbolStyle { ImageSource = "embedded://TramlineFive.Common.MTS_Bus_icon.svg", Enabled = false, SymbolScale = 0.14f };
 
-        int trolleyId = typeof(MapService).LoadSvgId("MTS_TrolleyBus_icon.svg");
-        trolleyPinStyle = new SymbolStyle { BitmapId = trolleyId, Enabled = false, SymbolScale = 0.14f };
+        trolleyPinStyle = new SymbolStyle { ImageSource = "embedded://TramlineFive.Common.MTS_TrolleyBus_icon.svg", Enabled = false, SymbolScale = 0.14f };
 
-        int tramId = typeof(MapService).LoadSvgId("MTS_Tram_icon.svg");
-        tramPinStyle = new SymbolStyle { BitmapId = tramId, Enabled = false, SymbolScale = 0.4f };
+        tramPinStyle = new SymbolStyle { ImageSource = "embedded://TramlineFive.Common.MTS_Tram_icon.svg", Enabled = false, SymbolScale = 0.4f };
 
-        int subwayId = typeof(MapService).LoadSvgId("subway_icon.svg");
-        subwayStyle = new SymbolStyle { BitmapId = subwayId, Enabled = false, SymbolScale = 0.4f };
+        subwayStyle = new SymbolStyle { ImageSource = "embedded://TramlineFive.Common.subway_icon.svg", Enabled = false, SymbolScale = 0.4f };
 
-        int nightId = typeof(MapService).LoadSvgId("MTS_Bus_icon_night.svg");
-        nightStyle = new SymbolStyle { BitmapId = nightId, Enabled = false, SymbolScale = 0.4f };
+        nightStyle = new SymbolStyle { ImageSource = "embedded://TramlineFive.Common.MTS_Bus_icon_night.svg", Enabled = false, SymbolScale = 0.4f };
     }
 
     private ILayer BuildStopsLayer()
@@ -337,7 +329,7 @@ public class MapService
                     new SymbolStyle
                     {
                         Enabled = symbolStyle.Enabled,
-                        BitmapId = symbolStyle.BitmapId,
+                        ImageSource = symbolStyle.ImageSource,
                         SymbolOffset = new Offset(0, 30),
                         SymbolScale = symbolStyle.SymbolScale,
                         MaxVisible = map.Navigator.Resolutions[MaxPinsZoom]
@@ -366,8 +358,7 @@ public class MapService
         {
             Name = "Stops layer",
             DataSource = new MemoryProvider(features),
-            Style = null,
-            IsMapInfoLayer = true
+            Style = null
         };
     }
 
@@ -508,9 +499,10 @@ public class MapService
     {
         WeakReferenceMessenger.Default.Send(new MapClickedMessage());
 
-        if (e.MapInfo.Feature != null && e.MapInfo.Feature.Styles.First().Enabled)
+        MapInfo info = e.GetMapInfo(map.Layers.FindLayer(STOPS_LAYER));
+        if (info.Feature != null && info.Feature.Styles.FirstOrDefault().Enabled)
         {
-            StopInformation location = e.MapInfo.Feature["stopObject"] as StopInformation;
+            StopInformation location = info.Feature["stopObject"] as StopInformation;
 
             WeakReferenceMessenger.Default.Send(new StopSelectedMessage(new StopSelectedMessagePayload(location.Code, true)));
         }

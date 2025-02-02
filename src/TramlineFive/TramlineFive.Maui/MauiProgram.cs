@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls.Compatibility.Hosting;
 using Microsoft.Maui.LifecycleEvents;
 using SkgtService.Parsers;
 using SkiaSharp.Views.Maui.Controls.Hosting;
@@ -13,6 +12,7 @@ using Plugin.LocalNotification;
 using SkgtService.Models;
 using TramlineFive.Common.Services.Maps;
 using TramlineFive.Common.Services.Interfaces;
+using Microsoft.Maui.Storage;
 
 namespace TramlineFive.Maui
 {
@@ -37,7 +37,7 @@ namespace TramlineFive.Maui
                     //options.TracesSampleRate = 0;
                     //options.ProfilesSampleRate = 0;
                 })
-                .UseSkiaSharp(true)
+                .UseSkiaSharp()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -67,7 +67,6 @@ namespace TramlineFive.Maui
 		    builder.Logging.AddDebug();
 #endif
 
-            Mapsui.UI.Maui.MapControl.UseGPU = true;
             MauiApp app = builder.Build();
 
             ServiceContainer.ServiceProvider = app.Services;

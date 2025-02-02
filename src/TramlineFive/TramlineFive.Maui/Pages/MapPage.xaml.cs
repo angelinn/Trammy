@@ -9,7 +9,6 @@ using Mapsui.UI;
 using Mapsui.UI.Maui;
 using Mapsui.Widgets;
 using Mapsui.Widgets.ScaleBar;
-using Mapsui.Widgets.Zoom;
 using Microsoft.Maui.Layouts;
 using SkgtService.Models;
 using SkgtService.Models.Json;
@@ -24,6 +23,8 @@ using TramlineFive.Common.ViewModels;
 using TramlineFive.Maui;
 using Color = Microsoft.Maui.Graphics.Color;
 using Map = Mapsui.Map;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Storage;
 
 namespace TramlineFive.Pages
 {
@@ -50,7 +51,7 @@ namespace TramlineFive.Pages
             WeakReferenceMessenger.Default.Register<ShowMapMessage>(this, async (r, m) => await OnShowMapMessage(m));
             WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables());
             WeakReferenceMessenger.Default.Register<StopDataLoadedMessage>(this, (r, m) => OnStopDataLoaded(m));
-            WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, async (r, m) => await OnShowRouteAsync()); 
+            WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, async (r, m) => await OnShowRouteAsync());
         }
 
         protected override void OnAppearing()
@@ -89,31 +90,6 @@ namespace TramlineFive.Pages
             });
         }
 
-        private async void OnMapTouchAction(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)
-        {
-            if (e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Released)
-            {
-                if (hasMoved)
-                {
-                    await mapService.ShowNearbyStops();
-                    Debug.WriteLine($"Show stops");
-
-                    hasMoved = false;
-                }
-            }
-            else if (e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Moved)
-            {
-                if (!hasMoved)
-                    hasMoved = true;
-            }
-            else if (isVirtualTablesShown && e.ActionType == SkiaSharp.Views.Maui.SKTouchAction.Pressed)
-            {
-                await HideVirtualTables();
-            }
-
-            Debug.WriteLine($"Touch: {e.ActionType} {map.Map.Navigator.Viewport.CenterX} {map.Map.Navigator.Viewport.CenterY}");
-        }
-
         private async Task ShowVirtualTables()
         {
             isVirtualTablesShown = true;
@@ -124,7 +100,10 @@ namespace TramlineFive.Pages
         {
             isVirtualTablesShown = false;
             await LazyVirtualTablesView.TranslateTo(0, Height, 400);
-            CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"));
+
+            Dispatcher.Dispatch(() =>
+                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"))
+            );
         }
 
         private async Task OnShowMapMessage(ShowMapMessage message)
@@ -137,8 +116,8 @@ namespace TramlineFive.Pages
         {
             mapService = ServiceContainer.ServiceProvider.GetService<MapService>();
             await (BindingContext as MapViewModel).Initialize(map.Map);
-
-            map.TouchAction += OnMapTouchAction;
+            //fix
+            //map.Map.Navigator. += OnMapTouchAction;
         }
 
         protected override void OnSizeAllocated(double width, double height)
@@ -168,12 +147,6 @@ namespace TramlineFive.Pages
 
             CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"));
             CommunityToolkit.Maui.Core.Platform.StatusBar.SetStyle(CommunityToolkit.Maui.Core.StatusBarStyle.LightContent);
-
-            if (map != null)
-            {
-                map.IsVisible = false;
-                map.IsVisible = true;
-            }
         }
 
         protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
@@ -212,6 +185,21 @@ namespace TramlineFive.Pages
             }
 
             return mapService.HandleGoBack();
+        }
+
+        private async void TapGestureRecognizer_Tapped(object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+        {
+            if (isVirtualTablesShown)
+            {
+                await HideVirtualTables();
+            }
+
+            Debug.WriteLine("Tapped");
+        }
+
+        private void PanGestureRecognizer_PanUpdated(object sender, PanUpdatedEventArgs e)
+        {
+            Debug.WriteLine($"Pan updated: {e.TotalY}");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -6,6 +6,7 @@
         xmlns:cv="clr-namespace:TramlineFive.Converters"             
         xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common" 
         x:DataType="local:MapViewModel"
+        x:Name="Page"
             Stroke="Transparent" BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" Opacity="0.9" Padding="5,0,5,0" HeightRequest="50">
 
     <Border.Resources>
@@ -28,7 +29,7 @@
                                 DefaultAnimationEasing="{x:Static Easing.CubicInOut}"
                                 PressedOpacity="0.6"
                                 PressedScale="0.8"
-                                Command="{Binding OpenHamburgerCommand}" />
+                                Command="{Binding BindingContext.OpenHamburgerCommand, Source={x:Reference Page}}" />
             </StackLayout.Behaviors>
 
             <Image Margin="5,0,0,0" HorizontalOptions="Center" VerticalOptions="Center" >
@@ -41,9 +42,12 @@
         <Entry Grid.Column="1" x:Name="txtSearch"  TextColor="{AppThemeBinding Light={DynamicResource LabelTextColor}, Dark={DynamicResource DarkLabelTextColor}}" Placeholder="Код/име на спирка..." PlaceholderColor="{AppThemeBinding Light={DynamicResource PlaceholderTextColor}, Dark={DynamicResource DarkPlaceholderTextColor}}" 
                                        FontSize="16" VerticalOptions="Center" Text="{Binding StopCode}">
             <Entry.Behaviors>
-                <mct:EventToCommandBehavior EventName="Completed" Command="{Binding SearchCommand}" />
-                <mct:EventToCommandBehavior EventName="Focused" Command="{Binding SearchFocusedCommand}" />
-                <mct:EventToCommandBehavior EventName="Unfocused" Command="{Binding SearchUnfocusedCommand}" />
+                <mct:EventToCommandBehavior EventName="Completed" 
+                                            Command="{Binding BindingContext.SearchCommand, Source={x:Reference Page}}" />
+                <mct:EventToCommandBehavior EventName="Focused" 
+                                            Command="{Binding BindingContext.SearchFocusedCommand, Source={x:Reference Page}}" />
+                <mct:EventToCommandBehavior EventName="Unfocused"
+                                            Command="{Binding BindingContext.SearchUnfocusedCommand, Source={x:Reference Page}}" />
             </Entry.Behaviors>
         </Entry>
     </StackLayout>

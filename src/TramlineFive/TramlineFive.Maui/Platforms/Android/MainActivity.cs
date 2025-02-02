@@ -22,6 +22,8 @@ using TramlineFive.Maui.Platforms.Android;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui;
 
 namespace TramlineFive.Maui
 {

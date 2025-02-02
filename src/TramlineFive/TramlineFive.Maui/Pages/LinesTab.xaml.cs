@@ -1,4 +1,5 @@
 using TramlineFive.Common.ViewModels;
+using Microsoft.Maui.Devices;
 
 namespace TramlineFive.Pages;
 

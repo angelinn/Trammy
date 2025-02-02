@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Maui;
 using TramlineFive.Services;
+using Microsoft.Maui.ApplicationModel;
 
 namespace TramlineFive.Pages
 {

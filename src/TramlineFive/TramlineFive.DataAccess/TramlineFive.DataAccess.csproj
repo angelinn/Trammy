@@ -1,18 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\SkgtService\SkgtService.csproj" />
   </ItemGroup>
-
 </Project>

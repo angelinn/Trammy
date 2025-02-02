@@ -24,7 +24,7 @@
             <Setter Property="TextColor" Value="Black" />
         </Style>
     </Shell.Resources>
-
+    
     <Shell.FlyoutHeader>
         <Grid BackgroundColor="DodgerBlue" HeightRequest="200">
             <Image Source="logo.png" HorizontalOptions="Center" Margin="0,20,0,0" VerticalOptions="Center" HeightRequest="80"  />

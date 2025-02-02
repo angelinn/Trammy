@@ -17,6 +17,8 @@ using Plugin.LocalNotification;
 using SkgtService.Models.Json;
 using TramlineFive.Common.Services.Interfaces;
 using CommunityToolkit.Maui.Alerts;
+using Microsoft.Maui.Storage;
+using NetTopologySuite.Operation.Overlay.Validate;
 
 namespace TramlineFive.Maui
 {
@@ -39,8 +41,11 @@ namespace TramlineFive.Maui
                 Names.DarkTheme => AppTheme.Dark,
                 _ => AppTheme.Unspecified
             };
+        }
 
-            MainPage = new AppShell();
+        protected override Window CreateWindow(IActivationState activationState)
+        {
+            return new Window(new AppShell());
         }
 
         private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)

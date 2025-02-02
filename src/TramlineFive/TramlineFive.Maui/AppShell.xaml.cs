@@ -2,6 +2,7 @@
 using TramlineFive.Common.Messages;
 using TramlineFive.Maui.Pages;
 using TramlineFive.Pages;
+using Microsoft.Maui.ApplicationModel;
 
 namespace TramlineFive.Maui
 {

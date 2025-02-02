@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.Services.Interfaces;
 using TramlineFive.Maui.Services;
+using Microsoft.Maui.Devices;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Devices.Sensors;
+using Microsoft.Maui.Storage;
 
 namespace TramlineFive.Services.Main;
 
