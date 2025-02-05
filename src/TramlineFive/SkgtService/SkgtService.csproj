@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
-    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />

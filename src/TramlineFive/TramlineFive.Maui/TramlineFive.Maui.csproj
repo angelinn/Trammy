@@ -149,6 +149,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui" Version="11.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Mapsui.Extensions" Version="5.0.0-beta.7" />
     <PackageReference Include="Mapsui.Maui" Version="5.0.0-beta.7" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.1" />
     <PackageReference Include="Plugin.LocalNotification" Version="11.1.2" />

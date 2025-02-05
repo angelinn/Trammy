@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Mapsui;
 using Sentry;
 using SkgtService;
+using SkgtService.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,13 +41,16 @@ public partial class MapViewModel : BaseViewModel
     private readonly PublicTransport publicTransport;
 
     private LocationStatus locationStatus;
+    private readonly string dbPath;
 
-    public MapViewModel(MapService mapServiceOther, PublicTransport publicTransport)
+    public MapViewModel(MapService mapServiceOther, PublicTransport publicTransport, StopsConfigurator configurator)
     {
         mapService = mapServiceOther;
         this.publicTransport = publicTransport;
         int maxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
         int maxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
+
+        dbPath = configurator.DatabasePath;
 
         if (maxTextZoom > 0)
             mapService.MaxTextZoom = maxTextZoom;
@@ -74,7 +78,7 @@ public partial class MapViewModel : BaseViewModel
     }
     public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy)
     {
-        mapService.LoadInitialMap(map, tileServer, dataFetchStrategy, renderFetchStrategy);
+        mapService.LoadInitialMap(map, tileServer, dataFetchStrategy, renderFetchStrategy, dbPath);
     }
 
     [RelayCommand]
@@ -124,13 +128,14 @@ public partial class MapViewModel : BaseViewModel
 
             if (locationStatus == LocationStatus.Allowed)
             {
-                mapService.MoveToCurrentLocation();
+                mapService.FollowUser();
             }
             else
             {
                 success = await ApplicationService.SubscribeForLocationChangeAsync((p) =>
                 {
                     Messenger.Send(new UpdateLocationMessage(p));
+                    mapService.FollowUser();
                 });
             }
 
@@ -245,6 +250,8 @@ public partial class MapViewModel : BaseViewModel
     private bool hasMoved;
     public async Task OnMapTouchAsync(TouchType touch)
     {
+        mapService.StopFollowing();
+       
         if (touch == TouchType.Released)
         {
             if (hasMoved)

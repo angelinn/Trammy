@@ -56,6 +56,7 @@ public class MapService
     private Stack<(MPoint, int)> navigationStack = new();
 
     private bool isShowingRoute;
+    private bool followUser;
 
     public double OverlayHeightInPixels { get; set; }
 
@@ -147,10 +148,13 @@ public class MapService
         }
     }
 
-    public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy)
+    private string dbPath;
+
+    public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy, string dbPath)
     {
         this.map = map;
         this.map.Navigator.RotationLock = true;
+        this.dbPath = dbPath;
 
         ChangeTileServer(tileServer, dataFetchStrategy, renderFetchStrategy);
 
@@ -189,7 +193,7 @@ public class MapService
         if (!string.IsNullOrEmpty(tileServer))
             savedTileServer = tileServer;
 
-        map.Layers.Insert(0, TileServerFactory.CreateTileLayer(savedTileServer, dataStrategy, renderStrategy));
+        map.Layers.Insert(0, TileServerFactory.CreateTileLayer(savedTileServer, dataStrategy, renderStrategy, dbPath));
     }
 
     private async Task OnStopsRefreshed()
@@ -234,22 +238,32 @@ public class MapService
                 var point = SphericalMercator.FromLonLat(m.Position.Longitude, m.Position.Latitude).ToMPoint();
                 locationLayer.UpdateMyLocation(point);
 
-                map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[17], ANIMATION_MS, Easing.Linear);
-
-                _ = ShowNearbyStops(point);
+                if (followUser)
+                {
+                    map.Navigator.CenterOn(point, ANIMATION_MS, Easing.Linear);
+                    _ = ShowNearbyStops(point);
+                }
             });
         }
 
         await publicTransport.ReloadDataIfNeededAsync();
     }
 
-    public void MoveToCurrentLocation()
+    public void FollowUser()
     {
         map.Navigator.CenterOnAndZoomTo(locationLayer.MyLocation, map.Navigator.Resolutions[17], ANIMATION_MS, Easing.CubicOut);
+        followUser = true;
+    }
+
+    public void StopFollowing()
+    {
+        if (followUser)
+            followUser = false;
     }
 
     public void MoveTo(MPoint position, int zoom, bool home = false, bool ignoreOverlayHeight = false)
     {
+        followUser = false;
         HideRoutes();
 
         MPoint point = SphericalMercator.FromLonLat(position);
@@ -351,6 +365,7 @@ public class MapService
     {
         if (!stopsDictionary.TryGetValue(code, out IFeature feature))
             return;
+
         StopInformation location = feature["stopObject"] as StopInformation;
         MPoint point = new MPoint(location.Lon, location.Lat);
         MoveTo(point, 17, false, ignoreOverlayHeight);
