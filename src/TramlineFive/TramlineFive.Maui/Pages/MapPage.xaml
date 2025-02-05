@@ -18,14 +18,9 @@
             <mapsui:MapControl.Behaviors>
                 <mct:EventToCommandBehavior EventName="Info" Command="{Binding BindingContext.MapInfoCommand, Source={x:Reference map}}" x:TypeArguments="mapsuipl:MapInfoEventArgs" />
             </mapsui:MapControl.Behaviors>
-
-            <mapsui:MapControl.GestureRecognizers>
-                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated" />
-            </mapsui:MapControl.GestureRecognizers>
         </mapsui:MapControl>
 
-        <Grid x:Name="themeOverlay" Background="Black" Opacity="0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1"/>
+        <Grid x:Name="themeOverlay" Background="Black" Opacity="0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" />
 
         <mct:LazyView x:Name="LazySuggestions" x:TypeArguments="views:SuggestionsView"  AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" Margin="15,-5,15,0"  VerticalOptions="End" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}" BindingContext="{Binding}" />
 

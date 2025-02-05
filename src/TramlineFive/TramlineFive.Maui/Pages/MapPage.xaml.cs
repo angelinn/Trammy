@@ -1,30 +1,15 @@
-﻿using CommunityToolkit.Maui.Behaviors;
-using CommunityToolkit.Mvvm.Messaging;
-using Mapsui;
-using Mapsui.Extensions;
-using Mapsui.Layers;
-using Mapsui.Projections;
-using Mapsui.Styles;
-using Mapsui.UI;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Mapsui.UI.Maui;
-using Mapsui.Widgets;
-using Mapsui.Widgets.ScaleBar;
-using Microsoft.Maui.Layouts;
 using SkgtService.Models;
-using SkgtService.Models.Json;
-using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using TramlineFive.Common;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
-using TramlineFive.Common.Services.Maps;
 using TramlineFive.Common.ViewModels;
-using TramlineFive.Maui;
 using Color = Microsoft.Maui.Graphics.Color;
-using Map = Mapsui.Map;
-using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Storage;
+using System.Reflection;
+using SkiaSharp.Views.Maui.Controls;
+using TramlineFive.Common.Services.Maps;
 
 namespace TramlineFive.Pages
 {
@@ -46,6 +31,9 @@ namespace TramlineFive.Pages
                 Preferences.Get(Settings.RenderStrategy, Defaults.RenderFetchStrategy));
 
             map.UpdateInterval = 8;
+
+            SKGLView glview = typeof(MapControl).GetField("_glView", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(map) as SKGLView;
+            glview.Touch += OnMapTouch;
 
             WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables());
             WeakReferenceMessenger.Default.Register<StopDataLoadedMessage>(this, (r, m) => OnStopDataLoaded(m));
@@ -87,6 +75,19 @@ namespace TramlineFive.Pages
                     Debug.WriteLine($"Lazy load time: {sw.ElapsedMilliseconds}");
                 });
             });
+        }
+
+        private void OnMapTouch(object sender, SkiaSharp.Views.Maui.SKTouchEventArgs e)
+        {
+            MapViewModel.TouchType touchType = e.ActionType switch
+            {
+                SkiaSharp.Views.Maui.SKTouchAction.Pressed => MapViewModel.TouchType.Pressed,
+                SkiaSharp.Views.Maui.SKTouchAction.Released => MapViewModel.TouchType.Released,
+                SkiaSharp.Views.Maui.SKTouchAction.Moved => MapViewModel.TouchType.Moved,
+                _ => MapViewModel.TouchType.None
+            };
+
+            _ = mapViewModel.OnMapTouchAsync(touchType);
         }
 
         private async Task ShowVirtualTables()
@@ -157,21 +158,6 @@ namespace TramlineFive.Pages
         protected override bool OnBackButtonPressed()
         {
             return mapViewModel.NavigateBack();
-        }
-
-        private async void TapGestureRecognizer_Tapped(object sender, Microsoft.Maui.Controls.TappedEventArgs e)
-        {
-            if (mapViewModel.IsVirtualTablesUp)
-            {
-                await HideVirtualTables();
-            }
-
-            Debug.WriteLine("Tapped");
-        }
-
-        private void PanGestureRecognizer_PanUpdated(object sender, PanUpdatedEventArgs e)
-        {
-            Debug.WriteLine($"Pan updated: {e.TotalY}");
         }
     }
 }

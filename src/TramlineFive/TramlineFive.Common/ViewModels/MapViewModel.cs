@@ -7,6 +7,7 @@ using SkgtService;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,6 +20,14 @@ namespace TramlineFive.Common.ViewModels;
 
 public partial class MapViewModel : BaseViewModel
 {
+    public enum TouchType
+    {
+        None,
+        Pressed,
+        Released,
+        Moved
+    }
+
     public List<string> FilteredStops { get; private set; }
 
     public double OverlayHeightInPixels
@@ -111,21 +120,26 @@ public partial class MapViewModel : BaseViewModel
                 }
             }
 
-            Position? position = await ApplicationService.GetCurrentPositionAsync();
-            if (position != null)
+            bool success = true;
+
+            if (locationStatus == LocationStatus.Allowed)
             {
-                ApplicationService.RunOnUIThread(() =>
+                mapService.MoveToCurrentLocation();
+            }
+            else
+            {
+                success = await ApplicationService.SubscribeForLocationChangeAsync((p) =>
                 {
-                    mapService.MoveToUser(position.Value, true);
+                    Messenger.Send(new UpdateLocationMessage(p));
                 });
+            }
 
-                Messenger.Send(new UpdateLocationMessage(position.Value));
+            isAnimating = false;
 
-                isAnimating = false;
-                HasLocation = true;
-
-
+            if (success)
+            {
                 locationStatus = LocationStatus.Allowed;
+                HasLocation = true;
                 return locationStatus;
             }
 
@@ -137,7 +151,7 @@ public partial class MapViewModel : BaseViewModel
         catch (Exception ex)
         {
             if (!first)
-                ApplicationService.DisplayToast("Моля включете местоположението.");
+                ApplicationService.DisplayToast($"{ex.Message} Моля включете местоположението.");
 
             isAnimating = false;
             HasLocation = false;
@@ -212,6 +226,7 @@ public partial class MapViewModel : BaseViewModel
     private void OnStopSelectedMessageReceived(StopSelectedMessage message)
     {
         IsVirtualTablesUp = true;
+        mapService.MoveToStop(message.Selected);
     }
 
     public bool NavigateBack()
@@ -225,6 +240,34 @@ public partial class MapViewModel : BaseViewModel
         }
 
         return mapService.HandleGoBack();
+    }
+
+    private bool hasMoved;
+    public async Task OnMapTouchAsync(TouchType touch)
+    {
+        if (touch == TouchType.Released)
+        {
+            if (hasMoved)
+            {
+                await mapService.ShowNearbyStops();
+                Debug.WriteLine($"Show stops");
+
+                hasMoved = false;
+            }
+        }
+        else if (touch == TouchType.Moved)
+        {
+            if (!hasMoved)
+                hasMoved = true;
+        }
+        else if (touch == TouchType.Pressed)
+        {
+            if (IsVirtualTablesUp)
+            {
+                IsVirtualTablesUp = false;
+                Messenger.Send(new HideVirtualTablesMessage());
+            }
+        }
     }
 
     [RelayCommand]
