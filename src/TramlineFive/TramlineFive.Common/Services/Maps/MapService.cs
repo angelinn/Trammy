@@ -198,10 +198,14 @@ public class MapService
 
     private async Task OnStopsRefreshed()
     {
-        map.Layers.Remove(map.Layers.Get(1));
-        map.Layers.Insert(1, BuildStopsLayer());
+        ILayer stopsLayer = map.Layers.FindLayer(STOPS_LAYER).FirstOrDefault();
+        if (stopsLayer is not null)
+        {
+            map.Layers.Remove(stopsLayer);
+            map.Layers.Insert(1, BuildStopsLayer());
 
-        await ShowNearbyStops(new MPoint(map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY));
+            await ShowNearbyStops(new MPoint(map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY));
+        }
     }
 
     public async Task SetupMapAsync()
@@ -230,7 +234,6 @@ public class MapService
         locationLayer = new MyLocationLayer(map);
         locationLayer.Enabled = true;
         locationLayer.IsCentered = false;
-        locationLayer.
 
         map.Layers.Add(locationLayer);
 
