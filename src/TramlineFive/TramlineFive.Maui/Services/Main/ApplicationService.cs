@@ -66,6 +66,19 @@ public class ApplicationService : IApplicationService
         }
     }
 
+    private Action<Position> locationChangedCallback;
+    public async Task<bool> SubscribeForLocationChangeAsync(Action<Position> action)
+    {
+        locationChangedCallback = action;
+        Geolocation.LocationChanged += OnLocationChanged;
+        return await Geolocation.StartListeningForegroundAsync(new GeolocationListeningRequest(GeolocationAccuracy.Best));
+    }
+
+    private void OnLocationChanged(object sender, GeolocationLocationChangedEventArgs e)
+    {
+        locationChangedCallback(new Position(e.Location.Latitude, e.Location.Longitude));
+    }
+
     public async Task<bool> RequestLocationPermissions()
     {
         return await Permissions.RequestAsync<Permissions.LocationWhenInUse>() == PermissionStatus.Granted;

@@ -40,6 +40,8 @@ public class MapService
     private SymbolStyle nightStyle;
     private readonly List<Style> activeStyles = new List<Style>();
 
+    private MyLocationLayer locationLayer;
+
     private KdTree<float, IFeature> stopsTree;
     private Dictionary<string, IFeature> stopsDictionary;
     private readonly ManualResetEvent stopsFinishedLoadingEvent = new(false);
@@ -221,7 +223,7 @@ public class MapService
         stopwatch.Stop();
         Debug.WriteLine($"Showed nearby stops in {stopwatch.ElapsedMilliseconds} ms");
 
-        MyLocationLayer locationLayer = new MyLocationLayer(map);
+        locationLayer = new MyLocationLayer(map);
         locationLayer.Enabled = true;
         map.Layers.Add(locationLayer);
 
@@ -231,10 +233,19 @@ public class MapService
             {
                 var point = SphericalMercator.FromLonLat(m.Position.Longitude, m.Position.Latitude).ToMPoint();
                 locationLayer.UpdateMyLocation(point);
+
+                map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[17], ANIMATION_MS, Easing.Linear);
+
+                _ = ShowNearbyStops(point);
             });
         }
 
         await publicTransport.ReloadDataIfNeededAsync();
+    }
+
+    public void MoveToCurrentLocation()
+    {
+        map.Navigator.CenterOnAndZoomTo(locationLayer.MyLocation, map.Navigator.Resolutions[17], ANIMATION_MS, Easing.CubicOut);
     }
 
     public void MoveTo(MPoint position, int zoom, bool home = false, bool ignoreOverlayHeight = false)
@@ -261,17 +272,6 @@ public class MapService
 
         map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[zoom], ANIMATION_MS, Easing.CubicOut);
     }
-
-    public void MoveToUser(TramlineFive.Common.Models.Position position, bool home = false)
-    {
-        (double x, double y) = SphericalMercator.FromLonLat(position.Longitude, position.Latitude);
-
-        MPoint userLocationMap = new MPoint(x, y);
-        map.Navigator.CenterOnAndZoomTo(userLocationMap, map.Navigator.Resolutions[17], ANIMATION_MS, home ? null : Easing.Linear);
-
-        _ = ShowNearbyStops(userLocationMap);
-    }
-
 
     private void LoadPinStyles()
     {
@@ -483,7 +483,6 @@ public class MapService
         if (info.Feature != null && info.Feature.Styles.FirstOrDefault().Enabled)
         {
             StopInformation location = info.Feature["stopObject"] as StopInformation;
-            MoveToStop(location.Code);
 
             WeakReferenceMessenger.Default.Send(new StopSelectedMessage(location.Code));
         }

@@ -30,6 +30,8 @@ public interface IApplicationService
     void VibrateShort();
     void OpenLocationUI();
     Task<bool> RequestLocationPermissions();
+    Task<bool> SubscribeForLocationChangeAsync(Action<Position> action);
+
     void ChangeNavigationBarColor(string color);
     void ChangeStatusBarColor(string color);
     string GetAppDataDirectory();
