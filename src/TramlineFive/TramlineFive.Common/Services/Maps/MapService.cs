@@ -229,6 +229,9 @@ public class MapService
 
         locationLayer = new MyLocationLayer(map);
         locationLayer.Enabled = true;
+        locationLayer.IsCentered = false;
+        locationLayer.
+
         map.Layers.Add(locationLayer);
 
         if (!WeakReferenceMessenger.Default.IsRegistered<UpdateLocationMessage>(this))
@@ -236,7 +239,7 @@ public class MapService
             WeakReferenceMessenger.Default.Register<UpdateLocationMessage>(this, (r, m) =>
             {
                 var point = SphericalMercator.FromLonLat(m.Position.Longitude, m.Position.Latitude).ToMPoint();
-                locationLayer.UpdateMyLocation(point);
+                locationLayer.UpdateMyLocation(point, true);
 
                 if (followUser)
                 {
