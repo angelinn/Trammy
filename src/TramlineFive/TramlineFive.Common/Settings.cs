@@ -20,7 +20,7 @@ public static class Settings
 public static class Defaults
 {
     public const string TileServer = "carto-voyager";
-    public const string TileServerUrl = "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png";
+    public const string TileServerUrl = "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}@3x.png";
     public const string DataFetchStrategy = "DataFetchStrategy";
     public const string RenderFetchStrategy = "RenderFetchStrategy";
 
