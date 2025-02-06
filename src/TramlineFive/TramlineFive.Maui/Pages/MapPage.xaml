@@ -9,28 +9,43 @@
              xmlns:mapsuipl="clr-namespace:Mapsui;assembly=Mapsui"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit" 
              xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
+             xmlns:bottomsheet="http://pluginmauibottomsheet.com"
              x:DataType="local:MapViewModel"
+             x:Name="Page"
              BindingContext="{Binding MapViewModel, Source={StaticResource Locator}}"
              Padding="0,0,0,0">
 
-    <AbsoluteLayout x:Name="absLayout">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:BottomSheetStateToIntConverter x:Key="StateToInt" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
         <mapsui:MapControl x:Name="map" VerticalOptions="StartAndExpand" HorizontalOptions="Fill" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" >
             <mapsui:MapControl.Behaviors>
                 <mct:EventToCommandBehavior EventName="Info" Command="{Binding BindingContext.MapInfoCommand, Source={x:Reference map}}" x:TypeArguments="mapsuipl:MapInfoEventArgs" />
             </mapsui:MapControl.Behaviors>
         </mapsui:MapControl>
 
-        <Grid x:Name="themeOverlay" Background="Black" Opacity="0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="1,1,1,1" />
+        <Grid x:Name="themeOverlay" Background="Black" Opacity="0" />
 
-        <mct:LazyView x:Name="LazySuggestions" x:TypeArguments="views:SuggestionsView"  AbsoluteLayout.LayoutBounds="0,0.8,1,300" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" Margin="15,-5,15,0"  VerticalOptions="End" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}" BindingContext="{Binding}" />
+        <mct:LazyView x:Name="LazySuggestions" x:TypeArguments="views:SuggestionsView" Margin="15,0,15,85"  VerticalOptions="End" IsVisible="{Binding IsSearching}" HeightRequest="{Binding SuggestionsHeight}" BindingContext="{Binding}" />
 
-        <mct:LazyView x:Name="LazyFab" x:TypeArguments="views:CustomFloatingActionButton"
-                       AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="1,0.80,1,58" Grid.Row="1"  HorizontalOptions="End" VerticalOptions="End" 
-             Margin="0,0,10,0" HeightRequest="58" WidthRequest="58" BindingContext="{Binding}" />
+        <mct:LazyView x:Name="LazyFab" x:TypeArguments="views:CustomFloatingActionButton" Grid.Row="1"  HorizontalOptions="End" VerticalOptions="End" 
+             Margin="0,0,10,90" HeightRequest="58" WidthRequest="58" BindingContext="{Binding}" />
 
-        <mct:LazyView x:Name="LazySearchBar" x:TypeArguments="views:SearchBar" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,0.95,1,47" Margin="15,0,15,0" />
+        <mct:LazyView x:Name="LazySearchBar" x:TypeArguments="views:SearchBar" VerticalOptions="End" Margin="15,0,15,30" />
 
-        <mct:LazyView Background="Transparent" x:Name="LazyVirtualTablesView"  Padding="0" VerticalOptions="End" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="SizeProportional" x:TypeArguments="pages:VirtualTablesPage" BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}" />
-    </AbsoluteLayout>
+        <bottomsheet:BottomSheet x:Name="bVirtualTables" States="Medium,Large" IsCancelable="True" IsDraggable="True" IsModal="False"
+                                 IsOpen="{Binding BindingContext.IsVirtualTablesUp, Source={x:Reference Page}}" 
+                                 CurrentState="{Binding BindingContext.CurrentVirtualTablesState, Source={x:Reference Page}, Converter={StaticResource StateToInt}}" 
+                                 BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}"   
+                                 BindingContext="{Binding VirtualTablesViewModel, Source={StaticResource Locator}}">
+            <bottomsheet:BottomSheet.Content>
+                <bottomsheet:BottomSheetContent ContentTemplate="{DataTemplate pages:VirtualTablesPage}" />
+            </bottomsheet:BottomSheet.Content>
+        </bottomsheet:BottomSheet>
+    </Grid>
 </ContentPage>
     

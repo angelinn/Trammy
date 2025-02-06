@@ -10,6 +10,7 @@ using Color = Microsoft.Maui.Graphics.Color;
 using System.Reflection;
 using SkiaSharp.Views.Maui.Controls;
 using TramlineFive.Common.Services.Maps;
+using Plugin.Maui.BottomSheet;
 
 namespace TramlineFive.Pages
 {
@@ -35,10 +36,8 @@ namespace TramlineFive.Pages
             SKGLView glview = typeof(MapControl).GetField("_glView", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(map) as SKGLView;
             glview.Touch += OnMapTouch;
 
-            WeakReferenceMessenger.Default.Register<StopSelectedMessage>(this, async (r, m) => await ShowVirtualTables());
             WeakReferenceMessenger.Default.Register<StopDataLoadedMessage>(this, (r, m) => OnStopDataLoaded(m));
             WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, async (r, m) => await HideVirtualTables());
-            WeakReferenceMessenger.Default.Register<HideVirtualTablesMessage>(this, async (r, m) => await HideVirtualTables());
         }
 
         protected override void OnAppearing()
@@ -68,7 +67,7 @@ namespace TramlineFive.Pages
                     var sw = new Stopwatch();
                     sw.Start();
                     LazySearchBar.LoadViewAsync();
-                    LazyVirtualTablesView.LoadViewAsync();
+                    //LazyVirtualTablesView.LoadViewAsync();
                     LazyFab.LoadViewAsync();
                     LazySuggestions.LoadViewAsync();
                     sw.Stop();
@@ -90,27 +89,20 @@ namespace TramlineFive.Pages
             _ = mapViewModel.OnMapTouchAsync(touchType);
         }
 
-        private async Task ShowVirtualTables()
-        {
-            await LazyVirtualTablesView.TranslateTo(0, 0, 400);
-        }
-
         private async Task HideVirtualTables()
         {
-            await LazyVirtualTablesView.TranslateTo(0, Height, 400);
-
             Dispatcher.Dispatch(() =>
-                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"))
-            );
+            {
+                bVirtualTables.IsOpen = false;
+                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"));
+            });
         }
 
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
 
-            LazyVirtualTablesView.TranslationY = mapViewModel.IsVirtualTablesUp ? 0 : Height;
-            LazyVirtualTablesView.HeightRequest = Height * 0.60;
-            mapViewModel.OverlayHeightInPixels = LazyVirtualTablesView.HeightRequest;
+            mapViewModel.OverlayHeightInPixels = Height * 0.5; ;
 
 #if ANDROID
             int statusBarHeight = 0;

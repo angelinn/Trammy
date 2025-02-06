@@ -153,6 +153,7 @@
     <PackageReference Include="Mapsui.Maui" Version="5.0.0-beta.7" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.1" />
     <PackageReference Include="Plugin.LocalNotification" Version="11.1.2" />
+    <PackageReference Include="Plugin.Maui.BottomSheet" Version="9.0.0" />
     <PackageReference Include="Sentry.Maui" Version="4.5.0" />
 	<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.30" />
   </ItemGroup>

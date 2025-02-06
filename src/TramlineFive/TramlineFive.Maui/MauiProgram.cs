@@ -13,6 +13,7 @@ using SkgtService.Models;
 using TramlineFive.Common.Services.Maps;
 using TramlineFive.Common.Services.Interfaces;
 using Microsoft.Maui.Storage;
+using Plugin.Maui.BottomSheet.Hosting;
 
 namespace TramlineFive.Maui
 {
@@ -25,6 +26,7 @@ namespace TramlineFive.Maui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseBottomSheet()
                 .UseSentry(options =>
                 {
                     // The DSN is the only required setting.

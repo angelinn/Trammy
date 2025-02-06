@@ -6,7 +6,8 @@
              x:Class="TramlineFive.Pages.VirtualTablesPage"
              xmlns:views="clr-namespace:TramlineFive.Maui.Views"
              xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
-             x:DataType="local:VirtualTablesViewModel" Padding="-2,0,-2,-2">
+             x:DataType="local:VirtualTablesViewModel" Padding="0"
+                x:Name="Page">
 
     <Grid.Resources>
         <ResourceDictionary>
@@ -16,90 +17,88 @@
         </ResourceDictionary>
     </Grid.Resources>
 
-    <Border Background="Transparent">
-        <Border.StrokeShape>
-            <RoundRectangle CornerRadius="30,30,0,0" />
-        </Border.StrokeShape>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="80" />
+        <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
 
-        <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="80" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}" >
+        <Grid HeightRequest="80" Padding="0" VerticalOptions="Start">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="68" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}" >
-                <Grid HeightRequest="80" Padding="0" VerticalOptions="Start">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="68" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                <StackLayout x:Name="txtStopName" Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
+                    <Label Text="{Binding StopInfo.PublicName}" FontSize="Default" />
+                    <Label Text="{Binding StopInfo.Code, StringFormat=' ({0})'}" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" FontSize="Small" />
+                </StackLayout>
 
-                        <StackLayout x:Name="txtStopName" Grid.Column="1" VerticalOptions="Center" Orientation="Horizontal">
-                            <Label Text="{Binding StopInfo.PublicName}" FontSize="Default" />
-                            <Label Text="{Binding StopInfo.Code, StringFormat=' ({0})'}" TextColor="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" FontSize="Small" />
-                        </StackLayout>
+                <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}">
+                    <Image Source="{Binding StopInfo.Code, Converter={StaticResource TransportToImage}}" Margin="10,10,10,10" HeightRequest="40" WidthRequest="40" />
+                </Grid>
 
-                        <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}">
-                            <Image Source="{Binding StopInfo.Code, Converter={StaticResource TransportToImage}}" Margin="10,10,10,10" HeightRequest="40" WidthRequest="40" />
-                        </Grid>
-
-                        <Grid x:Name="starView" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}" >
-                            <Border Padding="5" Margin="0,0,15,0" StrokeThickness="2" Stroke="Transparent" Background="{AppThemeBinding Light={DynamicResource BorderBackground}, Dark={DynamicResource DarkBorderBackground}}">
-                                <Border.Behaviors>
-                                    <mct:TouchBehavior DefaultAnimationDuration="350"
+                <Grid x:Name="starView" Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center" Background="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}" >
+                    <Border Padding="5" Margin="0,0,15,0" StrokeThickness="2" Stroke="Transparent" Background="{AppThemeBinding Light={DynamicResource BorderBackground}, Dark={DynamicResource DarkBorderBackground}}">
+                        <Border.Behaviors>
+                            <mct:TouchBehavior DefaultAnimationDuration="350"
                                             PressedOpacity="0.6"
                                             PressedScale="0.8"
                                             PressedRotationY="350"
-                                            Command="{Binding BindingContext.FavouriteCommand, Source={x:Reference refreshView}}" />
-                                </Border.Behaviors>
+                                            Command="{Binding BindingContext.FavouriteCommand, Source={x:Reference Page}}" />
+                        </Border.Behaviors>
 
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="40" />
-                                </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="40" />
+                        </Border.StrokeShape>
 
-                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Label.Triggers>
-                                        <DataTrigger TargetType="Label" Binding="{Binding StopInfo.IsFavourite}" Value="True">
-                                            <Setter Property="Text" Value="&#xe838;" />
-                                            <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
-                                        </DataTrigger>
+                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding StopInfo.IsFavourite}" Value="True">
+                                    <Setter Property="Text" Value="&#xe838;" />
+                                    <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
+                                </DataTrigger>
 
-                                        <DataTrigger TargetType="Label" Binding="{Binding StopInfo.IsFavourite}" Value="False">
-                                            <Setter Property="Text" Value="&#xE83A;" />
-                                            <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource LabelTextColor}, Dark={DynamicResource DarkLabelTextColor}}" />
-                                        </DataTrigger>
-                                    </Label.Triggers>
-                                </Label>
-                            </Border>
-                        </Grid>
+                                <DataTrigger TargetType="Label" Binding="{Binding StopInfo.IsFavourite}" Value="False">
+                                    <Setter Property="Text" Value="&#xE83A;" />
+                                    <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource LabelTextColor}, Dark={DynamicResource DarkLabelTextColor}}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </Border>
+                </Grid>
 
-                        <BoxView Grid.ColumnSpan="2" HeightRequest="1" 
+                <BoxView Grid.ColumnSpan="2" HeightRequest="1" 
                                  Color="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" 
                                  VerticalOptions="End" />
-                    </Grid>
-                </Grid>
             </Grid>
-
-            <RefreshView x:Name="refreshView" Command="{Binding RefreshCommand}" 
-                         Margin="3,0,3,0" Grid.Row="1" IsRefreshing="{Binding IsRefreshing}"
-                         RefreshColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" 
-                         Background="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
-                <StackLayout>
-                    <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Margin="0,20,0,0" 
-                       Color="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" />
-                    <CollectionView ItemsSource="{Binding StopInfo.Arrivals}" 
-                                    SelectedItem="{Binding Selected, Mode=TwoWay}" 
-                                    SelectionMode="Single" VerticalOptions="FillAndExpand">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <views:VirtualTablesViewCell BindingContext="{Binding}" HeightRequest="110" />
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </StackLayout>
-            </RefreshView>
         </Grid>
-    </Border>
+    </Grid>
+
+        <Grid Grid.Row="2"  Margin="3,0,3,0" >
+        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Margin="0,20,0,0" HeightRequest="58" WidthRequest="58"
+                       Color="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" />
+
+            <ListView ItemsSource="{Binding StopInfo.Arrivals}" 
+                                    SelectedItem="{Binding Selected, Mode=TwoWay}" 
+                                    SelectionMode="Single"
+                      RowHeight="120"
+                        SeparatorVisibility="None"
+                      IsPullToRefreshEnabled="True"
+                        VerticalOptions="FillAndExpand"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshing="{Binding IsRefreshing}"
+                      RefreshControlColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}">
+            
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Null}">
+                    <ViewCell>
+                        <views:VirtualTablesViewCell BindingContext="{Binding}" />
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
 </Grid>
     

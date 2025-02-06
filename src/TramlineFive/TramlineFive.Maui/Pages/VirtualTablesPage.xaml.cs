@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Plugin.Maui.BottomSheet.Navigation;
 using SkgtService.Models;
 using System;
 using System.Collections.Generic;
@@ -33,15 +34,9 @@ namespace TramlineFive.Pages
             {
                 isLoaded = true;
                 Task _ = AnimateText();
+
+                //refreshView.HeightRequest = DeviceDisplay.MainDisplayInfo.Height - 80;
             }
-        }
-
-        protected override void OnSizeAllocated(double width, double height)
-        {
-            base.OnSizeAllocated(width, height);
-
-            // workaround for collection view not appearing inside refresh view
-            refreshView.HeightRequest = Height - 80;
         }
 
         private async Task AnimateText()
@@ -50,7 +45,7 @@ namespace TramlineFive.Pages
             {
                 if (txtStopName.Width > 0)
                 {
-                    SizeRequest size = txtStopName.Measure(Width, Height);
+                    SizeRequest size = txtStopName.Measure(DeviceDisplay.MainDisplayInfo.Width, DeviceDisplay.MainDisplayInfo.Height);
 
                     await txtStopName.TranslateTo(-size.Request.Width, 0, 3000);
                     await Task.Delay(100);
@@ -58,7 +53,7 @@ namespace TramlineFive.Pages
                     if (txtStopName.TranslationX == 0)
                         continue;
 
-                    txtStopName.TranslationX = Width - starView.Width;
+                    txtStopName.TranslationX = DeviceDisplay.MainDisplayInfo.Width - starView.Width;
 
                     await txtStopName.TranslateTo(0, 0, 5000);
                 }

@@ -29,6 +29,14 @@ public partial class MapViewModel : BaseViewModel
         Moved
     }
 
+    public enum SheetState
+    {
+        None,
+        Peek = 1,
+        Medium = 2,
+        Large = 4
+    }
+
     public List<string> FilteredStops { get; private set; }
 
     public double OverlayHeightInPixels
@@ -136,9 +144,9 @@ public partial class MapViewModel : BaseViewModel
                 {
                     Messenger.Send(new UpdateLocationMessage(p));
                     mapService.FollowUser();
+                    mapService.MoveTo(p);
                 });
             }
-
             isAnimating = false;
 
             if (success)
@@ -239,7 +247,6 @@ public partial class MapViewModel : BaseViewModel
         if (IsVirtualTablesUp)
         {
             IsVirtualTablesUp = false;
-            Messenger.Send(new HideVirtualTablesMessage());
 
             return true;
         }
@@ -272,7 +279,7 @@ public partial class MapViewModel : BaseViewModel
             if (IsVirtualTablesUp)
             {
                 IsVirtualTablesUp = false;
-                Messenger.Send(new HideVirtualTablesMessage());
+                //Messenger.Send(new HideVirtualTablesMessage());
             }
         }
     }
@@ -329,6 +336,17 @@ public partial class MapViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool isVirtualTablesUp;
+    partial void OnIsVirtualTablesUpChanged(bool value)
+    {
+        if (!value)
+        {
+            CurrentVirtualTablesState = SheetState.Medium;
+            _ = mapService.ShowNearbyStops();
+        }
+    }
+
+    [ObservableProperty]
+    private SheetState currentVirtualTablesState = SheetState.Medium;
 
     [ObservableProperty]
     private bool isSearching;

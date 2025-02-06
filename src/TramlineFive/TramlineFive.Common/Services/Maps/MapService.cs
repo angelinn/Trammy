@@ -244,10 +244,11 @@ public class MapService
                 var point = SphericalMercator.FromLonLat(m.Position.Longitude, m.Position.Latitude).ToMPoint();
                 locationLayer.UpdateMyLocation(point, true);
 
+                _ = ShowNearbyStops(point);
+
                 if (followUser)
                 {
                     map.Navigator.CenterOn(point, ANIMATION_MS, Easing.Linear);
-                    _ = ShowNearbyStops(point);
                 }
             });
         }
@@ -257,7 +258,6 @@ public class MapService
 
     public void FollowUser()
     {
-        map.Navigator.CenterOnAndZoomTo(locationLayer.MyLocation, map.Navigator.Resolutions[17], ANIMATION_MS, Easing.CubicOut);
         followUser = true;
     }
 
@@ -265,6 +265,12 @@ public class MapService
     {
         if (followUser)
             followUser = false;
+    }
+
+    public void MoveTo(Models.Position position)
+    {
+        MPoint point = SphericalMercator.FromLonLat(position.Longitude, position.Latitude).ToMPoint();
+        map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[17], ANIMATION_MS, Easing.CubicOut);
     }
 
     public void MoveTo(MPoint position, int zoom, bool home = false, bool ignoreOverlayHeight = false)
@@ -509,7 +515,6 @@ public class MapService
         }
         else
         {
-            WeakReferenceMessenger.Default.Send(new HideVirtualTablesMessage());
             _ = ShowNearbyStops();
         }
     }
