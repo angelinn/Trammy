@@ -13,9 +13,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
             <Label Grid.Row="1" FontFamily="MaterialIconsOutlinedRegular.otf" Text="fmd_good" TextColor="DodgerBlue"  FontSize="70" HorizontalOptions="Center" VerticalOptions="Center"/>
-        <Label TextColor="Black" Grid.Row="2" FontSize="21" HorizontalTextAlignment="Center" Margin="15,10,15,10" Text="Позволи на Trammy да използва местоположението ти." />
+        <Label Grid.Row="2" FontSize="21" HorizontalTextAlignment="Center" Margin="15,10,15,10" Text="Позволи на Trammy да използва местоположението ти." />
         
-        <Label TextColor="Black" Grid.Row="3" HorizontalTextAlignment="Center" FontSize="15">
+        <Label Grid.Row="3" HorizontalTextAlignment="Center" FontSize="15">
             <Label.Text>
 Не се притеснявай, аз не събирам данни за теб. 😌
 Използвам местоположението ти само, за да ти покажа точна информация за спирките наоколо. 🗺️
