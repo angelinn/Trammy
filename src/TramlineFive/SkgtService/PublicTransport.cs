@@ -83,6 +83,9 @@ public class PublicTransport
 
     private bool ShouldUpdateStops()
     {
+        if (lastUpdated == DateTime.MinValue)
+            return false;
+
         return (DateTime.Now - lastUpdated > updateFrequency);
     }
 
