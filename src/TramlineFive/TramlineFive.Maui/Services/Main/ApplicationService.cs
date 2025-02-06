@@ -69,9 +69,16 @@ public class ApplicationService : IApplicationService
     private Action<Position> locationChangedCallback;
     public async Task<bool> SubscribeForLocationChangeAsync(Action<Position> action)
     {
-        locationChangedCallback = action;
-        Geolocation.LocationChanged += OnLocationChanged;
-        return await Geolocation.StartListeningForegroundAsync(new GeolocationListeningRequest(GeolocationAccuracy.Best));
+        try
+        {
+            locationChangedCallback = action;
+            Geolocation.LocationChanged += OnLocationChanged;
+            return await Geolocation.StartListeningForegroundAsync(new GeolocationListeningRequest(GeolocationAccuracy.Best));
+        }
+        catch (FeatureNotEnabledException)
+        {
+            return false;
+        }
     }
 
     private void OnLocationChanged(object sender, GeolocationLocationChangedEventArgs e)
