@@ -76,21 +76,24 @@
         </Grid>
     </Grid>
 
-        <Grid Grid.Row="2"  Margin="3,0,3,0" >
+    <Grid Grid.Row="2"  Margin="3,0,3,0" >
         <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Margin="0,20,0,0" HeightRequest="58" WidthRequest="58"
+                           VerticalOptions="Start"
                        Color="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" />
 
-            <ListView ItemsSource="{Binding StopInfo.Arrivals}" 
-                                    SelectedItem="{Binding Selected, Mode=TwoWay}" 
-                                    SelectionMode="Single"
-                      RowHeight="120"
-                        SeparatorVisibility="None"
-                      IsPullToRefreshEnabled="True"
-                        VerticalOptions="FillAndExpand"
-                      RefreshCommand="{Binding RefreshCommand}"
-                      IsRefreshing="{Binding IsRefreshing}"
-                      RefreshControlColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}">
-            
+        <ListView ItemsSource="{Binding StopInfo.Arrivals}" 
+                  SelectedItem="{Binding Selected, Mode=TwoWay}" 
+                  SelectionMode="Single"
+                  RowHeight="120"
+                  SeparatorVisibility="None"
+                  IsPullToRefreshEnabled="True"
+                  VerticalOptions="FillAndExpand"
+                  RefreshCommand="{Binding RefreshCommand}"
+                  IsRefreshing="{Binding IsRefreshing}" x:Name="listView"
+                  Scrolled="listView_Scrolled"
+                  ItemAppearing="listView_ItemAppearing"
+                  RefreshControlColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}">
+
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Null}">
                     <ViewCell>

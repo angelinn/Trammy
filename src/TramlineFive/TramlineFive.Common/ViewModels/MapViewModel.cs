@@ -347,6 +347,10 @@ public partial class MapViewModel : BaseViewModel
 
     [ObservableProperty]
     private SheetState currentVirtualTablesState = SheetState.Medium;
+    partial void OnCurrentVirtualTablesStateChanged(SheetState value)
+    {
+        Messenger.Send(new HeightChangedMessage(value));
+    }
 
     [ObservableProperty]
     private bool isSearching;

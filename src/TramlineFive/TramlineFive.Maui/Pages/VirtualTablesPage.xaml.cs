@@ -3,10 +3,12 @@ using Plugin.Maui.BottomSheet.Navigation;
 using SkgtService.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TramlineFive.Common.Messages;
+using TramlineFive.Common.Services;
 using TramlineFive.Common.ViewModels;
 using TramlineFive.Services;
 
@@ -15,6 +17,7 @@ namespace TramlineFive.Pages
 	public partial class VirtualTablesPage : Grid
 	{
         private bool isLoaded = false;
+        private bool hasScrolled = false;
 
         public VirtualTablesPage()
         {
@@ -25,6 +28,8 @@ namespace TramlineFive.Pages
             {
                 txtStopName.CancelAnimations();
                 txtStopName.TranslationX = 0;
+
+                hasScrolled = false;
             });
         }
 
@@ -60,6 +65,29 @@ namespace TramlineFive.Pages
 
                 await Task.Delay(5000);
             }
+        }
+
+        private void listView_ItemAppearing(object sender, ItemVisibilityEventArgs e)
+        {
+            if (!hasScrolled)
+                return;
+
+            var listView = sender as ListView;
+            var items = listView.ItemsSource as IList<ArrivalInformation>;  // Cast to your data type
+
+            if (items != null && e.Item == items[items.Count - 1])
+            {
+                // ListView has scrolled to the bottom
+
+                ServiceContainer.ServiceProvider.GetService<MapViewModel>().CurrentVirtualTablesState = MapViewModel.SheetState.Large;
+                Console.WriteLine("Reached the bottom of the ListView!");
+            }
+        }
+
+        private void listView_Scrolled(object sender, ScrolledEventArgs e)
+        {
+            if (e.ScrollY > 0)
+                hasScrolled = true;
         }
     }
 }

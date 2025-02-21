@@ -37,7 +37,10 @@
 
         <mct:LazyView x:Name="LazySearchBar" x:TypeArguments="views:SearchBar" VerticalOptions="End" Margin="15,0,15,30" />
 
-        <bottomsheet:BottomSheet x:Name="bVirtualTables" States="Medium,Large" IsCancelable="True" IsDraggable="True" IsModal="False"
+        <bottomsheet:BottomSheet x:Name="bVirtualTables"
+                                 xmlns:androidBottomsheet="http://pluginmauibottomsheet.com/platformconfiguration/android"
+                                 androidBottomsheet:BottomSheet.HalfExpandedRatio="0.6"
+                                 States="Medium,Large" IsCancelable="True" IsDraggable="True" IsModal="False"
                                  IsOpen="{Binding BindingContext.IsVirtualTablesUp, Source={x:Reference Page}}" 
                                  CurrentState="{Binding BindingContext.CurrentVirtualTablesState, Source={x:Reference Page}, Converter={StaticResource StateToInt}}" 
                                  BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}"   

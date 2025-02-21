@@ -166,7 +166,9 @@ namespace TramlineFive.Maui
             applicationService.SetStringSetting("APIVersion", newVersion);
             applicationService.SetStringSetting(Settings.StopsUpdated, DateTime.Now.ToString());
 
-            Dispatcher.Dispatch(() => Toast.Make("Спирките са обновени").Show());
+            if (!VersionTracking.IsFirstLaunchEver)
+                Dispatcher.Dispatch(() => Toast.Make("Спирките са обновени").Show());
+            
             WeakReferenceMessenger.Default.Send(new RefreshStopsMessage());
 
             //await applicationService.DisplayNotification("Trammy", "Спирките са обновени");

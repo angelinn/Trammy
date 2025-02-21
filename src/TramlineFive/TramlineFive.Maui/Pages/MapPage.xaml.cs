@@ -11,6 +11,8 @@ using System.Reflection;
 using SkiaSharp.Views.Maui.Controls;
 using TramlineFive.Common.Services.Maps;
 using Plugin.Maui.BottomSheet;
+using Plugin.Maui.BottomSheet.PlatformConfiguration.AndroidSpecific;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 
 namespace TramlineFive.Pages
 {
@@ -102,7 +104,7 @@ namespace TramlineFive.Pages
         {
             base.OnSizeAllocated(width, height);
 
-            mapViewModel.OverlayHeightInPixels = Height * 0.5; ;
+            mapViewModel.OverlayHeightInPixels = Height * 0.6;
 
 #if ANDROID
             int statusBarHeight = 0;
