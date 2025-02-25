@@ -62,9 +62,6 @@
     <Color x:Key="PlaceholderTextColor">#C7C7CD</Color>
     <Color x:Key="DarkPlaceholderTextColor">white</Color>
 
-    <Color x:Key="VirtualTablesTopBarColor">White</Color>
-    <Color x:Key="DarkVirtualTablesTopBarColor">#2d333b</Color>
-
     <Color x:Key="MenuTextColor">#717578</Color>
     <Color x:Key="DarkMenuTextColor">#bfbfbf</Color>
 
