@@ -68,7 +68,6 @@ public partial class MapViewModel : BaseViewModel
         Messenger.Register<StopSelectedMessage>(this, (r, m) => OnStopSelectedMessageReceived(m));
         Messenger.Register<SettingChanged<int>>(this, async (r, m) => await OnIntSettingChangedAsync(m));
         Messenger.Register<SettingChanged<string>>(this, (r, m) => OnStringSettingChanged(m));
-        Messenger.Register<MapLoadedMessage>(this, async (r, m) => await MoveToMostFrequentStopForCurrentHour());
     }
 
     public async Task SetupFullMapAsync()
@@ -84,9 +83,9 @@ public partial class MapViewModel : BaseViewModel
         }
 
     }
-    public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy)
+    public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy, double x, double y)
     {
-        mapService.LoadInitialMap(map, tileServer, dataFetchStrategy, renderFetchStrategy, dbPath);
+        mapService.LoadInitialMap(map, tileServer, dataFetchStrategy, renderFetchStrategy, dbPath, x, y);
     }
 
     [RelayCommand]

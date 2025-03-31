@@ -13,3 +13,5 @@ public class HideVirtualTablesMessage
 }
 
 public record HeightChangedMessage(MapViewModel.SheetState SheetState);
+public record ViewportChangedMessage(double x, double y);
+

@@ -19,6 +19,7 @@ using TramlineFive.Common.Services.Interfaces;
 using CommunityToolkit.Maui.Alerts;
 using Microsoft.Maui.Storage;
 using NetTopologySuite.Operation.Overlay.Validate;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace TramlineFive.Maui
 {
@@ -74,7 +75,8 @@ namespace TramlineFive.Maui
                 IApplicationService applicationService = ServiceContainer.ServiceProvider.GetService<IApplicationService>();
 
                 WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, (r, m) => OnThemeChanged(m));
-     
+                WeakReferenceMessenger.Default.Register<ViewportChangedMessage>(this, (r, m) => OnViewportChanged(m));
+
                 StopsLoader.OnStopsUpdated += OnStopsUpdated;
 
                 publicTransport.Initialize(applicationService.GetStringSetting(Settings.StopsUpdated, null), TimeSpan.FromDays(3));
@@ -172,6 +174,12 @@ namespace TramlineFive.Maui
             WeakReferenceMessenger.Default.Send(new RefreshStopsMessage());
 
             //await applicationService.DisplayNotification("Trammy", "Спирките са обновени");
+        }
+
+        private void OnViewportChanged(ViewportChangedMessage m)
+        {
+            Preferences.Set("CenterX", m.x);
+            Preferences.Set("CenterY", m.y);
         }
     }
 }

@@ -31,7 +31,9 @@ namespace TramlineFive.Pages
             mapViewModel.LoadInitialMap(map.Map,
                 Preferences.Get(Settings.SelectedTileServerUrl, Defaults.TileServerUrl),
                 Preferences.Get(Settings.FetchingStrategy, Defaults.DataFetchStrategy),
-                Preferences.Get(Settings.RenderStrategy, Defaults.RenderFetchStrategy));
+                Preferences.Get(Settings.RenderStrategy, Defaults.RenderFetchStrategy),
+                Preferences.Get("CenterX", double.MinValue),
+                Preferences.Get("CenterY", double.MinValue));
 
             map.UpdateInterval = 8;
 

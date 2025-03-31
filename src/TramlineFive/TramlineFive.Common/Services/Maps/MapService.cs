@@ -149,8 +149,9 @@ public class MapService
     }
 
     private string dbPath;
+    private MPoint homePoint;
 
-    public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy, string dbPath)
+    public void LoadInitialMap(Map map, string tileServer, string dataFetchStrategy, string renderFetchStrategy, string dbPath, double x, double y)
     {
         this.map = map;
         this.map.Navigator.RotationLock = true;
@@ -158,8 +159,14 @@ public class MapService
 
         ChangeTileServer(tileServer, dataFetchStrategy, renderFetchStrategy);
 
-        MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
-        map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[17]);
+        homePoint = x == double.MinValue || y == double.MinValue ?
+            SphericalMercator.FromLonLat(CENTER_OF_SOFIA) :
+            new MPoint(x, y);
+
+        map.Navigator.ViewportChanged += (s, e) => WeakReferenceMessenger.Default.Send(new ViewportChangedMessage(
+            map.Navigator.Viewport.CenterX, map.Navigator.Viewport.CenterY)
+        );
+        map.Navigator.CenterOnAndZoomTo(homePoint, map.Navigator.Resolutions[17]);
     }
 
     public void ChangeTileServer(string tileServer, string dataFetchStrategy, string renderFetchStrategy)
@@ -210,8 +217,6 @@ public class MapService
 
     public async Task SetupMapAsync()
     {
-        MPoint point = SphericalMercator.FromLonLat(CENTER_OF_SOFIA);
-
         LoadPinStyles();
 
         publicTransport.StopsReadyEvent.WaitOne();
@@ -227,7 +232,7 @@ public class MapService
         WeakReferenceMessenger.Default.Send(new MapLoadedMessage());
 
         stopwatch.Restart();
-        await ShowNearbyStops(point);
+        await ShowNearbyStops(homePoint);
         stopwatch.Stop();
         Debug.WriteLine($"Showed nearby stops in {stopwatch.ElapsedMilliseconds} ms");
 
