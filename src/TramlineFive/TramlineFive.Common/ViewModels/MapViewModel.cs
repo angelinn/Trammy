@@ -68,6 +68,8 @@ public partial class MapViewModel : BaseViewModel
         Messenger.Register<StopSelectedMessage>(this, (r, m) => OnStopSelectedMessageReceived(m));
         Messenger.Register<SettingChanged<int>>(this, async (r, m) => await OnIntSettingChangedAsync(m));
         Messenger.Register<SettingChanged<string>>(this, (r, m) => OnStringSettingChanged(m));
+        Messenger.Register<MapLoadedMessage>(this, async (r, m) => await MoveToMostFrequentStopForCurrentHour());
+        Messenger.Register<ShowRouteMessage>(this, (r, m) => IsVirtualTablesUp = false);
     }
 
     public async Task SetupFullMapAsync()
@@ -246,6 +248,7 @@ public partial class MapViewModel : BaseViewModel
         if (IsVirtualTablesUp)
         {
             IsVirtualTablesUp = false;
+            _ = mapService.ShowNearbyStops();
 
             return true;
         }
@@ -278,6 +281,7 @@ public partial class MapViewModel : BaseViewModel
             if (IsVirtualTablesUp)
             {
                 IsVirtualTablesUp = false;
+                _ = mapService.ShowNearbyStops();
                 //Messenger.Send(new HideVirtualTablesMessage());
             }
         }
@@ -339,7 +343,9 @@ public partial class MapViewModel : BaseViewModel
     {
         if (!value)
         {
-            CurrentVirtualTablesState = SheetState.Medium;
+            CurrentVirtualTablesState = SheetState.Medium; 
+            ApplicationService.ResetStatusBarStyle();
+
             _ = mapService.ShowNearbyStops();
         }
     }

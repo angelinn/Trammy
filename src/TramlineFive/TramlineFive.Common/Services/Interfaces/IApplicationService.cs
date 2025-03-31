@@ -33,7 +33,7 @@ public interface IApplicationService
     Task<bool> SubscribeForLocationChangeAsync(Action<Position> action);
 
     void ChangeNavigationBarColor(string color);
-    void ChangeStatusBarColor(string color);
+    void ResetStatusBarStyle();
     string GetAppDataDirectory();
     Task<Stream> OpenResourceFileAsync(string fileName);
 

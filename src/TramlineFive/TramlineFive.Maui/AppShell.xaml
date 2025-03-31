@@ -15,7 +15,7 @@
             <Setter Property="Shell.TabBarTitleColor"
               Value="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
             <Setter Property="Shell.BackgroundColor"
-              Value="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkVirtualTablesTopBarColor}}" />
+              Value="{AppThemeBinding Light={DynamicResource BarBackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}" />
             <Setter Property="Shell.TabBarForegroundColor" 
               Value="{AppThemeBinding Light={DynamicResource IconsColor}, Dark={DynamicResource DarkIconsColor}}" />
         </Style>
