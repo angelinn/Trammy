@@ -39,7 +39,6 @@ namespace TramlineFive.Pages
             glview.Touch += OnMapTouch;
 
             WeakReferenceMessenger.Default.Register<StopDataLoadedMessage>(this, (r, m) => OnStopDataLoaded(m));
-            WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, async (r, m) => await HideVirtualTables());
         }
 
         protected override void OnAppearing()
@@ -89,15 +88,6 @@ namespace TramlineFive.Pages
             };
 
             _ = mapViewModel.OnMapTouchAsync(touchType);
-        }
-
-        private async Task HideVirtualTables()
-        {
-            Dispatcher.Dispatch(() =>
-            {
-                bVirtualTables.IsOpen = false;
-                CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"));
-            });
         }
 
         protected override void OnSizeAllocated(double width, double height)

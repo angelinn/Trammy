@@ -148,7 +148,10 @@ public partial class VirtualTablesViewModel : BaseViewModel
                     
                     return;
                 }
-                Messenger.Send(new ShowRouteMessage(route.Line, route.Direction0, value.VehicleType));
+
+                ApplicationService.RunOnUIThread(() =>
+                    Messenger.Send(new ShowRouteMessage(route.Line, route.Direction0, value.VehicleType))
+                );
             });
 
             Selected = null;

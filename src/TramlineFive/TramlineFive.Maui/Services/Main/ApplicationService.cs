@@ -199,9 +199,10 @@ public class ApplicationService : IApplicationService
         permissionService.ChangeNavigationBarColor(color);
     }
 
-    public void ChangeStatusBarColor(string color)
+    public void ResetStatusBarStyle()
     {
-        CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Color.FromArgb(color));
+        CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor(Application.Current.RequestedTheme == AppTheme.Light ? Colors.DodgerBlue : Color.FromArgb("2d333b"));
+        CommunityToolkit.Maui.Core.Platform.StatusBar.SetStyle(StatusBarStyle.LightContent);
     }
 
     public string GetAppDataDirectory()
