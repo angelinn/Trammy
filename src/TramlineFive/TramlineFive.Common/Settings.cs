@@ -15,6 +15,8 @@ public static class Settings
     public const string Theme = "Theme";
     public const string FetchingStrategy = "FetchingStrategy";
     public const string RenderStrategy = "RenderStrategy";
+    public const string MapCenterX = "CenterX";
+    public const string MapCenterY = "CenterY";
 }
 
 public static class Defaults

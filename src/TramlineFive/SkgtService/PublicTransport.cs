@@ -86,6 +86,9 @@ public class PublicTransport
         if (lastUpdated == DateTime.MinValue)
             return false;
 
+        if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+            return false;
+
         return (DateTime.Now - lastUpdated > updateFrequency);
     }
 

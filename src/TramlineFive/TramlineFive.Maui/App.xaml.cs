@@ -178,8 +178,8 @@ namespace TramlineFive.Maui
 
         private void OnViewportChanged(ViewportChangedMessage m)
         {
-            Preferences.Set("CenterX", m.x);
-            Preferences.Set("CenterY", m.y);
+            Preferences.Set(Settings.MapCenterX, m.x);
+            Preferences.Set(Settings.MapCenterY, m.y);
         }
     }
 }
