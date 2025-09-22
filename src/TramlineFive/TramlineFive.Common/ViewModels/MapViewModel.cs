@@ -51,6 +51,8 @@ public partial class MapViewModel : BaseViewModel
     private LocationStatus locationStatus;
     private readonly string dbPath;
 
+    private bool subscribedForLocation;
+
     public MapViewModel(MapService mapServiceOther, PublicTransport publicTransport, StopsConfigurator configurator)
     {
         mapService = mapServiceOther;
@@ -68,7 +70,7 @@ public partial class MapViewModel : BaseViewModel
         Messenger.Register<StopSelectedMessage>(this, (r, m) => OnStopSelectedMessageReceived(m));
         Messenger.Register<SettingChanged<int>>(this, async (r, m) => await OnIntSettingChangedAsync(m));
         Messenger.Register<SettingChanged<string>>(this, (r, m) => OnStringSettingChanged(m));
-        Messenger.Register<MapLoadedMessage>(this, async (r, m) => await MoveToMostFrequentStopForCurrentHour());
+        // Messenger.Register<MapLoadedMessage>(this, async (r, m) => await MoveToMostFrequentStopForCurrentHour());
         Messenger.Register<ShowRouteMessage>(this, (r, m) => IsVirtualTablesUp = false);
     }
 
@@ -131,35 +133,32 @@ public partial class MapViewModel : BaseViewModel
                     locationStatus = LocationStatus.NoPermissions;
                     return locationStatus;
                 }
-            }
 
-            bool success = true;
+                locationStatus = LocationStatus.Allowed;
+            }
+            else
+                locationStatus = LocationStatus.Allowed;
 
             if (locationStatus == LocationStatus.Allowed)
             {
                 mapService.FollowUser();
-            }
-            else
-            {
-                success = await ApplicationService.SubscribeForLocationChangeAsync((p) =>
+                mapService.MoveToUser();
+
+                if (!subscribedForLocation)
                 {
-                    Messenger.Send(new UpdateLocationMessage(p));
-                    mapService.FollowUser();
-                    mapService.MoveTo(p);
-                });
-            }
-            isAnimating = false;
+                    subscribedForLocation = await ApplicationService.SubscribeForLocationChangeAsync((p) =>
+                    {
+                        Messenger.Send(new UpdateLocationMessage(p));
+                    });
 
-            if (success)
-            {
-                locationStatus = LocationStatus.Allowed;
-                HasLocation = true;
-                return locationStatus;
+                    if (!subscribedForLocation)
+                        locationStatus = LocationStatus.TurnedOff;
+                }
             }
 
             isAnimating = false;
-            HasLocation = false;
-            locationStatus = LocationStatus.TurnedOff;
+
+            HasLocation = locationStatus == LocationStatus.Allowed;
             return locationStatus;
         }
         catch (Exception ex)

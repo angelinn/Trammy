@@ -266,6 +266,12 @@ public class MapService
         followUser = true;
     }
 
+    public void MoveToUser()
+    {
+        if (locationLayer.MyLocation.X != 0 && locationLayer.MyLocation.Y != 0)
+            MoveTo(locationLayer.MyLocation);
+    }
+
     public void StopFollowing()
     {
         if (followUser)
@@ -275,6 +281,11 @@ public class MapService
     public void MoveTo(Models.Position position)
     {
         MPoint point = SphericalMercator.FromLonLat(position.Longitude, position.Latitude).ToMPoint();
+        map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[17], ANIMATION_MS, Easing.CubicOut);
+    }
+
+    public void MoveTo(MPoint point)
+    {
         map.Navigator.CenterOnAndZoomTo(point, map.Navigator.Resolutions[17], ANIMATION_MS, Easing.CubicOut);
     }
 
