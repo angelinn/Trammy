@@ -7,10 +7,12 @@ using TramlineFive.Maui;
 using TramlineFive.Services;
 using Microsoft.Maui.ApplicationModel;
 
-namespace TramlineFive.Pages
+namespace TramlineFive.Maui.Pages
 {
     public partial class LocationPromptPage : ContentPage
     {
+        public CarouselView? Carousel { get; set; }
+
         public LocationPromptPage()
         {
             InitializeComponent();
@@ -26,7 +28,7 @@ namespace TramlineFive.Pages
             //if (!permissionService.HasLocationPermissions())
             //    permissionService.RequestLocationPermissions();
 
-            await Shell.Current.GoToAsync("//Main");
+            App.Current.Windows[0].Page = new BuildDatabasePage();
         }
     }
 }

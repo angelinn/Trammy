@@ -20,6 +20,7 @@ using CommunityToolkit.Maui.Alerts;
 using Microsoft.Maui.Storage;
 using NetTopologySuite.Operation.Overlay.Validate;
 using System.Runtime.InteropServices.Marshalling;
+using TramlineFive.Maui.Pages;
 
 namespace TramlineFive.Maui
 {
@@ -42,10 +43,15 @@ namespace TramlineFive.Maui
                 Names.DarkTheme => AppTheme.Dark,
                 _ => AppTheme.Unspecified
             };
+
+            GTFSContext.DatabasePath = Path.Combine(FileSystem.AppDataDirectory, "gtfs.db");
         }
 
         protected override Window CreateWindow(IActivationState activationState)
         {
+            if (VersionTracking.IsFirstLaunchEver)
+                return new Window(new LocationPromptPage());
+
             return new Window(new AppShell());
         }
 

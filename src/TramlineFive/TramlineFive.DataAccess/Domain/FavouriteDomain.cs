@@ -1,6 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SkgtService;
-using SkgtService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +12,7 @@ namespace TramlineFive.DataAccess.Domain
     {
         public string Name { get; set; }
         public string StopCode { get; set; }
-        public List<LineInformation> Lines { get; set; }
+        public List<object> Lines { get; set; }
 
         [ObservableProperty]
         private int timesClicked;

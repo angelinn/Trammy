@@ -13,6 +13,7 @@ using TramlineFive.Common.Services.Maps;
 using Plugin.Maui.BottomSheet;
 using Plugin.Maui.BottomSheet.PlatformConfiguration.AndroidSpecific;
 using Microsoft.Maui.Controls.PlatformConfiguration;
+using TramlineFive.Maui.Pages;
 
 namespace TramlineFive.Pages
 {
@@ -55,8 +56,8 @@ namespace TramlineFive.Pages
             if (Application.Current.RequestedTheme == AppTheme.Dark)
                 themeOverlay.Opacity = 0.3;
 
-            if (VersionTracking.IsFirstLaunchEver)
-                Navigation.PushAsync(new LocationPromptPage());
+            //if (VersionTracking.IsFirstLaunchEver)
+                //Navigation.PushAsync(new LocationPromptPage());
 
             _ = Task.Run(async () =>
             {
