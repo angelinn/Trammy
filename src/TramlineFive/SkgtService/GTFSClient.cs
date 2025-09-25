@@ -5,23 +5,30 @@ using System.Text;
 using System.Threading.Tasks;
 using SkgtService.Models.GTFS;
 using SkgtService.Models.Json;
+using TransitRealtime;
 
 namespace SkgtService;
 
 public class GTFSClient
 {
+    private static readonly TimeZoneInfo SofiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("FLE Standard Time");
+
     private readonly GTFSDownloader Downloader;
     private readonly GTFSRepository Repo;
+    private readonly GTFSRTService RealtimeService;
+
+    private FeedMessage gtfsRtTripUpdates;
 
     public List<GTFSRoute> Routes => Repo.Routes;
     public List<GTFSTrip> Trips => Repo.Trips;
     public List<GTFSStop> Stops => Repo.Stops;
     public List<GTFSStopTime> StopTimes => Repo.StopTimes;
 
-    public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath)
+    public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath, string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)
     {
         Downloader = new GTFSDownloader(gtfsUrl, staticGtfsDir, extractPath);
         Repo = new GTFSRepository(extractPath);
+        RealtimeService = new GTFSRTService(tripUpdatesUrl, vehicleUpdatesUrl, alertsUrl);
     }
 
     public async Task DownloadAndExtractAsync()
@@ -92,10 +99,11 @@ public class GTFSClient
 
         return false;
     }
-    public Dictionary<GTFSRoute, List<(GTFSTrip Trip, GTFSStopTime StopTime)>> GetNextDeparturesPerRoute(
+
+    public Dictionary<GTFSRoute, List<(GTFSTrip Trip, GTFSStopTime StopTime, DateTime? PredictedDeparture)>> GetNextDeparturesPerRoute(
         string stopId, DateTime dateTime, int maxPerRoute = 3)
     {
-        var result = new Dictionary<GTFSRoute, List<(GTFSTrip, GTFSStopTime)>>();
+        var result = new Dictionary<GTFSRoute, List<(GTFSTrip, GTFSStopTime, DateTime?)>>();
 
         DateTime date = dateTime.Date;
         TimeSpan afterTime = dateTime.TimeOfDay;
@@ -109,7 +117,7 @@ public class GTFSClient
         {
             IEnumerable<GTFSTrip> trips = tripsAtStop.Where(t => t.RouteId == route.RouteId);
 
-            List<(GTFSTrip, GTFSStopTime)> nextDepartures = new List<(GTFSTrip, GTFSStopTime)>();
+            List<(GTFSTrip, GTFSStopTime, DateTime?)> nextDepartures = new List<(GTFSTrip, GTFSStopTime, DateTime?)>();
 
             foreach (GTFSTrip trip in trips)
             {
@@ -119,20 +127,29 @@ public class GTFSClient
                 string key = $"{trip.TripId}_{stopId}";
                 if (Repo.Indexes.StopTimesByTripAndStop.TryGetValue(key, out GTFSStopTime stopTime))
                 {
-                    if (TryParseGtfsTime(stopTime.DepartureTime, out TimeSpan t) && t >= afterTime)
-                    {
-                        nextDepartures.Add((trip, stopTime));
-                    }
+                    // Use predicted departure if available, otherwise scheduled
+                    DateTime? predictedDeparture = stopTime.PredictedDepartureTime;
+
+                    DateTime referenceTime;
+                    if (predictedDeparture.HasValue)
+                        referenceTime = predictedDeparture.Value;
+                    else if (TryParseGtfsTime(stopTime.DepartureTime, out TimeSpan t))
+                        referenceTime = date + t;
+                    else
+                        continue; // skip if neither available
+
+                    if (referenceTime.TimeOfDay >= afterTime)
+                        nextDepartures.Add((trip, stopTime, predictedDeparture));
                 }
             }
 
             nextDepartures.Sort((a, b) =>
             {
-                TryParseGtfsTime(a.Item2.DepartureTime, out TimeSpan t1);
-                TryParseGtfsTime(b.Item2.DepartureTime, out TimeSpan t2);
-
-                return t1.CompareTo(t2);
+                DateTime timeA = a.Item3 ?? (date + TimeSpan.Parse(a.Item2.DepartureTime));
+                DateTime timeB = b.Item3?? (date + TimeSpan.Parse(b.Item2.DepartureTime));
+                return timeA.CompareTo(timeB);
             });
+
 
             // 4. Take only the next `maxPerRoute` departures
             result[route] = nextDepartures.Take(maxPerRoute).ToList();
@@ -141,9 +158,42 @@ public class GTFSClient
         return result;
     }
 
+    public async Task QueryRealtimeData()
+    {
+        Console.WriteLine("Getting realtime trip updates...");
+        gtfsRtTripUpdates = await RealtimeService.FetchTripUpdates();
+
+        ApplyTripUpdates();
+        Console.WriteLine("Applied trip updates.");
+    }
+
     public GTFSStop GetStopById(string id)
     {
         return Repo.Indexes.StopsById.TryGetValue(id, out GTFSStop stop) ? stop : null;
     }
 
+    private void ApplyTripUpdates()
+    {
+        foreach (FeedEntity entity in gtfsRtTripUpdates.Entities.Where(e => e.TripUpdate != null))
+        {
+            foreach (TripUpdate.StopTimeUpdate stopTimeUpdate in entity.TripUpdate.StopTimeUpdates)
+            {
+                string stopId = stopTimeUpdate.StopId;
+                string key = $"{entity.TripUpdate.Trip.TripId}_{stopId}";
+
+                if (!Repo.Indexes.StopTimesByTripAndStop.TryGetValue(key, out GTFSStopTime staticStopTime))
+                    continue;
+
+                if (stopTimeUpdate.Arrival != null && stopTimeUpdate.Arrival.Time != 0)
+                    staticStopTime.PredictedArrivalTime = UnixTimeStampToDateTime(stopTimeUpdate.Arrival.Time);
+
+                if (stopTimeUpdate.Departure != null && stopTimeUpdate.Departure.Time != 0)
+                    staticStopTime.PredictedDepartureTime = UnixTimeStampToDateTime(stopTimeUpdate.Departure.Time);
+            }
+        }
+    }
+    private DateTime UnixTimeStampToDateTime(long unixTime)
+    {
+        return TimeZoneInfo.ConvertTimeFromUtc(DateTimeOffset.FromUnixTimeSeconds(unixTime).DateTime, SofiaTimeZone);
+    }
 }

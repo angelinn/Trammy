@@ -16,4 +16,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="GTFS" Version="1.7.1" />
+  </ItemGroup>
+
 </Project>

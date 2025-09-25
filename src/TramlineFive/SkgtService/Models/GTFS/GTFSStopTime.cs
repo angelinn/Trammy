@@ -1,4 +1,5 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿using System;
+using CsvHelper.Configuration.Attributes;
 
 namespace SkgtService.Models.GTFS;
 
@@ -18,4 +19,7 @@ public class GTFSStopTime
 
     [Name("stop_sequence")]
     public int StopSequence { get; set; }
+
+    public DateTime? PredictedArrivalTime { get; set; }
+    public DateTime? PredictedDepartureTime { get; set; }
 }
