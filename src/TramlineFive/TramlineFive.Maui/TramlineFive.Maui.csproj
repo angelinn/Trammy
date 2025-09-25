@@ -220,6 +220,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </MauiXaml>
+    <MauiXaml Update="Pages\BuildDatabasePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Pages\Directions.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

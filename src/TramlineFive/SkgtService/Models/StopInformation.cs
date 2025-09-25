@@ -1,6 +1,7 @@
 ﻿using SkgtService.Models.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ public class StopResponse
 {
     public string Code { get; set; }
     public string PublicName { get; set; }
-    public List<ArrivalInformation> Arrivals { get; set; } = new();
+    public ObservableCollection<ArrivalInformation> Arrivals { get; set; } = new();
     public bool IsFavourite { get; set; }
 
     public StopResponse(string stopCode, string name)

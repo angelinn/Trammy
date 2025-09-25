@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CsvHelper;
@@ -10,6 +11,7 @@ using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using SkgtService.Models.GTFS;
 using SkgtService.Models.Json;
+using TramlineFive.DataAccess;
 
 namespace SkgtService;
 
@@ -33,13 +35,30 @@ public class GTFSRepository
         StaticGtfsDir = staticGtfsDir;
     }
 
+    public void LoadStops()
+    {
+        GTFSContext context = new GTFSContext();
+        Stops = context.GetStops().Select(s => new GTFSStop
+        {
+            StopId = s.StopId,
+            StopCode = s.StopCode,
+            StopName = s.StopName,
+            StopLat = s.StopLat,
+            StopLon = s.StopLon
+        }).ToList();
+    }
+
     public void LoadData()
     {
         Stops = LoadCSV<GTFSStop>("stops.txt");
+
         Routes = LoadCSV<GTFSRoute>("routes.txt");
         Trips = LoadCSV<GTFSTrip>("trips.txt");
         StopTimes = LoadCSV<GTFSStopTime>("stop_times.txt");
         CalendarDates = LoadCSV<GTFSCalendarDate>("calendar_dates.txt");
+
+        var activeStopIds = new HashSet<string>(StopTimes.Select(st => st.StopId));
+        Stops = Stops.Where(s => activeStopIds.Contains(s.StopId)).ToList();
 
         Indexes.BuildIndexes(this);
     }

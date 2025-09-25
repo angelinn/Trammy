@@ -67,7 +67,7 @@ public class ArrivalsService
             currentStop.PublicName :
             string.Empty);
 
-        stopResponse.Arrivals.AddRange(stopsInfos.Select(s => new ArrivalInformation(s)));
+        //stopResponse.Arrivals.AddRange(stopsInfos.Select(s => new ArrivalInformation(s)));
 
         return stopResponse;
     }

@@ -21,6 +21,11 @@ namespace TramlineFive.Maui
     {
         private static IServiceProvider ServiceProvider;
 
+        const string GTFS_STATIC_DATA_URL = "https://gtfs.sofiatraffic.bg/api/v1/static";
+        const string TRIP_UPDATES_URL = "https://gtfs.sofiatraffic.bg/api/v1/trip-updates";
+        const string VEHICLE_POSITION_URL = "https://gtfs.sofiatraffic.bg/api/v1/vehicle-positions";
+        const string ALERTS_URL = "https://gtfs.sofiatraffic.bg/api/v1/alerts";
+
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -99,6 +104,12 @@ namespace TramlineFive.Maui
 
             services.AddSingleton<VersionCheckingService>();
             services.AddSingleton<PermissionService>();
+
+            string destinationGtfsStatic = Path.Combine(FileSystem.AppDataDirectory, "gtfs_static.zip");
+            string extractGtfsStatic = Path.Combine(FileSystem.AppDataDirectory, "gtfs_data");
+
+            GTFSClient gtfsClient = new GTFSClient(GTFS_STATIC_DATA_URL, destinationGtfsStatic, extractGtfsStatic, TRIP_UPDATES_URL, VEHICLE_POSITION_URL, ALERTS_URL);
+            services.AddSingleton(g => gtfsClient);
         }
     }
 }

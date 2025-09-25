@@ -22,6 +22,7 @@ using NetTopologySuite.IO;
 using Mapsui.Nts;
 using Mapsui.Nts.Extensions;
 using Mapsui.Manipulations;
+using SkgtService.Models.GTFS;
 
 namespace TramlineFive.Common.Services.Maps;
 
@@ -63,11 +64,13 @@ public class MapService
     public int MaxPinsZoom { get; set; } = 15;
     public int MaxTextZoom { get; set; } = 17;
 
+    private readonly GTFSClient gtfsClient;
 
-    public MapService(LocationService locationService, PublicTransport publicTransport)
+    public MapService(LocationService locationService, PublicTransport publicTransport, GTFSClient gtfsClient)
     {
         this.locationService = locationService;
         this.publicTransport = publicTransport;
+        this.gtfsClient = gtfsClient;
 
         WeakReferenceMessenger.Default.Register<RefreshStopsMessage>(this, async (r, m) => await OnStopsRefreshed());
         WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, (r, m) => ShowRoute(m));
@@ -219,7 +222,9 @@ public class MapService
     {
         LoadPinStyles();
 
-        publicTransport.StopsReadyEvent.WaitOne();
+        //publicTransport.StopsReadyEvent.WaitOne();
+
+        gtfsClient.LoadStops();
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -258,7 +263,7 @@ public class MapService
             });
         }
 
-        await publicTransport.ReloadDataIfNeededAsync();
+        //await publicTransport.ReloadDataIfNeededAsync();
     }
 
     public void FollowUser()
@@ -334,12 +339,12 @@ public class MapService
         stopsTree = new KdTree<float, IFeature>(2, new KdTree.Math.GeoMath());
         stopsDictionary = new Dictionary<string, IFeature>();
 
-        foreach (var location in publicTransport.Stops)
+        foreach (GTFSStop stop in gtfsClient.Stops)
         {
-            MPoint stopLocation = new MPoint(location.Lon, location.Lat);
+            MPoint stopLocation = new MPoint(stop.StopLon, stop.StopLat);
             MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(stopLocation.X, stopLocation.Y));
 
-            var (symbolStyle, offset) = location.Type switch
+            var (symbolStyle, offset) = stop.TransportType switch
             {
                 TransportType.Trolley => (trolleyPinStyle, new Offset(0, -32)),
                 TransportType.Tram => (tramPinStyle, new Offset(0, -40)),
@@ -365,7 +370,7 @@ public class MapService
                     {
                         Enabled = symbolStyle.Enabled,
                         MaxVisible = map.Navigator.Resolutions[MaxTextZoom],
-                        Text = $"{location.PublicName} ({location.Code})",
+                        Text = $"{stop.StopName} ({stop.StopCode})",
                         Offset = offset,
                         Font = new Font { Size = 11 },
                         BackColor = new Brush(new Color(255, 255, 255, 200)),
@@ -374,11 +379,11 @@ public class MapService
                 }
             };
 
-            feature["stopObject"] = location;
+            feature["stopObject"] = stop;
             features.Add(feature);
 
-            stopsTree.Add(new float[] { (float)location.Lat, (float)location.Lon }, feature);
-            stopsDictionary[location.Code] = feature;
+            stopsTree.Add(new float[] { (float)stop.StopLat, (float)stop.StopLon}, feature);
+            stopsDictionary[stop.StopCode] = feature;
         }
 
         return new Layer
@@ -394,8 +399,8 @@ public class MapService
         if (!stopsDictionary.TryGetValue(code, out IFeature feature))
             return;
 
-        StopInformation location = feature["stopObject"] as StopInformation;
-        MPoint point = new MPoint(location.Lon, location.Lat);
+        GTFSStop location = feature["stopObject"] as GTFSStop;
+        MPoint point = new MPoint(location.StopLon, location.StopLat);
         MoveTo(point, 17, false, ignoreOverlayHeight);
 
         MPoint localPoint = SphericalMercator.FromLonLat(point);
@@ -411,8 +416,8 @@ public class MapService
         if (!stopsDictionary.TryGetValue(code, out IFeature feature))
             return;
 
-        StopInformation location = feature["stopObject"] as StopInformation;
-        MPoint point = new MPoint(location.Lon, location.Lat);
+        GTFSStop location = feature["stopObject"] as GTFSStop;
+        MPoint point = new MPoint(location.StopLon, location.StopLat);
 
         foreach (IStyle style in feature.Styles)
         {
@@ -441,7 +446,7 @@ public class MapService
         {
             stopsFinishedLoadingEvent.WaitOne();
 
-            List<StopInformation> nearbyStops = new List<StopInformation>();
+            List<GTFSStop> nearbyStops = new List<GTFSStop>();
 
             MPoint pointLan = SphericalMercator.ToLonLat(position);
             var neighbours = stopsTree.GetNearestNeighbours(new float[] { (float)pointLan.Y, (float)pointLan.X }, 10).Where(n => n != null).Select(n => n.Value).ToList();
@@ -451,7 +456,7 @@ public class MapService
 
             foreach (var neighbour in neighbours)
             {
-                StopInformation location = neighbour["stopObject"] as StopInformation;
+                GTFSStop location = neighbour["stopObject"] as GTFSStop;
                 nearbyStops.Add(location);
 
                 foreach (IStyle style in neighbour.Styles)
@@ -525,9 +530,10 @@ public class MapService
         MapInfo info = e.GetMapInfo(map.Layers.FindLayer(STOPS_LAYER));
         if (info.Feature != null && info.Feature.Styles.FirstOrDefault().Enabled)
         {
-            StopInformation location = info.Feature["stopObject"] as StopInformation;
+            var testobj = info.Feature["stopObject"];
+            GTFSStop location = info.Feature["stopObject"] as GTFSStop;
 
-            WeakReferenceMessenger.Default.Send(new StopSelectedMessage(location.Code));
+            WeakReferenceMessenger.Default.Send(new StopSelectedMessage(location.StopCode));
         }
         else
         {

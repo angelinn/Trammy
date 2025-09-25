@@ -47,16 +47,18 @@ public partial class MapViewModel : BaseViewModel
 
     private readonly MapService mapService;
     private readonly PublicTransport publicTransport;
+    private readonly GTFSClient gtfsClient;
 
     private LocationStatus locationStatus;
     private readonly string dbPath;
 
     private bool subscribedForLocation;
 
-    public MapViewModel(MapService mapServiceOther, PublicTransport publicTransport, StopsConfigurator configurator)
+    public MapViewModel(MapService mapServiceOther, PublicTransport publicTransport, StopsConfigurator configurator, GTFSClient gtfsClient)
     {
         mapService = mapServiceOther;
         this.publicTransport = publicTransport;
+        this.gtfsClient = gtfsClient; 
         int maxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
         int maxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
 
@@ -192,9 +194,9 @@ public partial class MapViewModel : BaseViewModel
             return;
 
         if (Char.IsDigit(StopCode[0]))
-            FilteredStops = publicTransport.Stops.Where(s => s.Code.Contains(StopCode)).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+            FilteredStops = gtfsClient.Stops.Where(s => s.StopCode.Contains(StopCode)).Select(s => s.StopCode + " " + s.StopName).Take(5).ToList();
         else
-            FilteredStops = publicTransport.Stops.Where(s => s.PublicName.ToLower().Contains(StopCode.ToLower())).Select(s => s.Code + " " + s.PublicName).Take(5).ToList();
+            FilteredStops = gtfsClient.Stops.Where(s => s.StopName.ToLower().Contains(StopCode.ToLower())).Select(s => s.StopCode + " " + s.StopName).Take(5).ToList();
 
         OnPropertyChanged(nameof(FilteredStops));
 

@@ -29,13 +29,13 @@
                 </StackLayout>
 
                 <StackLayout Orientation="Horizontal">
-                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="21" Margin="0,0,5,0" TextColor="LightGoldenrodYellow" />
-                    <Label Text="{Binding LastCalculated}" TextColor="White" />
+                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="21" Margin="0,0,5,0" TextColor="Green" IsVisible="{Binding Realtime}" />
+                <Label Text="{Binding LastCalculated}" TextColor="White" />
                 </StackLayout>
             </StackLayout>
             <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0">
-                <Label Text="{Binding Minutes}" TextColor="White" FontSize="40" HorizontalOptions="Center"/>
-                <Label Text="минути" TextColor="White" HorizontalOptions="Center"  />
+            <Label Text="{Binding Minutes}" FontSize="40" HorizontalOptions="Center" TextColor="White" />
+            <Label Text="минути" TextColor="White" HorizontalOptions="Center"  />
             </StackLayout>
         </Grid>
     </Border>

@@ -12,6 +12,6 @@
     <PackageReference Include="Sentry.Maui" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="NewFolder\" />
+    <ProjectReference Include="..\TramlineFive.DataAccess\TramlineFive.DataAccess.csproj" />
   </ItemGroup>
 </Project>

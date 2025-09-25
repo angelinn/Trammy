@@ -39,14 +39,14 @@ public partial class SettingsViewModel : BaseViewModel
     private Func<string, string, string, string[], Task<string>> displayActionSheet;
 
     private readonly VersionService versionService;
-    private readonly PublicTransport publicTransport;
+    private readonly GTFSClient gtfsClient;
 
-    public SettingsViewModel(VersionService versionService, PublicTransport publicTransport)
+    public SettingsViewModel(VersionService versionService, GTFSClient gtfsClient)
     {
         RefreshStopsUpdatedTime();
 
         this.versionService = versionService;
-        this.publicTransport = publicTransport;
+        this.gtfsClient = gtfsClient;
         ShowNearestStop = ApplicationService.GetBoolSetting(Settings.ShowStopOnLaunch, false);
         MaxTextZoom = ApplicationService.GetIntSetting(Settings.MaxTextZoom, 0);
         MaxPinsZoom = ApplicationService.GetIntSetting(Settings.MaxPinsZoom, 0);
@@ -175,7 +175,8 @@ public partial class SettingsViewModel : BaseViewModel
     {
         IsUpdatingStops = true;
 
-        await publicTransport.LoadData(true);
+        await gtfsClient.DownloadAndExtractAsync();
+        gtfsClient.LoadAllData();
 
         Messenger.Send(new RefreshStopsMessage());
 

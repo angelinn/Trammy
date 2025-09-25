@@ -6,12 +6,14 @@ using Sentry;
 using SkgtService;
 using SkgtService.Exceptions;
 using SkgtService.Models;
+using SkgtService.Models.GTFS;
 using SkgtService.Models.Json;
 using SkgtService.Parsers;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Topten.RichTextKit;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
 using TramlineFive.DataAccess.Domain;
@@ -23,14 +25,16 @@ public partial class VirtualTablesViewModel : BaseViewModel
     private readonly ArrivalsService arrivalsService;
     private readonly PublicTransport publicTransport;
     private readonly RoutesLoader routesLoader;
+    private readonly GTFSClient gtfsClient;
 
     private string stopCode;
 
-    public VirtualTablesViewModel(ArrivalsService arrivalsService, PublicTransport publicTransport, RoutesLoader routesLoader)
+    public VirtualTablesViewModel(ArrivalsService arrivalsService, PublicTransport publicTransport, RoutesLoader routesLoader, GTFSClient gtfsClient)
     {
         this.arrivalsService = arrivalsService;
         this.publicTransport = publicTransport;
         this.routesLoader = routesLoader;
+        this.gtfsClient = gtfsClient;
 
         Messenger.Register<StopSelectedMessage>(this, async (r, sc) =>
         {
@@ -45,6 +49,7 @@ public partial class VirtualTablesViewModel : BaseViewModel
                 OnPropertyChanged(nameof(StopInfo));
             }
         });
+        this.gtfsClient = gtfsClient;
     }
 
     [RelayCommand]
@@ -83,40 +88,75 @@ public partial class VirtualTablesViewModel : BaseViewModel
     public async Task SearchByStopCodeAsync(string stopCode)
     {
         IsLoading = true;
+        await gtfsClient.QueryRealtimeData();
 
         try
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            StopInformation stopInformation = publicTransport.FindStop(stopCode);
-            StopInfo = new StopResponse(stopCode, stopInformation.PublicName);
+            GTFSStop stop = gtfsClient.GetStopByCode(stopCode).FirstOrDefault();
+            StopInfo = new StopResponse(stopCode, stop.StopName);
 
-            StopResponse info = await arrivalsService.GetByStopCodeAsync(stopCode, stopInformation?.Type);
-            info.Arrivals = info.Arrivals
-                .OrderBy(a => a.TransportType)
-                .ThenBy(a =>
+            var nextDepartures = gtfsClient.GetNextDeparturesPerRoute(stop.StopCode, DateTime.Now);
+            foreach (var (route, departure) in nextDepartures)
+            {
+                ArrivalInformation arrival = new ArrivalInformation();
+                arrival.LineName = route.RouteShortName;
+
+                foreach (var (trip, stopTime, predictedDeparture) in departure)
                 {
-                    if (a.LineName.Any(i => !char.IsDigit(i)))
-                        return int.MaxValue;
+                    arrival.Direction = trip.TripHeadsign;
+                    if (predictedDeparture.HasValue)
+                    {
+                        arrival.Realtime = true;
 
-                    char[] lineNumber = a.LineName.Where(i => char.IsDigit(i)).ToArray();
-                    if (int.TryParse(new string(lineNumber), out int lineInt))
-                        return lineInt;
+                        arrival.Arrivals.Add(new Arrival
+                        {
+                            Minutes = (int)(predictedDeparture.Value - DateTime.Now).TotalMinutes,
+                            Bikes = trip.BikesAllowed.HasValue ? Convert.ToBoolean(trip.BikesAllowed.Value) : false
+                        });
+                    }
+                    else
+                    {
+                        if (DateTime.TryParse(stopTime.DepartureTime, out DateTime scheduledDeparture))
+                        {
+                            arrival.Arrivals.Add(new Arrival
+                            {
+                                Minutes = (int)(scheduledDeparture - DateTime.Now).TotalMinutes,
+                                Bikes = trip.BikesAllowed.HasValue ? Convert.ToBoolean(trip.BikesAllowed.Value) : false
+                            });
+                        }
+                    }
+                }
 
-                    return int.MaxValue;
-                }).ToList();
+                StopInfo.Arrivals.Add(arrival);
+            }
+
+            //StopResponse info = await arrivalsService.GetByStopCodeAsync(stopCode, stopInformation?.Type);
+            //info.Arrivals = info.Arrivals
+            //    .OrderBy(a => a.TransportType)
+            //    .ThenBy(a =>
+            //    {
+            //        if (a.LineName.Any(i => !char.IsDigit(i)))
+            //            return int.MaxValue;
+
+            //        char[] lineNumber = a.LineName.Where(i => char.IsDigit(i)).ToArray();
+            //        if (int.TryParse(new string(lineNumber), out int lineInt))
+            //            return lineInt;
+
+            //        return int.MaxValue;
+            //    }).ToList();
 
             IsLoading = false;
 
-            FavouriteDomain favourite = await FavouriteDomain.FindAsync(info.Code);
-            info.IsFavourite = favourite != null;
-
-            StopInfo = info;
+            FavouriteDomain favourite = await FavouriteDomain.FindAsync(StopInfo.Code);
+            StopInfo.IsFavourite = favourite != null;
 
             sw.Stop();
 
             Messenger.Send(new StopDataLoadedMessage(StopInfo));
+            OnPropertyChanged(nameof(StopInfo));
         }
         catch (StopNotFoundException e)
         {

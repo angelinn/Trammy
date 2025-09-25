@@ -16,6 +16,12 @@ public class ArrivalInformation
     public TransportType VehicleType { get; set; }
     public List<Arrival> Arrivals { get; set; }
     public int Minutes => Arrivals[0].Minutes;
+    public bool Realtime { get; set; }
+
+    public ArrivalInformation()
+    {
+        Arrivals = new List<Arrival>();
+    }
 
     public ArrivalInformation(LineArrivalInfo line)
     {

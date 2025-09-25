@@ -11,7 +11,7 @@ namespace SkgtService;
 
 public class GTFSClient
 {
-    private static readonly TimeZoneInfo SofiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("FLE Standard Time");
+    private static readonly TimeZoneInfo SofiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Helsinki");
 
     private readonly GTFSDownloader Downloader;
     private readonly GTFSRepository Repo;
@@ -101,75 +101,92 @@ public class GTFSClient
     }
 
     public Dictionary<GTFSRoute, List<(GTFSTrip Trip, GTFSStopTime StopTime, DateTime? PredictedDeparture)>> GetNextDeparturesPerRoute(
-        string stopId, DateTime dateTime, int maxPerRoute = 3)
+        string stopCode, DateTime dateTime, int maxPerRoute = 3)
     {
         var result = new Dictionary<GTFSRoute, List<(GTFSTrip, GTFSStopTime, DateTime?)>>();
 
         DateTime date = dateTime.Date;
         TimeSpan afterTime = dateTime.TimeOfDay;
 
-        if (!Repo.Indexes.TripsByStop.TryGetValue(stopId, out List<GTFSTrip> tripsAtStop))
-            return result; 
-
-        List<GTFSRoute> routes = GetRoutesForStop(stopId, date);
-
-        foreach (GTFSRoute route in routes)
+        foreach (GTFSStop stop in Repo.Indexes.StopsByCode[stopCode])
         {
-            IEnumerable<GTFSTrip> trips = tripsAtStop.Where(t => t.RouteId == route.RouteId);
+            List<GTFSRoute> routes = GetRoutesForStop(stop.StopId, date);
+            List<GTFSTrip> tripsAtStop = Repo.Indexes.TripsByStop[stop.StopId];
 
-            List<(GTFSTrip, GTFSStopTime, DateTime?)> nextDepartures = new List<(GTFSTrip, GTFSStopTime, DateTime?)>();
-
-            foreach (GTFSTrip trip in trips)
+            foreach (GTFSRoute route in routes)
             {
-                if (!TripRunsOnDate(trip.TripId, date)) 
-                    continue;
+                IEnumerable<GTFSTrip> trips = tripsAtStop.Where(t => t.RouteId == route.RouteId);
 
-                string key = $"{trip.TripId}_{stopId}";
-                if (Repo.Indexes.StopTimesByTripAndStop.TryGetValue(key, out GTFSStopTime stopTime))
+                List<(GTFSTrip, GTFSStopTime, DateTime?)> nextDepartures = new List<(GTFSTrip, GTFSStopTime, DateTime?)>();
+
+                foreach (GTFSTrip trip in trips)
                 {
-                    // Use predicted departure if available, otherwise scheduled
-                    DateTime? predictedDeparture = stopTime.PredictedDepartureTime;
+                    if (!TripRunsOnDate(trip.TripId, date))
+                        continue;
 
-                    DateTime referenceTime;
-                    if (predictedDeparture.HasValue)
-                        referenceTime = predictedDeparture.Value;
-                    else if (TryParseGtfsTime(stopTime.DepartureTime, out TimeSpan t))
-                        referenceTime = date + t;
-                    else
-                        continue; // skip if neither available
+                    string key = $"{trip.TripId}_{stop.StopId}";
+                    if (Repo.Indexes.StopTimesByTripAndStop.TryGetValue(key, out GTFSStopTime stopTime))
+                    {
+                        // Use predicted departure if available, otherwise scheduled
+                        DateTime? predictedDeparture = stopTime.PredictedDepartureTime;
 
-                    if (referenceTime.TimeOfDay >= afterTime)
-                        nextDepartures.Add((trip, stopTime, predictedDeparture));
+                        DateTime referenceTime;
+                        if (predictedDeparture.HasValue)
+                            referenceTime = predictedDeparture.Value;
+                        else if (TryParseGtfsTime(stopTime.DepartureTime, out TimeSpan t))
+                            referenceTime = date + t;
+                        else
+                            continue; // skip if neither available
+
+                        if (referenceTime.TimeOfDay >= afterTime)
+                            nextDepartures.Add((trip, stopTime, predictedDeparture));
+                    }
                 }
+
+                nextDepartures.Sort((a, b) =>
+                {
+                    DateTime timeA = a.Item3 ?? (date + TimeSpan.Parse(a.Item2.DepartureTime));
+                    DateTime timeB = b.Item3 ?? (date + TimeSpan.Parse(b.Item2.DepartureTime));
+                    return timeA.CompareTo(timeB);
+                });
+
+
+                // 4. Take only the next `maxPerRoute` departures
+                result[route] = nextDepartures.Take(maxPerRoute).ToList();
             }
-
-            nextDepartures.Sort((a, b) =>
-            {
-                DateTime timeA = a.Item3 ?? (date + TimeSpan.Parse(a.Item2.DepartureTime));
-                DateTime timeB = b.Item3?? (date + TimeSpan.Parse(b.Item2.DepartureTime));
-                return timeA.CompareTo(timeB);
-            });
-
-
-            // 4. Take only the next `maxPerRoute` departures
-            result[route] = nextDepartures.Take(maxPerRoute).ToList();
         }
-
         return result;
     }
 
+    DateTime? lastRealtimeCheck = null;
     public async Task QueryRealtimeData()
     {
-        Console.WriteLine("Getting realtime trip updates...");
-        gtfsRtTripUpdates = await RealtimeService.FetchTripUpdates();
+        if (lastRealtimeCheck != null && (DateTime.UtcNow - lastRealtimeCheck.Value).TotalSeconds < 60)
+            return; // Avoid querying more than once per minute
 
-        ApplyTripUpdates();
-        Console.WriteLine("Applied trip updates.");
+        try
+        {
+            Console.WriteLine("Getting realtime trip updates...");
+            gtfsRtTripUpdates = await RealtimeService.FetchTripUpdates();
+
+            ApplyTripUpdates();
+            lastRealtimeCheck = DateTime.UtcNow;
+            Console.WriteLine("Applied trip updates.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching or applying trip updates: {ex.Message}");
+        }
     }
 
     public GTFSStop GetStopById(string id)
     {
         return Repo.Indexes.StopsById.TryGetValue(id, out GTFSStop stop) ? stop : null;
+    }
+
+    public List<GTFSStop> GetStopByCode(string code)
+    {
+        return Repo.Indexes.StopsByCode.TryGetValue(code, out List<GTFSStop> stop) ? stop : null;
     }
 
     private void ApplyTripUpdates()
@@ -195,5 +212,10 @@ public class GTFSClient
     private DateTime UnixTimeStampToDateTime(long unixTime)
     {
         return TimeZoneInfo.ConvertTimeFromUtc(DateTimeOffset.FromUnixTimeSeconds(unixTime).DateTime, SofiaTimeZone);
+    }
+
+    public void LoadStops()
+    {
+        Repo.LoadStops();
     }
 }

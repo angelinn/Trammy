@@ -39,4 +39,26 @@ public class GTFSStop
 
     [Name("wheelchair_boarding")]
     public int? WheelchairBoarding { get; set; } // 0 = no info, 1 = accessible, 2 = not accessible
+
+    public TransportType TransportType
+    {
+        get
+        {
+            if (StopId.Length == 0)
+                return TransportType.Bus; 
+
+            if (StopId[0] == 'A')
+                return TransportType.Bus;
+            if (StopId[0] == 'M')
+                return TransportType.Subway;
+            if (StopId[0] == 'N')
+                return TransportType.NightBus;
+            if (StopId.LastIndexOf("TB") != -1)
+                return TransportType.Trolley;
+            if (StopId.LastIndexOf("TM") != -1) 
+                return TransportType.Tram;
+
+            return TransportType.Bus;
+        }
+    }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using SkgtService.Models.GTFS;
+using SkgtService.Models.Json;
 
 namespace SkgtService;
 
@@ -11,6 +12,7 @@ public class GTFSIndexes
     public Dictionary<string, List<GTFSTrip>> TripsByRoute { get; private set; } = new();
     public Dictionary<string, List<GTFSStopTime>> StopTimesByTrip { get; private set; } = new();
     public Dictionary<string, GTFSStop> StopsById { get; private set; } = new();
+    public Dictionary<string, List<GTFSStop>> StopsByCode { get; private set; } = new();
     public Dictionary<string, HashSet<DateTime>> ServiceDates { get; private set; } = new();
     public Dictionary<string, List<GTFSTrip>> TripsByStop { get; private set; } = new();
     // Key: "tripId_stopId"
@@ -29,6 +31,20 @@ public class GTFSIndexes
             .ToDictionary(g => g.Key, g => g.OrderBy(st => st.StopSequence).ToList());
 
         StopsById = repo.Stops.ToDictionary(s => s.StopId, s => s);
+        StopsByCode = new Dictionary<string, List<GTFSStop>>();
+
+        foreach (GTFSStop s in repo.Stops)
+        {
+            if (!StopsByCode.TryGetValue(s.StopCode, out List<GTFSStop> list))
+            {
+                list = new List<GTFSStop>();
+                StopsByCode[s.StopCode] = list;
+            }
+
+            list.Add(s);
+        }
+
+
         Console.WriteLine("Building service dates index...");
         LoadServiceDates(repo);
         Console.WriteLine("Building stops indexes...");
