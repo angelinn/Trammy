@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SkgtService\SkgtService.csproj" />
     <ProjectReference Include="..\..\TramlineFive.Common\TramlineFive.Common.csproj" />
+    <ProjectReference Include="..\..\TramlineFive.DataAccess\TramlineFive.DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GTFS" Version="1.7.1" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
   </ItemGroup>
 
 </Project>
