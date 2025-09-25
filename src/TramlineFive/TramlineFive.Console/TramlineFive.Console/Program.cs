@@ -1,102 +1,91 @@
-﻿
-using QuikGraph.Algorithms.MaximumFlow;
-using SkgtService;
-using SkgtService.Models;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using TramlineFive.Common.Services;
+﻿using SkgtService;
+using SkgtService.Models.GTFS;
+using static SkgtService.GTFSRepository;
 
-StopsLoader.Initialize(".");
 
-PublicTransport pb = new PublicTransport();
+const string GTFS_STATIC_DATA_URL = "https://gtfs.sofiatraffic.bg/api/v1/static";
+const string DESTINATION_STATIC_ZIP_PATH = "gtfs_static.zip";
+const string EXTRACT_PATH = "gtfs_data";
 
-Console.WriteLine("Loading data...");
-pb.LoadData().Wait();
-
-DirectionsService directions = new DirectionsService(pb);
-
-Stopwatch sw = new Stopwatch();
-sw.Start();
-
-Console.WriteLine("Building...");
-directions.Build();
-
-sw.Stop();
-
-Console.WriteLine($"Build took {sw.Elapsed} time");
-
-sw.Reset();
-sw.Start();
-
-Console.WriteLine("Finding path...");
-Console.OutputEncoding = Encoding.UTF8;
-var path = directions.GetShortestPath(pb.FindStop("2193"), pb.FindStop("2327")).ToList();
-
-List<LineInformation> previousBuses = null;
-LineInformation singleActive = null;
-float walkingDistance = 0;
-string previousStop = "";
-
-foreach (var line in path)
+void ManualTestGTFS()
 {
-    List<LineInformation> currentLine = pb.FindLineByTwoStops(line.FromStop.Code, line.ToStop.Code);
-    List<LineInformation> sameLines = new List<LineInformation>();
-    if (previousBuses != null)
+    GTFSDownloader downloader = new GTFSDownloader(GTFS_STATIC_DATA_URL, DESTINATION_STATIC_ZIP_PATH, EXTRACT_PATH);
+    downloader.DownloadStaticDataAsync().Wait();
+    downloader.ExtractStaticData();
+
+    GTFSRepository repo = new GTFSRepository(EXTRACT_PATH);
+    repo.LoadData();
+
+    foreach (var stop in repo.Stops.Take(10))
     {
-        if (currentLine != null)
+        Console.WriteLine($"{stop.StopId}: {stop.StopName} ({stop.StopLat}, {stop.StopLon})");
+    }
+
+    Console.WriteLine("\nSample of 10 routes:");
+    foreach (var route in repo.Routes.Take(10))
+    {
+        Console.WriteLine($"{route.RouteId}: {route.RouteShortName} - {route.RouteLongName}");
+    }
+
+    Console.WriteLine("\nSample of 10 trips");
+    foreach (var trip in repo.Trips.Take(10))
+    {
+        Console.WriteLine($"{trip.TripId}: route {trip.RouteId}, service {trip.ServiceId}, headsign {trip.TripHeadsign}");
+    }
+
+
+    Console.WriteLine($"Total {repo.Stops.Count} stops.");
+    Console.WriteLine($"Total {repo.Routes.Count} routes.");
+    Console.WriteLine($"Total {repo.Trips.Count} trips.");
+
+
+    Console.WriteLine("Автобус 107 route A29");
+    foreach (var trip in repo.Indexes.TripsByRoute["A29"])
+    {
+        Console.WriteLine($"   TripId: {trip.TripId} → Headsign: {trip.TripHeadsign}");
+    }
+
+    string selectedRouteId = "A29"; // example
+    if (repo.Indexes.TripsByRoute.TryGetValue(selectedRouteId, out var tripsForRoute))
+    {
+        foreach (var trip in tripsForRoute)
         {
-            sameLines = currentLine.Where(l => previousBuses.Contains(l)).ToList();
+            Console.WriteLine($"Trip {trip.TripId} → {trip.TripHeadsign}");
+
+            if (repo.Indexes.StopTimesByTrip.TryGetValue(trip.TripId, out var stopsForTrip))
+            {
+                foreach (var st in stopsForTrip)
+                {
+                    if (repo.Indexes.StopsById.TryGetValue(st.StopId, out var stop))
+                    {
+                        Console.WriteLine($"   Stop {stop.StopName} ({stop.StopId}) | Arr: {st.ArrivalTime} | Dep: {st.DepartureTime}");
+                    }
+                }
+            }
         }
-        else
-            sameLines = previousBuses;
     }
-
-    string lineNames = "";
-    if (sameLines.Count == 0)
-    {
-        if (previousStop == line.FromStop.Code && currentLine.Count > 0)
-            lineNames = string.Join(", ", currentLine.Select(s => s.VehicleType + " " + s.Name));
-        else
-            lineNames = $"Пеша {walkingDistance / 2} км";
-    }
-
-    else
-    {
-        if (sameLines.Count > 1 && singleActive != null && sameLines.Contains(singleActive))
-        {
-            sameLines.Clear();
-            sameLines.Add(singleActive);
-        }
-        else if (sameLines.Count == 1)
-            singleActive = sameLines[0];
-
-        lineNames = string.Join(", ", sameLines.Select(s => s.VehicleType + " " + s.Name));
-    }
-
-    previousBuses = currentLine;
-    previousStop = line.ToStop.Code;
-
-    //Console.WriteLine(costs[line]);
-
-    //Console.Write($" [{lineNames}]");
-    //Console.WriteLine();
-
-    string realLine = line.FromLine == null ? "Пеша" : line.FromLine.Name;
-    if (line == path.First())
-        realLine = "Начало";
-    if (line.FromLine == null && line.ToLine != null)
-        realLine = "Качване на " + line.ToLine.Name;
-    else if (line.FromLine != null && line.ToLine == null)
-        realLine = "Слизане от " + line.FromLine.Name;
-
-    Console.WriteLine($"[{realLine}] {pb.FindStop(line.FromStop.Code).PublicName} - {line.FromStop.Code} to {pb.FindStop(line.ToStop.Code).PublicName} - {line.ToStop.Code}");
-
 }
-//foreach (var shortestPath in res)
-//Console.WriteLine($"{pb.FindStop(shortestPath.Source.Code).PublicName} - {shortestPath.Source.Code} to {pb.FindStop(shortestPath.Target.Code).PublicName} - {shortestPath.Target.Code}");
 
-sw.Stop();
+GTFSClient client = new GTFSClient(GTFS_STATIC_DATA_URL, DESTINATION_STATIC_ZIP_PATH, EXTRACT_PATH);
+client.DownloadAndExtractAsync().Wait();
+client.LoadAllData();
 
-Console.WriteLine($"Search took {sw.Elapsed} time");
+Console.WriteLine("\nReady\n");
+while (true)
+{
+    string stop = Console.ReadLine();
+    GTFSStop gtfsStop = client.GetStopById(stop);
+    gtfsStop.
+    Console.WriteLine($"\nGet next 3 departures for stop {stop}");
+    var nextDepartures = client.GetNextDeparturesPerRoute(stop, DateTime.Now);
+    foreach (var (route, departure) in nextDepartures)
+    {
+        Console.WriteLine($"Route {route.RouteShortName} ({route.RouteId})");
+        foreach (var (trip, stopTime) in departure)
+        {
+            Console.WriteLine($"   Trip to {trip.TripHeadsign} at {stopTime.DepartureTime} (TripId: {trip.TripId})");
+        }
+    }
 
+    Console.WriteLine("\nDone\n");
+}
