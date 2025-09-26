@@ -103,6 +103,7 @@ public partial class VirtualTablesViewModel : BaseViewModel
             StopInfo = new StopResponse(stopCode, stops[0].StopName);
             OnPropertyChanged(nameof(StopInfo));
 
+            List<ArrivalInformation> arrivals = new List<ArrivalInformation>();
             var nextDepartures = await GTFSContext.GetNextDeparturesPerStopQueryAsync(stopCode, DateTime.Now);
             foreach (var (route, departure) in nextDepartures)
             {
@@ -134,33 +135,28 @@ public partial class VirtualTablesViewModel : BaseViewModel
                     }
                 }
 
-                StopInfo.Arrivals.Add(arrival);
+                arrivals.Add(arrival);
             }
 
-            //StopResponse info = await arrivalsService.GetByStopCodeAsync(stopCode, stopInformation?.Type);
-            //info.Arrivals = info.Arrivals
-            //    .OrderBy(a => a.TransportType)
-            //    .ThenBy(a =>
-            //    {
-            //        if (a.LineName.Any(i => !char.IsDigit(i)))
-            //            return int.MaxValue;
+            StopInfo.Arrivals = [.. arrivals.OrderBy(a => a.VehicleType).ThenBy(a => {
+                if (int.TryParse(a.LineName, out int lineNumber))
+                    return lineNumber;
 
-            //        char[] lineNumber = a.LineName.Where(i => char.IsDigit(i)).ToArray();
-            //        if (int.TryParse(new string(lineNumber), out int lineInt))
-            //            return lineInt;
+                return 1337;
+            })];
 
-            //        return int.MaxValue;
-            //    }).ToList();
+            OnPropertyChanged(nameof(StopInfo));
 
             IsLoading = false;
 
             FavouriteDomain favourite = await FavouriteDomain.FindAsync(StopInfo.Code);
             StopInfo.IsFavourite = favourite != null;
 
+            OnPropertyChanged(nameof(StopInfo));
+
             sw.Stop();
 
             Messenger.Send(new StopDataLoadedMessage(StopInfo));
-            OnPropertyChanged(nameof(StopInfo));
         }
         catch (StopNotFoundException e)
         {
