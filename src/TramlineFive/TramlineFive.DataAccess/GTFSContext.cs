@@ -19,7 +19,7 @@ public class GTFSContext
 
         string sql = @"
         SELECT s.StopId, s.StopCode, s.StopName, s.StopLat, s.StopLon,
-               GROUP_CONCAT(DISTINCT r.RouteType) as StopModes
+               GROUP_CONCAT(r.RouteType) as StopModes
         FROM Stop s
         INNER JOIN StopTime st ON s.StopId = st.StopId
         INNER JOIN Trip t ON st.TripId = t.TripId
