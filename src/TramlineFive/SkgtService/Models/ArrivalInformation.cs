@@ -15,7 +15,7 @@ public class ArrivalInformation
     public string Direction { get; set; }
     public TransportType VehicleType { get; set; }
     public List<Arrival> Arrivals { get; set; }
-    public int Minutes => Arrivals[0].Minutes;
+    public int Minutes => Arrivals.Count > 0 ? Arrivals[0].Minutes : 1337;
     public bool Realtime { get; set; }
 
     public ArrivalInformation()
@@ -41,12 +41,6 @@ public class ArrivalInformation
         }
 
         Arrivals = line.Details;
-
-        if (LineName[0] == 'E')
-            VehicleType = Models.TransportType.Electrobus;
-        if (LineName.Length == 3 && LineName[0] == '8' && VehicleType == Models.TransportType.Bus)
-            VehicleType = Models.TransportType.Additional;
-
         VehicleType = line.Type;
     }
 
@@ -73,7 +67,6 @@ public class ArrivalInformation
                 Models.TransportType.Tram => "Трамвай",
                 Models.TransportType.Trolley => "Тролей",
                 Models.TransportType.Subway => "Метро",
-                Models.TransportType.NightBus => "Нощен",
                 _ => string.Empty
             };
         }
