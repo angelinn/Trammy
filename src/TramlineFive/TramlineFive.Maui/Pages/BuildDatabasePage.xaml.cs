@@ -47,6 +47,7 @@ public partial class BuildDatabasePage : ContentPage
             db.CreateTable<Route>();
             db.CreateTable<Trip>();
             db.CreateTable<StopTime>();
+            db.Execute("CREATE UNIQUE INDEX IF NOT EXISTS IX_Trip_Stop ON StopTime(TripId, StopId)");
 
             // Insert CSVs
             await InsertCsvAsync<Stop>(db, Path.Combine(extractPath, "stops.txt"), "stops");

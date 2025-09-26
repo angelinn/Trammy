@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SkgtService.Models.GTFS;
 using SkgtService.Models.Json;
+using TramlineFive.DataAccess;
+using TramlineFive.DataAccess.Entities.GTFS;
 using TransitRealtime;
 
 namespace SkgtService;
@@ -18,6 +20,8 @@ public class GTFSClient
     private readonly GTFSRTService RealtimeService;
 
     private FeedMessage gtfsRtTripUpdates;
+
+    public Dictionary<string, DateTime> StopTimeCache { get; init; } = new();
 
     public List<GTFSRoute> Routes => Repo.Routes;
     public List<GTFSTrip> Trips => Repo.Trips;
@@ -195,17 +199,12 @@ public class GTFSClient
         {
             foreach (TripUpdate.StopTimeUpdate stopTimeUpdate in entity.TripUpdate.StopTimeUpdates)
             {
-                string stopId = stopTimeUpdate.StopId;
-                string key = $"{entity.TripUpdate.Trip.TripId}_{stopId}";
-
-                if (!Repo.Indexes.StopTimesByTripAndStop.TryGetValue(key, out GTFSStopTime staticStopTime))
-                    continue;
-
-                if (stopTimeUpdate.Arrival != null && stopTimeUpdate.Arrival.Time != 0)
-                    staticStopTime.PredictedArrivalTime = UnixTimeStampToDateTime(stopTimeUpdate.Arrival.Time);
+                StopTime stopTime = GTFSContext.GetStopTime(entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId);
 
                 if (stopTimeUpdate.Departure != null && stopTimeUpdate.Departure.Time != 0)
-                    staticStopTime.PredictedDepartureTime = UnixTimeStampToDateTime(stopTimeUpdate.Departure.Time);
+                {
+                    StopTimeCache[$"{entity.TripUpdate.Trip.TripId}_{stopTimeUpdate.StopId}"] = UnixTimeStampToDateTime(stopTimeUpdate.Departure.Time);
+                }
             }
         }
     }

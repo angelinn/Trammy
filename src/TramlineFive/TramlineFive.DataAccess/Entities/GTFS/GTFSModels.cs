@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using System;
+using SQLite;
 
 namespace TramlineFive.DataAccess.Entities.GTFS;
 public class Stop
@@ -34,8 +35,6 @@ public class StopTime
     public string ArrivalTime { get; set; }
     public string DepartureTime { get; set; }
 
-    [Indexed(Name = "IX_Trip_Stop", Unique = true)]
-    public string TripStopKey => $"{TripId}_{StopId}";
 }
 
 public class StopDepartureFull
