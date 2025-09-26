@@ -175,10 +175,7 @@ public partial class SettingsViewModel : BaseViewModel
     {
         IsUpdatingStops = true;
 
-        await gtfsClient.DownloadAndExtractAsync();
-        gtfsClient.LoadAllData();
-
-        Messenger.Send(new RefreshStopsMessage());
+        Messenger.Send(new RequestDatabaseRebuildMessage());
 
         RefreshStopsUpdatedTime();
 

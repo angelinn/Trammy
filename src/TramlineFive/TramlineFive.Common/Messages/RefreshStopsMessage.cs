@@ -7,3 +7,8 @@ namespace TramlineFive.Common.Messages;
 public class RefreshStopsMessage
 {
 }
+
+public class RequestDatabaseRebuildMessage
+{
+
+}

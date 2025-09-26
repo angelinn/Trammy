@@ -82,6 +82,7 @@ namespace TramlineFive.Maui
 
                 WeakReferenceMessenger.Default.Register<ChangeThemeMessage>(this, (r, m) => OnThemeChanged(m));
                 WeakReferenceMessenger.Default.Register<ViewportChangedMessage>(this, (r, m) => OnViewportChanged(m));
+                WeakReferenceMessenger.Default.Register<RequestDatabaseRebuildMessage>(this, (r, m) => { Windows[0].Page = new BuildDatabasePage(); });
 
                 StopsLoader.OnStopsUpdated += OnStopsUpdated;
 
