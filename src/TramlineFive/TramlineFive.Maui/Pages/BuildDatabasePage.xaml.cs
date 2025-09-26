@@ -1,5 +1,6 @@
 using CsvHelper;
 using Microsoft.Maui.Controls;
+using SkgtService;
 using SQLite;
 using System.Globalization;
 using System.IO.Compression;
@@ -26,22 +27,18 @@ public partial class BuildDatabasePage : ContentPage
                 ProgressBar.Progress = 0;
             });
 
-            // Download GTFS zip
-            var client = new HttpClient();
-            var zipBytes = await client.GetByteArrayAsync("https://gtfs.sofiatraffic.bg/api/v1/static");
-            var zipPath = Path.Combine(FileSystem.CacheDirectory, "gtfs.zip");
-            await File.WriteAllBytesAsync(zipPath, zipBytes);
-
-            // Extract
-            var extractPath = Path.Combine(FileSystem.CacheDirectory, "gtfs");
-            if (Directory.Exists(extractPath))
-                Directory.Delete(extractPath, true);
-
-            ZipFile.ExtractToDirectory(zipPath, extractPath);
+            string zipPath = Path.Combine(FileSystem.CacheDirectory, "gtfs.zip");
+            string extractPath = Path.Combine(FileSystem.CacheDirectory, "gtfs");
+            GTFSDownloader downloader = new GTFSDownloader("https://gtfs.sofiatraffic.bg/api/v1/static", zipPath, extractPath);
+            await downloader.DownloadStaticDataAsync();
+            downloader.ExtractStaticData();
 
             // Create database
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "gtfs.db");
-            var db = new SQLiteConnection(dbPath);
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "gtfs.db");
+            if (File.Exists(dbPath))
+                File.Delete(dbPath);
+
+            SQLiteConnection db = new SQLiteConnection(dbPath);
 
             db.CreateTable<Stop>();
             db.CreateTable<Route>();
@@ -57,10 +54,8 @@ public partial class BuildDatabasePage : ContentPage
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                StatusLabel.Text = "Database build complete!";
                 ProgressBar.Progress = 1;
                 App.Current.Windows[0].Page = new AppShell();
-                //Shell.Current.GoToAsync("//Main");
             });
 
         }
@@ -75,8 +70,8 @@ public partial class BuildDatabasePage : ContentPage
 
     private async Task InsertCsvAsync<T>(SQLiteConnection db, string filePath, string tableName)
     {
-        using var reader = new StreamReader(filePath);
-        using var csv = new CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
+        using StreamReader reader = new StreamReader(filePath);
+        using CsvReader csv = new CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HeaderValidated = null,       // Ignore missing header validation
             PrepareHeaderForMatch = (args) => args.Header.Replace("_", "").ToLower() // Normalize
@@ -87,7 +82,7 @@ public partial class BuildDatabasePage : ContentPage
             StatusLabel.Text = $"Четене на {tableName}...";
         });
 
-        var records = csv.GetRecords<T>().ToList();
+        List<T> records = csv.GetRecords<T>().ToList();
         int total = records.Count;
         int count = 0;
 
@@ -95,7 +90,7 @@ public partial class BuildDatabasePage : ContentPage
         {
             db.RunInTransaction(() =>
             {
-                foreach (var record in records)
+                foreach (T record in records)
                 {
                     db.InsertOrReplace(record);
                     count++;
