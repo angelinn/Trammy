@@ -60,3 +60,24 @@ public class StopWithType
     // aggregated info
     public string StopModes { get; set; } // e.g. "Bus, Tram"
 }
+public class StopDepartureSql
+{
+    public string StopId { get; set; }
+    public string TripId { get; set; }
+    public string RouteId { get; set; }
+    public string RouteShortName { get; set; }
+    public string TripHeadsign { get; set; }
+    public string DepartureTime { get; set; } // GTFS "HH:mm:ss"
+}
+
+public class StopTimeMap
+{
+    public string TripId { get; set; }
+    public string StopId { get; set; }
+    public string StopCode { get; set; }
+    public string StopName { get; set; }
+    public string RouteShortName { get; set; }
+    public int RouteType { get; set; }
+    public int RouteId { get; set; }
+    public string TripHeadsign { get; set; }
+}

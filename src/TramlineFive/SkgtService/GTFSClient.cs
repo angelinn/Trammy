@@ -20,10 +20,11 @@ public class GTFSClient
     private FeedMessage gtfsRtTripUpdates;
 
     private DateTime? lastRealtimeCheck = null;
-    public Dictionary<string, DateTime> StopTimeCache { get; init; } = new();
+    //public Dictionary<string, DateTime> StopTimeCache { get; init; } = new();
     public List<StopWithType> Stops => Repo.Stops;
     public Dictionary<string, TransportType> StopDominantTypes { get; init; } = new();
-    private Dictionary<(string TripId, string StopId), StopTime> tripIdStopIdStopTimeCache;
+    //private Dictionary<(string TripId, string StopId), StopTime> tripIdStopIdStopTimeCache;
+    public Dictionary<(string routeId, string stopId), List<DateTime>> PredictedArrivals { get; init; } = new();
 
     public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath, string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)
     {
@@ -34,7 +35,8 @@ public class GTFSClient
     public async Task LoadDataAsync()
     {
         await Repo.LoadStopsAsync();
-        tripIdStopIdStopTimeCache = await GTFSContext.LoadStopTimesNexthAsync(DateTime.Now, 2);
+
+        //tripIdStopIdStopTimeCache = await GTFSContext.LoadStopTimesNexthAsync(DateTime.Now, 2);
 
         //TripToRoute = GTFSContext.BuildTripToVehicleTypeMap();
     }
@@ -64,19 +66,24 @@ public class GTFSClient
         return await GTFSContext.GetStopsByCodeAsync(stopCode);
     }
 
+    // get all trip ids for this stop for today
+    // check if any are present in realtime data
     private void ApplyTripUpdates()
     {
+        PredictedArrivals.Clear();
+
         foreach (FeedEntity entity in gtfsRtTripUpdates.Entities.Where(e => e.TripUpdate != null))
         {
             foreach (TripUpdate.StopTimeUpdate stopTimeUpdate in entity.TripUpdate.StopTimeUpdates)
             {
-                if (stopTimeUpdate.Departure != null && stopTimeUpdate.Departure.Time != 0 && tripIdStopIdStopTimeCache.TryGetValue((entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId), out StopTime stopTime))
-                {
-                    StopTimeCache[$"{entity.TripUpdate.Trip.TripId}_{stopTimeUpdate.StopId}"] = UnixTimeStampToDateTime(stopTimeUpdate.Departure.Time);
-                }
+                if (!PredictedArrivals.TryGetValue((entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId), out List<DateTime> arrivals))
+                    PredictedArrivals[(entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId)] = new List<DateTime>();
+
+                PredictedArrivals[(entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId)].Add(UnixTimeStampToDateTime(stopTimeUpdate.Departure.Time));
             }
         }
     }
+
     private DateTime UnixTimeStampToDateTime(long unixTime)
     {
         return TimeZoneInfo.ConvertTimeFromUtc(DateTimeOffset.FromUnixTimeSeconds(unixTime).DateTime, SofiaTimeZone);

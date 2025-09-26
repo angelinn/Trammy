@@ -57,6 +57,31 @@ public class GTFSContext
         return await db.Table<Stop>().Where(s => s.StopCode == stopCode).ToListAsync();
     }
 
+    public static async Task<List<StopTimeMap>> GetAllTripsAndStopsByStopCodeAsync(string stopCode)
+    {
+        SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+
+        string sql = @"
+SELECT 
+    st.TripId,
+    st.StopId,
+    s.StopCode,
+    s.StopName,
+    r.RouteShortName,
+    r.RouteType,
+r.RouteId,
+    t.TripHeadsign
+FROM StopTime st
+JOIN Stop s ON st.StopId = s.StopId
+JOIN Trip t ON st.TripId = t.TripId
+JOIN Route r ON t.RouteId = r.RouteId
+WHERE s.StopCode = ?
+ORDER BY st.TripId, st.StopId
+
+";
+        return await db.QueryAsync<StopTimeMap>(sql, stopCode);
+    }
+
     public static async Task<List<(Route route, List<(Trip trip, StopTime stopTime)>)>>
         GetNextDeparturesPerStopQueryAsync(string stopCode, DateTime now, int countPerRoute=3)
     {

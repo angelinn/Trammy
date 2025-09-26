@@ -378,7 +378,8 @@ public class MapService
                 _ => (busPinStyle, new Offset(0, -32))
             };
 
-            gtfsClient.StopDominantTypes[stop.StopCode] = dominantType;
+            if (!gtfsClient.StopDominantTypes.ContainsKey(stop.StopCode))
+                gtfsClient.StopDominantTypes[stop.StopCode] = dominantType;
 
             IFeature feature = new PointFeature(stopMapLocation)
             {

@@ -12,4 +12,5 @@ public class Arrival
     public int Minutes { get; set; }
     public bool AC { get; set; }
     public bool Bikes { get; set; }
+    public bool Realtime { get; set; }
 }
