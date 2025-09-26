@@ -30,10 +30,10 @@ public class GTFSClient
         RealtimeService = new GTFSRTService(tripUpdatesUrl, vehicleUpdatesUrl, alertsUrl);
     }
 
-    public void LoadStops()
+    public async Task LoadDataAsync()
     {
-        Repo.LoadStops();
-        tripIdStopIdStopTimeCache = GTFSContext.LoadStopTimesNexth(DateTime.Now, 2);
+        await Repo.LoadStopsAsync();
+        tripIdStopIdStopTimeCache = await GTFSContext.LoadStopTimesNexthAsync(DateTime.Now, 2);
 
         //TripToRoute = GTFSContext.BuildTripToVehicleTypeMap();
     }
@@ -58,9 +58,9 @@ public class GTFSClient
         }
     }
 
-    public List<Stop> GetStopsByCode(string stopCode)
+    public async Task<List<Stop>> GetStopsByCodeAsync(string stopCode)
     {
-        return GTFSContext.GetStopsByCode(stopCode);
+        return await GTFSContext.GetStopsByCodeAsync(stopCode);
     }
 
     private void ApplyTripUpdates()

@@ -88,6 +88,9 @@ public partial class VirtualTablesViewModel : BaseViewModel
 
     public async Task SearchByStopCodeAsync(string stopCode)
     {
+        StopInfo = new StopResponse(stopCode, stops[0].StopName);
+        OnPropertyChanged(nameof(StopInfo));
+
         IsLoading = true;
         await gtfsClient.QueryRealtimeData();
 
@@ -96,10 +99,9 @@ public partial class VirtualTablesViewModel : BaseViewModel
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            List<DataAccess.Entities.GTFS.Stop> stops = gtfsClient.GetStopsByCode(stopCode);
-            StopInfo = new StopResponse(stopCode, stops[0].StopName);
-
-            var nextDepartures = GTFSContext.GetNextDeparturesPerStopQuery(stopCode, DateTime.Now);
+            List<DataAccess.Entities.GTFS.Stop> stops = await gtfsClient.GetStopsByCodeAsync(stopCode);
+            
+            var nextDepartures = await GTFSContext.GetNextDeparturesPerStopQueryAsync(stopCode, DateTime.Now);
             foreach (var (route, departure) in nextDepartures)
             {
                 ArrivalInformation arrival = new ArrivalInformation();

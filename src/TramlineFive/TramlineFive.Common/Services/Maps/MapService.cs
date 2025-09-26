@@ -224,7 +224,7 @@ public class MapService
 
         //publicTransport.StopsReadyEvent.WaitOne();
 
-        gtfsClient.LoadStops();
+        await gtfsClient.LoadDataAsync();
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();

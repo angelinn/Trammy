@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TramlineFive.DataAccess;
 using TramlineFive.DataAccess.Entities.GTFS;
 
@@ -8,8 +9,8 @@ public class GTFSRepository
 {
     public List<StopWithType> Stops { get; private set; } = new();
 
-    public void LoadStops()
+    public async Task LoadStopsAsync()
     {
-        Stops = GTFSContext.GetActiveStopsWithTypes();
+        Stops = await GTFSContext.GetActiveStopsWithTypesAsync();
     }
 }

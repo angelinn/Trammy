@@ -13,9 +13,9 @@ public class GTFSContext
 {
     public static string DatabasePath { get; set; }
 
-    public static List<StopWithType> GetActiveStopsWithTypes()
+    public static async Task<List<StopWithType>> GetActiveStopsWithTypesAsync()
     {
-        SQLiteConnection db = new SQLiteConnection(DatabasePath);
+        SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
 
         string sql = @"
         SELECT s.StopId, s.StopCode, s.StopName, s.StopLat, s.StopLon,
@@ -27,11 +27,11 @@ public class GTFSContext
         GROUP BY s.StopCode
     ";
 
-        return db.Query<StopWithType>(sql);
+        return await db.QueryAsync<StopWithType>(sql);
     }
-    public static Dictionary<(string TripId, string StopId), StopTime> LoadStopTimesNexth(DateTime now, int hours)
+    public static async Task<Dictionary<(string TripId, string StopId), StopTime>> LoadStopTimesNexthAsync(DateTime now, int hours)
     {
-        SQLiteConnection db = new SQLiteConnection(DatabasePath);
+        SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
 
         int nowSeconds = now.Hour * 3600 + now.Minute * 60 + now.Second;
         int endSeconds = nowSeconds + hours * 3600;
@@ -46,44 +46,23 @@ public class GTFSContext
           BETWEEN ? AND ?
     ";
 
-        var stopTimes = db.Query<StopTime>(sql, nowSeconds, endSeconds);
+        var stopTimes = await db.QueryAsync<StopTime>(sql, nowSeconds, endSeconds);
 
         return stopTimes.ToDictionary(st => (st.TripId, st.StopId));
     }
 
-    public static List<Stop> GetStopsByCode(string stopCode)
+    public static async Task<List<Stop>> GetStopsByCodeAsync(string stopCode)
     {
-        SQLiteConnection db = new SQLiteConnection(DatabasePath);
-        return db.Table<Stop>().Where(s => s.StopCode == stopCode).ToList();
+        SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+        return await db.Table<Stop>().Where(s => s.StopCode == stopCode).ToListAsync();
     }
 
-    public static Dictionary<string, int> BuildTripToVehicleTypeMap()
+    public static async Task<List<(Route route, List<(Trip trip, StopTime stopTime)>)>>
+        GetNextDeparturesPerStopQueryAsync(string stopCode, DateTime now, int countPerRoute=3)
     {
-        SQLiteConnection db = new SQLiteConnection(DatabasePath);
+        SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
 
-        string sql = @"
-        SELECT t.TripId, r.RouteType
-        FROM Trip t
-        INNER JOIN Route r ON t.RouteId = r.RouteId
-    ";
-
-        var map = new Dictionary<string, int>();
-
-        foreach (var row in db.Query<(string TripId, int RouteType)>(sql))
-        {
-            map[row.TripId] = row.RouteType;
-        }
-
-        return map;
-    }
-
-
-    public static List<(Route route, List<(Trip trip, StopTime stopTime)>)> 
-        GetNextDeparturesPerStopQuery(string stopCode, DateTime now, int countPerRoute=3)
-    {
-        SQLiteConnection db = new SQLiteConnection(DatabasePath);
-
-        var stopIds = db.Table<Stop>().Where(s => s.StopCode == stopCode).Select(s => s.StopId).ToList();
+        var stopIds = await db.Table<Stop>().Where(s => s.StopCode == stopCode).ToListAsync();
         if (stopIds.Count == 0)
             return new List<(Route, List<(Trip, StopTime)>)>();
 
@@ -96,11 +75,11 @@ SELECT r.RouteId, r.RouteShortName, r.RouteType, t.TripId, t.TripHeadsign,
 FROM StopTime st
 JOIN Trip t ON t.TripId = st.TripId
 JOIN Route r ON r.RouteId = t.RouteId
-WHERE st.StopId IN ({string.Join(',', stopIds.Select(s => $"'{s}'"))})
+WHERE st.StopId IN ({string.Join(',', stopIds.Select(s => $"'{s.StopId}'"))})
   AND st.DepartureTime >= ?
 ORDER BY r.RouteId, st.DepartureTime";
 
-        var departures = db.Query<StopDepartureFull>(sql, nowStr);
+        var departures = await db.QueryAsync<StopDepartureFull>(sql, nowStr);
 
         // Group by route
         var grouped = departures
@@ -127,11 +106,6 @@ ORDER BY r.RouteId, st.DepartureTime";
             }).ToList();
 
         return grouped;
-    }
-    public static StopTime? GetStopTime(string tripId, string stopId)
-    {
-        SQLiteConnection db = new SQLiteConnection(DatabasePath);
-        return db.Table<StopTime>().FirstOrDefault(st => st.TripId == tripId && st.StopId == stopId);
     }
 
     public static void Update<T>(T entity) where T : new()
