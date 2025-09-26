@@ -10,12 +10,14 @@ using SkgtService.Models.GTFS;
 using SkgtService.Models.Json;
 using SkgtService.Parsers;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Topten.RichTextKit;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
+using TramlineFive.DataAccess;
 using TramlineFive.DataAccess.Domain;
 
 namespace TramlineFive.Common.ViewModels;
@@ -95,26 +97,25 @@ public partial class VirtualTablesViewModel : BaseViewModel
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            GTFSStop stop = gtfsClient.GetStopByCode(stopCode).FirstOrDefault();
-            StopInfo = new StopResponse(stopCode, stop.StopName);
+            List<DataAccess.Entities.GTFS.Stop> stops = GTFSContext.GetStopsByCode(stopCode);
+            StopInfo = new StopResponse(stopCode, stops[0].StopName);
 
-            var nextDepartures = gtfsClient.GetNextDeparturesPerRoute(stop.StopCode, DateTime.Now);
+            var nextDepartures = GTFSContext.GetNextDeparturesPerStopQuery(stopCode, DateTime.Now);
             foreach (var (route, departure) in nextDepartures)
             {
                 ArrivalInformation arrival = new ArrivalInformation();
                 arrival.LineName = route.RouteShortName;
 
-                foreach (var (trip, stopTime, predictedDeparture) in departure)
+                foreach (var (trip, stopTime) in departure)
                 {
                     arrival.Direction = trip.TripHeadsign;
-                    if (predictedDeparture.HasValue)
+                    if (gtfsClient.StopTimeCache.TryGetValue($"{trip.TripId}_{stopTime.StopId}", out DateTime predictedDeparture) && predictedDeparture > DateTime.Now)
                     {
                         arrival.Realtime = true;
 
                         arrival.Arrivals.Add(new Arrival
                         {
-                            Minutes = (int)(predictedDeparture.Value - DateTime.Now).TotalMinutes,
-                            Bikes = trip.BikesAllowed.HasValue ? Convert.ToBoolean(trip.BikesAllowed.Value) : false
+                            Minutes = (int)(predictedDeparture - DateTime.Now).TotalMinutes,
                         });
                     }
                     else
@@ -124,7 +125,6 @@ public partial class VirtualTablesViewModel : BaseViewModel
                             arrival.Arrivals.Add(new Arrival
                             {
                                 Minutes = (int)(scheduledDeparture - DateTime.Now).TotalMinutes,
-                                Bikes = trip.BikesAllowed.HasValue ? Convert.ToBoolean(trip.BikesAllowed.Value) : false
                             });
                         }
                     }
