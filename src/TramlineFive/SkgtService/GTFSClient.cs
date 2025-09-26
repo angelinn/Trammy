@@ -22,6 +22,7 @@ public class GTFSClient
     private DateTime? lastRealtimeCheck = null;
     public Dictionary<string, DateTime> StopTimeCache { get; init; } = new();
     public List<StopWithType> Stops => Repo.Stops;
+    public Dictionary<string, TransportType> StopDominantTypes { get; init; } = new();
     private Dictionary<(string TripId, string StopId), StopTime> tripIdStopIdStopTimeCache;
 
     public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath, string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)

@@ -368,7 +368,8 @@ public class MapService
             MPoint stopLocation = new MPoint(stop.StopLon, stop.StopLat);
             MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(stopLocation.X, stopLocation.Y));
 
-            var (symbolStyle, offset) = GetDominantRouteType(stop.StopModes) switch
+            TransportType dominantType = GetDominantRouteType(stop.StopModes);
+            var (symbolStyle, offset) = dominantType switch
             {
                 TransportType.Trolley => (trolleyPinStyle, new Offset(0, -32)),
                 TransportType.Tram => (tramPinStyle, new Offset(0, -40)),
@@ -376,6 +377,8 @@ public class MapService
                 TransportType.Bus => (busPinStyle, new Offset(0, -32)),
                 _ => (busPinStyle, new Offset(0, -32))
             };
+
+            gtfsClient.StopDominantTypes[stop.StopCode] = dominantType;
 
             IFeature feature = new PointFeature(stopMapLocation)
             {

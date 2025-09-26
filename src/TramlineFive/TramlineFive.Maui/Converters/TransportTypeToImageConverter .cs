@@ -21,14 +21,10 @@ public class TransportTypeToImageConverter : IValueConverter
         if (value is string)
             textValue = value as string;
 
-        StopInformation stop = ServiceContainer.ServiceProvider
-            .GetService<PublicTransport>()
-            .FindStop(textValue);
-
-        if (stop == null)
+        if (!ServiceContainer.ServiceProvider.GetService<GTFSClient>().StopDominantTypes.TryGetValue(textValue, out TransportType transportType))
             return ImageSource.FromFile("bus_icon.svg");
 
-        return stop.Type switch
+        return transportType switch
         {
             TransportType.Bus => ImageSource.FromFile("bus_icon.svg"),
             TransportType.Tram => ImageSource.FromFile("tram_icon.svg"),
