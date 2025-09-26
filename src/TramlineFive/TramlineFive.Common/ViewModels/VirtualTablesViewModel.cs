@@ -6,7 +6,6 @@ using Sentry;
 using SkgtService;
 using SkgtService.Exceptions;
 using SkgtService.Models;
-using SkgtService.Models.GTFS;
 using SkgtService.Models.Json;
 using SkgtService.Parsers;
 using System;
@@ -97,7 +96,7 @@ public partial class VirtualTablesViewModel : BaseViewModel
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            List<DataAccess.Entities.GTFS.Stop> stops = GTFSContext.GetStopsByCode(stopCode);
+            List<DataAccess.Entities.GTFS.Stop> stops = gtfsClient.GetStopsByCode(stopCode);
             StopInfo = new StopResponse(stopCode, stops[0].StopName);
 
             var nextDepartures = GTFSContext.GetNextDeparturesPerStopQuery(stopCode, DateTime.Now);
@@ -105,6 +104,7 @@ public partial class VirtualTablesViewModel : BaseViewModel
             {
                 ArrivalInformation arrival = new ArrivalInformation();
                 arrival.LineName = route.RouteShortName;
+                arrival.VehicleType = (TransportType)route.RouteType;
 
                 foreach (var (trip, stopTime) in departure)
                 {

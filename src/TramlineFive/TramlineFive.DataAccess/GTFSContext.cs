@@ -13,10 +13,42 @@ public class GTFSContext
 {
     public static string DatabasePath { get; set; }
 
-    public List<Stop> GetStops()
+    public static List<StopWithType> GetActiveStopsWithTypes()
     {
         SQLiteConnection db = new SQLiteConnection(DatabasePath);
-        return db.Table<Stop>().ToList();
+
+        string sql = @"
+        SELECT s.StopId, s.StopCode, s.StopName, s.StopLat, s.StopLon,
+               GROUP_CONCAT(DISTINCT r.RouteType) as StopModes
+        FROM Stop s
+        INNER JOIN StopTime st ON s.StopId = st.StopId
+        INNER JOIN Trip t ON st.TripId = t.TripId
+        INNER JOIN Route r ON t.RouteId = r.RouteId
+        GROUP BY s.StopCode
+    ";
+
+        return db.Query<StopWithType>(sql);
+    }
+    public static Dictionary<(string TripId, string StopId), StopTime> LoadStopTimesNexth(DateTime now, int hours)
+    {
+        SQLiteConnection db = new SQLiteConnection(DatabasePath);
+
+        int nowSeconds = now.Hour * 3600 + now.Minute * 60 + now.Second;
+        int endSeconds = nowSeconds + hours * 3600;
+
+        string sql = @"
+        SELECT *
+        FROM StopTime
+        WHERE
+          (CAST(SUBSTR(DepartureTime,1,2) AS INTEGER) * 3600 +
+           CAST(SUBSTR(DepartureTime,4,2) AS INTEGER) * 60 +
+           CAST(SUBSTR(DepartureTime,7,2) AS INTEGER))
+          BETWEEN ? AND ?
+    ";
+
+        var stopTimes = db.Query<StopTime>(sql, nowSeconds, endSeconds);
+
+        return stopTimes.ToDictionary(st => (st.TripId, st.StopId));
     }
 
     public static List<Stop> GetStopsByCode(string stopCode)
@@ -25,6 +57,25 @@ public class GTFSContext
         return db.Table<Stop>().Where(s => s.StopCode == stopCode).ToList();
     }
 
+    public static Dictionary<string, int> BuildTripToVehicleTypeMap()
+    {
+        SQLiteConnection db = new SQLiteConnection(DatabasePath);
+
+        string sql = @"
+        SELECT t.TripId, r.RouteType
+        FROM Trip t
+        INNER JOIN Route r ON t.RouteId = r.RouteId
+    ";
+
+        var map = new Dictionary<string, int>();
+
+        foreach (var row in db.Query<(string TripId, int RouteType)>(sql))
+        {
+            map[row.TripId] = row.RouteType;
+        }
+
+        return map;
+    }
 
 
     public static List<(Route route, List<(Trip trip, StopTime stopTime)>)> 
@@ -40,7 +91,7 @@ public class GTFSContext
 
         // Single SQL query fetching everything
         var sql = @$"
-SELECT r.RouteId, r.RouteShortName, t.TripId, t.TripHeadsign,
+SELECT r.RouteId, r.RouteShortName, r.RouteType, t.TripId, t.TripHeadsign,
        st.StopId, st.StopSequence, st.DepartureTime
 FROM StopTime st
 JOIN Trip t ON t.TripId = st.TripId
@@ -59,7 +110,8 @@ ORDER BY r.RouteId, st.DepartureTime";
                 var routeObj = new Route
                 {
                     RouteId = g.Key,
-                    RouteShortName = g.First().RouteShortName
+                    RouteShortName = g.First().RouteShortName,
+                    RouteType = g.First().RouteType
                 };
 
                 var list = g.Take(countPerRoute)

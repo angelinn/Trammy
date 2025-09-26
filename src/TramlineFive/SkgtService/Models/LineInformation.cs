@@ -35,12 +35,6 @@ public class LineInformation
             _ => TransportType.Bus
         };
 
-        // latin or cyrilic
-        if (name.StartsWith('E') || name.StartsWith('Е'))
-            VehicleType = TransportType.Electrobus;
-        else if (Name.Length == 3 && Name.StartsWith('8') && VehicleType == TransportType.Bus)
-            VehicleType = TransportType.Additional;
-
         Routes = routes.Select(r => new LineRoute(r)).ToList();
     }
 }

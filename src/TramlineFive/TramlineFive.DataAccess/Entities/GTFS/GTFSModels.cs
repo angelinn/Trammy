@@ -41,9 +41,22 @@ public class StopDepartureFull
 {
     public string RouteId { get; set; }
     public string RouteShortName { get; set; }
+    public int RouteType { get; set; }
     public string TripId { get; set; }
     public string TripHeadsign { get; set; }
     public string StopId { get; set; }
     public int StopSequence { get; set; }
     public string DepartureTime { get; set; }
+}
+
+public class StopWithType
+{
+    public string StopId { get; set; }
+    public string StopCode { get; set; }
+    public string StopName { get; set; }
+    public double StopLat { get; set; }
+    public double StopLon { get; set; }
+
+    // aggregated info
+    public string StopModes { get; set; } // e.g. "Bus, Tram"
 }
