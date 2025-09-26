@@ -44,12 +44,14 @@ public partial class BuildDatabasePage : ContentPage
             db.CreateTable<Route>();
             db.CreateTable<Trip>();
             db.CreateTable<StopTime>();
+            db.CreateTable<CalendarDate>();
             db.Execute("CREATE UNIQUE INDEX IF NOT EXISTS IX_Trip_Stop ON StopTime(TripId, StopId)");
 
             // Insert CSVs
             await InsertCsvAsync<Stop>(db, Path.Combine(extractPath, "stops.txt"), "stops");
             await InsertCsvAsync<Route>(db, Path.Combine(extractPath, "routes.txt"), "routes");
             await InsertCsvAsync<Trip>(db, Path.Combine(extractPath, "trips.txt"), "trips");
+            await InsertCsvAsync<CalendarDate>(db, Path.Combine(extractPath, "calendar_dates.txt"), "calendar_dates");
             await InsertCsvAsync<StopTime>(db, Path.Combine(extractPath, "stop_times.txt"), "stop_times");
 
             MainThread.BeginInvokeOnMainThread(() =>

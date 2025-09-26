@@ -101,10 +101,15 @@ FROM StopTime st
 JOIN Trip t ON t.TripId = st.TripId
 JOIN Route r ON r.RouteId = t.RouteId
 WHERE st.StopId IN ({string.Join(',', stopIds.Select(s => $"'{s.StopId}'"))})
+AND t.ServiceId IN (
+    SELECT ServiceId
+    FROM CalendarDate
+    WHERE Date = ? AND ExceptionType = 1
+)
   AND st.DepartureTime >= ?
 ORDER BY r.RouteId, st.DepartureTime";
 
-        var departures = await db.QueryAsync<StopDepartureFull>(sql, nowStr);
+        var departures = await db.QueryAsync<StopDepartureFull>(sql, nowStr, nowStr);
 
         // Group by route
         var grouped = departures

@@ -23,6 +23,7 @@ public class Trip
 {
     [PrimaryKey] public string TripId { get; set; }
     [Indexed] public string RouteId { get; set; }
+    [Indexed]
     public string ServiceId { get; set; }
     public string TripHeadsign { get; set; }
 }
@@ -37,6 +38,19 @@ public class StopTime
 
 }
 
+public class CalendarDate
+{
+    [Indexed]
+    public string ServiceId { get; set; }
+
+    // Store as string "yyyyMMdd" to match GTFS directly,
+    // or as int if you prefer numeric comparison
+    [Indexed]
+    public string Date { get; set; }
+
+    // 1 = added, 2 = removed
+    public int ExceptionType { get; set; }
+}
 public class StopDepartureFull
 {
     public string RouteId { get; set; }

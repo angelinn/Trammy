@@ -14,31 +14,24 @@ public class GTFSClient
 {
     private static readonly TimeZoneInfo SofiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Helsinki");
 
-    private readonly GTFSRepository Repo;
     private readonly GTFSRTService RealtimeService;
 
     private FeedMessage gtfsRtTripUpdates;
 
     private DateTime? lastRealtimeCheck = null;
-    //public Dictionary<string, DateTime> StopTimeCache { get; init; } = new();
-    public List<StopWithType> Stops => Repo.Stops;
+
+    public List<StopWithType> Stops { get; private set; }
     public Dictionary<string, TransportType> StopDominantTypes { get; init; } = new();
-    //private Dictionary<(string TripId, string StopId), StopTime> tripIdStopIdStopTimeCache;
     public Dictionary<(string routeId, string stopId), DateTime> PredictedArrivals { get; init; } = new();
 
     public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath, string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)
     {
-        Repo = new GTFSRepository();
         RealtimeService = new GTFSRTService(tripUpdatesUrl, vehicleUpdatesUrl, alertsUrl);
     }
 
     public async Task LoadDataAsync()
     {
-        await Repo.LoadStopsAsync();
-
-        //tripIdStopIdStopTimeCache = await GTFSContext.LoadStopTimesNexthAsync(DateTime.Now, 2);
-
-        //TripToRoute = GTFSContext.BuildTripToVehicleTypeMap();
+        Stops = await GTFSContext.GetActiveStopsWithTypesAsync();
     }
 
     public async Task QueryRealtimeData()
