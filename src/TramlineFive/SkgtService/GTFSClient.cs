@@ -24,7 +24,7 @@ public class GTFSClient
     public List<StopWithType> Stops => Repo.Stops;
     public Dictionary<string, TransportType> StopDominantTypes { get; init; } = new();
     //private Dictionary<(string TripId, string StopId), StopTime> tripIdStopIdStopTimeCache;
-    public Dictionary<(string routeId, string stopId), List<DateTime>> PredictedArrivals { get; init; } = new();
+    public Dictionary<(string routeId, string stopId), DateTime> PredictedArrivals { get; init; } = new();
 
     public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath, string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)
     {
@@ -76,10 +76,13 @@ public class GTFSClient
         {
             foreach (TripUpdate.StopTimeUpdate stopTimeUpdate in entity.TripUpdate.StopTimeUpdates)
             {
-                if (!PredictedArrivals.TryGetValue((entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId), out List<DateTime> arrivals))
-                    PredictedArrivals[(entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId)] = new List<DateTime>();
+                if (PredictedArrivals.ContainsKey((entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId)))
+                {
+                    Console.WriteLine("Duplicate tripId-stopId in PredictedArrivals");
+                    System.Diagnostics.Debugger.Break();
+                }
 
-                PredictedArrivals[(entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId)].Add(UnixTimeStampToDateTime(stopTimeUpdate.Departure.Time));
+                PredictedArrivals[(entity.TripUpdate.Trip.TripId, stopTimeUpdate.StopId)] = UnixTimeStampToDateTime(stopTimeUpdate.Departure.Time);
             }
         }
     }

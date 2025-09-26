@@ -13,4 +13,5 @@ public class Arrival
     public bool AC { get; set; }
     public bool Bikes { get; set; }
     public bool Realtime { get; set; }
+    public string TripId { get; set; }
 }

@@ -8,19 +8,31 @@ using System.Xml.Linq;
 
 namespace SkgtService.Models;
 
+public class TripArrival
+{
+    public string LineName { get; set; }
+    public string Direction { get; set; }
+    public TransportType VehicleType { get; set; }
+    public bool Realtime { get; set; }
+    public string RouteId { get; set; }
+    public string TripId { get; set; }
+    public DateTime Arrival { get; set; }
+}
+
 public class ArrivalInformation
 {
     public string LineName { get; set; }
     public string Start { get; set; }
     public string Direction { get; set; }
     public TransportType VehicleType { get; set; }
-    public List<Arrival> Arrivals { get; set; }
+    public List<Arrival> Arrivals { get; set; } = new();
     public int Minutes => Arrivals.Count > 0 ? Arrivals[0].Minutes : 1337;
     public bool Realtime { get; set; }
+    public string RouteId { get; set; }
 
     public ArrivalInformation()
     {
-        Arrivals = new List<Arrival>();
+
     }
 
     public ArrivalInformation(LineArrivalInfo line)

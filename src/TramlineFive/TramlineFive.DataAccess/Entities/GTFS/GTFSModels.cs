@@ -78,6 +78,6 @@ public class StopTimeMap
     public string StopName { get; set; }
     public string RouteShortName { get; set; }
     public int RouteType { get; set; }
-    public int RouteId { get; set; }
+    public string RouteId { get; set; }
     public string TripHeadsign { get; set; }
 }

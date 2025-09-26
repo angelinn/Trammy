@@ -102,80 +102,88 @@ public partial class VirtualTablesViewModel : BaseViewModel
         try
         {
             Stopwatch sw = new Stopwatch();
-            sw.Start();            
+            sw.Start();
 
-            List<ArrivalInformation> arrivals = new List<ArrivalInformation>();
+            Dictionary<string, TripArrival> arrivals = new Dictionary<string, TripArrival>();
+            HashSet<string> realtimeRouteIds = new HashSet<string>();
+
+            //List<ArrivalInformation> arrivals = new List<ArrivalInformation>();
             List<StopTimeMap> tripStopList = await GTFSContext.GetAllTripsAndStopsByStopCodeAsync(stopCode);
             foreach (StopTimeMap map in tripStopList)
             {
-                if (!gtfsClient.PredictedArrivals.TryGetValue((map.TripId, map.StopId), out List<DateTime> predictedArrivals))
+                if (!gtfsClient.PredictedArrivals.TryGetValue((map.TripId, map.StopId), out DateTime predictedArrival))
+                {
+                    Console.WriteLine($"No predicted arrival for {map.TripId} {map.StopId} {map.StopName}");
                     continue;
+                }
 
-                ArrivalInformation arrival = new ArrivalInformation();
+                TripArrival arrival = new TripArrival();
                 arrival.LineName = map.RouteShortName;
                 arrival.VehicleType = (TransportType)map.RouteType;
                 arrival.Direction = map.TripHeadsign;
                 arrival.Realtime = true;
+                arrival.RouteId = map.RouteId;
 
-                arrival.Arrivals.AddRange(predictedArrivals.Select(pr => new Arrival
+                arrival.Arrival = predictedArrival;
+
+                if (arrivals.ContainsKey(map.TripId))
                 {
-                    Realtime = true,
-                    Minutes = (int)(pr - DateTime.Now).TotalMinutes,
-                }));
+                    Console.WriteLine($"Arrivals already contains key {map.TripId}");
+                    System.Diagnostics.Debugger.Break();
+                }
 
-                arrivals.Add(arrival);
+                arrivals[map.TripId] = arrival;
+                realtimeRouteIds.Add(map.RouteId);
             }
 
-            if (arrivals.Count > 0)
+            var nextDepartures = await GTFSContext.GetNextDeparturesPerStopQueryAsync(stopCode, DateTime.Now, 3);
+
+            foreach (var (route, departure) in nextDepartures)
             {
-                arrivals = arrivals
-                    .GroupBy(a => new { a.LineName, a.VehicleType, a.Direction })
-                    .Select(g =>
-                    {
-                        var first = g.First();
+                if (realtimeRouteIds.Contains(route.RouteId))
+                    continue;
 
-                        return new ArrivalInformation
-                        {
-                            LineName = first.LineName,
-                            VehicleType = first.VehicleType,
-                            Direction = first.Direction,
-                            Arrivals = g.SelectMany(a => a.Arrivals).OrderBy(a => a.Minutes).ToList()
-                        };
-                    })
-                    .ToList();
+                foreach (var (trip, stopTime) in departure)
+                {
+                    TripArrival arrival = new TripArrival();
+                    arrival.LineName = route.RouteShortName;
+                    arrival.VehicleType = (TransportType)route.RouteType;
+                    arrival.Direction = departure[0].trip.TripHeadsign;
+                    arrival.RouteId = route.RouteId;
+                    arrival.Realtime = false;
+
+                    if (DateTime.TryParse(stopTime.DepartureTime, out DateTime scheduledDeparture))
+                        arrival.Arrival = scheduledDeparture;
+
+                    if (arrivals.ContainsKey(trip.TripId))
+                    {
+                        Console.WriteLine($"Arrivals already contains key {trip.TripId}");
+                        System.Diagnostics.Debugger.Break();
+                    }
+
+                    arrivals[trip.TripId] = arrival;
+                }
             }
 
-            //var nextDepartures = await GTFSContext.GetNextDeparturesPerStopQueryAsync(stopCode, DateTime.Now, 3);
 
-            //foreach (var (route, departure) in nextDepartures)
-            //{
-            //    ArrivalInformation arrival = new ArrivalInformation();
-            //    arrival.LineName = route.RouteShortName;
-            //    arrival.VehicleType = (TransportType)route.RouteType;
-            //    arrival.Direction = departure[0].trip.TripHeadsign;
+            List<ArrivalInformation> arrivalsVm = arrivals.Values
+                .GroupBy(a => new { a.LineName, a.VehicleType, a.Direction })
+                .Select(g =>
+                {
+                    var first = g.First();
 
-            //        foreach (var (trip, stopTime) in departure)
-            //        {
-            //            if (DateTime.TryParse(stopTime.DepartureTime, out DateTime scheduledDeparture))
-            //            {
-            //                arrival.Arrivals.Add(new Arrival
-            //                {
-            //                    Minutes = (int)(scheduledDeparture - DateTime.Now).TotalMinutes,
-            //                });
-            //            }
-            //        }
+                    return new ArrivalInformation
+                    {
+                        LineName = first.LineName,
+                        VehicleType = first.VehicleType,
+                        Direction = first.Direction,
+                        Arrivals = g.Select(a => new Arrival { Minutes = (int)(a.Arrival - DateTime.Now).TotalMinutes, Realtime = a.Realtime }).OrderBy(a => a.Minutes).ToList(),
+                        Realtime = first.Realtime
+                    };
+                })
+                .ToList();
 
-            //    arrivals.Add(arrival);
-            //}
-
-            //foreach (ArrivalInformation arrival in arrivals)
-            //{
-            //    List<Arrival> realtimeArrivals = [.. arrival.Arrivals.Where(a => a.Realtime)];
-            //    if (realtimeArrivals.Count > 0)
-            //        arrival.Arrivals = realtimeArrivals;
-            //}
-
-            StopInfo.Arrivals = [.. arrivals.OrderBy(a => a.VehicleType).ThenBy(a => {
+            StopInfo.Arrivals = [.. arrivalsVm.OrderBy(a => a.VehicleType).ThenBy(a => {
                 if (int.TryParse(a.LineName, out int lineNumber))
                     return lineNumber;
 
