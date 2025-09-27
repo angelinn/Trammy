@@ -62,7 +62,7 @@ public partial class VirtualTablesViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void Subscribe(ArrivalInformation m)
+    private void Subscribe(RouteArrivalInformation m)
     {
         Messenger.Send(new SubscribeMessage(m.LineName, stopCode));
     }
@@ -104,10 +104,8 @@ public partial class VirtualTablesViewModel : BaseViewModel
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            Dictionary<string, TripArrival> arrivals = new Dictionary<string, TripArrival>();
-            HashSet<string> realtimeRouteIds = new HashSet<string>();
+            Dictionary<string, RouteArrivalInformation> arrivals = new Dictionary<string, RouteArrivalInformation>();
 
-            //List<ArrivalInformation> arrivals = new List<ArrivalInformation>();
             List<StopTimeMap> tripStopList = await GTFSContext.GetAllTripsAndStopsByStopCodeAsync(stopCode);
             foreach (StopTimeMap map in tripStopList)
             {
@@ -117,73 +115,70 @@ public partial class VirtualTablesViewModel : BaseViewModel
                     continue;
                 }
 
-                TripArrival arrival = new TripArrival();
-                arrival.LineName = map.RouteShortName;
-                arrival.VehicleType = (TransportType)map.RouteType;
-                arrival.Direction = map.TripHeadsign;
-                arrival.Realtime = true;
-                arrival.RouteId = map.RouteId;
-
-                arrival.Arrival = predictedArrival;
-
-                if (arrivals.ContainsKey(map.TripId))
+                if (!arrivals.TryGetValue(map.RouteId, out RouteArrivalInformation routeArrival))
                 {
-                    Console.WriteLine($"Arrivals already contains key {map.TripId}");
-                    System.Diagnostics.Debugger.Break();
+                    routeArrival = new RouteArrivalInformation();
+                    routeArrival.LineName = map.RouteShortName;
+                    routeArrival.VehicleType = (TransportType)map.RouteType;
+                    routeArrival.RouteId = map.RouteId;
+
+                    arrivals[map.RouteId] = routeArrival;
                 }
 
-                arrivals[map.TripId] = arrival;
-                realtimeRouteIds.Add(map.RouteId);
+                routeArrival.Arrivals.Add(new TripArrival
+                {
+                    Direction = map.TripHeadsign,
+                    Realtime = true,
+                    TripId = map.TripId,
+                    Arrival = predictedArrival
+                });
+
+                if (routeArrival.Arrivals.DistinctBy(a => a.TripId).Count() != routeArrival.Arrivals.Count)
+                {
+                    Console.WriteLine($"Repetetive tripid for route {routeArrival.RouteId}");
+                    Debugger.Break();
+                }
+
+                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).ToList();
             }
 
             var nextDepartures = await GTFSContext.GetNextDeparturesPerStopQueryAsync(stopCode, DateTime.Now, 3);
 
             foreach (var (route, departure) in nextDepartures)
             {
-                if (realtimeRouteIds.Contains(route.RouteId))
+                if (arrivals.ContainsKey(route.RouteId))
                     continue;
+
+                RouteArrivalInformation routeArrival = new RouteArrivalInformation();
+                routeArrival.LineName = route.RouteShortName;
+                routeArrival.VehicleType = (TransportType)route.RouteType;
+                routeArrival.RouteId = route.RouteId;
 
                 foreach (var (trip, stopTime) in departure)
                 {
-                    TripArrival arrival = new TripArrival();
-                    arrival.LineName = route.RouteShortName;
-                    arrival.VehicleType = (TransportType)route.RouteType;
-                    arrival.Direction = departure[0].trip.TripHeadsign;
-                    arrival.RouteId = route.RouteId;
-                    arrival.Realtime = false;
+                    TripArrival arrival = new TripArrival
+                    {
+                        Direction = trip.TripHeadsign,
+                        Realtime = false,
+                        TripId = trip.TripId
+                    };
 
                     if (DateTime.TryParse(stopTime.DepartureTime, out DateTime scheduledDeparture))
                         arrival.Arrival = scheduledDeparture;
 
-                    if (arrivals.ContainsKey(trip.TripId))
+                    routeArrival.Arrivals.Add(arrival);
+
+                    if (routeArrival.Arrivals.DistinctBy(a => a.TripId).Count() != routeArrival.Arrivals.Count)
                     {
                         Console.WriteLine($"Arrivals already contains key {trip.TripId}");
-                        System.Diagnostics.Debugger.Break();
+                        Debugger.Break();
                     }
-
-                    arrivals[trip.TripId] = arrival;
                 }
+
+                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).ToList();
             }
 
-
-            List<ArrivalInformation> arrivalsVm = arrivals.Values
-                .GroupBy(a => new { a.LineName, a.VehicleType, a.Direction })
-                .Select(g =>
-                {
-                    var first = g.First();
-
-                    return new ArrivalInformation
-                    {
-                        LineName = first.LineName,
-                        VehicleType = first.VehicleType,
-                        Direction = first.Direction,
-                        Arrivals = g.Select(a => new Arrival { Minutes = (int)(a.Arrival - DateTime.Now).TotalMinutes, Realtime = a.Realtime }).OrderBy(a => a.Minutes).ToList(),
-                        Realtime = first.Realtime
-                    };
-                })
-                .ToList();
-
-            StopInfo.Arrivals = [.. arrivalsVm.OrderBy(a => a.VehicleType).ThenBy(a => {
+            StopInfo.Arrivals = [.. arrivals.Values.OrderBy(a => a.VehicleType).ThenBy(a => {
                 if (int.TryParse(a.LineName, out int lineNumber))
                     return lineNumber;
 
@@ -217,27 +212,33 @@ public partial class VirtualTablesViewModel : BaseViewModel
     }
 
     [ObservableProperty]
-    private ArrivalInformation selected;
-    partial void OnSelectedChanged(ArrivalInformation value)
+    private RouteArrivalInformation selected;
+    partial void OnSelectedChanged(RouteArrivalInformation value)
     {
         if (value != null)
         {
-            routesLoader.LoadRoutes().ContinueWith(t =>
+            NavigationService.ChangePage("RouteDetails", new Dictionary<string, object>
             {
-                Route1 route = routesLoader.GetRoute(value.LineName, value.VehicleType);
-                if (route is null)
-                {
-                    ApplicationService.RunOnUIThread(() =>
-                        ApplicationService.DisplayToast($"Не е намерен маршрут за {value.VehicleType} {value.LineName}")
-                    );
-                    
-                    return;
-                }
-
-                ApplicationService.RunOnUIThread(() =>
-                    Messenger.Send(new ShowRouteMessage(route.Line, route.Direction0, value.VehicleType))
-                );
+                { "Arrival", value },
+                { "stopCode", stopCode }
             });
+
+            //routesLoader.LoadRoutes().ContinueWith(t =>
+            //{
+            //    Route1 route = routesLoader.GetRoute(value.LineName, value.VehicleType);
+            //    if (route is null)
+            //    {
+            //        ApplicationService.RunOnUIThread(() =>
+            //            ApplicationService.DisplayToast($"Не е намерен маршрут за {value.VehicleType} {value.LineName}")
+            //        );
+
+            //        return;
+            //    }
+
+            //    ApplicationService.RunOnUIThread(() =>
+            //        Messenger.Send(new ShowRouteMessage(route.Line, route.Direction0, value.VehicleType))
+            //    );
+            //});
 
             Selected = null;
         }

@@ -42,7 +42,7 @@ public class StopResponse
 {
     public string Code { get; set; }
     public string PublicName { get; set; }
-    public ObservableCollection<ArrivalInformation> Arrivals { get; set; } = new();
+    public ObservableCollection<RouteArrivalInformation> Arrivals { get; set; } = new();
     public bool IsFavourite { get; set; }
 
     public StopResponse(string stopCode, string name)
