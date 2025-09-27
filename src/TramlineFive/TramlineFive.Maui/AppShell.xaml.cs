@@ -32,6 +32,7 @@ namespace TramlineFive.Maui
             WeakReferenceMessenger.Default.Register<ChangePageMessage>(this, (r, m) => MainThread.BeginInvokeOnMainThread(() => GoToAsync($"{m.Page}")));
             Routing.RegisterRoute("schedule", typeof(SchedulesPage));
             Routing.RegisterRoute("Licenses", typeof(LicensesPage));
+            Routing.RegisterRoute("RouteDetails", typeof(RouteDetailsPage));
         }
     }
 }

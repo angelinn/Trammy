@@ -29,13 +29,21 @@
                 </StackLayout>
 
                 <StackLayout Orientation="Horizontal">
-                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="21" Margin="0,0,5,0" TextColor="Green" IsVisible="{Binding Realtime}" />
-                <Label Text="{Binding LastCalculated}" TextColor="White" />
-                </StackLayout>
+                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="21" Margin="0,0,5,0" TextColor="White" IsVisible="{Binding Realtime}" />
+                    <Label Text="Следващи: " TextColor="White" />
+
+                <CollectionView ItemsSource="{Binding ArrivalsSkipFirst}" ItemsLayout="HorizontalList">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                            <Label Text="{Binding MinutesTillArrival, StringFormat=' {0} мин'}" TextColor="White" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+            </StackLayout>
             </StackLayout>
             <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0" Margin="0">
-            <Label Text="{Binding Minutes}" FontSize="40" HorizontalOptions="Center" TextColor="White" />
-            <Label Text="минути" TextColor="White" HorizontalOptions="Center"  />
+            <Label Text="{Binding MinutesTillArrival}" FontSize="40" HorizontalOptions="Center" TextColor="White" />
+                <Label Text="минути" TextColor="White" HorizontalOptions="Center"  />
             </StackLayout>
         </Grid>
     </Border>

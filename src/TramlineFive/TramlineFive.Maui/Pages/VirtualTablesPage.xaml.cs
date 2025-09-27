@@ -73,7 +73,7 @@ namespace TramlineFive.Pages
                 return;
 
             var listView = sender as ListView;
-            var items = listView.ItemsSource as IList<ArrivalInformation>;  // Cast to your data type
+            var items = listView.ItemsSource as IList<RouteArrivalInformation>;  // Cast to your data type
 
             if (items != null && e.Item == items[items.Count - 1])
             {

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TramlineFive.Maui.Pages.RouteDetailsPage"
+             xmlns:vm="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
+             xmlns:cv="clr-namespace:TramlineFive.Converters"
+             Title="RouteDetails">
+
+    <ContentPage.BindingContext>
+        <vm:RouteDetailViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cv:TransportTypeToImageConverter x:Key="TransportToImage" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView Background="#f5f0f0">
+        <VerticalStackLayout Padding="15" Spacing="10">
+            <HorizontalStackLayout Spacing="5" Background="White">
+                <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkBackgroundColor}}">
+                    <Image Source="{Binding StopCode, Converter={StaticResource TransportToImage}}"  HeightRequest="40" WidthRequest="40" />
+                </Grid>                <!-- bus icon -->
+                <Label Text="{Binding Arrival.LineName}" FontSize="24" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                <Label Text="{Binding Arrival.Direction}" FontSize="24" TextColor="Black" VerticalTextAlignment="Center" Margin="15,0,0,0" />
+            </HorizontalStackLayout>
+
+            <Border BackgroundColor="White" Padding="10">
+                <VerticalStackLayout>
+                    <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="18" TextColor="Green" />
+                        <Label Text="Пристигания в реално време" FontAttributes="Bold" FontSize="16"/>
+                    </HorizontalStackLayout>
+                    <CollectionView ItemsSource="{Binding Arrival.Arrivals}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="16" TextColor="Green" IsVisible="{Binding Realtime}" />
+                                    <Label Text="{Binding MinutesTillArrival, StringFormat='{0} минути'}" FontSize="16"/>
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Scheduled Arrivals -->
+            <Frame BackgroundColor="White" CornerRadius="10" Padding="10">
+                <VerticalStackLayout>
+                    <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe916;" FontSize="18" TextColor="Gray" />
+                        <Label Text="Пристигания по разписание" FontAttributes="Bold" FontSize="16"/>
+                    </HorizontalStackLayout>
+
+                    <ActivityIndicator IsRunning="{Binding IsLoading}" 
+                                   IsVisible="{Binding IsLoading}" 
+                                   HorizontalOptions="Center" 
+                                   HeightRequest="40"/>
+
+                    <CollectionView ItemsSource="{Binding ScheduledArrivals}" >
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe916;" FontSize="16" TextColor="Gray"/>
+                                    <Label Text="{Binding MinutesDisplay}" FontSize="16"/>
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Buttons -->
+            <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
+
+                <Border Padding="10" BackgroundColor="DodgerBlue">
+                    <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="White" Text="&#xe55b;" FontSize="18" />
+                        <!-- map icon -->
+                        <Label Text="Маршрут" TextColor="White" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ViewRouteCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border Padding="10" BackgroundColor="DodgerBlue">
+                    <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe530;" TextColor="White" FontSize="18" />
+                        <!-- vehicle icon -->
+                        <Label Text="Местоположение" TextColor="White" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ViewVehicleCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+
+            </HorizontalStackLayout>
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

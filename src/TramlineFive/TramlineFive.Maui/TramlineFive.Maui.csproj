@@ -185,6 +185,9 @@
     <Compile Update="Pages\MapPage.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Pages\RouteDetailsPage.xaml.cs">
+      <DependentUpon>RouteDetailsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Pages\SettingsPage.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
@@ -248,6 +251,9 @@
     <MauiXaml Update="Pages\MapPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Pages\RouteDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Pages\SchedulesPage.xaml">
       <Generator>MSBuild:Compile</Generator>

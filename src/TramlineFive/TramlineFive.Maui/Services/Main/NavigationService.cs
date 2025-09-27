@@ -15,16 +15,12 @@ namespace TramlineFive.Services.Main;
 
 public class NavigationService : INavigationService
 {
-    public async void ChangePage(string pageName)
+    public async void ChangePage(string pageName, Dictionary<string, object> payload = null)
     {
-        //NavigationPage main = Application.Current.MainPage as NavigationPage;
-
-        //await main.PushAsync(Activator.CreateInstance(Type.GetType($"TramlineFive.Pages.{pageName}Page")) as Page);
-        //await (main.RootPage as MainPage).ToggleHamburgerAsync();
-        await Shell.Current.GoToAsync(pageName);
+        await Shell.Current.GoToAsync(pageName, payload);
     }
 
-    public void GoToDetails(ArrivalInformation line, string stop)
+    public void GoToDetails(RouteArrivalInformation line, string stop)
     {
         PublicTransport publicTransport = ServiceContainer.ServiceProvider.GetService<PublicTransport>();
         Line lineInformation = publicTransport.FindByTypeAndLine(line.VehicleType, line.LineName);

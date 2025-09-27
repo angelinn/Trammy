@@ -87,10 +87,6 @@ ORDER BY st.TripId, st.StopId
     {
         SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
 
-        var stopIds = await db.Table<Stop>().Where(s => s.StopCode == stopCode).ToListAsync();
-        if (stopIds.Count == 0)
-            return new List<(Route, List<(Trip, StopTime)>)>();
-
         string nowStr = now.ToString("HH:mm:ss");
 
         // Single SQL query fetching everything
@@ -100,7 +96,8 @@ SELECT r.RouteId, r.RouteShortName, r.RouteType, t.TripId, t.TripHeadsign,
 FROM StopTime st
 JOIN Trip t ON t.TripId = st.TripId
 JOIN Route r ON r.RouteId = t.RouteId
-WHERE st.StopId IN ({string.Join(',', stopIds.Select(s => $"'{s.StopId}'"))})
+JOIN Stop s on s.StopId = st.StopId
+WHERE s.StopCode = ?
 AND t.ServiceId IN (
     SELECT ServiceId
     FROM CalendarDate
@@ -109,7 +106,7 @@ AND t.ServiceId IN (
   AND st.DepartureTime >= ?
 ORDER BY r.RouteId, st.DepartureTime";
 
-        var departures = await db.QueryAsync<StopDepartureFull>(sql, nowStr, nowStr);
+        var departures = await db.QueryAsync<StopDepartureFull>(sql, stopCode, nowStr, nowStr);
 
         // Group by route
         var grouped = departures
@@ -136,6 +133,65 @@ ORDER BY r.RouteId, st.DepartureTime";
             }).ToList();
 
         return grouped;
+    }
+
+    public static async Task<List<(Trip trip, StopTime stopTime)>>
+    GetNextDeparturesForRouteAtStopAsync(string routeId, string stopCode, DateTime now, int count = 3)
+    {
+        SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+
+        string nowStr = now.ToString("HH:mm:ss");
+        string dateStr = now.ToString("yyyyMMdd"); // CalendarDate.Date format
+
+        var sql = @"
+SELECT r.RouteId, r.RouteShortName, r.RouteType,
+       t.TripId, t.TripHeadsign,
+       st.StopId, st.StopSequence, st.DepartureTime
+FROM StopTime st
+JOIN Trip t ON t.TripId = st.TripId
+JOIN Route r ON r.RouteId = t.RouteId
+JOIN Stop s ON s.StopId = st.StopId
+WHERE s.StopCode = ?
+  AND r.RouteId = ?
+  AND t.ServiceId IN (
+      SELECT ServiceId
+      FROM CalendarDate
+      WHERE Date = ? AND ExceptionType = 1
+  )
+  AND st.DepartureTime >= ?
+ORDER BY st.DepartureTime
+LIMIT ?;";
+
+        var departures = await db.QueryAsync<StopDepartureFull>(
+            sql,
+            stopCode,
+            routeId,
+            dateStr,
+            nowStr,
+            count
+        );
+
+        var result = departures.Select(d =>
+        {
+            var trip = new Trip
+            {
+                TripId = d.TripId,
+                TripHeadsign = d.TripHeadsign,
+                RouteId = d.RouteId
+            };
+
+            var stopTime = new StopTime
+            {
+                TripId = d.TripId,
+                StopId = d.StopId,
+                StopSequence = d.StopSequence,
+                DepartureTime = d.DepartureTime
+            };
+
+            return (trip, stopTime);
+        }).ToList();
+
+        return result;
     }
 
     public static void Update<T>(T entity) where T : new()

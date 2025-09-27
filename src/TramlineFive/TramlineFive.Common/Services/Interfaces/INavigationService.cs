@@ -10,8 +10,8 @@ namespace TramlineFive.Common.Services.Interfaces;
 
 public interface INavigationService
 {
-    void ChangePage(string pageName);
+    void ChangePage(string pageName, Dictionary<string, object> payload = null);
     Task GoToDetails(Line line, string stop = "");
-    void GoToDetails(ArrivalInformation line, string stop);
+    void GoToDetails(RouteArrivalInformation line, string stop);
     Task GoToSchedule(RouteResponse route, string stopCode);
 }
