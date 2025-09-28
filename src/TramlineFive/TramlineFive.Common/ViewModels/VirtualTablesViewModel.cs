@@ -223,6 +223,8 @@ public partial class VirtualTablesViewModel : BaseViewModel
                 { "stopCode", stopCode }
             });
 
+            
+
             //routesLoader.LoadRoutes().ContinueWith(t =>
             //{
             //    Route1 route = routesLoader.GetRoute(value.LineName, value.VehicleType);

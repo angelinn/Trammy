@@ -4,11 +4,8 @@
              x:Class="TramlineFive.Maui.Pages.RouteDetailsPage"
              xmlns:vm="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
              xmlns:cv="clr-namespace:TramlineFive.Converters"
+             BindingContext="{Binding RouteDetailViewModel, Source={StaticResource Locator}}"
              Title="RouteDetails">
-
-    <ContentPage.BindingContext>
-        <vm:RouteDetailViewModel />
-    </ContentPage.BindingContext>
 
     <ContentPage.Resources>
         <ResourceDictionary>

@@ -17,7 +17,7 @@ public class NavigationService : INavigationService
 {
     public async void ChangePage(string pageName, Dictionary<string, object> payload = null)
     {
-        await Shell.Current.GoToAsync(pageName, payload);
+        await Shell.Current.GoToAsync(pageName, payload ?? new Dictionary<string, object>());
     }
 
     public void GoToDetails(RouteArrivalInformation line, string stop)

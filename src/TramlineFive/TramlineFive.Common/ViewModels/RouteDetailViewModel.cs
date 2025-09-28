@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SkgtService;
 using SkgtService.Models;
+using TramlineFive.Common.Services.Maps;
 using TramlineFive.DataAccess;
 using TramlineFive.DataAccess.Entities.GTFS;
 
@@ -28,6 +30,12 @@ public partial class RouteDetailViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool isLoading;
+
+    private readonly GTFSClient GtfsClient;
+    public RouteDetailViewModel(GTFSClient gtfsClient)
+    { 
+        GtfsClient = gtfsClient;
+    }
 
     private async Task LoadScheduledArrivalsAsync()
     {
@@ -55,6 +63,8 @@ public partial class RouteDetailViewModel : BaseViewModel
     {
         Arrival = arrival;
         this.stopCode = stopCode;
+        ScheduledArrivals.Clear();
+
         OnPropertyChanged(nameof(Arrival));
 
         await LoadScheduledArrivalsAsync();
@@ -69,6 +79,8 @@ public partial class RouteDetailViewModel : BaseViewModel
     [RelayCommand]
     private void ViewVehicle()
     {
-        // Navigate to vehicle location page
+        GtfsClient.QueryVehicleUpdates();
+        MapService.VehicleTripId = (Arrival.LineName, Arrival.Arrivals[0].TripId);
+        NavigationService.ChangePage("//Main");
     }
 }

@@ -23,6 +23,9 @@ using Mapsui.Nts;
 using Mapsui.Nts.Extensions;
 using Mapsui.Manipulations;
 using TramlineFive.DataAccess.Entities.GTFS;
+using SkgtService.Models.Json;
+using System.Security.Cryptography.X509Certificates;
+using System;
 
 namespace TramlineFive.Common.Services.Maps;
 
@@ -66,6 +69,8 @@ public class MapService
 
     private readonly GTFSClient gtfsClient;
 
+    public static (string, string) VehicleTripId { get; set; }
+
     public MapService(LocationService locationService, PublicTransport publicTransport, GTFSClient gtfsClient)
     {
         this.locationService = locationService;
@@ -74,6 +79,66 @@ public class MapService
 
         WeakReferenceMessenger.Default.Register<RefreshStopsMessage>(this, async (r, m) => await OnStopsRefreshed());
         WeakReferenceMessenger.Default.Register<ShowRouteMessage>(this, (r, m) => ShowRoute(m));
+        gtfsClient.VehicleUpdatesUpdated += OnVehicleUpdatesUpdated;
+    }
+
+    private void OnVehicleUpdatesUpdated(object sender, System.EventArgs e)
+    {
+        (string lineName, string vehicleTripId) = VehicleTripId;
+        if (!gtfsClient.VehiclePositions.TryGetValue(vehicleTripId, out TransitRealtime.Position position))
+        {
+            Console.WriteLine($"Could not get position for trip {vehicleTripId}");
+            gtfsClient.StopVehicleUpdates();
+            VehicleTripId = ("" ,"");
+
+            return;
+        }
+
+        MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(position.Longitude, position.Latitude));
+
+        IFeature feature = new PointFeature(stopMapLocation)
+        {
+            Styles = new List<IStyle>
+                {
+                    new SymbolStyle
+                    {
+                        ImageSource = busPinStyle.ImageSource,
+                        SymbolOffset = new Offset(0, 30),
+                        SymbolScale = busPinStyle.SymbolScale
+                    },
+                    new LabelStyle
+                    {
+                        Text = lineName,
+                        Offset = new Offset(0, -40),
+                        Font = new Font { Size = 21 },
+                        BackColor = new Brush(new Color(255, 255, 255, 200)),
+                    }
+            }
+        };
+
+        activeStyles.ForEach(s => s.Enabled = false);
+        activeStyles.Clear();
+
+        Layer vehicleLayer = map.Layers.FindLayer("VehicleLayer").FirstOrDefault() as Layer;
+        if (vehicleLayer == null)
+        {
+            vehicleLayer = new Layer
+            {
+                Name = "VehicleLayer",
+                DataSource = new MemoryProvider(new List<IFeature> { feature }),
+                Style = null
+            };
+
+            map.Layers.Add(vehicleLayer);
+            map.Navigator.CenterOnAndZoomTo(stopMapLocation, map.Navigator.Resolutions[15], ANIMATION_MS, Easing.CubicOut);
+        }
+        else
+        {
+            vehicleLayer.DataSource = new MemoryProvider(new List<IFeature> { feature });
+            map.Refresh(); 
+            map.Navigator.CenterOn(stopMapLocation, ANIMATION_MS, Easing.CubicOut);
+
+        }
     }
 
     private void ShowRoute(ShowRouteMessage showRouteMessage)
@@ -405,7 +470,7 @@ public class MapService
                     }
                 }
             };
-
+            
             feature["stopObject"] = stop;
             features.Add(feature);
 
@@ -572,6 +637,16 @@ public class MapService
     {
         if (isShowingRoute)
             HideRoutes();
+
+        if (VehicleTripId != ("", ""))
+        {
+            ILayer layer = map.Layers.FindLayer("VehicleLayer").FirstOrDefault();
+            if (layer != null)
+                map.Layers.Remove(layer);
+
+            VehicleTripId = ("", "");
+            gtfsClient.StopVehicleUpdates();
+        }
 
         if (navigationStack.Count > 0)
         {
