@@ -87,8 +87,6 @@ ORDER BY st.TripId, st.StopId
     {
         SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
 
-        string nowStr = now.ToString("HH:mm:ss");
-
         // Single SQL query fetching everything
         var sql = @$"
 SELECT r.RouteId, r.RouteShortName, r.RouteType, t.TripId, t.TripHeadsign,
@@ -106,7 +104,7 @@ AND t.ServiceId IN (
   AND st.DepartureTime >= ?
 ORDER BY r.RouteId, st.DepartureTime";
 
-        var departures = await db.QueryAsync<StopDepartureFull>(sql, stopCode, nowStr, nowStr);
+        var departures = await db.QueryAsync<StopDepartureFull>(sql, stopCode, now.ToString("yyyyMMdd"), now.ToString("HH:mm:ss"));
 
         // Group by route
         var grouped = departures

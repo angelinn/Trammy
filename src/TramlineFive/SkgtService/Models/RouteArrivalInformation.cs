@@ -27,5 +27,5 @@ public class RouteArrivalInformation
     public List<TripArrival> ArrivalsSkipFirst => Arrivals.Skip(1).ToList();
     public string RouteId { get; set; }
     public int MinutesTillArrival => Arrivals.Count > 0 ? Arrivals[0].MinutesTillArrival : 1337;
-    public bool Realtime => Arrivals.Any(a => a.Realtime);
+    public bool Realtime => Arrivals.Count > 0 ? Arrivals[0].Realtime : false;
 }

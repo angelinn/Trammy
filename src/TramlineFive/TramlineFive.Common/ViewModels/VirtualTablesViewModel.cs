@@ -24,6 +24,8 @@ namespace TramlineFive.Common.ViewModels;
 
 public partial class VirtualTablesViewModel : BaseViewModel
 {
+    private const int MAX_ARRIVAL_TIMES = 3;
+
     private readonly GTFSClient gtfsClient;
 
     private string stopCode;
@@ -133,23 +135,36 @@ public partial class VirtualTablesViewModel : BaseViewModel
                     Debugger.Break();
                 }
 
-                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).Take(4).ToList();
+                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).Take(MAX_ARRIVAL_TIMES).ToList();
             }
 
-            var nextDepartures = await GTFSContext.GetNextDeparturesPerStopQueryAsync(stopCode, DateTime.Now, 3);
+            var nextDepartures = await GTFSContext.GetNextDeparturesPerStopQueryAsync(stopCode, DateTime.Now, MAX_ARRIVAL_TIMES);
 
             foreach (var (route, departure) in nextDepartures)
             {
-                if (arrivals.ContainsKey(route.RouteId))
-                    continue;
+                int neededArrivals = MAX_ARRIVAL_TIMES;
 
-                RouteArrivalInformation routeArrival = new RouteArrivalInformation();
-                routeArrival.LineName = route.RouteShortName;
-                routeArrival.VehicleType = (TransportType)route.RouteType;
-                routeArrival.RouteId = route.RouteId;
-
-                foreach (var (trip, stopTime) in departure)
+                if (arrivals.TryGetValue(route.RouteId, out RouteArrivalInformation routeArrival))
                 {
+                    neededArrivals -= routeArrival.Arrivals.Count;
+                    if (neededArrivals <= 0)
+                        continue;
+                }
+                else
+                {
+                    routeArrival = new RouteArrivalInformation();
+                    routeArrival.LineName = route.RouteShortName;
+                    routeArrival.VehicleType = (TransportType)route.RouteType;
+                    routeArrival.RouteId = route.RouteId;
+
+                    arrivals[route.RouteId] = routeArrival;
+                }
+
+                foreach (var (trip, stopTime) in departure.OrderBy(d => d.stopTime.DepartureTime))
+                {
+                    if (routeArrival.Arrivals.Any(t => t.TripId == trip.TripId))
+                        continue;
+
                     TripArrival arrival = new TripArrival
                     {
                         Direction = trip.TripHeadsign,
@@ -169,7 +184,7 @@ public partial class VirtualTablesViewModel : BaseViewModel
                     }
                 }
 
-                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).Take(4).ToList();
+                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).Take(MAX_ARRIVAL_TIMES).ToList();
             }
 
             StopInfo.Arrivals = [.. arrivals.Values.OrderBy(a => a.VehicleType).ThenBy(a => {

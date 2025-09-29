@@ -74,6 +74,7 @@ async Task GenerateDB()
     db.CreateTable<Route>();
     db.CreateTable<Trip>();
     db.CreateTable<StopTime>();
+    db.CreateTable<CalendarDate>();
     Console.WriteLine("Tables created.");
 
     // 1️⃣ Download GTFS zip
@@ -94,6 +95,7 @@ async Task GenerateDB()
 
     // 3️⃣ Import CSVs
     await ImportCsvAsync<Stop>(db, Path.Combine(extractPath, "stops.txt"), "stops");
+    await ImportCsvAsync<CalendarDate>(db, Path.Combine(extractPath, "calendar_dates.txt"), "calendar_dates");
     await ImportCsvAsync<Route>(db, Path.Combine(extractPath, "routes.txt"), "routes");
     await ImportCsvAsync<Trip>(db, Path.Combine(extractPath, "trips.txt"), "trips");
     await ImportCsvAsync<StopTime>(db, Path.Combine(extractPath, "stop_times.txt"), "stop_times");
@@ -265,4 +267,5 @@ void TestDB()
     }
 }
 
-TestGTFSRT().Wait();
+//TestGTFSRT().Wait();
+GenerateDB().Wait();
