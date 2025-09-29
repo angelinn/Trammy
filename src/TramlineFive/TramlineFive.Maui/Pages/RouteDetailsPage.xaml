@@ -10,15 +10,16 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <cv:TransportTypeToImageConverter x:Key="TransportToImage" />
+            <cv:TransportTypeToColorConverter x:Key="TransportToColor" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <ScrollView Background="White">
         <VerticalStackLayout>
             <HorizontalStackLayout Background="White" Padding="10">
-                <StackLayout Background="Orange" Padding="5" WidthRequest="40">
-                    <Label Text="{Binding Arrival.LineName}" FontSize="24" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalOptions="Center" TextColor="White" />
-                </StackLayout>
+                <HorizontalStackLayout Background="{Binding Arrival.VehicleType, Converter={StaticResource TransportToColor}}" Padding="10" HeightRequest="50">
+                    <Label Text="{Binding Arrival.LineName}" FontSize="24" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" />
+                </HorizontalStackLayout>
                 <Label Text="{Binding StopName}" FontSize="24" TextColor="Black" VerticalTextAlignment="Center" Margin="15,0,0,0" />
             </HorizontalStackLayout>
 
@@ -59,7 +60,7 @@
                         <DataTemplate>
                             <Border StrokeThickness="0" Margin="0,0,0,5" BackgroundColor="White" StrokeShape="RoundRectangle 5">
                                 <Grid ColumnDefinitions="10, *">
-                                    <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="Red" />
+                                    <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="{Binding BindingContext.Arrival.VehicleType, Converter={StaticResource TransportToColor}, Source={RelativeSource AncestorType={x:Type CollectionView}}}" />
                                     <Grid Grid.Column="1" Margin="5" Padding="0,10,10,10" ColumnDefinitions="Auto, Auto, *, Auto" VerticalOptions="Center">
                                         <Label Grid.Column="1" VerticalTextAlignment="Center" FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="25" Margin="0,0,5,0" TextColor="Green" IsVisible="{Binding Realtime}" />
                                         <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
@@ -81,12 +82,12 @@
                 </CollectionView>
 
                 <!-- Scheduled Arrivals -->
-                <CollectionView ItemsSource="{Binding ScheduledArrivals}">
+                <CollectionView ItemsSource="{Binding ScheduledArrivals}" ItemSizingStrategy="MeasureFirstItem">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Border StrokeThickness="0" BackgroundColor="White" StrokeShape="RoundRectangle 5">
                                 <Grid ColumnDefinitions="10, *">
-                                    <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="Red" />
+                                    <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="{Binding BindingContext.Arrival.VehicleType, Converter={StaticResource TransportToColor}, Source={RelativeSource AncestorType={x:Type CollectionView}}}" />
                                     <Grid Grid.Column="1" Margin="5" Padding="0,10,10,10" ColumnDefinitions="Auto, Auto, *, Auto" VerticalOptions="Center">
                                         <Label VerticalOptions="Center" Grid.Column="1" FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xE8B5;" TextColor="Gray" FontSize="25" Margin="0,0,5,0" />
                                         <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">

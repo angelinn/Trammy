@@ -45,13 +45,34 @@ public partial class RouteDetailViewModel : BaseViewModel
         GtfsClient = gtfsClient;
     }
 
+    public static bool TryNormalize(string input, out TimeSpan result)
+    {
+        result = TimeSpan.Zero;
+
+        // split by ':'
+        var parts = input.Split(':');
+        if (parts.Length != 3) return false;
+
+        if (!int.TryParse(parts[0], out int hours)) return false;
+        if (!int.TryParse(parts[1], out int minutes)) return false;
+        if (!int.TryParse(parts[2], out int seconds)) return false;
+
+        // normalize: convert excess hours into days
+        result = new TimeSpan(hours / 24, hours % 24, minutes, seconds);
+        return true;
+    }
+
     private async Task LoadScheduledArrivalsAsync()
     {
         IsLoading = true;
         List<(Trip, StopTime)> departures = await GTFSContext.GetNextDeparturesForRouteAtStopAsync(Arrival.RouteId, stopCode, DateTime.Now, 10);
         foreach ((Trip trip, StopTime stopTime) in departures)
         {
-            TimeSpan ts = TimeSpan.Parse(stopTime.DepartureTime);
+            if (Arrival.Arrivals.Any(a => a.TripId == trip.TripId))
+                continue;
+
+            TryNormalize(stopTime.DepartureTime, out TimeSpan ts);
+
             DateTime departureTime = DateTime.Today.Add(ts);
             if (departureTime < DateTime.Now)
                 departureTime = departureTime.AddDays(1); // handle past midnight times
