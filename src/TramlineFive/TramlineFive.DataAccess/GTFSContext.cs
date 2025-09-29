@@ -156,11 +156,10 @@ WHERE s.StopCode = ?
   AND t.ServiceId IN (
       SELECT ServiceId
       FROM CalendarDate
-      WHERE Date = ? AND ExceptionType = 1
+      WHERE Date = strftime('%Y%m%d','now','localtime')  AND ExceptionType = 1
   )
   AND st.DepartureTime >= ?
-ORDER BY st.DepartureTime
-LIMIT ?;";
+ORDER BY st.DepartureTime;";
 
         var departures = await db.QueryAsync<StopDepartureFull>(
             sql,
