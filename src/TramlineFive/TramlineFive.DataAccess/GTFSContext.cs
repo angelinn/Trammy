@@ -163,9 +163,7 @@ ORDER BY st.DepartureTime;";
             sql,
             stopCode,
             routeId,
-            dateStr,
-            nowStr,
-            count
+            nowStr
         );
 
         var result = departures.Select(d =>

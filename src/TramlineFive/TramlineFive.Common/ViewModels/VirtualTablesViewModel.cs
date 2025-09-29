@@ -100,7 +100,7 @@ public partial class VirtualTablesViewModel : BaseViewModel
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            Dictionary<string, RouteArrivalInformation> arrivals = new Dictionary<string, RouteArrivalInformation>();
+            Dictionary<(string routeId, string tripHeadsign), RouteArrivalInformation> arrivals = new();
 
             List<StopTimeMap> tripStopList = await GTFSContext.GetAllTripsAndStopsByStopCodeAsync(stopCode);
             foreach (StopTimeMap map in tripStopList)
@@ -111,14 +111,14 @@ public partial class VirtualTablesViewModel : BaseViewModel
                     continue;
                 }
 
-                if (!arrivals.TryGetValue(map.RouteId, out RouteArrivalInformation routeArrival))
+                if (!arrivals.TryGetValue((map.RouteId, map.TripHeadsign), out RouteArrivalInformation routeArrival))
                 {
                     routeArrival = new RouteArrivalInformation();
                     routeArrival.LineName = map.RouteShortName;
                     routeArrival.VehicleType = (TransportType)map.RouteType;
                     routeArrival.RouteId = map.RouteId;
 
-                    arrivals[map.RouteId] = routeArrival;
+                    arrivals[(map.RouteId, map.TripHeadsign)] = routeArrival;
                 }
 
                 routeArrival.Arrivals.Add(new TripArrival
@@ -142,26 +142,26 @@ public partial class VirtualTablesViewModel : BaseViewModel
 
             foreach (var (route, departure) in nextDepartures)
             {
-                int neededArrivals = MAX_ARRIVAL_TIMES;
-
-                if (arrivals.TryGetValue(route.RouteId, out RouteArrivalInformation routeArrival))
-                {
-                    neededArrivals -= routeArrival.Arrivals.Count;
-                    if (neededArrivals <= 0)
-                        continue;
-                }
-                else
-                {
-                    routeArrival = new RouteArrivalInformation();
-                    routeArrival.LineName = route.RouteShortName;
-                    routeArrival.VehicleType = (TransportType)route.RouteType;
-                    routeArrival.RouteId = route.RouteId;
-
-                    arrivals[route.RouteId] = routeArrival;
-                }
-
                 foreach (var (trip, stopTime) in departure.OrderBy(d => d.stopTime.DepartureTime))
                 {
+                    int neededArrivals = MAX_ARRIVAL_TIMES;
+
+                    if (arrivals.TryGetValue((route.RouteId, trip.TripHeadsign), out RouteArrivalInformation routeArrival))
+                    {
+                        neededArrivals -= routeArrival.Arrivals.Count;
+                        if (neededArrivals <= 0)
+                            continue;
+                    }
+                    else
+                    {
+                        routeArrival = new RouteArrivalInformation();
+                        routeArrival.LineName = route.RouteShortName;
+                        routeArrival.VehicleType = (TransportType)route.RouteType;
+                        routeArrival.RouteId = route.RouteId;
+
+                        arrivals[(route.RouteId, trip.TripHeadsign)] = routeArrival;
+                    }
+
                     if (routeArrival.Arrivals.Any(t => t.TripId == trip.TripId))
                         continue;
 
@@ -182,9 +182,9 @@ public partial class VirtualTablesViewModel : BaseViewModel
                         Console.WriteLine($"Arrivals already contains key {trip.TripId}");
                         Debugger.Break();
                     }
-                }
 
-                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).Take(MAX_ARRIVAL_TIMES).ToList();
+                    routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).Take(MAX_ARRIVAL_TIMES).ToList();
+                }
             }
 
             StopInfo.Arrivals = [.. arrivals.Values.OrderBy(a => a.VehicleType).ThenBy(a => {
