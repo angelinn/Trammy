@@ -220,12 +220,13 @@ public partial class VirtualTablesViewModel : BaseViewModel
             NavigationService.ChangePage("RouteDetails", new Dictionary<string, object>
             {
                 { "Arrival", value },
-                { "stopCode", stopCode }
+                { "stopCode", stopCode },
+                { "stopName", stopInfo.PublicName }
             });
 
-            
+            Messenger.Send(new HideVirtualTablesMessage());
 
-            //routesLoader.LoadRoutes().ContinueWith(t =>
+                        //routesLoader.LoadRoutes().ContinueWith(t =>
             //{
             //    Route1 route = routesLoader.GetRoute(value.LineName, value.VehicleType);
             //    if (route is null)

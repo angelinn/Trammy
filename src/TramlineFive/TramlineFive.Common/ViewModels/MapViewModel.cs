@@ -74,6 +74,7 @@ public partial class MapViewModel : BaseViewModel
         Messenger.Register<SettingChanged<string>>(this, (r, m) => OnStringSettingChanged(m));
         // Messenger.Register<MapLoadedMessage>(this, async (r, m) => await MoveToMostFrequentStopForCurrentHour());
         Messenger.Register<ShowRouteMessage>(this, (r, m) => IsVirtualTablesUp = false);
+        Messenger.Register<HideVirtualTablesMessage>(this, (r, m) => IsVirtualTablesUp = false);
     }
 
     public async Task SetupFullMapAsync()

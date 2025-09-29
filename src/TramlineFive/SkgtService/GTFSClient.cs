@@ -26,7 +26,7 @@ public class GTFSClient
     public List<StopWithType> Stops { get; private set; }
     public Dictionary<string, TransportType> StopDominantTypes { get; init; } = new();
     public Dictionary<(string routeId, string stopId), DateTime> PredictedArrivals { get; init; } = new();
-    public Dictionary<string, Position> VehiclePositions { get; init; } = new(); 
+    public Dictionary<string, VehiclePosition> VehiclePositions { get; init; } = new(); 
 
     public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath, string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)
     {
@@ -72,7 +72,7 @@ public class GTFSClient
 
                 foreach (FeedEntity entity in vehicleUpdates.Entities.Where(e => e.Vehicle != null))
                 {
-                    VehiclePositions[entity.Vehicle.Trip.TripId] = entity.Vehicle.Position;
+                    VehiclePositions[entity.Vehicle.Trip.TripId] = entity.Vehicle;
                 }
 
                 var list = VehiclePositions.Keys.Where(k => k.Contains("A29")).ToList();

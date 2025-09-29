@@ -85,7 +85,7 @@ public class MapService
     private void OnVehicleUpdatesUpdated(object sender, System.EventArgs e)
     {
         (string lineName, string vehicleTripId) = VehicleTripId;
-        if (!gtfsClient.VehiclePositions.TryGetValue(vehicleTripId, out TransitRealtime.Position position))
+        if (!gtfsClient.VehiclePositions.TryGetValue(vehicleTripId, out TransitRealtime.VehiclePosition vehiclePosition))
         {
             Console.WriteLine($"Could not get position for trip {vehicleTripId}");
             gtfsClient.StopVehicleUpdates();
@@ -94,7 +94,13 @@ public class MapService
             return;
         }
 
-        MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(position.Longitude, position.Latitude));
+        MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(vehiclePosition.Position.Longitude, vehiclePosition.Position.Latitude));
+
+        DateTime dataTimestamp = DateTime.Now;
+        if (DateTime.TryParse(vehiclePosition.Timestamp.ToString(), out DateTime timeStamp))
+        {
+            dataTimestamp = timeStamp;
+        }
 
         IFeature feature = new PointFeature(stopMapLocation)
         {
@@ -102,18 +108,34 @@ public class MapService
                 {
                     new SymbolStyle
                     {
-                        ImageSource = busPinStyle.ImageSource,
-                        SymbolOffset = new Offset(0, 30),
+                        ImageSource = busPinStyle.ImageSource, // your bus icon
+                        SymbolOffset = new Offset(0, 0),
                         SymbolScale = busPinStyle.SymbolScale
                     },
+
+                    // 2. Fake shadow layer for badge text
                     new LabelStyle
                     {
-                        Text = lineName,
-                        Offset = new Offset(0, -40),
-                        Font = new Font { Size = 21 },
-                        BackColor = new Brush(new Color(255, 255, 255, 200)),
+                        Text = $"{lineName} ({vehiclePosition.Vehicle.Id})\n{vehiclePosition.Position.Speed} км/ч ({dataTimestamp:HH:mm:ss})", // e.g. "5"
+                        Offset = new Offset(1, -40), // slightly offset to look like shadow
+                        Font = new Font { Size = 18, Bold = true },
+                        ForeColor = new Color(0, 0, 0, 128), // semi-transparent black
+                        HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
+                        VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Center
+                    },
+
+                    // 3. Actual badge (foreground)
+                    new LabelStyle
+                    {
+                        Text = $"{lineName} ({vehiclePosition.Vehicle.Id})\n{vehiclePosition.Position.Speed} км/ч ({dataTimestamp:HH:mm:ss})", // e.g. "5"
+                        Offset = new Offset(0, -39), // just above the bus icon
+                        Font = new Font { Size = 18, Bold = true },
+                        ForeColor = Color.White, // line number text
+                        BackColor = new Brush(Color.Red), // red badge background
+                        HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
+                        VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Center
                     }
-            }
+                }
         };
 
         activeStyles.ForEach(s => s.Enabled = false);
@@ -465,8 +487,7 @@ public class MapService
                         Text = $"{stop.StopName} ({stop.StopCode})",
                         Offset = offset,
                         Font = new Font { Size = 11 },
-                        BackColor = new Brush(new Color(255, 255, 255, 200)),
-
+                        BackColor = new Brush(new Color(255, 255, 255, 200))
                     }
                 }
             };

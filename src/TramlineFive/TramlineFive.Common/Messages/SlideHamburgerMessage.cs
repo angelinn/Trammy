@@ -8,4 +8,9 @@ namespace TramlineFive.Common.Messages
     {
 
     }
+
+    public class ShowToastMessage
+    {
+        public string Message { get; set; }
+    }
 }

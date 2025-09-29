@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ExCSS;
 using SkgtService;
 using SkgtService.Models;
 using TramlineFive.Common.Services.Maps;
@@ -17,14 +18,21 @@ namespace TramlineFive.Common.ViewModels;
 
 public class ArrivalVM
 {
-    public string MinutesDisplay { get; set; } // e.g. "5 min"
+    public int MinutesDisplay { get; set; } // e.g. "5 min"
+    public string DepartureTime { get; set; }
     public bool Realtime { get; set; }
+    public string Headsign { get; set; }
 }
 
 public partial class RouteDetailViewModel : BaseViewModel
 {
     public RouteArrivalInformation Arrival { get; private set; }
+
+    [ObservableProperty]
     private string stopCode;
+
+    [ObservableProperty]
+    private string stopName;
 
     public ObservableCollection<ArrivalVM> ScheduledArrivals { get; set; } = new();
 
@@ -48,10 +56,13 @@ public partial class RouteDetailViewModel : BaseViewModel
             if (departureTime < DateTime.Now)
                 departureTime = departureTime.AddDays(1); // handle past midnight times
             int minutes = (int)(departureTime - DateTime.Now).TotalMinutes;
+
             ScheduledArrivals.Add(new ArrivalVM
             {
-                MinutesDisplay = $"{departureTime} - След {minutes} min",
-                Realtime = false
+                MinutesDisplay = minutes,
+                DepartureTime = departureTime.Date == DateTime.Today ? departureTime.ToString("HH:mm") : departureTime.ToString("dd MMM HH:mm"),
+                Realtime = false,
+                Headsign = trip.TripHeadsign
             });
         }
 
@@ -59,10 +70,11 @@ public partial class RouteDetailViewModel : BaseViewModel
         IsLoading = false;
     }
 
-    public async Task LoadAsync(RouteArrivalInformation arrival, string stopCode)
+    public async Task LoadAsync(RouteArrivalInformation arrival, string stopCode, string stopName)
     {
         Arrival = arrival;
-        this.stopCode = stopCode;
+        StopCode = stopCode;
+        StopName = stopName;
         ScheduledArrivals.Clear();
 
         OnPropertyChanged(nameof(Arrival));
