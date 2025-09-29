@@ -24,18 +24,12 @@ namespace TramlineFive.Common.ViewModels;
 
 public partial class VirtualTablesViewModel : BaseViewModel
 {
-    private readonly ArrivalsService arrivalsService;
-    private readonly PublicTransport publicTransport;
-    private readonly RoutesLoader routesLoader;
     private readonly GTFSClient gtfsClient;
 
     private string stopCode;
 
-    public VirtualTablesViewModel(ArrivalsService arrivalsService, PublicTransport publicTransport, RoutesLoader routesLoader, GTFSClient gtfsClient)
+    public VirtualTablesViewModel(GTFSClient gtfsClient)
     {
-        this.arrivalsService = arrivalsService;
-        this.publicTransport = publicTransport;
-        this.routesLoader = routesLoader;
         this.gtfsClient = gtfsClient;
 
         Messenger.Register<StopSelectedMessage>(this, async (r, sc) =>
@@ -139,7 +133,7 @@ public partial class VirtualTablesViewModel : BaseViewModel
                     Debugger.Break();
                 }
 
-                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).ToList();
+                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).Take(4).ToList();
             }
 
             var nextDepartures = await GTFSContext.GetNextDeparturesPerStopQueryAsync(stopCode, DateTime.Now, 3);
@@ -175,7 +169,7 @@ public partial class VirtualTablesViewModel : BaseViewModel
                     }
                 }
 
-                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).ToList();
+                routeArrival.Arrivals = routeArrival.Arrivals.OrderBy(a => a.Arrival).Take(4).ToList();
             }
 
             StopInfo.Arrivals = [.. arrivals.Values.OrderBy(a => a.VehicleType).ThenBy(a => {
