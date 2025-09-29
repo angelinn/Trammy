@@ -13,65 +13,22 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView Background="#f5f0f0">
-        <VerticalStackLayout Padding="15" Spacing="10">
-            <HorizontalStackLayout Spacing="5" Background="White">
-                <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource VirtualTablesTopBarColor}, Dark={DynamicResource DarkBackgroundColor}}">
-                    <Image Source="{Binding StopCode, Converter={StaticResource TransportToImage}}"  HeightRequest="40" WidthRequest="40" />
-                </Grid>                <!-- bus icon -->
-                <Label Text="{Binding Arrival.LineName}" FontSize="24" FontAttributes="Bold" VerticalTextAlignment="Center"/>
-                <Label Text="{Binding Arrival.Direction}" FontSize="24" TextColor="Black" VerticalTextAlignment="Center" Margin="15,0,0,0" />
+    <ScrollView Background="White">
+        <VerticalStackLayout>
+            <HorizontalStackLayout Background="White" Padding="10">
+                <StackLayout Background="Orange" Padding="5" WidthRequest="40">
+                    <Label Text="{Binding Arrival.LineName}" FontSize="24" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalOptions="Center" TextColor="White" />
+                </StackLayout>
+                <Label Text="{Binding StopName}" FontSize="24" TextColor="Black" VerticalTextAlignment="Center" Margin="15,0,0,0" />
             </HorizontalStackLayout>
 
-            <Border BackgroundColor="White" Padding="10">
-                <VerticalStackLayout>
-                    <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
-                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="18" TextColor="Green" />
-                        <Label Text="Пристигания в реално време" FontAttributes="Bold" FontSize="16"/>
-                    </HorizontalStackLayout>
-                    <CollectionView ItemsSource="{Binding Arrival.Arrivals}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <HorizontalStackLayout Spacing="10">
-                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="16" TextColor="Green" IsVisible="{Binding Realtime}" />
-                                    <Label Text="{Binding MinutesTillArrival, StringFormat='{0} минути'}" FontSize="16"/>
-                                </HorizontalStackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Scheduled Arrivals -->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="10">
-                <VerticalStackLayout>
-                    <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
-                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe916;" FontSize="18" TextColor="Gray" />
-                        <Label Text="Пристигания по разписание" FontAttributes="Bold" FontSize="16"/>
-                    </HorizontalStackLayout>
-
-                    <ActivityIndicator IsRunning="{Binding IsLoading}" 
+            <ActivityIndicator IsRunning="{Binding IsLoading}" 
                                    IsVisible="{Binding IsLoading}" 
                                    HorizontalOptions="Center" 
                                    HeightRequest="40"/>
+            <HorizontalStackLayout Spacing="10" Margin="15,10,0,0">
 
-                    <CollectionView ItemsSource="{Binding ScheduledArrivals}" >
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <HorizontalStackLayout Spacing="10">
-                                    <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe916;" FontSize="16" TextColor="Gray"/>
-                                    <Label Text="{Binding MinutesDisplay}" FontSize="16"/>
-                                </HorizontalStackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
-
-            <!-- Buttons -->
-            <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
-
-                <Border Padding="10" BackgroundColor="DodgerBlue">
+                <Border Padding="10" BackgroundColor="DodgerBlue" StrokeShape="RoundRectangle 12" StrokeThickness="0">
                     <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
                         <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="White" Text="&#xe55b;" FontSize="18" />
                         <!-- map icon -->
@@ -82,7 +39,7 @@
                     </Border.GestureRecognizers>
                 </Border>
 
-                <Border Padding="10" BackgroundColor="DodgerBlue">
+                <Border Padding="10" BackgroundColor="DodgerBlue"  StrokeShape="RoundRectangle 12" StrokeThickness="0">
                     <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
                         <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe530;" TextColor="White" FontSize="18" />
                         <!-- vehicle icon -->
@@ -92,10 +49,65 @@
                         <TapGestureRecognizer Command="{Binding ViewVehicleCommand}" />
                     </Border.GestureRecognizers>
                 </Border>
-
             </HorizontalStackLayout>
 
 
+            <VerticalStackLayout Margin="5,15,0,0">
+                <!-- Realtime Arrivals -->
+                <CollectionView ItemsSource="{Binding Arrival.Arrivals}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeThickness="0" Margin="0,0,0,5" BackgroundColor="White" StrokeShape="RoundRectangle 5">
+                                <Grid ColumnDefinitions="10, *">
+                                    <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="Red" />
+                                    <Grid Grid.Column="1" Margin="5" Padding="0,10,10,10" ColumnDefinitions="Auto, Auto, *, Auto" VerticalOptions="Center">
+                                        <Label Grid.Column="1" VerticalTextAlignment="Center" FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="25" Margin="0,0,5,0" TextColor="Green" IsVisible="{Binding Realtime}" />
+                                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
+                                            <HorizontalStackLayout>
+                                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe52e;" FontSize="21" Margin="0,0,5,0" TextColor="Black" />
+                                                <Label Text="{Binding Direction}" FontSize="Default" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="3">
+                                            <Label Text="{Binding MinutesTillArrival}" FontSize="21" VerticalOptions="Center" HorizontalOptions="Center" TextColor="Green"/>
+                                            <Label Text="мин" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <BoxView HeightRequest="1" Margin="0,0,0,0" VerticalOptions="End" Color="LightGray" Grid.ColumnSpan="2" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Scheduled Arrivals -->
+                <CollectionView ItemsSource="{Binding ScheduledArrivals}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeThickness="0" BackgroundColor="White" StrokeShape="RoundRectangle 5">
+                                <Grid ColumnDefinitions="10, *">
+                                    <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="Red" />
+                                    <Grid Grid.Column="1" Margin="5" Padding="0,10,10,10" ColumnDefinitions="Auto, Auto, *, Auto" VerticalOptions="Center">
+                                        <Label VerticalOptions="Center" Grid.Column="1" FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xE8B5;" TextColor="Gray" FontSize="25" Margin="0,0,5,0" />
+                                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
+                                            <HorizontalStackLayout>
+                                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe52e;" FontSize="21" Margin="0,0,5,0" TextColor="Black" />
+                                                <Label Text="{Binding Headsign}"  FontSize="Default" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                            </HorizontalStackLayout>
+                                            <Label Text="{Binding DepartureTime}" FontSize="14" TextColor="Gray" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="3">
+                                            <Label Text="{Binding MinutesDisplay}" FontSize="21" VerticalOptions="Center" HorizontalOptions="Center" />
+                                            <Label Text="мин" HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <BoxView HeightRequest="1" Margin="0,0,0,0" VerticalOptions="End" Color="LightGray" Grid.ColumnSpan="2" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 
