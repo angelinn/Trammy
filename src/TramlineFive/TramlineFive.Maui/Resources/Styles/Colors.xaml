@@ -48,22 +48,23 @@
     <Color x:Key="DarkBarTextColor">White</Color>
 
     <Color x:Key="LabelTextColor">Black</Color>
-    <Color x:Key="DarkLabelTextColor">White</Color>
+    <Color x:Key="DarkLabelTextColor">#E0E0E0</Color>
 
     <Color x:Key="DetailsTextColor">#737373</Color>
     <Color x:Key="DarkDetailsTextColor">#bfbfbf</Color>
 
     <Color x:Key="PrimaryColor">DodgerBlue</Color>
-    <Color x:Key="DarkPrimaryColor">#1e90ff</Color>
+    <Color x:Key="DarkPrimaryColor">#136abe</Color>
 
     <Color x:Key="BackgroundColor">White</Color>
-    <Color x:Key="DarkBackgroundColor">#22272e</Color>
+    <Color x:Key="DarkBackgroundColor">#121212</Color>
 
     <Color x:Key="PlaceholderTextColor">#C7C7CD</Color>
     <Color x:Key="DarkPlaceholderTextColor">white</Color>
 
-    <Color x:Key="MenuTextColor">#717578</Color>
-    <Color x:Key="DarkMenuTextColor">#bfbfbf</Color>
+    <Color x:Key="ButtonTextColor">White</Color>
+    
+    <Color x:Key="DarkModeTextColor">#E0E0E0</Color>
 
     <Color x:Key="RedAccentColor">Red</Color>
     <Color x:Key="DarkRedAccentColor">Crimson</Color>

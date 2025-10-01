@@ -14,13 +14,13 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView Background="White">
+    <ScrollView>
         <VerticalStackLayout>
-            <HorizontalStackLayout Background="White" Padding="10">
+            <HorizontalStackLayout Padding="10">
                 <HorizontalStackLayout Background="{Binding Arrival.VehicleType, Converter={StaticResource TransportToColor}}" Padding="10" HeightRequest="50">
                     <Label Text="{Binding Arrival.LineName}" FontSize="24" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" />
                 </HorizontalStackLayout>
-                <Label Text="{Binding StopName}" FontSize="24" TextColor="Black" VerticalTextAlignment="Center" Margin="15,0,0,0" />
+                <Label Text="{Binding StopName}" FontSize="24" VerticalTextAlignment="Center" Margin="15,0,0,0" />
             </HorizontalStackLayout>
 
             <ActivityIndicator IsRunning="{Binding IsLoading}" 
@@ -29,22 +29,22 @@
                                    HeightRequest="40"/>
             <HorizontalStackLayout Spacing="10" Margin="15,10,0,0">
 
-                <Border Padding="10" BackgroundColor="DodgerBlue" StrokeShape="RoundRectangle 12" StrokeThickness="0">
+                <Border Padding="10" BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryColor}, Dark={DynamicResource DarkPrimaryColor}}" StrokeShape="RoundRectangle 12" StrokeThickness="0">
                     <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
-                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="White" Text="&#xe55b;" FontSize="18" />
+                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" TextColor="{AppThemeBinding Light={DynamicResource ButtonTextColor}, Dark={DynamicResource DarkModeTextColor}}" Text="&#xe55b;" FontSize="18" />
                         <!-- map icon -->
-                        <Label Text="Маршрут" TextColor="White" VerticalOptions="Center"/>
+                        <Label Text="Маршрут" VerticalOptions="Center" TextColor="{AppThemeBinding Light={DynamicResource ButtonTextColor}, Dark={DynamicResource DarkModeTextColor}}" />
                     </HorizontalStackLayout>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ViewRouteCommand}" />
                     </Border.GestureRecognizers>
                 </Border>
 
-                <Border Padding="10" BackgroundColor="DodgerBlue"  StrokeShape="RoundRectangle 12" StrokeThickness="0">
+                <Border Padding="10" BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryColor}, Dark={DynamicResource DarkPrimaryColor}}"  StrokeShape="RoundRectangle 12" StrokeThickness="0">
                     <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
-                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe530;" TextColor="White" FontSize="18" />
+                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe530;" TextColor="{AppThemeBinding Light={DynamicResource ButtonTextColor}, Dark={DynamicResource DarkModeTextColor}}" FontSize="18" />
                         <!-- vehicle icon -->
-                        <Label Text="Местоположение" TextColor="White" VerticalOptions="Center"/>
+                        <Label Text="Местоположение" TextColor="{AppThemeBinding Light={DynamicResource ButtonTextColor}, Dark={DynamicResource DarkModeTextColor}}" VerticalOptions="Center"/>
                     </HorizontalStackLayout>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ViewVehicleCommand}" />
@@ -52,20 +52,19 @@
                 </Border>
             </HorizontalStackLayout>
 
-
             <VerticalStackLayout Margin="5,15,0,0">
                 <!-- Realtime Arrivals -->
                 <CollectionView ItemsSource="{Binding Arrival.Arrivals}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border StrokeThickness="0" Margin="0,0,0,5" BackgroundColor="White" StrokeShape="RoundRectangle 5">
+                            <Border StrokeThickness="0" Margin="0,0,0,5" StrokeShape="RoundRectangle 5">
                                 <Grid ColumnDefinitions="10, *">
                                     <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="{Binding BindingContext.Arrival.VehicleType, Converter={StaticResource TransportToColor}, Source={RelativeSource AncestorType={x:Type CollectionView}}}" />
                                     <Grid Grid.Column="1" Margin="5" Padding="0,10,10,10" ColumnDefinitions="Auto, Auto, *, Auto" VerticalOptions="Center">
                                         <Label Grid.Column="1" VerticalTextAlignment="Center" FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="25" Margin="0,0,5,0" TextColor="Green" IsVisible="{Binding Realtime}" />
                                         <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
                                             <HorizontalStackLayout>
-                                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe52e;" FontSize="21" Margin="0,0,5,0" TextColor="Black" />
+                                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe52e;" FontSize="21" Margin="0,0,5,0" />
                                                 <Label Text="{Binding Direction}" FontSize="Default" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
                                             </HorizontalStackLayout>
                                         </VerticalStackLayout>
@@ -85,14 +84,14 @@
                 <CollectionView ItemsSource="{Binding ScheduledArrivals}" ItemSizingStrategy="MeasureFirstItem">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border StrokeThickness="0" BackgroundColor="White" StrokeShape="RoundRectangle 5">
+                            <Border StrokeThickness="0" StrokeShape="RoundRectangle 5">
                                 <Grid ColumnDefinitions="10, *">
                                     <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="{Binding BindingContext.Arrival.VehicleType, Converter={StaticResource TransportToColor}, Source={RelativeSource AncestorType={x:Type CollectionView}}}" />
                                     <Grid Grid.Column="1" Margin="5" Padding="0,10,10,10" ColumnDefinitions="Auto, Auto, *, Auto" VerticalOptions="Center">
                                         <Label VerticalOptions="Center" Grid.Column="1" FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xE8B5;" TextColor="Gray" FontSize="25" Margin="0,0,5,0" />
                                         <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
                                             <HorizontalStackLayout>
-                                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe52e;" FontSize="21" Margin="0,0,5,0" TextColor="Black" />
+                                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe52e;" FontSize="21" Margin="0,0,5,0" />
                                                 <Label Text="{Binding Headsign}"  FontSize="Default" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
                                             </HorizontalStackLayout>
                                             <Label Text="{Binding DepartureTime}" FontSize="14" TextColor="Gray" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
