@@ -18,21 +18,29 @@ namespace TramlineFive.Common.ViewModels;
 
 public class ArrivalVM
 {
-    public int MinutesDisplay { get; set; } // e.g. "5 min"
+    public string ArrivalDisplay { get; set; } // e.g. "5 min"
+    public bool MinutesDisplay { get; set; }
     public string DepartureTime { get; set; }
+    public DateTime DepartureDateTime { get; set; }
     public bool Realtime { get; set; }
     public string Headsign { get; set; }
+    public string TripId { get; set; }
+    public int Delay { get; set; }
 }
 
 public partial class RouteDetailViewModel : BaseViewModel
 {
-    public RouteArrivalInformation Arrival { get; private set; }
-
     [ObservableProperty]
     private string stopCode;
 
     [ObservableProperty]
     private string stopName;
+
+    [ObservableProperty]
+    private string lineName;
+
+    [ObservableProperty]
+    private TransportType vehicleType;
 
     public ObservableCollection<ArrivalVM> ScheduledArrivals { get; set; } = new();
 
@@ -62,14 +70,12 @@ public partial class RouteDetailViewModel : BaseViewModel
         return true;
     }
 
-    private async Task LoadScheduledArrivalsAsync()
+    private async Task LoadScheduledArrivalsAsync(string routeId)
     {
-        IsLoading = true;
-        List<(Trip, StopTime)> departures = await GTFSContext.GetNextDeparturesForRouteAtStopAsync(Arrival.RouteId, stopCode, DateTime.Now, 10);
+        List<(Trip, StopTime)> departures = await GTFSContext.GetNextDeparturesForRouteAtStopAsync(routeId, StopCode, DateTime.Now, 10);
+
         foreach ((Trip trip, StopTime stopTime) in departures)
         {
-            if (Arrival.Arrivals.Any(a => a.TripId == trip.TripId))
-                continue;
 
             TryNormalize(stopTime.DepartureTime, out TimeSpan ts);
 
@@ -78,13 +84,25 @@ public partial class RouteDetailViewModel : BaseViewModel
                 departureTime = departureTime.AddDays(1); // handle past midnight times
             int minutes = (int)(departureTime - DateTime.Now).TotalMinutes;
 
-            ScheduledArrivals.Add(new ArrivalVM
+
+            var arrival = ScheduledArrivals.FirstOrDefault(a => a.TripId == trip.TripId);
+            if (arrival != null)
             {
-                MinutesDisplay = minutes,
-                DepartureTime = departureTime.Date == DateTime.Today ? departureTime.ToString("HH:mm") : departureTime.ToString("dd MMM HH:mm"),
-                Realtime = false,
-                Headsign = trip.TripHeadsign
-            });
+                arrival.Delay = (int)(arrival.DepartureDateTime - departureTime).TotalMinutes;
+            }
+            else
+            {
+                ScheduledArrivals.Add(new ArrivalVM
+                {
+                    ArrivalDisplay = minutes > 100 ? departureTime.ToString("HH:mm") : minutes.ToString(),
+                    MinutesDisplay = minutes <= 100,
+                    DepartureTime = departureTime.Date == DateTime.Today ? departureTime.ToString("HH:mm") : departureTime.ToString("dd MMM HH:mm"),
+                    Realtime = false,
+                    Headsign = trip.TripHeadsign
+                });
+            }
+
+            await Task.Delay(50);
         }
 
 
@@ -93,14 +111,33 @@ public partial class RouteDetailViewModel : BaseViewModel
 
     public async Task LoadAsync(RouteArrivalInformation arrival, string stopCode, string stopName)
     {
-        Arrival = arrival;
+        IsLoading = true;
+
+        LineName = arrival.LineName;
         StopCode = stopCode;
         StopName = stopName;
+        VehicleType = arrival.VehicleType;
+        
         ScheduledArrivals.Clear();
 
-        OnPropertyChanged(nameof(Arrival));
+        await Task.Delay(50);
 
-        await LoadScheduledArrivalsAsync();
+        foreach (var nextArrival in arrival.Arrivals)
+        {
+            ScheduledArrivals.Add(new ArrivalVM
+            {
+                ArrivalDisplay = nextArrival.MinutesTillArrival.ToString(),
+                DepartureDateTime = nextArrival.Arrival,
+                DepartureTime = nextArrival.Arrival.ToString("HH:mm"),
+                Realtime = nextArrival.Realtime,
+                Headsign = nextArrival.Direction,
+                TripId = nextArrival.TripId,
+                MinutesDisplay = true
+            });
+        }
+
+        await Task.Delay(50);
+        await LoadScheduledArrivalsAsync(arrival.RouteId);
     }
 
     [RelayCommand]
@@ -113,7 +150,7 @@ public partial class RouteDetailViewModel : BaseViewModel
     private void ViewVehicle()
     {
         GtfsClient.QueryVehicleUpdates();
-        MapService.VehicleTripId = (Arrival.LineName, Arrival.Arrivals[0].TripId);
+        MapService.VehicleTripId = (StopName, ScheduledArrivals[0].TripId);
         NavigationService.ChangePage("//Main");
     }
 }

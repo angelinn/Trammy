@@ -17,8 +17,8 @@
     <ScrollView>
         <VerticalStackLayout>
             <HorizontalStackLayout Padding="10">
-                <HorizontalStackLayout Background="{Binding Arrival.VehicleType, Converter={StaticResource TransportToColor}}" Padding="10" HeightRequest="50">
-                    <Label Text="{Binding Arrival.LineName}" FontSize="24" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" />
+                <HorizontalStackLayout Background="{Binding VehicleType, Converter={StaticResource TransportToColor}}" Padding="10" HeightRequest="50">
+                    <Label Text="{Binding LineName}" FontSize="24" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" />
                 </HorizontalStackLayout>
                 <Label Text="{Binding StopName}" FontSize="24" VerticalTextAlignment="Center" Margin="15,0,0,0" />
             </HorizontalStackLayout>
@@ -54,51 +54,47 @@
 
             <VerticalStackLayout Margin="5,15,0,0">
                 <!-- Realtime Arrivals -->
-                <CollectionView ItemsSource="{Binding Arrival.Arrivals}">
+                <CollectionView ItemsSource="{Binding ScheduledArrivals}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Border StrokeThickness="0" Margin="0,0,0,5" StrokeShape="RoundRectangle 5">
                                 <Grid ColumnDefinitions="10, *">
-                                    <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="{Binding BindingContext.Arrival.VehicleType, Converter={StaticResource TransportToColor}, Source={RelativeSource AncestorType={x:Type CollectionView}}}" />
+                                    <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="{Binding BindingContext.VehicleType, Converter={StaticResource TransportToColor}, Source={RelativeSource AncestorType={x:Type CollectionView}}}" />
                                     <Grid Grid.Column="1" Margin="5" Padding="0,10,10,10" ColumnDefinitions="Auto, Auto, *, Auto" VerticalOptions="Center">
-                                        <Label Grid.Column="1" VerticalTextAlignment="Center" FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe51e;" FontSize="25" Margin="0,0,5,0" TextColor="Green" IsVisible="{Binding Realtime}" />
-                                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
-                                            <HorizontalStackLayout>
-                                                <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe52e;" FontSize="21" Margin="0,0,5,0" />
-                                                <Label Text="{Binding Direction}" FontSize="Default" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
-                                            </HorizontalStackLayout>
-                                        </VerticalStackLayout>
-                                        <VerticalStackLayout Grid.Column="3">
-                                            <Label Text="{Binding MinutesTillArrival}" FontSize="21" VerticalOptions="Center" HorizontalOptions="Center" TextColor="Green"/>
-                                            <Label Text="мин" />
-                                        </VerticalStackLayout>
-                                    </Grid>
-                                    <BoxView HeightRequest="1" Margin="0,0,0,0" VerticalOptions="End" Color="LightGray" Grid.ColumnSpan="2" />
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
-                <!-- Scheduled Arrivals -->
-                <CollectionView ItemsSource="{Binding ScheduledArrivals}" ItemSizingStrategy="MeasureFirstItem">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Border StrokeThickness="0" StrokeShape="RoundRectangle 5">
-                                <Grid ColumnDefinitions="10, *">
-                                    <BoxView WidthRequest="7" Margin="-3,0,0,0" Color="{Binding BindingContext.Arrival.VehicleType, Converter={StaticResource TransportToColor}, Source={RelativeSource AncestorType={x:Type CollectionView}}}" />
-                                    <Grid Grid.Column="1" Margin="5" Padding="0,10,10,10" ColumnDefinitions="Auto, Auto, *, Auto" VerticalOptions="Center">
-                                        <Label VerticalOptions="Center" Grid.Column="1" FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xE8B5;" TextColor="Gray" FontSize="25" Margin="0,0,5,0" />
+                                        <Label Grid.Column="1" VerticalTextAlignment="Center" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="25" Margin="0,0,5,0">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Realtime}" Value="True">
+                                                    <Setter Property="Text" Value="&#xe51e;" />
+                                                    <Setter Property="TextColor" Value="Green" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Realtime}" Value="False">
+                                                    <Setter Property="Text" Value="&#xE8B5;" />
+                                                    <Setter Property="TextColor" Value="LightGray" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
                                         <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
                                             <HorizontalStackLayout>
                                                 <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe52e;" FontSize="21" Margin="0,0,5,0" />
                                                 <Label Text="{Binding Headsign}"  FontSize="Default" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
                                             </HorizontalStackLayout>
-                                            <Label Text="{Binding DepartureTime}" FontSize="14" TextColor="Gray" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                            <HorizontalStackLayout>
+                                                <Label Text="{Binding DepartureTime}" FontSize="14" TextColor="Gray" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                                <Label Text="{Binding Delay,StringFormat='Закъснение: {0} мин'}" IsVisible="{Binding Realtime}" Margin="5,0,0,0" FontSize="14" TextColor="Gray" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                            </HorizontalStackLayout>
                                         </VerticalStackLayout>
                                         <VerticalStackLayout Grid.Column="3">
-                                            <Label Text="{Binding MinutesDisplay}" FontSize="21" VerticalOptions="Center" HorizontalOptions="Center" />
-                                            <Label Text="мин" HorizontalOptions="Center" />
+                                            <Label Text="{Binding ArrivalDisplay}" FontSize="21" VerticalOptions="Center" HorizontalOptions="Center">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Realtime}" Value="True">
+                                                        <Setter Property="TextColor" Value="Green" />
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Realtime}" Value="False">
+                                                        <Setter Property="TextColor" Value="LightGray" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                            <Label Text="мин" IsVisible="{Binding MinutesDisplay}" />
                                         </VerticalStackLayout>
                                     </Grid>
                                     <BoxView HeightRequest="1" Margin="0,0,0,0" VerticalOptions="End" Color="LightGray" Grid.ColumnSpan="2" />
