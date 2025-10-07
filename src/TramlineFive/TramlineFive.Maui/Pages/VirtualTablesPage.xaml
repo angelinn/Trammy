@@ -7,7 +7,8 @@
              xmlns:views="clr-namespace:TramlineFive.Maui.Views"
              xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
              x:DataType="local:VirtualTablesViewModel" Padding="0"
-                x:Name="Page">
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+             x:Name="Page">
 
     <Grid.Resources>
         <ResourceDictionary>
@@ -77,9 +78,7 @@
     </Grid>
 
     <Grid Grid.Row="2"  Margin="3,0,3,0" >
-        <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Margin="0,20,0,0" HeightRequest="58" WidthRequest="58"
-                           VerticalOptions="Start"
-                       Color="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" />
+        <skia:SKLottieView Source="bus-lottie.json" RepeatCount="-1" HeightRequest="276" WidthRequest="240" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Start" />
 
         <ListView ItemsSource="{Binding StopInfo.Arrivals}" 
                   SelectedItem="{Binding Selected, Mode=TwoWay}" 

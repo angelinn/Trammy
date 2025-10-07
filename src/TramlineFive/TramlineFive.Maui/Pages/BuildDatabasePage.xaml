@@ -1,13 +1,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                          x:Class="TramlineFive.Maui.Pages.BuildDatabasePage">
+                          x:Class="TramlineFive.Maui.Pages.BuildDatabasePage"
+                          xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI">
     
     <Grid BackgroundColor="{AppThemeBinding Light={DynamicResource BackgroundColor}, Dark={DynamicResource DarkBackgroundColor}}">
         <VerticalStackLayout Padding="20" Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+            <skia:SKLottieView Source="bus-lottie.json" RepeatCount="-1" HeightRequest="276" WidthRequest="240" />
             <Label Text="Подготовка на базата данни…" FontSize="24" HorizontalTextAlignment="Center"/>
             <Label Text="(може да отнеме около 1 минута)" FontSize="16" HorizontalOptions="Center" />
             <ProgressBar x:Name="ProgressBar" Progress="0" ProgressColor="{AppThemeBinding Light={DynamicResource PrimaryColor}, Dark={DynamicResource DarkPrimaryColor}}" />
-            <Label x:Name="StatusLabel" Text="Зареждане..." />
+            <Label x:Name="StatusLabel" Text="Зареждане..." HorizontalOptions="Center" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

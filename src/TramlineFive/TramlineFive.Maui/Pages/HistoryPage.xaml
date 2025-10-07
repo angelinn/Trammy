@@ -4,6 +4,7 @@
              xmlns:cv="clr-namespace:TramlineFive.Converters"
              x:Class="TramlineFive.Pages.HistoryPage"
              xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              x:DataType="local:HistoryViewModel"
              BindingContext="{Binding HistoryViewModel, Source={StaticResource Locator}}"
              Shell.NavBarIsVisible="True" 
@@ -28,7 +29,7 @@
         </Grid>-->
 
         <Grid>
-            <Label Text="Няма история на търсенията. Потърсете спирка." FontAttributes="Italic" TextColor="Gray" IsVisible="{Binding HasHistory}" Margin="5" />
+            <skia:SKLottieView Source="empty-box-lottie.json" HorizontalOptions="Center" RepeatCount="-1" IsVisible="{Binding HasHistory}" HeightRequest="276" WidthRequest="240" />
 
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
 

@@ -7,6 +7,7 @@
              Shell.NavBarIsVisible="True"
              xmlns:local="clr-namespace:TramlineFive.Common.ViewModels;assembly=TramlineFive.Common"
              x:DataType="local:FavouritesViewModel"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
              BindingContext="{Binding FavouritesViewModel, Source={StaticResource Locator}}">
 
     <ContentPage.Resources>
@@ -59,8 +60,7 @@
         <Grid Grid.Row="1">
             <ActivityIndicator IsEnabled="{Binding IsLoading}" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" HorizontalOptions="Center" VerticalOptions="Center" />
             <StackLayout HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding HasFavourites}" Padding="10">
-                <Label Text="Списъкът е празен. Потърсете спирка и я добавете към любими." TextColor="Gray"  FontSize="21" HorizontalTextAlignment="Center" />
-                <Label Text="tram" FontFamily="MaterialIconsOutlinedRegular.otf" FontSize="105" TextColor="{AppThemeBinding Light={DynamicResource BlueAccentColor}, Dark={DynamicResource DarkBlueAccentColor}}" HorizontalOptions="Center" Margin="0,10,0,0" Opacity="0.7" />
+                <skia:SKLottieView Source="empty-box-lottie.json" RepeatCount="-1" HeightRequest="276" WidthRequest="240" />
             </StackLayout>
 
             <CollectionView ItemsSource="{Binding Favourites}" SelectedItem="{Binding Selected, Mode=TwoWay}" VerticalOptions="Fill" SelectionMode="Single">
