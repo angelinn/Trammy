@@ -8,6 +8,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExCSS;
+using Mapsui.Utilities;
 using SkgtService;
 using SkgtService.Models;
 using TramlineFive.Common.Services.Maps;
@@ -42,7 +43,7 @@ public partial class RouteDetailViewModel : BaseViewModel
     [ObservableProperty]
     private TransportType vehicleType;
 
-    public ObservableCollection<ArrivalVM> ScheduledArrivals { get; set; } = new();
+    public ObservableRangeCollection<ArrivalVM> ScheduledArrivals { get; set; } = new();
 
     [ObservableProperty]
     private bool isLoading;
@@ -102,7 +103,7 @@ public partial class RouteDetailViewModel : BaseViewModel
                 });
             }
 
-            await Task.Delay(50);
+            await Task.Yield();
         }
 
 
@@ -117,26 +118,21 @@ public partial class RouteDetailViewModel : BaseViewModel
         StopCode = stopCode;
         StopName = stopName;
         VehicleType = arrival.VehicleType;
-        
-        ScheduledArrivals.Clear();
 
-        await Task.Delay(50);
+        await Task.Yield();
 
-        foreach (var nextArrival in arrival.Arrivals)
+        ScheduledArrivals.ReplaceRange(arrival.Arrivals.Select(a => new ArrivalVM
         {
-            ScheduledArrivals.Add(new ArrivalVM
-            {
-                ArrivalDisplay = nextArrival.MinutesTillArrival.ToString(),
-                DepartureDateTime = nextArrival.Arrival,
-                DepartureTime = nextArrival.Arrival.ToString("HH:mm"),
-                Realtime = nextArrival.Realtime,
-                Headsign = nextArrival.Direction,
-                TripId = nextArrival.TripId,
-                MinutesDisplay = true
-            });
-        }
+            ArrivalDisplay = a.MinutesTillArrival.ToString(),
+            DepartureDateTime = a.Arrival,
+            DepartureTime = a.Arrival.ToString("HH:mm"),
+            Realtime = a.Realtime,
+            Headsign = a.Direction,
+            TripId = a.TripId,
+            MinutesDisplay = true
+        }));
 
-        await Task.Delay(50);
+        await Task.Yield();
         await LoadScheduledArrivalsAsync(arrival.RouteId);
     }
 

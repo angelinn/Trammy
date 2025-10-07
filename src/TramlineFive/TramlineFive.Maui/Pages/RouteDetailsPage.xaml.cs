@@ -26,17 +26,20 @@ public partial class RouteDetailsPage : ContentPage, IQueryAttributable
 			arrivalO = arrival;
             stopCodeO = stopCode;
             stopNameO = stopName;
+
+            appeared = false;
         }
     }
 
     protected override async void OnAppearing()
     {
+        base.OnAppearing();
+
         if (!appeared)
         {
-            await Task.Delay(1000);
+            await Task.Delay(300);
             _ = (BindingContext as RouteDetailViewModel).LoadAsync(arrivalO as RouteArrivalInformation, stopCodeO as string, stopNameO as string);
             appeared = true;
         }
-        base.OnAppearing();
     }
 }
