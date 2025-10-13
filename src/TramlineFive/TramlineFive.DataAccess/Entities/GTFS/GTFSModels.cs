@@ -65,14 +65,11 @@ public class StopDepartureFull
 
 public class StopWithType
 {
-    public string StopId { get; set; }
     public string StopCode { get; set; }
     public string StopName { get; set; }
     public double StopLat { get; set; }
     public double StopLon { get; set; }
-
-    // aggregated info
-    public string StopModes { get; set; } // e.g. "Bus, Tram"
+    public int DominantRouteType { get; set; }
 }
 public class StopDepartureSql
 {

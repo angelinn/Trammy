@@ -35,7 +35,7 @@ public class GTFSClient
 
     public async Task LoadDataAsync()
     {
-        Stops = await GTFSContext.GetActiveStopsWithTypesAsync();
+        Stops = await GTFSContext.FetchDominantStops();
     }
 
     public async Task QueryRealtimeData()

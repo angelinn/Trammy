@@ -455,7 +455,7 @@ public class MapService
             MPoint stopLocation = new MPoint(stop.StopLon, stop.StopLat);
             MPoint stopMapLocation = SphericalMercator.FromLonLat(new MPoint(stopLocation.X, stopLocation.Y));
 
-            TransportType dominantType = GetDominantRouteType(stop.StopModes);
+            TransportType dominantType = (TransportType)stop.DominantRouteType;
             var (symbolStyle, offset) = dominantType switch
             {
                 TransportType.Trolley => (trolleyPinStyle, new Offset(0, -32)),

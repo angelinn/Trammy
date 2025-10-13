@@ -29,6 +29,67 @@ public class GTFSContext
 
         return await db.QueryAsync<StopWithType>(sql);
     }
+
+    public static async Task<List<StopWithType>> FetchDominantStops()
+    {
+        SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
+
+        string sql = @"
+SELECT 
+    d.StopCode,
+    AVG(s.StopLat) AS StopLat,
+    AVG(s.StopLon) AS StopLon,
+    s.StopName,
+    d.DominantRouteType
+FROM StopDominantType d
+JOIN Stop s ON s.StopCode = d.StopCode
+GROUP BY d.StopCode;";
+
+        return await db.QueryAsync<StopWithType>(sql);
+    }
+
+    public static  int CreateDominantTypesTable(SQLiteConnection db)
+    {
+        string sql = @"
+CREATE TABLE StopDominantType AS
+WITH RouteCounts AS (
+    SELECT 
+        s.StopCode,
+        r.RouteType,
+        COUNT(*) AS RouteTypeCount
+    FROM Stop s
+    JOIN StopTime st ON s.StopId = st.StopId
+    JOIN Trip t ON st.TripId = t.TripId
+    JOIN Route r ON t.RouteId = r.RouteId
+    GROUP BY s.StopCode, r.RouteType
+),
+Dominant AS (
+    SELECT 
+        StopCode,
+        RouteType AS DominantRouteType
+    FROM (
+        SELECT 
+            StopCode,
+            RouteType,
+            RouteTypeCount,
+            ROW_NUMBER() OVER (
+                PARTITION BY StopCode 
+                ORDER BY RouteTypeCount DESC
+            ) AS rn
+        FROM RouteCounts
+    ) ranked
+    WHERE rn = 1
+)
+SELECT 
+    d.StopCode,
+    d.DominantRouteType
+FROM Dominant d
+GROUP BY d.StopCode;";
+        return 
+            db.Execute(sql);
+
+    }
+
     public static async Task<Dictionary<(string TripId, string StopId), StopTime>> LoadStopTimesNexthAsync(DateTime now, int hours)
     {
         SQLiteAsyncConnection db = new SQLiteAsyncConnection(DatabasePath);
