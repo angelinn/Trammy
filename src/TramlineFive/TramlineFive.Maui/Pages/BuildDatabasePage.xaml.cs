@@ -5,6 +5,7 @@ using SQLite;
 using System.Globalization;
 using System.IO.Compression;
 using System.Net.Http;
+using TramlineFive.DataAccess;
 using TramlineFive.DataAccess.Entities.GTFS;
 
 namespace TramlineFive.Maui.Pages;
@@ -15,6 +16,18 @@ public partial class BuildDatabasePage : ContentPage
     {
         InitializeComponent();
         Task.Run(() => BuildDatabaseAsync());
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        DeviceDisplay.Current.KeepScreenOn = true;
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing(); 
+        DeviceDisplay.Current.KeepScreenOn = false;
     }
 
     private async Task BuildDatabaseAsync()
@@ -53,6 +66,13 @@ public partial class BuildDatabasePage : ContentPage
             await InsertCsvAsync<Trip>(db, Path.Combine(extractPath, "trips.txt"), "trips");
             await InsertCsvAsync<CalendarDate>(db, Path.Combine(extractPath, "calendar_dates.txt"), "calendar_dates");
             await InsertCsvAsync<StopTime>(db, Path.Combine(extractPath, "stop_times.txt"), "stop_times");
+            
+            MainThread.BeginInvokeOnMainThread(() =>
+            { 
+                StatusLabel.Text = $"Оптимизиране на зареждане спирки...";
+            });
+
+            GTFSContext.CreateDominantTypesTable(db);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
