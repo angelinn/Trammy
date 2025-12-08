@@ -48,6 +48,10 @@ public partial class RouteDetailViewModel : BaseViewModel
     [ObservableProperty]
     private bool isLoading;
 
+    private const int PAGE_SIZE = 20;
+    private int currentPage = 0;
+    private List<ArrivalVM> allArrivals = new();
+
     private readonly GTFSClient GtfsClient;
     public RouteDetailViewModel(GTFSClient gtfsClient)
     { 
@@ -86,14 +90,14 @@ public partial class RouteDetailViewModel : BaseViewModel
             int minutes = (int)(departureTime - DateTime.Now).TotalMinutes;
 
 
-            var arrival = ScheduledArrivals.FirstOrDefault(a => a.TripId == trip.TripId);
+            var arrival = allArrivals.FirstOrDefault(a => a.TripId == trip.TripId);
             if (arrival != null)
             {
                 arrival.Delay = (int)(arrival.DepartureDateTime - departureTime).TotalMinutes;
             }
             else
             {
-                ScheduledArrivals.Add(new ArrivalVM
+                allArrivals.Add(new ArrivalVM
                 {
                     ArrivalDisplay = minutes > 100 ? departureTime.ToString("HH:mm") : minutes.ToString(),
                     MinutesDisplay = minutes <= 100,
@@ -112,6 +116,9 @@ public partial class RouteDetailViewModel : BaseViewModel
 
     public async Task LoadAsync(RouteArrivalInformation arrival, string stopCode, string stopName)
     {
+        ScheduledArrivals.Clear();
+        currentPage = 0;
+
         IsLoading = true;
 
         LineName = arrival.LineName;
@@ -121,7 +128,7 @@ public partial class RouteDetailViewModel : BaseViewModel
 
         await Task.Yield();
 
-        ScheduledArrivals.ReplaceRange(arrival.Arrivals.Select(a => new ArrivalVM
+        allArrivals = arrival.Arrivals.Select(a => new ArrivalVM
         {
             ArrivalDisplay = a.MinutesTillArrival.ToString(),
             DepartureDateTime = a.Arrival,
@@ -130,10 +137,35 @@ public partial class RouteDetailViewModel : BaseViewModel
             Headsign = a.Direction,
             TripId = a.TripId,
             MinutesDisplay = true
-        }));
+        }).ToList();
 
         await Task.Yield();
         await LoadScheduledArrivalsAsync(arrival.RouteId);
+
+        LoadMoreArrivals();
+    }
+
+    [RelayCommand]
+    public async Task LoadMoreArrivals()
+    {
+        if (currentPage * PAGE_SIZE >= allArrivals.Count)
+            return;
+
+        IsLoading = true;
+
+        var nextItems = allArrivals.Skip(currentPage * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+        if (nextItems.Count > 0)
+        {
+            foreach (var item in nextItems)
+            {
+                ScheduledArrivals.Add(item);
+                await Task.Yield(); // let UI update
+            }
+            //ScheduledArrivals.AddRange(nextItems);
+            ++currentPage;
+        }
+
+        IsLoading = false;
     }
 
     [RelayCommand]
@@ -152,7 +184,7 @@ public partial class RouteDetailViewModel : BaseViewModel
     private void ViewVehicle()
     {
         GtfsClient.QueryVehicleUpdates();
-        MapService.VehicleTripId = (StopName, ScheduledArrivals[0].TripId);
+        MapService.VehicleTripId = (LineName, ScheduledArrivals[0].TripId);
         NavigationService.ChangePage("//Main");
     }
 }

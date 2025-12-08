@@ -43,9 +43,4 @@ public partial class RouteDetailsPage : ContentPage, IQueryAttributable
             appeared = true;
         }
     }
-
-    private void CollectionView_RemainingItemsThresholdReached(object sender, EventArgs e)
-    {
-
-    }
 }
