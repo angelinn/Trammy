@@ -34,6 +34,7 @@ public partial class RouteDetailsPage : ContentPage, IQueryAttributable
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        (BindingContext as RouteDetailViewModel).ScheduledArrivals.Clear();
 
         if (!appeared)
         {
@@ -41,5 +42,10 @@ public partial class RouteDetailsPage : ContentPage, IQueryAttributable
             _ = (BindingContext as RouteDetailViewModel).LoadAsync(arrivalO as RouteArrivalInformation, stopCodeO as string, stopNameO as string);
             appeared = true;
         }
+    }
+
+    private void CollectionView_RemainingItemsThresholdReached(object sender, EventArgs e)
+    {
+
     }
 }
