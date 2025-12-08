@@ -50,6 +50,17 @@
                         <TapGestureRecognizer Command="{Binding ViewVehicleCommand}" />
                     </Border.GestureRecognizers>
                 </Border>
+
+                <Border Padding="10" BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryColor}, Dark={DynamicResource DarkPrimaryColor}}"  StrokeShape="RoundRectangle 12" StrokeThickness="0">
+                    <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                        <Label FontFamily="MaterialIconsOutlinedRegular.otf" Text="&#xe530;" TextColor="{AppThemeBinding Light={DynamicResource ButtonTextColor}, Dark={DynamicResource DarkModeTextColor}}" FontSize="18" />
+                        <!-- vehicle icon -->
+                        <Label Text="Известяване" TextColor="{AppThemeBinding Light={DynamicResource ButtonTextColor}, Dark={DynamicResource DarkModeTextColor}}" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SubscribeCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
             </HorizontalStackLayout>
 
             <VerticalStackLayout Margin="5,15,0,0">

@@ -37,4 +37,7 @@ public interface IApplicationService
     string GetAppDataDirectory();
     Task<Stream> OpenResourceFileAsync(string fileName);
 
+    void SubscribeForArrival(string tripId, string stopId);
+    void StopArrivalSub();
+
 }

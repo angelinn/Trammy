@@ -14,6 +14,7 @@ using TramlineFive.Common.Services.Maps;
 using TramlineFive.Common.Services.Interfaces;
 using Microsoft.Maui.Storage;
 using Plugin.Maui.BottomSheet.Hosting;
+using TramlineFive.Maui.Platforms.Android;
 
 namespace TramlineFive.Maui
 {
@@ -104,6 +105,7 @@ namespace TramlineFive.Maui
 
             services.AddSingleton<VersionCheckingService>();
             services.AddSingleton<PermissionService>();
+            services.AddSingleton<MonitoringService>();
 
             string destinationGtfsStatic = Path.Combine(FileSystem.AppDataDirectory, "gtfs_static.zip");
             string extractGtfsStatic = Path.Combine(FileSystem.AppDataDirectory, "gtfs_data");

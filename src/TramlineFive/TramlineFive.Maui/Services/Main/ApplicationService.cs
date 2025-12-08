@@ -19,10 +19,12 @@ namespace TramlineFive.Services.Main;
 public class ApplicationService : IApplicationService
 {
     private readonly PermissionService permissionService;
+    private readonly MonitoringService monitoringService;
 
-    public ApplicationService(PermissionService permissionService)
+    public ApplicationService(PermissionService permissionService, MonitoringService monitoringService)
     {
         this.permissionService = permissionService;
+        this.monitoringService = monitoringService;
     }
 
     public string GetStringSetting(string key, string defaultValue)
@@ -213,5 +215,15 @@ public class ApplicationService : IApplicationService
     public async Task<Stream> OpenResourceFileAsync(string fileName)
     {
         return await FileSystem.OpenAppPackageFileAsync(fileName);
+    }
+
+    public void SubscribeForArrival(string tripId, string stopId)
+    {
+        monitoringService.Subscribe(tripId, stopId);
+    }
+
+    public void StopArrivalSub()
+    {
+        monitoringService.StopSubscription();
     }
 }

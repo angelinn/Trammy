@@ -40,6 +40,7 @@ SELECT
     AVG(s.StopLat) AS StopLat,
     AVG(s.StopLon) AS StopLon,
     s.StopName,
+    s.StopId,
     d.DominantRouteType
 FROM StopDominantType d
 JOIN Stop s ON s.StopCode = d.StopCode

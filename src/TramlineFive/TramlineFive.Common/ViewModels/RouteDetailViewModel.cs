@@ -137,6 +137,12 @@ public partial class RouteDetailViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private void Subscribe()
+    {
+        ApplicationService.SubscribeForArrival(ScheduledArrivals[0].TripId, new string(StopCode.Where(s => char.IsDigit(s)).ToArray()));
+    }
+
+    [RelayCommand]
     private void ViewRoute()
     {
         // Navigate to route/shape map

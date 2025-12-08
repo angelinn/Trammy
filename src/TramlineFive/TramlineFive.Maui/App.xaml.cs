@@ -188,5 +188,6 @@ namespace TramlineFive.Maui
             Preferences.Set(Settings.MapCenterX, m.x);
             Preferences.Set(Settings.MapCenterY, m.y);
         }
+
     }
 }

@@ -25,7 +25,7 @@ public class GTFSClient
 
     public List<StopWithType> Stops { get; private set; }
     public Dictionary<string, TransportType> StopDominantTypes { get; init; } = new();
-    public Dictionary<(string routeId, string stopId), DateTime> PredictedArrivals { get; init; } = new();
+    public Dictionary<(string tripId, string stopId), DateTime> PredictedArrivals { get; init; } = new();
     public Dictionary<string, VehiclePosition> VehiclePositions { get; init; } = new(); 
 
     public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath, string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)
