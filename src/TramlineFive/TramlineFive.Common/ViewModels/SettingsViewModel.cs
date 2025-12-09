@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TramlineFive.Common.GTFS;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
 using TramlineFive.Common.Services.Maps;

@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Topten.RichTextKit;
+using TramlineFive.Common.GTFS;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Services;
 using TramlineFive.DataAccess;

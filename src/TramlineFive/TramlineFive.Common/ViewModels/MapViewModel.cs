@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TramlineFive.Common.GTFS;
 using TramlineFive.Common.Messages;
 using TramlineFive.Common.Models;
 using TramlineFive.Common.Services.Maps;

@@ -4,12 +4,15 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
+using SkgtService;
 using SkgtService.Models;
+using TramlineFive.Common.Messages;
 using TramlineFive.DataAccess;
 using TramlineFive.DataAccess.Entities.GTFS;
 using TransitRealtime;
 
-namespace SkgtService;
+namespace TramlineFive.Common.GTFS;
 
 public class GTFSClient
 {
@@ -23,6 +26,8 @@ public class GTFSClient
 
     public event EventHandler VehicleUpdatesUpdated;
 
+    private bool queryUpdates;
+
     public List<StopWithType> Stops { get; private set; }
     public Dictionary<string, TransportType> StopDominantTypes { get; init; } = new();
     public Dictionary<(string tripId, string stopId), DateTime> PredictedArrivals { get; init; } = new();
@@ -31,6 +36,7 @@ public class GTFSClient
     public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath, string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)
     {
         RealtimeService = new GTFSRTService(tripUpdatesUrl, vehicleUpdatesUrl, alertsUrl);
+        WeakReferenceMessenger.Default.Register<VehicleNotFoundMessage>(this, (r, m) => StopVehicleUpdates());
     }
 
     public async Task LoadDataAsync()
@@ -57,8 +63,6 @@ public class GTFSClient
             Console.WriteLine($"Error fetching or applying trip updates: {ex.Message}");
         }
     }
-    private bool queryUpdates;
-
     public void QueryVehicleUpdates()
     {
         Task.Run(async () =>

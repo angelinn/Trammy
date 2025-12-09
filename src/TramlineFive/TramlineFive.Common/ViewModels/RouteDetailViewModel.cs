@@ -9,8 +9,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ExCSS;
 using Mapsui.Utilities;
-using SkgtService;
 using SkgtService.Models;
+using TramlineFive.Common.GTFS;
 using TramlineFive.Common.Services.Maps;
 using TramlineFive.DataAccess;
 using TramlineFive.DataAccess.Entities.GTFS;
@@ -184,7 +184,7 @@ public partial class RouteDetailViewModel : BaseViewModel
     private void ViewVehicle()
     {
         GtfsClient.QueryVehicleUpdates();
-        MapService.VehicleTripId = (LineName, ScheduledArrivals[0].TripId);
+        MapService.VehicleData = (LineName, ScheduledArrivals[0].TripId, VehicleType);
         NavigationService.ChangePage("//Main");
     }
 }

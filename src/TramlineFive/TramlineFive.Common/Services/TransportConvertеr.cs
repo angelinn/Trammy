@@ -23,4 +23,16 @@ public static class TransportConvertеr
             _ => "#EE3124"
         };
     }
+
+    public static string TypeToBulgarianName(TransportType type)
+    { 
+        return type switch
+        { 
+            TransportType.Bus => "Автобус",
+            TransportType.Tram => "Трамвай",
+            TransportType.Trolley => "Тролей",
+            TransportType.Subway => "Метро",
+            _ => "#"
+        };
+    }
 }

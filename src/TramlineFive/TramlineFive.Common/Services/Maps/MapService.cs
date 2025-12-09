@@ -26,6 +26,7 @@ using TramlineFive.DataAccess.Entities.GTFS;
 using SkgtService.Models.Json;
 using System.Security.Cryptography.X509Certificates;
 using System;
+using TramlineFive.Common.GTFS;
 
 namespace TramlineFive.Common.Services.Maps;
 
@@ -69,7 +70,7 @@ public class MapService
 
     private readonly GTFSClient gtfsClient;
 
-    public static (string, string) VehicleTripId { get; set; }
+    public static (string, string, TransportType) VehicleData { get; set; }
 
     public MapService(LocationService locationService, PublicTransport publicTransport, GTFSClient gtfsClient)
     {
@@ -84,12 +85,14 @@ public class MapService
 
     private void OnVehicleUpdatesUpdated(object sender, System.EventArgs e)
     {
-        (string lineName, string vehicleTripId) = VehicleTripId;
+        (string lineName, string vehicleTripId, TransportType transportType) = VehicleData;
         if (!gtfsClient.VehiclePositions.TryGetValue(vehicleTripId, out TransitRealtime.VehiclePosition vehiclePosition))
         {
             Console.WriteLine($"Could not get position for trip {vehicleTripId}");
             gtfsClient.StopVehicleUpdates();
-            VehicleTripId = ("" ,"");
+            VehicleData = ("" ,"", transportType);
+
+            WeakReferenceMessenger.Default.Send(new VehicleNotFoundMessage(lineName, vehicleTripId));
 
             return;
         }
@@ -102,36 +105,42 @@ public class MapService
             dataTimestamp = timeStamp;
         }
 
+        SymbolStyle symbolStyle = transportType switch
+        {
+            TransportType.Trolley => trolleyPinStyle,
+            TransportType.Tram => tramPinStyle,
+            TransportType.Subway => subwayStyle,
+            TransportType.Bus => busPinStyle,
+            _ => busPinStyle
+        };
+
         IFeature feature = new PointFeature(stopMapLocation)
         {
             Styles = new List<IStyle>
                 {
                     new SymbolStyle
                     {
-                        ImageSource = busPinStyle.ImageSource, // your bus icon
+                        ImageSource = symbolStyle.ImageSource,
                         SymbolOffset = new Offset(0, 0),
-                        SymbolScale = busPinStyle.SymbolScale
+                        SymbolScale = symbolStyle.SymbolScale * 0.9
                     },
-
-                    // 2. Fake shadow layer for badge text
                     new LabelStyle
                     {
-                        Text = $"{lineName} ({vehiclePosition.Vehicle.Id})\n{vehiclePosition.Position.Speed} км/ч ({dataTimestamp:HH:mm:ss})", // e.g. "5"
-                        Offset = new Offset(1, -40), // slightly offset to look like shadow
-                        Font = new Font { Size = 18, Bold = true },
-                        ForeColor = new Color(0, 0, 0, 128), // semi-transparent black
+                        Text = $"{TransportConvertеr.TypeToBulgarianName(transportType)} №{lineName} ({vehiclePosition.Position.Speed} км/ч)", // e.g. "5"
+                        Offset = new Offset(0, -59), // just above the bus icon
+                        Font = new Font { Size = 16, Bold = true },
+                        ForeColor = Color.White, // line number text
+                        BackColor = new Brush(Color.FromString(TransportConvertеr.TypeToColor(transportType))), // red badge background
                         HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                         VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Center
                     },
-
-                    // 3. Actual badge (foreground)
                     new LabelStyle
                     {
-                        Text = $"{lineName} ({vehiclePosition.Vehicle.Id})\n{vehiclePosition.Position.Speed} км/ч ({dataTimestamp:HH:mm:ss})", // e.g. "5"
+                        Text = $"({vehiclePosition.Vehicle.Id}) ({dataTimestamp:HH:mm:ss})", // e.g. "5"
                         Offset = new Offset(0, -39), // just above the bus icon
-                        Font = new Font { Size = 18, Bold = true },
+                        Font = new Font { Size = 12, Bold = true },
                         ForeColor = Color.White, // line number text
-                        BackColor = new Brush(Color.Red), // red badge background
+                        BackColor = new Brush(Color.FromString(TransportConvertеr.TypeToColor(transportType))), // red badge background
                         HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                         VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Center
                     }
@@ -659,13 +668,13 @@ public class MapService
         if (isShowingRoute)
             HideRoutes();
 
-        if (VehicleTripId != ("", ""))
+        if (VehicleData.Item1 != "")
         {
             ILayer layer = map.Layers.FindLayer("VehicleLayer").FirstOrDefault();
             if (layer != null)
                 map.Layers.Remove(layer);
 
-            VehicleTripId = ("", "");
+            VehicleData = ("", "", TransportType.Bus);
             gtfsClient.StopVehicleUpdates();
         }
 

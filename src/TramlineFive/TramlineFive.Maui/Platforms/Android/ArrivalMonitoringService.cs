@@ -9,6 +9,7 @@ using Android.Media;
 
 using Timer = System.Timers.Timer;
 using Uri = Android.Net.Uri;
+using TramlineFive.Common.GTFS;
 
 namespace TramlineFive.Maui.Platforms.Android;
 
