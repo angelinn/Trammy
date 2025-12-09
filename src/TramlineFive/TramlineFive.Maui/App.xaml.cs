@@ -21,6 +21,7 @@ using Microsoft.Maui.Storage;
 using NetTopologySuite.Operation.Overlay.Validate;
 using System.Runtime.InteropServices.Marshalling;
 using TramlineFive.Maui.Pages;
+using CommunityToolkit.Maui.Core;
 
 namespace TramlineFive.Maui
 {
@@ -85,7 +86,9 @@ namespace TramlineFive.Maui
                 WeakReferenceMessenger.Default.Register<RequestDatabaseRebuildMessage>(this, (r, m) => { Windows[0].Page = new BuildDatabasePage(); });
                 WeakReferenceMessenger.Default.Register<VehicleNotFoundMessage>(this, (r, m) =>
                 {
-                    Toast.Make($"Не е намерено превозно средство от линия {m.lineName} и tripId {m.vehicleTripId}").Show();
+                    Dispatcher.Dispatch(() =>
+                        Toast.Make($"Не е намерено превозно средство от линия {m.lineName} и tripId {m.vehicleTripId}", ToastDuration.Long).Show()
+                    );
                 });
 
                 StopsLoader.OnStopsUpdated += OnStopsUpdated;

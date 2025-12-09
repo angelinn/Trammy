@@ -127,20 +127,20 @@ public class MapService
                     new LabelStyle
                     {
                         Text = $"{TransportConvertеr.TypeToBulgarianName(transportType)} №{lineName} ({vehiclePosition.Position.Speed} км/ч)", // e.g. "5"
-                        Offset = new Offset(0, -59), // just above the bus icon
+                        Offset = new Offset(0, -59),
                         Font = new Font { Size = 16, Bold = true },
-                        ForeColor = Color.White, // line number text
-                        BackColor = new Brush(Color.FromString(TransportConvertеr.TypeToColor(transportType))), // red badge background
+                        ForeColor = Color.White,
+                        BackColor = new Brush(Color.FromString(TransportConvertеr.TypeToColor(transportType))),
                         HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                         VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Center
                     },
                     new LabelStyle
                     {
-                        Text = $"({vehiclePosition.Vehicle.Id}) ({dataTimestamp:HH:mm:ss})", // e.g. "5"
-                        Offset = new Offset(0, -39), // just above the bus icon
+                        Text = $"({vehiclePosition.Vehicle.Id}) ({dataTimestamp:HH:mm:ss})",
+                        Offset = new Offset(0, -39),
                         Font = new Font { Size = 12, Bold = true },
-                        ForeColor = Color.White, // line number text
-                        BackColor = new Brush(Color.FromString(TransportConvertеr.TypeToColor(transportType))), // red badge background
+                        ForeColor = Color.White,
+                        BackColor = new Brush(Color.FromString(TransportConvertеr.TypeToColor(transportType))),
                         HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                         VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Center
                     }
@@ -168,7 +168,6 @@ public class MapService
             vehicleLayer.DataSource = new MemoryProvider(new List<IFeature> { feature });
             map.Refresh(); 
             map.Navigator.CenterOn(stopMapLocation, ANIMATION_MS, Easing.CubicOut);
-
         }
     }
 
