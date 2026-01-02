@@ -58,20 +58,40 @@ public partial class RouteDetailViewModel : BaseViewModel
         GtfsClient = gtfsClient;
     }
 
-    public static bool TryNormalize(string input, out TimeSpan result)
+    public static bool TryNormalize(string gtfsTime, out DateTime result)
     {
-        result = TimeSpan.Zero;
+        result = default;
 
-        // split by ':'
-        var parts = input.Split(':');
+        DateTime now = DateTime.Now;
+
+        var parts = gtfsTime.Split(':');
         if (parts.Length != 3) return false;
 
-        if (!int.TryParse(parts[0], out int hours)) return false;
-        if (!int.TryParse(parts[1], out int minutes)) return false;
-        if (!int.TryParse(parts[2], out int seconds)) return false;
+        int h = int.Parse(parts[0]);
+        int m = int.Parse(parts[1]);
+        int s = int.Parse(parts[2]);
 
-        // normalize: convert excess hours into days
-        result = new TimeSpan(hours / 24, hours % 24, minutes, seconds);
+        // GTFS: hours may exceed 24 → next calendar day(s)
+        int dayOffset = h / 24;
+        int normalizedHour = h % 24;
+
+        // build the intended datetime
+        DateTime departure = now.Date.AddHours(normalizedHour)
+                                     .AddMinutes(m)
+                                     .AddSeconds(s)
+                                     .AddDays(dayOffset);
+
+        // ---------- NIGHT LOGIC FIX ----------
+        // if GTFS hour < 24 but departure time is less than "now" AND it's after midnight,
+        // we DO NOT treat it as next day: it's earlier today (still correct)
+        if (dayOffset > 0 && now.Hour < 3 && departure.Hour < 3)
+        {
+            // both are after midnight → do nothing
+            result = departure.AddDays(-dayOffset);
+            return true;
+        }
+
+        result = departure;
         return true;
     }
 
@@ -81,14 +101,9 @@ public partial class RouteDetailViewModel : BaseViewModel
 
         foreach ((Trip trip, StopTime stopTime) in departures)
         {
-
-            TryNormalize(stopTime.DepartureTime, out TimeSpan ts);
-
-            DateTime departureTime = DateTime.Today.Add(ts);
-            if (departureTime < DateTime.Now)
-                departureTime = departureTime.AddDays(1); // handle past midnight times
+            TryNormalize(stopTime.DepartureTime, out DateTime departureTime);
+      
             int minutes = (int)(departureTime - DateTime.Now).TotalMinutes;
-
 
             var arrival = allArrivals.FirstOrDefault(a => a.TripId == trip.TripId);
             if (arrival != null)
@@ -142,13 +157,13 @@ public partial class RouteDetailViewModel : BaseViewModel
         await Task.Yield();
         await LoadScheduledArrivalsAsync(arrival.RouteId);
 
-        LoadMoreArrivals();
+        await LoadMoreArrivals();
     }
 
     [RelayCommand]
     public async Task LoadMoreArrivals()
     {
-        if (currentPage * PAGE_SIZE >= allArrivals.Count)
+        if (currentPage * PAGE_SIZE >= allArrivals.Count || IsLoading)
             return;
 
         IsLoading = true;

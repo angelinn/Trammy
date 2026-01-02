@@ -8,6 +8,13 @@ namespace TramlineFive.Maui.Services;
 
 public partial class MonitoringService
 {
-    public partial void Subscribe(string tripId, string stopId);
-    public partial void StopSubscription();
+    public partial void Subscribe(string tripId, string stopId)
+    {
+
+    }
+
+    public partial void StopSubscription()
+    {
+
+    }
 }

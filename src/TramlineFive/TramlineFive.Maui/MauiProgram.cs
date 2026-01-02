@@ -14,7 +14,6 @@ using TramlineFive.Common.Services.Maps;
 using TramlineFive.Common.Services.Interfaces;
 using Microsoft.Maui.Storage;
 using Plugin.Maui.BottomSheet.Hosting;
-using TramlineFive.Maui.Platforms.Android;
 using TramlineFive.Common.GTFS;
 
 namespace TramlineFive.Maui
@@ -108,10 +107,7 @@ namespace TramlineFive.Maui
             services.AddSingleton<PermissionService>();
             services.AddSingleton<MonitoringService>();
 
-            string destinationGtfsStatic = Path.Combine(FileSystem.AppDataDirectory, "gtfs_static.zip");
-            string extractGtfsStatic = Path.Combine(FileSystem.AppDataDirectory, "gtfs_data");
-
-            GTFSClient gtfsClient = new GTFSClient(GTFS_STATIC_DATA_URL, destinationGtfsStatic, extractGtfsStatic, TRIP_UPDATES_URL, VEHICLE_POSITION_URL, ALERTS_URL);
+            GTFSClient gtfsClient = new GTFSClient(TRIP_UPDATES_URL, VEHICLE_POSITION_URL, ALERTS_URL);
             services.AddSingleton(g => gtfsClient);
         }
     }

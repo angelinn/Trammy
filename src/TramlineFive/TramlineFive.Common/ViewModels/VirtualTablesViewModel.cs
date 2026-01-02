@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui.Devices;
 using Sentry;
 using SkgtService;
 using SkgtService.Exceptions;
@@ -108,8 +109,15 @@ public partial class VirtualTablesViewModel : BaseViewModel
             {
                 if (!gtfsClient.PredictedArrivals.TryGetValue((map.TripId, map.StopId), out DateTime predictedArrival))
                 {
-                    Console.WriteLine($"No predicted arrival for {map.TripId} {map.StopId} {map.StopName}");
+                    //Console.WriteLine($"No predicted arrival for {map.TripId} {map.StopId} {map.StopName}");
                     continue;
+                }
+
+                if (DeviceInfo.Platform == DevicePlatform.Unknown)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Found predicted arrival for {map.TripId} {map.StopId} {map.StopName} at {predictedArrival}");
+                    Console.ResetColor();
                 }
 
                 if (!arrivals.TryGetValue((map.RouteId, map.TripHeadsign), out RouteArrivalInformation routeArrival))
