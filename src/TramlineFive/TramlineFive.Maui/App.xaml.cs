@@ -114,12 +114,15 @@ namespace TramlineFive.Maui
             NewVersion version = await ServiceContainer.ServiceProvider.GetService<VersionService>().CheckForUpdates();
             if (version != null)
             {
-                bool result = await MainPage.DisplayAlert("Нова версия", $"{AppInfo.Name} има нова версия {version.VersionNumber} 🎉", "СВАЛЯНЕ", "ОТКАЗ");
-                if (result)
+                await Dispatcher.DispatchAsync(async () =>
                 {
-                    Uri url = new Uri(version.ReleaseUrl);
-                    await Browser.Default.OpenAsync(url);
-                }
+                    bool result = await Windows[0].Page.DisplayAlert("Нова версия", $"{AppInfo.Name} има нова версия {version.VersionNumber} 🎉", "СВАЛЯНЕ", "ОТКАЗ");
+                    if (result)
+                    {
+                        Uri url = new Uri(version.ReleaseUrl);
+                        await Browser.Default.OpenAsync(url);
+                    }
+                });
             }
 
             Preferences.Set("VersionCheckDate", DateTime.Now);
