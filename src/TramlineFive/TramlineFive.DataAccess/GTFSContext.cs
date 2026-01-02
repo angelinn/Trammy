@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CsvHelper;
 using SQLite;
 using TramlineFive.DataAccess.Entities.GTFS;
 
@@ -268,4 +271,66 @@ ORDER BY st.DepartureTime;";
 
         return new TimeSpan(hours, minutes, seconds);
     }
+
+    public static async Task CreateDatabaseFromStaticDataAsync(string extractPath, Action<CreateDatabaseCallbackParams> progressCallback)
+    {
+        File.Delete(DatabasePath);
+
+        SQLiteConnection db = new SQLiteConnection(DatabasePath);
+
+        db.CreateTable<Stop>();
+        db.CreateTable<Route>();
+        db.CreateTable<Trip>();
+        db.CreateTable<StopTime>();
+        db.CreateTable<CalendarDate>();
+        db.Execute("CREATE UNIQUE INDEX IF NOT EXISTS IX_Trip_Stop ON StopTime(TripId, StopId)");
+
+        // Insert CSVs
+        await InsertCsvAsync<Stop>(db, Path.Combine(extractPath, "stops.txt"), "stops", progressCallback);
+        await InsertCsvAsync<Route>(db, Path.Combine(extractPath, "routes.txt"), "routes", progressCallback);
+        await InsertCsvAsync<Trip>(db, Path.Combine(extractPath, "trips.txt"), "trips", progressCallback);
+        await InsertCsvAsync<CalendarDate>(db, Path.Combine(extractPath, "calendar_dates.txt"), "calendar_dates", progressCallback);
+        await InsertCsvAsync<StopTime>(db, Path.Combine(extractPath, "stop_times.txt"), "stop_times", progressCallback);
+
+        progressCallback(new CreateDatabaseCallbackParams(0, "Оптимизиране на зареждане спирки..."));
+
+        CreateDominantTypesTable(db);
+    }
+
+
+    private static async Task InsertCsvAsync<T>(SQLiteConnection db, string filePath, string tableName, Action<CreateDatabaseCallbackParams> progressCallback)
+    {
+        using StreamReader reader = new StreamReader(filePath);
+        using CsvReader csv = new CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HeaderValidated = null,       // Ignore missing header validation
+            PrepareHeaderForMatch = (args) => args.Header.Replace("_", "").ToLower() // Normalize
+        });
+
+        progressCallback(new CreateDatabaseCallbackParams(0, $"Четене на {tableName}..."));
+
+        List<T> records = csv.GetRecords<T>().ToList();
+        int total = records.Count;
+        int count = 0;
+
+        await Task.Run(() =>
+        {
+            db.RunInTransaction(() =>
+            {
+                foreach (T record in records)
+                {
+                    db.InsertOrReplace(record);
+                    count++;
+                    if (count % 100 == 0) // update UI every 100 records
+                    {
+                        progressCallback(new CreateDatabaseCallbackParams((double)count / total, $"Въвеждане на {tableName}: {count}/{total}"));
+                    }
+                }
+            });
+        });
+
+        progressCallback(new CreateDatabaseCallbackParams(1, $"Готово {tableName}"));
+    }
+
+    public record CreateDatabaseCallbackParams(double Progress, string Status);
 }

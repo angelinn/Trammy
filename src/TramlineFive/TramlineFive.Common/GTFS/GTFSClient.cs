@@ -33,7 +33,7 @@ public class GTFSClient
     public Dictionary<(string tripId, string stopId), DateTime> PredictedArrivals { get; init; } = new();
     public Dictionary<string, VehiclePosition> VehiclePositions { get; init; } = new(); 
 
-    public GTFSClient(string gtfsUrl, string staticGtfsDir, string extractPath, string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)
+    public GTFSClient(string tripUpdatesUrl, string vehicleUpdatesUrl, string alertsUrl)
     {
         RealtimeService = new GTFSRTService(tripUpdatesUrl, vehicleUpdatesUrl, alertsUrl);
         WeakReferenceMessenger.Default.Register<VehicleNotFoundMessage>(this, (r, m) => StopVehicleUpdates());

@@ -9,19 +9,19 @@ namespace SkgtService;
 public class GTFSDownloader
 {
     private readonly string StaticDataUrl;
-    private readonly string DestinationPath;
+    private readonly string LocalDownloadPath;
     private readonly string ExtractPath;
 
-    public GTFSDownloader(string staticDataUrl, string destinationPath, string extractPath)
+    public GTFSDownloader(string staticDataUrl, string localDownloadPath, string extractPath)
     {
         StaticDataUrl = staticDataUrl;
-        DestinationPath = destinationPath;
+        LocalDownloadPath = localDownloadPath;
         ExtractPath = extractPath;
     }
 
     public async Task DownloadStaticDataAsync()
     {
-        if (File.Exists(DestinationPath))
+        if (File.Exists(LocalDownloadPath))
         {
             Console.WriteLine("GTFS ZIP already exists, skipping download.");
             return;
@@ -31,7 +31,7 @@ public class GTFSDownloader
         Console.WriteLine($"Downloading GTFS feed from {StaticDataUrl}...");
 
         byte[] data = await client.GetByteArrayAsync(StaticDataUrl);
-        await File.WriteAllBytesAsync(DestinationPath, data);
+        await File.WriteAllBytesAsync(LocalDownloadPath, data);
 
         Console.WriteLine("Download complete.");
     }
@@ -44,7 +44,7 @@ public class GTFSDownloader
         }
         else
         {
-            ZipFile.ExtractToDirectory(DestinationPath, ExtractPath, true);
+            ZipFile.ExtractToDirectory(LocalDownloadPath, ExtractPath, true);
             Console.WriteLine($"Extracted GTFS to {ExtractPath}");
         }
     }
