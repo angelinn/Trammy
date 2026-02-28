@@ -31,8 +31,8 @@ public class ArrivalMonitoringService : Service
         CreateImportantNotificationChannel();
 
         var notif = new NotificationCompat.Builder(this, "poll_channel")
-            .SetContentTitle("Transport Tracker")
-            .SetContentText("Monitoring arrivals…")
+            .SetContentTitle("Trammy")
+            .SetContentText("Това известие е необходимо за следене на транспорта при изгасен екран.")
             .SetSmallIcon(Resource.Drawable.bus_icon)
             .SetOngoing(true)
             .Build();
@@ -42,6 +42,8 @@ public class ArrivalMonitoringService : Service
         _timer = new Timer(60_000);
         _timer.Elapsed += async (_, __) => await PollGtfsAsync();
         _timer.Start();
+
+        PollGtfsAsync();
     }
 
     private async Task PollGtfsAsync()
@@ -65,8 +67,8 @@ public class ArrivalMonitoringService : Service
                     if (DateTime.Now > notifyTime)
                     {
                         var notif = new NotificationCompat.Builder(this, "arrivals_channel")
-    .SetContentTitle("Transport arriving soon!")
-    .SetContentText($"Your bus arrives at {predictedArrival.ToLocalTime():HH:mm}.")
+    .SetContentTitle("Следене на транспорт")
+    .SetContentText($"Автобусът ще пристигне след {(int)((predictedArrival - DateTime.Now).TotalMinutes)} минути ({predictedArrival:HH:mm}).")
     .SetSmallIcon(Resource.Drawable.bus_icon)
     .SetPriority((int)NotificationPriority.High)
     .SetDefaults((int)(NotificationDefaults.Sound | NotificationDefaults.Vibrate))
@@ -74,8 +76,25 @@ public class ArrivalMonitoringService : Service
     .Build();
                         var manager = (NotificationManager)GetSystemService(NotificationService);
                         manager.Notify(1002, notif);
-                        StopForeground(true);
-                        StopSelf();
+
+                        var locale = (await TextToSpeech.Default.GetLocalesAsync()).FirstOrDefault(l => l.Language.ToLower() == "bg");
+
+                        int minutes = (int)((predictedArrival - DateTime.Now).TotalMinutes);
+                        string minutesText = minutes == 1 ? "една минута" : $"{minutes} минути";
+
+                        await Task.Delay(800);
+                        await TextToSpeech.Default.SpeakAsync($"Автобусът ще пристигне след {minutesText}", new SpeechOptions
+                        {
+                            Locale = locale,
+                            Volume = 1.0f,
+                            Pitch = 1.0f
+                        });
+
+                        if (DateTime.Now > predictedArrival)
+                        {
+                            StopForeground(true);
+                            StopSelf();
+                        }
                     }
 
                 }
