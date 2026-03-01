@@ -13,6 +13,9 @@
     <!-- App Identifier -->
     <ApplicationId>com.openbulgariasoftware.trammy</ApplicationId>
     <ApplicationIdGuid>a7870315-0617-407e-9b7f-ce7d39c8b02e</ApplicationIdGuid>
+	  
+	<UseMaterial3>true</UseMaterial3>
+
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>

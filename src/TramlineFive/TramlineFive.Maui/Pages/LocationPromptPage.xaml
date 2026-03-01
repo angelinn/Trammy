@@ -18,13 +18,14 @@
         
         <Label Grid.Row="3" HorizontalTextAlignment="Center" FontSize="15">
             <Label.Text>
-Не се притеснявай, приложението не събира данни за теб. 😌
-Използва местоположението ти само, за да покаже точна информация за спирките наоколо. 🗺️
+Приложението не събира никакви данни от устройството.
+Използва се единствено местоположението, за да покаже точна информация за спирките наоколо. 🗺️
                 
 Местоположението не се съхранява или споделя.
             </Label.Text>
         </Label> 
 
-        <Button Grid.Row="4" VerticalOptions="Start" Clicked="LocationPromptClicked" Text="Позволи" Background="DodgerBlue" TextColor="White" Margin="30,20,30,0" CornerRadius="11" />
+        <Button Grid.Row="4" VerticalOptions="Start" Clicked="LocationPromptClicked" Text="Позволи" Background="DodgerBlue" TextColor="White" Margin="30,20,30,0"/>
+        <Switch />
     </Grid>
 </ContentPage>

@@ -27,7 +27,7 @@ using Microsoft.Maui;
 
 namespace TramlineFive.Maui
 {
-    [Activity(Label = "Trammy", Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode)]
+    [Activity(Label = "Trammy", Theme = "@style/TramTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode)]
     public class MainActivity : MauiAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
