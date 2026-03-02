@@ -1,39 +1,55 @@
-class Agency {
-  final String agencyId;
-  final String? agencyName;
-  final String? agencyUrl;
-  final String? agencyTimezone;
-  final String? agencyLang;
-  final String? agencyPhone;
-  final String? agencyEmail;
+class GTFSCalendarDate {
+  final String serviceId;
+  final DateTime date;
+  final int exceptionType; // 1 = added, 2 = removed
 
-  Agency({
-    required this.agencyId,
-    this.agencyName,
-    this.agencyUrl,
-    this.agencyTimezone,
-    this.agencyLang,
-    this.agencyPhone,
-    this.agencyEmail,
+    GTFSCalendarDate({
+    required this.serviceId,
+    required this.date,
+    required this.exceptionType,
   });
 
-  factory Agency.fromMap(Map<String, dynamic> map) => Agency(
-        agencyId: map['agency_id'],
-        agencyName: map['agency_name'],
-        agencyUrl: map['agency_url'],
-        agencyTimezone: map['agency_timezone'],
-        agencyLang: map['agency_lang'],
-        agencyPhone: map['agency_phone'],
-        agencyEmail: map['agency_email'],
-      );
+  /// Create from SQLite map
+  factory GTFSCalendarDate.fromMap(Map<String, dynamic> map) {
+    return GTFSCalendarDate(
+      serviceId: map['service_id'].toString(),
+      date: _parseGtfsDate(map['date']),
+      exceptionType: _toInt(map['exception_type']),
+    );
+  }
 
-  Map<String, dynamic> toMap() => {
-        'agency_id': agencyId,
-        'agency_name': agencyName,
-        'agency_url': agencyUrl,
-        'agency_timezone': agencyTimezone,
-        'agency_lang': agencyLang,
-        'agency_phone': agencyPhone,
-        'agency_email': agencyEmail,
-      };
+  /// Convert to SQLite map
+  Map<String, dynamic> toMap() {
+    return {
+      'service_id': serviceId,
+      'date': _formatGtfsDate(date),
+      'exception_type': exceptionType,
+    };
+  }
+
+  /// Helper: parse YYYYMMDD (GTFS format)
+  static DateTime _parseGtfsDate(dynamic value) {
+    final str = value.toString();
+    return DateTime(
+      int.parse(str.substring(0, 4)),
+      int.parse(str.substring(4, 6)),
+      int.parse(str.substring(6, 8)),
+    );
+  }
+
+  /// Helper: convert DateTime → YYYYMMDD
+  static String _formatGtfsDate(DateTime date) {
+    return '${date.year.toString().padLeft(4, '0')}'
+        '${date.month.toString().padLeft(2, '0')}'
+        '${date.day.toString().padLeft(2, '0')}';
+  }
+
+  static int _toInt(dynamic value) {
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
+  }
+
+  bool get isAdded => exceptionType == 1;
+  bool get isRemoved => exceptionType == 2;
 }

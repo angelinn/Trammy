@@ -1,59 +1,59 @@
-class RouteModel {
-  final String routeId;
-  final String? agencyId;
-  final String? routeShortName;
-  final String? routeLongName;
-  final String? routeDesc;
-  final int? routeType;
-  final String? routeUrl;
-  final String? routeColor;
-  final String? routeTextColor;
-  final int? routeSortOrder;
+class GTFSStopTime {
+  final String tripId;
+  final String? arrivalTime;
+  final String? departureTime;
+  final String stopId;
+  final int stopSequence;
+  final String? stopHeadsign;
+  final int? pickupType;
+  final int? dropOffType;
+  final double? shapeDistTraveled;
   final int? continuousPickup;
   final int? continuousDropOff;
+  final int? timepoint;
 
-  RouteModel({
-    required this.routeId,
-    this.agencyId,
-    this.routeShortName,
-    this.routeLongName,
-    this.routeDesc,
-    this.routeType,
-    this.routeUrl,
-    this.routeColor,
-    this.routeTextColor,
-    this.routeSortOrder,
+  GTFSStopTime({
+    required this.tripId,
+    required this.stopId,
+    required this.stopSequence,
+    this.arrivalTime,
+    this.departureTime,
+    this.stopHeadsign,
+    this.pickupType,
+    this.dropOffType,
+    this.shapeDistTraveled,
     this.continuousPickup,
     this.continuousDropOff,
+    this.timepoint,
   });
 
-  factory RouteModel.fromMap(Map<String, dynamic> map) => RouteModel(
-        routeId: map['route_id'],
-        agencyId: map['agency_id'],
-        routeShortName: map['route_short_name'],
-        routeLongName: map['route_long_name'],
-        routeDesc: map['route_desc'],
-        routeType: map['route_type'],
-        routeUrl: map['route_url'],
-        routeColor: map['route_color'],
-        routeTextColor: map['route_text_color'],
-        routeSortOrder: map['route_sort_order'],
+  factory GTFSStopTime.fromMap(Map<String, dynamic> map) => GTFSStopTime(
+        tripId: map['trip_id'],
+        arrivalTime: map['arrival_time'],
+        departureTime: map['departure_time'],
+        stopId: map['stop_id'],
+        stopSequence: map['stop_sequence'],
+        stopHeadsign: map['stop_headsign'],
+        pickupType: map['pickup_type'],
+        dropOffType: map['drop_off_type'],
+        shapeDistTraveled: (map['shape_dist_traveled'] as num?)?.toDouble(),
         continuousPickup: map['continuous_pickup'],
         continuousDropOff: map['continuous_drop_off'],
+        timepoint: map['timepoint'],
       );
 
   Map<String, dynamic> toMap() => {
-        'route_id': routeId,
-        'agency_id': agencyId,
-        'route_short_name': routeShortName,
-        'route_long_name': routeLongName,
-        'route_desc': routeDesc,
-        'route_type': routeType,
-        'route_url': routeUrl,
-        'route_color': routeColor,
-        'route_text_color': routeTextColor,
-        'route_sort_order': routeSortOrder,
+        'trip_id': tripId,
+        'arrival_time': arrivalTime,
+        'departure_time': departureTime,
+        'stop_id': stopId,
+        'stop_sequence': stopSequence,
+        'stop_headsign': stopHeadsign,
+        'pickup_type': pickupType,
+        'drop_off_type': dropOffType,
+        'shape_dist_traveled': shapeDistTraveled,
         'continuous_pickup': continuousPickup,
         'continuous_drop_off': continuousDropOff,
+        'timepoint': timepoint,
       };
 }

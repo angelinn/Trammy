@@ -1,15 +1,15 @@
-class Level {
+class GTFSLevel {
   final String levelId;
   final double? levelIndex;
   final String? levelName;
 
-  Level({
+  GTFSLevel({
     required this.levelId,
     this.levelIndex,
     this.levelName,
   });
 
-  factory Level.fromMap(Map<String, dynamic> map) => Level(
+  factory GTFSLevel.fromMap(Map<String, dynamic> map) => GTFSLevel(
         levelId: map['level_id'],
         levelIndex: (map['level_index'] as num?)?.toDouble(),
         levelName: map['level_name'],

@@ -1,11 +1,11 @@
-class Shape {
+class GTFSShape {
   final String shapeId;
   final double shapePtLat;
   final double shapePtLon;
   final int shapePtSequence;
   final double? shapeDistTraveled;
 
-  Shape({
+  GTFSShape({
     required this.shapeId,
     required this.shapePtLat,
     required this.shapePtLon,
@@ -13,7 +13,7 @@ class Shape {
     this.shapeDistTraveled,
   });
 
-  factory Shape.fromMap(Map<String, dynamic> map) => Shape(
+  factory GTFSShape.fromMap(Map<String, dynamic> map) => GTFSShape(
         shapeId: map['shape_id'],
         shapePtLat: (map['shape_pt_lat'] as num).toDouble(),
         shapePtLon: (map['shape_pt_lon'] as num).toDouble(),

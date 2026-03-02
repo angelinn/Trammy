@@ -1,4 +1,4 @@
-class Translation {
+class GTFSTranslation {
   final String? tableName;
   final String? fieldName;
   final String? language;
@@ -7,7 +7,7 @@ class Translation {
   final String? recordSubId;
   final String? fieldValue;
 
-  Translation({
+  GTFSTranslation({
     this.tableName,
     this.fieldName,
     this.language,
@@ -17,7 +17,7 @@ class Translation {
     this.fieldValue,
   });
 
-  factory Translation.fromMap(Map<String, dynamic> map) => Translation(
+  factory GTFSTranslation.fromMap(Map<String, dynamic> map) => GTFSTranslation(
         tableName: map['table_name'],
         fieldName: map['field_name'],
         language: map['language'],

@@ -1,4 +1,4 @@
-class Agency {
+class GTFSAgency {
   final String agencyId;
   final String? agencyName;
   final String? agencyUrl;
@@ -7,7 +7,7 @@ class Agency {
   final String? agencyPhone;
   final String? agencyEmail;
 
-  Agency({
+  GTFSAgency({
     required this.agencyId,
     this.agencyName,
     this.agencyUrl,
@@ -17,7 +17,7 @@ class Agency {
     this.agencyEmail,
   });
 
-  factory Agency.fromMap(Map<String, dynamic> map) => Agency(
+  factory GTFSAgency.fromMap(Map<String, dynamic> map) => GTFSAgency(
         agencyId: map['agency_id'],
         agencyName: map['agency_name'],
         agencyUrl: map['agency_url'],

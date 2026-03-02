@@ -1,4 +1,4 @@
-class FeedInfo {
+class GTFSFeedInfo {
   final String? feedPublisherName;
   final String? feedPublisherUrl;
   final String? feedLang;
@@ -9,7 +9,7 @@ class FeedInfo {
   final String? feedContactEmail;
   final String? feedContactUrl;
 
-  FeedInfo({
+  GTFSFeedInfo({
     this.feedPublisherName,
     this.feedPublisherUrl,
     this.feedLang,
@@ -21,7 +21,7 @@ class FeedInfo {
     this.feedContactUrl,
   });
 
-  factory FeedInfo.fromMap(Map<String, dynamic> map) => FeedInfo(
+  factory GTFSFeedInfo.fromMap(Map<String, dynamic> map) => GTFSFeedInfo(
         feedPublisherName: map['feed_publisher_name'],
         feedPublisherUrl: map['feed_publisher_url'],
         feedLang: map['feed_lang'],

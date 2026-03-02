@@ -1,4 +1,4 @@
-class FareAttribute {
+class GTFSFareAttribute {
   final String fareId;
   final double? price;
   final String? currencyType;
@@ -7,7 +7,7 @@ class FareAttribute {
   final String? agencyId;
   final int? transferDuration;
 
-  FareAttribute({
+  GTFSFareAttribute({
     required this.fareId,
     this.price,
     this.currencyType,
@@ -17,7 +17,7 @@ class FareAttribute {
     this.transferDuration,
   });
 
-  factory FareAttribute.fromMap(Map<String, dynamic> map) => FareAttribute(
+  factory GTFSFareAttribute.fromMap(Map<String, dynamic> map) => GTFSFareAttribute(
         fareId: map['fare_id'],
         price: (map['price'] as num?)?.toDouble(),
         currencyType: map['currency_type'],

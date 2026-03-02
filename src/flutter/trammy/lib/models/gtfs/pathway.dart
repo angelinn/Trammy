@@ -1,4 +1,4 @@
-class Pathway {
+class GTFSPathway {
   final String pathwayId;
   final String? fromStopId;
   final String? toStopId;
@@ -12,7 +12,7 @@ class Pathway {
   final String? signpostedAs;
   final String? reversedSignpostedAs;
 
-  Pathway({
+  GTFSPathway({
     required this.pathwayId,
     this.fromStopId,
     this.toStopId,
@@ -27,7 +27,7 @@ class Pathway {
     this.reversedSignpostedAs,
   });
 
-  factory Pathway.fromMap(Map<String, dynamic> map) => Pathway(
+  factory GTFSPathway.fromMap(Map<String, dynamic> map) => GTFSPathway(
         pathwayId: map['pathway_id'],
         fromStopId: map['from_stop_id'],
         toStopId: map['to_stop_id'],

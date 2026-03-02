@@ -41,6 +41,8 @@ dependencies:
   http: ^1.6.0
   sqflite: ^2.4.2
   shared_preferences: ^2.5.4
+  gtfs_realtime_bindings: ^1.2.0
+  protobuf: ^6.0.0
 
 dev_dependencies:
   flutter_test:

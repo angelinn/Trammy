@@ -1,8 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:trammy/db/gtfs_repository.dart';
-import 'package:trammy/models/gtfs/route.dart';
+import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/services/gtfs_service.dart';
 
 class MapScreen extends StatefulWidget {
@@ -16,13 +16,11 @@ class MapScreen extends StatefulWidget {
 
 class MapScreenState extends State<MapScreen> {
   final TextEditingController searchController = TextEditingController();
-  GTFSRepository? repo;
-  List<Stop> stops = [];
-  bool mapReady = true;
+  bool stopsLoaded = false;
   MapCamera? currentPosition;
   final MapController mapController = MapController();
 
-  bool _isStopInView(Stop stop) {
+  bool _isStopInView(GTFSStop stop) {
     if (mapController.camera.zoom < 15.5) return false;
 
     final bounds = mapController.camera.visibleBounds;
@@ -33,14 +31,16 @@ class MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
 
-    GTFSService.init().then((db) {
-      repo = GTFSRepository(db: db!);
-      repo?.getStops().then((stops) {
-        debugPrint('[MapScreen] Loaded ${stops.length} stops from database');
-        setState(() {
-          this.stops = stops;
-        });
-      });
+    GTFSService.init().then((res) {
+      GTFSService.getAllStops()
+          .then((stops) {
+            setState(() {
+              stopsLoaded = true;
+            });
+          })
+          .catchError((e) {
+            debugPrint('Error fetching stops: $e');
+          });
     });
   }
 
@@ -55,6 +55,111 @@ class MapScreenState extends State<MapScreen> {
     print('FAB pressed: Go to current location');
   }
 
+  Future<void> onStopTapped(GTFSStop stop) async {
+    await GTFSService.fetchTripUpdates();
+    final updates = GTFSService.getUpdatesForStopId(stop.stopId);
+
+    print('Updates for stop ${stop.stopName} (${stop.stopId}):');
+    print(updates);
+
+    print('${updates[0].arrival.time.runtimeType}');
+    final arrivals = updates
+        .map((u) => u.arrival.time.toInt())
+        .toList();
+
+    showArrivals(stop.stopCode!, arrivals);
+  }
+
+  void showArrivals(String stopId, List<int> arrivalTimes) {
+    print('Showing arrivals for stop $stopId: $arrivalTimes');
+    String _formatTime(DateTime dt) {
+      final hour = dt.hour.toString().padLeft(2, '0');
+      final minute = dt.minute.toString().padLeft(2, '0');
+      return "$hour:$minute";
+    }
+
+    DateTime _fromUnix(int seconds) {
+      return DateTime.fromMillisecondsSinceEpoch(seconds * 1000);
+    }
+
+    final now = DateTime.now();
+
+    final upcoming =
+        arrivalTimes
+            .map((t) => _fromUnix(t))
+            .where((dt) => dt.isAfter(now))
+            .toList()
+          ..sort();
+
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Arrivals at $stopId",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              if (upcoming.isEmpty)
+                const Text("No upcoming vehicles")
+              else
+                ...upcoming.take(5).map((dt) {
+                  final minutes = dt.difference(now).inMinutes;
+
+                  return ListTile(
+                    leading: const Icon(Icons.tram),
+                    title: Text(_formatTime(dt)),
+                    subtitle: Text("In $minutes min"),
+                  );
+                }),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void onMapTapped(TapPosition tapPosition, LatLng latlng) {
+    const double maxDistanceMeters = 20;
+
+    GTFSStop? closest;
+    double minDistance = double.infinity;
+
+    for (final stop in GTFSService.stops) {
+      if (stop.stopLat == null || stop.stopLon == null) continue;
+      final distance = const Distance().as(
+        LengthUnit.Meter,
+        latlng,
+        LatLng(stop.stopLat!, stop.stopLon!),
+      );
+
+      if (distance < minDistance && distance < maxDistanceMeters) {
+        minDistance = distance;
+        closest = stop;
+      }
+    }
+
+    if (closest != null) {
+      print(
+        'Tapped near stop: ${closest.stopName} (${closest.stopId}), distance: ${minDistance.toStringAsFixed(1)}m',
+      );
+      onStopTapped(closest);
+    } else {
+      print(
+        'Tapped at ${latlng.latitude.toStringAsFixed(5)}, ${latlng.longitude.toStringAsFixed(5)}, no nearby stop (closest is ${minDistance.toStringAsFixed(1)}m away)',
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,21 +170,18 @@ class MapScreenState extends State<MapScreen> {
             options: MapOptions(
               initialCenter: const LatLng(42.6977, 23.3219), // Sofia
               initialZoom: 16,
-              onPositionChanged: (position, hasGesture) {
-
-              },
-              onMapReady: () => {
-
-              },
+              onPositionChanged: (position, hasGesture) {},
+              onTap: onMapTapped,
               onMapEvent: (event) => {
-                if (event is MapEventMoveEnd) {
-                  debugPrint('Map move ended ${mapController.camera.zoom}'),
-                
-                  // This will trigger a rebuild and update the visible stops
-                  setState(() {
-                    currentPosition = mapController.camera;
-                  }),
-                }
+                if (event is MapEventMoveEnd)
+                  {
+                    debugPrint('Map move ended ${mapController.camera.zoom}'),
+
+                    // This will trigger a rebuild and update the visible stops
+                    setState(() {
+                      currentPosition = mapController.camera;
+                    }),
+                  },
               },
             ),
             children: [
@@ -89,34 +191,41 @@ class MapScreenState extends State<MapScreen> {
                 subdomains: ['a', 'b', 'c'],
                 userAgentPackageName: 'Trammy/5.0 (trammy@outlook.com)',
               ),
-              if (stops.isNotEmpty && mapReady)
+              if (GTFSService.stops.isNotEmpty)
                 CircleLayer(
-                  circles: stops.where((s) => 
-                  s.stopLat != null && s.stopLon != null && _isStopInView(s)).map((stop) {
-                     final zoom = mapController.camera.zoom; // current zoom
-                    final double radius;
-                     switch (zoom) {
-                      case < 16:
-                        radius = 4;
-                        break;
-                      case < 16.5:
-                        radius = 6;
-                        break;
-                      case < 17:
-                        radius = 7;
-                        break;
-                      default:
-                        radius = 9;
-                        break;
-                     }
-                    return CircleMarker(
-                      point: LatLng(stop.stopLat!, stop.stopLon!),
-                      color: Colors.deepPurple.withOpacity(0.7),
-                      borderStrokeWidth: 1.0,
-                      borderColor: Colors.deepPurple,
-                      radius: radius, // pixels
-                    );
-                  }).toList(),
+                  circles: GTFSService.stops
+                      .where(
+                        (s) =>
+                            s.stopLat != null &&
+                            s.stopLon != null &&
+                            _isStopInView(s),
+                      )
+                      .map((stop) {
+                        final zoom = mapController.camera.zoom; // current zoom
+                        final double radius;
+                        switch (zoom) {
+                          case < 16:
+                            radius = 4;
+                            break;
+                          case < 16.5:
+                            radius = 6;
+                            break;
+                          case < 17:
+                            radius = 7;
+                            break;
+                          default:
+                            radius = 9;
+                            break;
+                        }
+                        return CircleMarker(
+                          point: LatLng(stop.stopLat!, stop.stopLon!),
+                          color: Colors.deepPurple.withOpacity(0.7),
+                          borderStrokeWidth: 1.0,
+                          borderColor: Colors.deepPurple,
+                          radius: radius, // pixels
+                        );
+                      })
+                      .toList(),
                 ),
             ],
           ),
