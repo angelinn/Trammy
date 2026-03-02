@@ -26,7 +26,7 @@ class GTFSService {
   static Database? _db;
 
   /// Initialize database
-  static Future<void> init() async {
+  static Future<Database?> init() async {
     print('init()');
     final dir = await getApplicationDocumentsDirectory();
     final path = join(dir.path, 'gtfs.db');
@@ -210,6 +210,8 @@ class GTFSService {
           ''');
       },
     );
+
+    return _db;
   }
 
 static Future<void> importFileFast({
