@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trammy/screens/favourites_screen.dart';
 import 'package:trammy/screens/map_screen.dart';
-import 'package:trammy/screens/stops_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key, required this.title});
-
-  final String title;
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => MainScreenState();
@@ -17,8 +14,7 @@ class MainScreenState extends State<MainScreen> {
 
   final List<Widget> screens = [
     MapScreen(title: 'Map Screen'),
-    FavouritesScreen(title: 'Favourites Screen'),
-    StopsScreen()
+    FavouritesScreen(title: 'Favourites Screen')
   ];
 
   void onTabTapped(int index) {
@@ -45,11 +41,7 @@ class MainScreenState extends State<MainScreen> {
           NavigationDestination(
             icon: Icon(Icons.favorite),
             label: 'Любими',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.stop_circle_outlined),
-            label: 'Спирки',
-          ),
+          )
         ],
       )
     );
