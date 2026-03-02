@@ -1,0 +1,51 @@
+class Stop {
+  final String stopId;
+  final String? stopCode;
+  final String? stopName;
+  final String? stopDesc;
+  final double? stopLat;
+  final double? stopLon;
+  final int? locationType;
+  final String? parentStation;
+  final String? stopTimezone;
+  final String? levelId;
+
+  Stop({
+    required this.stopId,
+    this.stopCode,
+    this.stopName,
+    this.stopDesc,
+    this.stopLat,
+    this.stopLon,
+    this.locationType,
+    this.parentStation,
+    this.stopTimezone,
+    this.levelId,
+  });
+
+  factory Stop.fromMap(Map<String, dynamic> map) => Stop(
+        stopId: map['stop_id'],
+        stopCode: map['stop_code'],
+        stopName: map['stop_name'],
+        stopDesc: map['stop_desc'],
+        stopLat: (map['stop_lat'] as num?)?.toDouble(),
+        stopLon: (map['stop_lon'] as num?)?.toDouble(),
+        locationType: map['location_type'],
+        parentStation: map['parent_station'],
+        stopTimezone: map['stop_timezone'],
+        levelId: map['level_id'],
+      );
+
+  Map<String, dynamic> toMap() => {
+        'stop_id': stopId,
+        'stop_code': stopCode,
+        'stop_name': stopName,
+        'stop_desc': stopDesc,
+        'stop_lat': stopLat,
+        'stop_lon': stopLon,
+        'location_type': locationType,
+        'parent_station': parentStation,
+        'stop_timezone': stopTimezone,
+        'level_id': levelId,
+      };
+}
