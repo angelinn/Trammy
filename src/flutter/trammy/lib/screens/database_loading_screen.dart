@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keep_screen_on/keep_screen_on.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trammy/screens/main_screen.dart';
 import 'package:trammy/services/gtfs_service.dart';
@@ -16,6 +17,8 @@ class DatabaseLoadingScreenState extends State<DatabaseLoadingScreen> {
   @override
   void initState() {
     super.initState();
+
+    KeepScreenOn.turnOn();
     downloadGTFSData();
   }
 
@@ -38,6 +41,8 @@ class DatabaseLoadingScreenState extends State<DatabaseLoadingScreen> {
     await prefs.setBool('dbLoaded', true); 
 
     if (!mounted) return;
+    
+    KeepScreenOn.turnOff();
 
     Navigator.of(context).pushReplacement(
     MaterialPageRoute(
