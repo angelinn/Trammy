@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:trammy/controllers/map_screen_controller.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/services/gtfs_service.dart';
@@ -20,9 +20,17 @@ class MapScreenState extends State<MapScreen> {
   bool stopsLoaded = false;
   MapCamera? currentPosition;
   final MapController mapController = MapController();
+  final MapScreenController mapScreenController = MapScreenController();
 
-  bool _isStopInView(GTFSStop stop) {
-    if (mapController.camera.zoom < 15.5) return false;
+    Set<String> stopLocations = {};
+  bool _isStopInView(GTFSStopRouteInfo stop) {
+    if (mapController.camera.zoom < 14) return false;
+
+    if (stopLocations.contains(stop.stopCode)) {
+      return false;
+    } else {
+      stopLocations.add(stop.stopCode!);
+    }
 
     final bounds = mapController.camera.visibleBounds;
     return bounds.contains(LatLng(stop.stopLat!, stop.stopLon!));
@@ -32,16 +40,11 @@ class MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
 
-    GTFSService.init().then((res) {
-      GTFSService.getAllStops()
-          .then((stops) {
-            setState(() {
-              stopsLoaded = true;
-            });
-          })
-          .catchError((e) {
-            debugPrint('Error fetching stops: $e');
-          });
+    print('[MapScreen] initState()');
+    mapScreenController.initialize().then((_) {
+      setState(() {
+        stopsLoaded = true;
+      });
     });
   }
 
@@ -56,35 +59,20 @@ class MapScreenState extends State<MapScreen> {
     print('FAB pressed: Go to current location');
   }
 
-  Future<void> onStopTapped(GTFSStop stop) async {
-    await GTFSService.fetchTripUpdates();
-    final tripUpdates = GTFSService.getUpdatesForStopId(stop.stopId);
-
-    List<(GTFSRoute route, List<int> arrivals)> updates = [];
-    for (final tripUpdate in tripUpdates) {
-      debugPrint('Looking for route ${tripUpdate.trip.routeId} of trip ${tripUpdate.trip.tripId} at stop ${stop.stopId}');
-      debugPrint('Available routes: ${GTFSService.routes.map((r) => r.routeId).join(', ')}');
-      final route = GTFSService.routes.firstWhere((r) => r.routeId == tripUpdate.trip.routeId);
-      debugPrint('Found route ${route.routeShortName} for trip ${tripUpdate.trip.tripId}');
-      final arrivals = tripUpdate.stopTimeUpdate.map((u) => u.arrival.time.toInt())
-        .toList();
-
-      updates.add((route, arrivals));
-    }
-
+  Future<void> onStopTapped(GTFSStopRouteInfo stop) async {
+    var updates = await mapScreenController.getUpdatesForStop(stop);
     showArrivals(stop, updates);
   }
 
-  void showArrivals(GTFSStop stop, List<(GTFSRoute route, List<int> arrivals)> updates) {
+  void showArrivals(
+    GTFSStopRouteInfo stop,
+    Map<GTFSRoute, List<DateTime>> updates,
+  ) {
     print('Showing arrivals for stop ${stop.stopName}');
     String _formatTime(DateTime dt) {
       final hour = dt.hour.toString().padLeft(2, '0');
       final minute = dt.minute.toString().padLeft(2, '0');
       return "$hour:$minute";
-    }
-
-    DateTime _fromUnix(int seconds) {
-      return DateTime.fromMillisecondsSinceEpoch(seconds * 1000);
     }
 
     final now = DateTime.now();
@@ -110,22 +98,22 @@ class MapScreenState extends State<MapScreen> {
               if (updates.isEmpty)
                 const Text("Няма пристигащи скоро превозни средства.")
               else
-                ...updates.take(5).map((update) {
-                  final (route, arrivals) = update;
-                  final upcoming = arrivals
-                      .map((t) => _fromUnix(t))
-                      .where((dt) => dt.isAfter(now))
-                      .toList()
-                    ..sort();
-                  if (upcoming.isEmpty) return const SizedBox.shrink();
+                ...updates.entries.take(5).map((entry) {
+                  if (entry.value.isEmpty) return const SizedBox.shrink();
 
-                  final dt = upcoming.first;
-                  final minutes = dt.difference(now).inMinutes;
+                  final dt = entry.value.first;
+                  final minutes = entry.value
+                      .skip(1)
+                      .map((dt) => "${dt.difference(now).inMinutes} минути")
+                      .take(3)
+                      .join(", ");
 
                   return ListTile(
                     leading: const Icon(Icons.tram),
-                    title: Text("${route.routeShortName} ${_formatTime(dt)}"),
-                    subtitle: Text("In $minutes min"),
+                    title: Text(
+                      "${entry.key.routeShortName} ${_formatTime(dt)}",
+                    ),
+                    subtitle: Text(minutes),
                   );
                 }),
             ],
@@ -138,7 +126,7 @@ class MapScreenState extends State<MapScreen> {
   void onMapTapped(TapPosition tapPosition, LatLng latlng) {
     const double maxDistanceMeters = 20;
 
-    GTFSStop? closest;
+    GTFSStopRouteInfo? closest;
     double minDistance = double.infinity;
 
     for (final stop in GTFSService.stops) {
@@ -166,9 +154,15 @@ class MapScreenState extends State<MapScreen> {
       );
     }
   }
-
+Color colorFromHex(String hexString) {
+  final buffer = StringBuffer();
+  if (hexString.length == 6 || hexString.length == 7) buffer.write('ff'); // add opacity if missing
+  buffer.write(hexString.replaceFirst('#', ''));
+  return Color(int.parse(buffer.toString(), radix: 16));
+}
   @override
   Widget build(BuildContext context) {
+    stopLocations = {};
     return Scaffold(
       body: Stack(
         children: [
@@ -177,6 +171,10 @@ class MapScreenState extends State<MapScreen> {
             options: MapOptions(
               initialCenter: const LatLng(42.6977, 23.3219), // Sofia
               initialZoom: 16,
+              maxZoom: 19,
+              interactionOptions: const InteractionOptions(
+                flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+              ),
               onPositionChanged: (position, hasGesture) {},
               onTap: onMapTapped,
               onMapEvent: (event) => {
@@ -226,9 +224,9 @@ class MapScreenState extends State<MapScreen> {
                         }
                         return CircleMarker(
                           point: LatLng(stop.stopLat!, stop.stopLon!),
-                          color: Colors.deepPurple.withOpacity(0.7),
+                          color: colorFromHex(stop.routeColor!).withOpacity(0.7),
                           borderStrokeWidth: 1.0,
-                          borderColor: Colors.deepPurple,
+                          borderColor: colorFromHex(stop.routeColor!),
                           radius: radius, // pixels
                         );
                       })
