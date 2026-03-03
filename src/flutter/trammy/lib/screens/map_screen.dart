@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trammy/controllers/map_screen_controller.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
@@ -22,7 +23,7 @@ class MapScreenState extends State<MapScreen> {
   final MapController mapController = MapController();
   final MapScreenController mapScreenController = MapScreenController();
 
-    Set<String> stopLocations = {};
+  Set<String> stopLocations = {};
   bool _isStopInView(GTFSStopRouteInfo stop) {
     if (mapController.camera.zoom < 14) return false;
 
@@ -39,6 +40,8 @@ class MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+
+    loadLastPosition();
 
     print('[MapScreen] initState()');
     mapScreenController.initialize().then((_) {
@@ -154,12 +157,15 @@ class MapScreenState extends State<MapScreen> {
       );
     }
   }
-Color colorFromHex(String hexString) {
-  final buffer = StringBuffer();
-  if (hexString.length == 6 || hexString.length == 7) buffer.write('ff'); // add opacity if missing
-  buffer.write(hexString.replaceFirst('#', ''));
-  return Color(int.parse(buffer.toString(), radix: 16));
-}
+
+  Color colorFromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7)
+      buffer.write('ff'); // add opacity if missing
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
   @override
   Widget build(BuildContext context) {
     stopLocations = {};
@@ -175,7 +181,8 @@ Color colorFromHex(String hexString) {
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
               ),
-              onPositionChanged: (position, hasGesture) {},
+              onPositionChanged: onPositionChanged,
+              onMapReady: onMapReady,
               onTap: onMapTapped,
               onMapEvent: (event) => {
                 if (event is MapEventMoveEnd)
@@ -224,7 +231,9 @@ Color colorFromHex(String hexString) {
                         }
                         return CircleMarker(
                           point: LatLng(stop.stopLat!, stop.stopLon!),
-                          color: colorFromHex(stop.routeColor!).withOpacity(0.7),
+                          color: colorFromHex(
+                            stop.routeColor!,
+                          ).withOpacity(0.7),
                           borderStrokeWidth: 1.0,
                           borderColor: colorFromHex(stop.routeColor!),
                           radius: radius, // pixels
@@ -271,5 +280,32 @@ Color colorFromHex(String hexString) {
         ],
       ),
     );
+  }
+
+  Future<void> onPositionChanged(MapCamera camera, bool hasGesture) async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setDouble('lastLat', camera.center.latitude);
+    prefs.setDouble('lastLng', camera.center.longitude);
+    prefs.setDouble('lastZoom', camera.zoom);
+  }
+
+  Future<void> loadLastPosition() async {
+    var prefs = await SharedPreferences.getInstance();
+    lastLat = prefs.getDouble('lastLat');
+    lastLng = prefs.getDouble('lastLng');
+    lastZoom = prefs.getDouble('lastZoom');
+  }
+
+  double? lastLat;
+  double? lastLng;
+  double? lastZoom;
+
+  void onMapReady() {
+    if (lastLat != null && lastLng != null && lastZoom != null) {
+      mapController.move(
+        LatLng(lastLat!, lastLng!),
+        lastZoom!,
+      );
+    }
   }
 }
