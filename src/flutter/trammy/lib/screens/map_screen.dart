@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trammy/controllers/map_screen_controller.dart';
@@ -20,6 +21,7 @@ class MapScreenState extends State<MapScreen> {
   late TextEditingController searchController;
   bool stopsLoaded = false;
   MapCamera? currentPosition;
+  LatLng? userLocation;
   final MapController mapController = MapController();
   final MapScreenController mapScreenController = MapScreenController();
 
@@ -57,9 +59,36 @@ class MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
-  void _goToCurrentLocation() {
-    // TODO: implement logic to move the map to user's current location
-    print('FAB pressed: Go to current location');
+Future<LatLng?> getUserLocation() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Check if location services are enabled
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) return null;
+
+  // Check permission
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) return null;
+  }
+  if (permission == LocationPermission.deniedForever) return null;
+
+  // Get current position
+  final pos = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+  return LatLng(pos.latitude, pos.longitude);
+}
+  void _goToCurrentLocation() async {
+    var location = await getUserLocation();
+    if (location != null) {
+    setState(() {
+      userLocation = location;
+    });
+
+    mapController.move(location, 18); // Zoom to user
+  }
   }
 
   Future<void> onStopTapped(GTFSStopRouteInfo stop) async {
@@ -241,6 +270,21 @@ class MapScreenState extends State<MapScreen> {
                       })
                       .toList(),
                 ),
+                if (userLocation != null)
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: userLocation!,
+                        width: 40,
+                        height: 40,
+                        child: const Icon(
+                          Icons.my_location,
+                          color: Colors.blue,
+                          size: 32,
+                        ),
+                      ),
+                    ],
+                  ),
             ],
           ),
           // Bottom search bar
