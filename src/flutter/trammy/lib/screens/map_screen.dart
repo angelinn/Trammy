@@ -17,7 +17,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class MapScreenState extends State<MapScreen> {
-  final TextEditingController searchController = TextEditingController();
+  late TextEditingController searchController;
   bool stopsLoaded = false;
   MapCamera? currentPosition;
   final MapController mapController = MapController();
@@ -244,31 +244,7 @@ class MapScreenState extends State<MapScreen> {
             ],
           ),
           // Bottom search bar
-          Positioned(
-            left: 32,
-            right: 32,
-            bottom: 32,
-            child: Material(
-              elevation: 4,
-              borderRadius: BorderRadius.circular(8),
-              child: TextField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  hintText: 'Търсене на спирка...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 14,
-                    horizontal: 16,
-                  ),
-                ),
-                onSubmitted: (query) {
-                  // TODO: Implement search logic
-                  debugPrint('Search for: $query');
-                },
-              ),
-            ),
-          ),
+          Positioned(left: 32, right: 32, bottom: 32, child: buildStopSearch()),
           Positioned(
             bottom: 106, // slightly above search bar
             right: 16,
@@ -302,10 +278,76 @@ class MapScreenState extends State<MapScreen> {
 
   void onMapReady() {
     if (lastLat != null && lastLng != null && lastZoom != null) {
-      mapController.move(
-        LatLng(lastLat!, lastLng!),
-        lastZoom!,
-      );
+      mapController.move(LatLng(lastLat!, lastLng!), lastZoom!);
     }
+  }
+
+  void onStopSearch(String value) {
+    final query = value.toLowerCase();
+    final matches = GTFSService.stops.where(
+      (s) =>
+          s.stopName != null && s.stopCode != null && "${s.stopName!.toLowerCase()} (${s.stopCode!.toLowerCase()})" == query
+    );
+
+    if (matches.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Няма намерени спирки')));
+    } else {
+      final stop = matches.first;
+      mapController.move(LatLng(stop.stopLat!, stop.stopLon!), 18);
+      onStopTapped(stop);
+    }
+
+    searchController.clear();
+    searchFocusNode.unfocus();
+  }
+
+late FocusNode searchFocusNode;
+  Widget buildStopSearch() {
+    return Autocomplete<String>(
+      optionsViewOpenDirection: OptionsViewOpenDirection.up,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text.isEmpty) {
+          return const Iterable<String>.empty();
+        }
+        return GTFSService.stops
+            .where(
+              (stop) =>
+                  stop.stopName!.toLowerCase().contains(
+                    textEditingValue.text.toLowerCase(),
+                  ) ||
+                  stop.stopCode!.toLowerCase().contains(
+                    textEditingValue.text.toLowerCase(),
+                  ),
+            )
+            .map((s) => "${s.stopName!} (${s.stopCode})");
+      },
+      onSelected: onStopSearch,
+      fieldViewBuilder:
+          (context, textController, focusNode, onEditingComplete) {
+            searchController = textController;
+            searchFocusNode = focusNode;
+            return Material(
+              elevation: 4,
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white, // make the box opaque
+              child: TextField(
+                controller: searchController,
+                focusNode: focusNode,
+                onEditingComplete: onEditingComplete,
+                decoration: const InputDecoration(
+                  hintText: 'Търсене на спирка...',
+                  prefixIcon: Icon(Icons.search),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 16,
+                  ),
+                ),
+              ),
+            );
+          },
+    );
   }
 }
