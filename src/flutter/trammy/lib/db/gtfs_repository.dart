@@ -19,6 +19,15 @@ class GTFSRepository {
     return rows.map((r) => GTFSStop.fromMap(r)).toList();
   }
 
+  Future<List<GTFSRoute>> getRoutes() async {
+    final rows = await db.query(
+      'routes',
+      orderBy: 'route_short_name ASC',
+    );
+
+    return rows.map((r) => GTFSRoute.fromMap(r)).toList();
+  }
+  
   /// Get a single stop by its ID
   Future<GTFSStop?> getStopById(String id) async {
     final rows = await db.query(

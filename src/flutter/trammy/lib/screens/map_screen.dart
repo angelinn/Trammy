@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/services/gtfs_service.dart';
 
@@ -57,21 +58,25 @@ class MapScreenState extends State<MapScreen> {
 
   Future<void> onStopTapped(GTFSStop stop) async {
     await GTFSService.fetchTripUpdates();
-    final updates = GTFSService.getUpdatesForStopId(stop.stopId);
+    final tripUpdates = GTFSService.getUpdatesForStopId(stop.stopId);
 
-    print('Updates for stop ${stop.stopName} (${stop.stopId}):');
-    print(updates);
-
-    print('${updates[0].arrival.time.runtimeType}');
-    final arrivals = updates
-        .map((u) => u.arrival.time.toInt())
+    List<(GTFSRoute route, List<int> arrivals)> updates = [];
+    for (final tripUpdate in tripUpdates) {
+      debugPrint('Looking for route ${tripUpdate.trip.routeId} of trip ${tripUpdate.trip.tripId} at stop ${stop.stopId}');
+      debugPrint('Available routes: ${GTFSService.routes.map((r) => r.routeId).join(', ')}');
+      final route = GTFSService.routes.firstWhere((r) => r.routeId == tripUpdate.trip.routeId);
+      debugPrint('Found route ${route.routeShortName} for trip ${tripUpdate.trip.tripId}');
+      final arrivals = tripUpdate.stopTimeUpdate.map((u) => u.arrival.time.toInt())
         .toList();
 
-    showArrivals(stop.stopCode!, arrivals);
+      updates.add((route, arrivals));
+    }
+
+    showArrivals(stop, updates);
   }
 
-  void showArrivals(String stopId, List<int> arrivalTimes) {
-    print('Showing arrivals for stop $stopId: $arrivalTimes');
+  void showArrivals(GTFSStop stop, List<(GTFSRoute route, List<int> arrivals)> updates) {
+    print('Showing arrivals for stop ${stop.stopName}');
     String _formatTime(DateTime dt) {
       final hour = dt.hour.toString().padLeft(2, '0');
       final minute = dt.minute.toString().padLeft(2, '0');
@@ -84,13 +89,6 @@ class MapScreenState extends State<MapScreen> {
 
     final now = DateTime.now();
 
-    final upcoming =
-        arrivalTimes
-            .map((t) => _fromUnix(t))
-            .where((dt) => dt.isAfter(now))
-            .toList()
-          ..sort();
-
     showModalBottomSheet(
       context: context,
       builder: (_) {
@@ -101,7 +99,7 @@ class MapScreenState extends State<MapScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Arrivals at $stopId",
+                "${stop.stopName} (${stop.stopCode})",
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -109,15 +107,24 @@ class MapScreenState extends State<MapScreen> {
               ),
               const SizedBox(height: 12),
 
-              if (upcoming.isEmpty)
-                const Text("No upcoming vehicles")
+              if (updates.isEmpty)
+                const Text("Няма пристигащи скоро превозни средства.")
               else
-                ...upcoming.take(5).map((dt) {
+                ...updates.take(5).map((update) {
+                  final (route, arrivals) = update;
+                  final upcoming = arrivals
+                      .map((t) => _fromUnix(t))
+                      .where((dt) => dt.isAfter(now))
+                      .toList()
+                    ..sort();
+                  if (upcoming.isEmpty) return const SizedBox.shrink();
+
+                  final dt = upcoming.first;
                   final minutes = dt.difference(now).inMinutes;
 
                   return ListTile(
                     leading: const Icon(Icons.tram),
-                    title: Text(_formatTime(dt)),
+                    title: Text("${route.routeShortName} ${_formatTime(dt)}"),
                     subtitle: Text("In $minutes min"),
                   );
                 }),
