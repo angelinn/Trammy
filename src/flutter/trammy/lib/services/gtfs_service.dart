@@ -4,12 +4,14 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:csv/csv.dart';
+import 'package:flutter/material.dart';
 import 'package:gtfs_realtime_bindings/gtfs_realtime_bindings.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:trammy/db/gtfs_repository.dart';
+import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 
 class GTFSProgress {
@@ -27,7 +29,7 @@ class GTFSService {
   static  Map<String, GTFSStop> stopsByCode = {};
 
   /// stop_id -> list of updates
-  static final Map<String, List<TripUpdate_StopTimeUpdate>> _updatesByStop = {};
+  static final Map<String, List<TripUpdate>> _updatesByStop = {};
 
   static DateTime? lastUpdated;
 
@@ -36,7 +38,7 @@ class GTFSService {
     if (lastUpdated != null && DateTime.now().difference(lastUpdated!) < const Duration(seconds: 60)) {
       return;
     }
-    
+
     final response = await http.get(Uri.parse(_url));
 
     if (response.statusCode != 200) {
@@ -53,14 +55,13 @@ class GTFSService {
       if (!entity.hasTripUpdate()) continue;
 
       final tripUpdate = entity.tripUpdate;
-
       for (final stopTimeUpdate in tripUpdate.stopTimeUpdate) {
         final stopId = stopTimeUpdate.stopId;
 
         if (stopId == null) continue;
 
         _updatesByStop.putIfAbsent(stopId, () => []);
-        _updatesByStop[stopId]!.add(stopTimeUpdate);
+        _updatesByStop[stopId]!.add(tripUpdate);
       }
     }
 
@@ -68,12 +69,12 @@ class GTFSService {
   }
 
   /// Query by stop_id directly
-  static List<TripUpdate_StopTimeUpdate> getUpdatesForStopId(String stopId) {
+  static List<TripUpdate> getUpdatesForStopId(String stopId) {
     return _updatesByStop[stopId] ?? [];
   }
 
   /// Query by stopCode (requires stop lookup map)
-  static List<TripUpdate_StopTimeUpdate> getUpdatesForStopCode(
+  static List<TripUpdate> getUpdatesForStopCode(
     String stopCode,
     Map<String, Stop> stopsByCode,
   ) {
@@ -86,6 +87,7 @@ class GTFSService {
   static const gtfsUrl = 'https://gtfs.sofiatraffic.bg/api/v1/static';
   static Database? _db;
   static List<GTFSStop> stops = [];
+  static List<GTFSRoute> routes = [];
   static GTFSRepository? repo;
 
   /// Initialize database
@@ -298,12 +300,18 @@ class GTFSService {
     int inserted = 0;
 
     List<Map<String, Object?>> batchRows = [];
+    final codec = CsvCodec(dynamicTyping: true);
 
     while (await iterator.moveNext()) {
-      final values = iterator.current.split(',');
+      final values = codec.decode(iterator.current)[0];
       final row = <String, Object?>{};
       for (int i = 0; i < header.length && i < values.length; i++) {
-        row[header[i]] = values[i];
+        final value = values[i] is String ? values[i].trim() : values[i];
+        if (value is String && value.isEmpty) {
+          row[header[i]] = null;
+        } else {
+          row[header[i]] = value;
+        }
       }
       batchRows.add(row);
       inserted++;
@@ -437,6 +445,13 @@ class GTFSService {
       stopsById[stop.stopId] = stop;
       stopsByCode[stop.stopCode!] = stop;
     }
+
+    routes = (await repo?.getRoutes())!;
+    print('Loaded ${stops.length} stops and ${routes.length} routes from database');
     return stops;
+  }
+
+  static GTFSRoute findByTripId(String tripId) {
+    return routes.firstWhere((r) => r.routeId == tripId, orElse: () => GTFSRoute(routeId: tripId));
   }
 }
