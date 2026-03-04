@@ -56,6 +56,13 @@ class MapControl extends StatelessWidget {
                 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}@3x.png',
             subdomains: ['a', 'b', 'c'],
             userAgentPackageName: 'Trammy/5.0 (trammy@outlook.com)',
+            tileBuilder: (BuildContext context, Widget tileWidget, TileImage tile) {
+              if (Theme.of(context).brightness == Brightness.dark) {
+                return darkModeTileBuilder(context, tileWidget, tile);
+              }
+
+              return tileWidget;
+            }
           ),
           if (stops.isNotEmpty) StopsLayer(animatedMapController: animatedMapController, stops: stops, onStopTapped: onStopTapped),
           if (userLocation != null)

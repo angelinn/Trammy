@@ -41,7 +41,8 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: dbLoaded ? const MainScreen() : DatabaseLoadingScreen()
+      home: dbLoaded ? const MainScreen() : DatabaseLoadingScreen(),
+      darkTheme: ThemeData.dark(),
     );
   }
 }
