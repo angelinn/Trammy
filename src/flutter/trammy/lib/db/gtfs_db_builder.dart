@@ -218,6 +218,7 @@ class GtfsDbBuilder {
   }
 
   Future<void> createStopsWithRoutesTable() async {
+    print('Creating stop_route_info table');
     await db?.execute('''
           CREATE TABLE IF NOT EXISTS stop_route_info AS
           SELECT 
@@ -231,14 +232,14 @@ class GtfsDbBuilder {
   stops.parent_station,
   stops.stop_timezone,
   stops.level_id,
-  routes.route_type,
-  routes.route_color
+  GROUP_CONCAT(DISTINCT routes.route_type) AS route_types,
+  GROUP_CONCAT(DISTINCT routes.route_color) AS route_colors
 FROM stops
 JOIN stop_times ON stops.stop_id = stop_times.stop_id
 JOIN trips ON stop_times.trip_id = trips.trip_id
 JOIN routes ON trips.route_id = routes.route_id
 WHERE stops.stop_lat IS NOT NULL AND stops.stop_lon IS NOT NULL
-GROUP BY stops.stop_id, routes.route_id;
+GROUP BY stops.stop_id;
         ''');
   }
 

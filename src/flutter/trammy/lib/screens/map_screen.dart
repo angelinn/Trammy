@@ -59,36 +59,38 @@ class MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
-Future<LatLng?> getUserLocation() async {
-  bool serviceEnabled;
-  LocationPermission permission;
+  Future<LatLng?> getUserLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-  // Check if location services are enabled
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) return null;
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return null;
 
-  // Check permission
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) return null;
+    // Check permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return null;
+    }
+    if (permission == LocationPermission.deniedForever) return null;
+
+    // Get current position
+    final pos = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    return LatLng(pos.latitude, pos.longitude);
   }
-  if (permission == LocationPermission.deniedForever) return null;
 
-  // Get current position
-  final pos = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
-  return LatLng(pos.latitude, pos.longitude);
-}
   void _goToCurrentLocation() async {
     var location = await getUserLocation();
     if (location != null) {
-    setState(() {
-      userLocation = location;
-    });
+      setState(() {
+        userLocation = location;
+      });
 
-    mapController.move(location, 18); // Zoom to user
-  }
+      mapController.move(location, 18); // Zoom to user
+    }
   }
 
   Future<void> onStopTapped(GTFSStopRouteInfo stop) async {
@@ -135,8 +137,7 @@ Future<LatLng?> getUserLocation() async {
 
                   final dt = entry.value.first;
                   final minutes = entry.value
-                      .skip(1)
-                      .map((dt) => "${dt.difference(now).inMinutes} минути")
+                      .map((date) => "${date.difference(now).inMinutes} минути")
                       .take(3)
                       .join(", ");
 
@@ -233,8 +234,8 @@ Future<LatLng?> getUserLocation() async {
                 userAgentPackageName: 'Trammy/5.0 (trammy@outlook.com)',
               ),
               if (GTFSService.stops.isNotEmpty)
-                CircleLayer(
-                  circles: GTFSService.stops
+                MarkerLayer(
+                  markers: GTFSService.stops
                       .where(
                         (s) =>
                             s.stopLat != null &&
@@ -243,7 +244,7 @@ Future<LatLng?> getUserLocation() async {
                       )
                       .map((stop) {
                         final zoom = mapController.camera.zoom; // current zoom
-                        final double radius;
+                        double radius;
                         switch (zoom) {
                           case < 16:
                             radius = 4;
@@ -258,33 +259,54 @@ Future<LatLng?> getUserLocation() async {
                             radius = 9;
                             break;
                         }
-                        return CircleMarker(
+
+                        radius *= 2;
+                        return Marker(
                           point: LatLng(stop.stopLat!, stop.stopLon!),
-                          color: colorFromHex(
-                            stop.routeColor!,
-                          ).withOpacity(0.7),
-                          borderStrokeWidth: 1.0,
-                          borderColor: colorFromHex(stop.routeColor!),
-                          radius: radius, // pixels
+                          width: radius,
+                          height: radius,
+
+                          child: Material(
+                            color: Colors.transparent,
+                            shape: const CircleBorder(),
+                            child: InkWell(
+                              customBorder: const CircleBorder(),
+                              onTap: () => onStopTapped(stop),
+                              child: Container(
+                                width: radius,
+                                height: radius,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: colorFromHex(
+                                    stop.getDominantColor()!,
+                                  ).withOpacity(0.8),
+                                  border: Border.all(
+                                    color: colorFromHex(stop.getDominantType()!.toString()),
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         );
                       })
                       .toList(),
                 ),
-                if (userLocation != null)
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: userLocation!,
-                        width: 40,
-                        height: 40,
-                        child: const Icon(
-                          Icons.my_location,
-                          color: Colors.blue,
-                          size: 32,
-                        ),
+              if (userLocation != null)
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: userLocation!,
+                      width: 40,
+                      height: 40,
+                      child: const Icon(
+                        Icons.my_location,
+                        color: Colors.blue,
+                        size: 32,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
             ],
           ),
           // Bottom search bar
@@ -330,7 +352,10 @@ Future<LatLng?> getUserLocation() async {
     final query = value.toLowerCase();
     final matches = GTFSService.stops.where(
       (s) =>
-          s.stopName != null && s.stopCode != null && "${s.stopName!.toLowerCase()} (${s.stopCode!.toLowerCase()})" == query
+          s.stopName != null &&
+          s.stopCode != null &&
+          "${s.stopName!.toLowerCase()} (${s.stopCode!.toLowerCase()})" ==
+              query,
     );
 
     if (matches.isEmpty) {
@@ -347,7 +372,7 @@ Future<LatLng?> getUserLocation() async {
     searchFocusNode.unfocus();
   }
 
-late FocusNode searchFocusNode;
+  late FocusNode searchFocusNode;
   Widget buildStopSearch() {
     return Autocomplete<String>(
       optionsViewOpenDirection: OptionsViewOpenDirection.up,

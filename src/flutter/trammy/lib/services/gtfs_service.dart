@@ -26,10 +26,10 @@ class GTFSProgress {
 class GTFSService {
   static const _url = 'https://gtfs.sofiatraffic.bg/api/v1/trip-updates';
   static Map<String, GTFSStopRouteInfo> stopsById = {};
-  static Map<String, GTFSStopRouteInfo> stopsByCode = {};
+  static Map<String, List<GTFSStopRouteInfo>> stopsByCode = {};
 
   /// stop_id -> list of updates
-  static final Map<String, List<TripUpdate>> _updatesByStop = {};
+  static final Map<String, List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)>> _updatesByStop = {};
 
   static DateTime? lastUpdated;
 
@@ -58,31 +58,39 @@ class GTFSService {
       final tripUpdate = entity.tripUpdate;
       for (final stopTimeUpdate in tripUpdate.stopTimeUpdate) {
         final stopId = stopTimeUpdate.stopId;
-
-        if (stopId == null) continue;
+        if (stopId != "A1310") continue;
 
         _updatesByStop.putIfAbsent(stopId, () => []);
-        _updatesByStop[stopId]!.add(tripUpdate);
+        _updatesByStop[stopId]!.add((tripUpdate, []));
+        _updatesByStop[stopId]!.last.$2.addAll(tripUpdate.stopTimeUpdate.where((u) => u.stopId == stopId).toList());
       }
     }
 
+    print('Fetched ${feed.entity.length} trip updates for ${_updatesByStop.length} stops');
     lastUpdated = DateTime.now();
   }
 
   /// Query by stop_id directly
-  static List<TripUpdate> getUpdatesForStopId(String stopId) {
-    return _updatesByStop[stopId] ?? [];
+  static List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)>? getUpdatesForStopId(String stopId) {
+    return _updatesByStop[stopId];
   }
 
   /// Query by stopCode (requires stop lookup map)
-  static List<TripUpdate> getUpdatesForStopCode(
-    String stopCode,
-    Map<String, Stop> stopsByCode,
+  static List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)>? getUpdatesForStopCode(
+    String stopCode
   ) {
-    final stop = stopsByCode[stopCode];
-    if (stop == null) return [];
+    final stops = stopsByCode[stopCode];
 
-    return getUpdatesForStopId(stop.stopId);
+    if (stops == null || stops.isEmpty) {
+      return null;
+    }
+
+    List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)> allUpdates = [];
+    for (var stop in stops) {
+      allUpdates.addAll(getUpdatesForStopId(stop.stopId) ?? []);
+    }
+
+    return allUpdates;
   }
 
   static Database? _db;
@@ -93,6 +101,7 @@ class GTFSService {
   /// Initialize database
   static Future<void> init() async {
     print('[GTFSService] init()');
+
     final path = join(
       (await getApplicationDocumentsDirectory()).path,
       'gtfs.db',
@@ -100,6 +109,7 @@ class GTFSService {
 
     await repo.initialize(path);
   }
+
 
   static Future<void> updateGTFS({
     required void Function(GTFSProgress progress) onProgress,
@@ -122,7 +132,7 @@ class GTFSService {
 
     for (final stop in stops) {
       stopsById[stop.stopId] = stop;
-      stopsByCode[stop.stopCode!] = stop;
+      stopsByCode.putIfAbsent(stop.stopCode!, () => []).add(stop);
     }
 
     routes = (await repo?.getRoutes())!;
