@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trammy/db/gtfs_db_builder.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
+import 'package:trammy/models/gtfs/trip.dart';
 import 'package:trammy/services/gtfs_service.dart';
 
 /// Repository for accessing GTFS data
@@ -48,6 +49,12 @@ class GTFSRepository {
     final rows = await dbBuilder.db.query('routes', orderBy: 'route_short_name ASC');
 
     return rows.map((r) => GTFSRoute.fromMap(r)).toList();
+  }
+
+  Future<List<GTFSTrip>> getTrips() async {
+    final rows = await dbBuilder.db.query('trips');
+
+    return rows.map((r) => GTFSTrip.fromMap(r)).toList();
   }
 
   /// Get a single stop by its ID

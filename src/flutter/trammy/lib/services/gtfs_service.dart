@@ -13,6 +13,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trammy/db/gtfs_repository.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
+import 'package:trammy/models/gtfs/trip.dart';
 
 class GTFSProgress {
   final String table;
@@ -95,6 +96,7 @@ class GTFSService {
   static List<GTFSStopRouteInfo> stops = [];
   static List<GTFSStopRouteInfo> stopsByCode = [];
   static List<GTFSRoute> routes = [];
+  static Map<String, GTFSTrip> trips = {};
   static final GTFSRepository repo = GTFSRepository();
 
 
@@ -136,11 +138,29 @@ class GTFSService {
     stopsByCode = stopsByCodeMap.values.map((v) => v.first).toList();
 
     routes = (await repo?.getRoutes())!;
+    final dbTrips = await repo.getTrips();
+    for (final trip in dbTrips) {
+      trips[trip.tripId] = trip;
+    }
+
     print(
       'Loaded ${stops.length} stops and ${routes.length} routes from database',
     );
 
     return stopsByCode;
+  }
+
+  static IconData getStopIcon(int dominantType) {
+    switch (dominantType) {
+      case 0:
+        return Icons.tram;
+      case 3:
+        return Icons.directions_bus;
+      case 11:
+        return Icons.electric_scooter;
+      default:
+        return Icons.directions_bus;
+    }
   }
 
   static GTFSRoute findByTripId(String tripId) {

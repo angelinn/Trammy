@@ -102,7 +102,7 @@ class MapScreenState extends State<MapScreen> {
 
   void showArrivals(
     GTFSStopRouteInfo stop,
-    Map<GTFSRoute, List<DateTime>> updates,
+    Map<StopInfoKey, List<DateTime>> updates,
   ) {
     print('Showing arrivals for stop ${stop.stopName}');
     String _formatTime(DateTime dt) {
@@ -116,64 +116,165 @@ class MapScreenState extends State<MapScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-    builder: (_) {
-    return DraggableScrollableSheet(
-      initialChildSize: updates.entries.length > 3 ? (updates.entries.length > 5 ? 0.75 : 0.5) : 0.35,
-      minChildSize: 0.35,
-      maxChildSize: 0.75,
-      expand: false,
-      builder: (context, scrollController) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            // Wrap content in SingleChildScrollView
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              ),
-              child: SingleChildScrollView(
-                controller: scrollController, // important!
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${stop.stopName} (${stop.stopCode})",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+      builder: (_) {
+        return DraggableScrollableSheet(
+          initialChildSize: updates.entries.length > 3
+              ? (updates.entries.length > 5 ? 0.75 : 0.5)
+              : 0.35,
+          minChildSize: 0.35,
+          maxChildSize: 0.75,
+          expand: false,
+          builder: (context, scrollController) {
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                // Wrap content in SingleChildScrollView
+                return Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    controller: scrollController, // important!
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                          children: [
+                            Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: colorFromHex(stop.getDominantColor()!), // route-specific color
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          GTFSService.getStopIcon(stop.getDominantType()!),
+                          color: Colors.white, // icon stands out on colored background
+                          size: 20,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      if (updates.isEmpty)
-                        const Text("Няма пристигащи скоро превозни средства.")
-                      else
-                        ...updates.entries.map((entry) {
-                          if (entry.value.isEmpty) return const SizedBox.shrink();
+                            const SizedBox(width: 8),
+                            Text(
+                              "${stop.stopName} (${stop.stopCode})",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                          const SizedBox(height: 12),
+                          if (updates.isEmpty)
+                            const Text(
+                              "Няма пристигащи скоро превозни средства.",
+                            )
+                          else
+                            ...(updates.entries.toList()..sort((a, b) { 
+                             final vehicleCompare = a.key.route.routeType!.compareTo(b.key.route.routeType!);
+                                  if (vehicleCompare != 0) return vehicleCompare;
 
-                          final dt = entry.value.first;
-                          final minutes = entry.value
-                              .map((date) => "${date.difference(now).inMinutes} минути")
-                              .take(3)
-                              .join(", ");
+                                  // Then sort by LineName as integer, fallback to 1337
+                                  int parseLine(String line) {
+                                    final num = int.tryParse(line);
+                                    return num ?? 1337;
+                                  }
 
-                          return ListTile(
-                            leading: const Icon(Icons.tram),
-                            title: Text("${entry.key.routeShortName} ${_formatTime(dt)}"),
-                            subtitle: Text(minutes),
-                          );
-                        }),
-                    ],
+                                  return parseLine(a.key.route.routeShortName!).compareTo(parseLine(b.key.route.routeShortName!));
+                            })).map((entry) {
+                              if (entry.value.isEmpty)
+                                return const SizedBox.shrink();
+
+                              final dt = entry.value.first;
+                              final minutes = entry.value
+                                  .map(
+                                    (date) {
+                                      var difference = date.difference(now).inMinutes;
+                                      if (difference < 0) difference = 0;
+
+                                       return "$difference мин";
+                                    }
+                                  )
+                                  .take(3);
+
+                              return Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                elevation: 3,
+                                margin: const EdgeInsets.symmetric(vertical: 6),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 12,
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [Row(
+                                            children:[
+                                            // Route name with colored background
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(vertical: 4,horizontal: 8),
+                                              decoration: BoxDecoration(color: colorFromHex(entry.key.route.routeColor!), borderRadius: BorderRadius.circular(6),),
+                                              child: Text(
+                                                entry.key.route.routeShortName!,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left: 8.0),
+                                              child: Text(
+                                              entry.key.direction,
+                                              style: const TextStyle(
+                                                fontSize: 14
+                                              ),
+                                            ),
+                                            )
+                                          ]),
+                                            const SizedBox(height: 6),
+                                            // Upcoming times as chips
+                                            Wrap(
+                                              spacing: 6,
+                                              children: minutes
+                                                  .map(
+                                                    (time) => Chip(
+                                                      label: Text(time),
+                                                      visualDensity:
+                                                          VisualDensity.compact,
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             );
           },
         );
       },
-    );
-  },
     );
   }
 
@@ -388,9 +489,9 @@ class MapScreenState extends State<MapScreen> {
     } else {
       final stop = matches.first;
       onStopTapped(stop);
-        setState(() {
-                currentPosition = mapController.camera;
-              });
+      setState(() {
+        currentPosition = mapController.camera;
+      });
     }
 
     searchController.clear();
