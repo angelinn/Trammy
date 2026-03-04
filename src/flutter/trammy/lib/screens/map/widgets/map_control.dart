@@ -30,6 +30,30 @@ class MapControl extends StatelessWidget {
     this.onMapTapped,
   });
 
+  Widget renderMapTheme(BuildContext context) {
+    final tileLayer =  TileLayer(
+              urlTemplate:
+                  'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}@3x.png',
+              subdomains: ['a', 'b', 'c'],
+              userAgentPackageName: 'Trammy/5.0 (trammy@outlook.com)',
+            );
+
+    if (Theme.of(context).brightness == Brightness.dark) { 
+     return ColorFiltered(
+          colorFilter: const ColorFilter.matrix(<double>[
+            -0.2126, -0.5152, -0.0722, 0, 255, // Red channel
+            -0.2126, -0.5152, -0.0722, 0, 255, // Green channel
+            -0.2126, -0.5152, -0.0722, 0, 255, // Blue channel
+            0,       0,       0,       1, 0,   // Alpha channel
+          ]),
+        
+          child: tileLayer
+      );
+    }
+
+    return tileLayer;
+  }
+
   @override
   Widget build(BuildContext context) {
      return FlutterMap(
@@ -51,19 +75,7 @@ class MapControl extends StatelessWidget {
         },
       ),
       children: [
-          TileLayer(
-            urlTemplate:
-                'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}@3x.png',
-            subdomains: ['a', 'b', 'c'],
-            userAgentPackageName: 'Trammy/5.0 (trammy@outlook.com)',
-            tileBuilder: (BuildContext context, Widget tileWidget, TileImage tile) {
-              if (Theme.of(context).brightness == Brightness.dark) {
-                return darkModeTileBuilder(context, tileWidget, tile);
-              }
-
-              return tileWidget;
-            }
-          ),
+          renderMapTheme(context),
           if (stops.isNotEmpty) StopsLayer(animatedMapController: animatedMapController, stops: stops, onStopTapped: onStopTapped),
           if (userLocation != null)
             MarkerLayer(
