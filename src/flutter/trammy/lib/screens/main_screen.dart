@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trammy/screens/favourites_screen.dart';
-import 'package:trammy/screens/map_screen.dart';
+import 'package:trammy/screens/map/map_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
