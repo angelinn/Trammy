@@ -94,6 +94,8 @@ class MapScreenState extends State<MapScreen> {
   }
 
   Future<void> onStopTapped(GTFSStopRouteInfo stop) async {
+    mapController.move(LatLng(stop.stopLat!, stop.stopLon!), 18);
+
     var updates = await mapScreenController.getUpdatesForStop(stop);
     showArrivals(stop, updates);
   }
@@ -385,8 +387,10 @@ class MapScreenState extends State<MapScreen> {
       ).showSnackBar(const SnackBar(content: Text('Няма намерени спирки')));
     } else {
       final stop = matches.first;
-      mapController.move(LatLng(stop.stopLat!, stop.stopLon!), 18);
       onStopTapped(stop);
+        setState(() {
+                currentPosition = mapController.camera;
+              });
     }
 
     searchController.clear();
