@@ -102,111 +102,176 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin  {
   Future<void> onStopTapped(GTFSStopRouteInfo stop) async {
     animatedMapController.animateTo(dest: LatLng(stop.stopLat!, stop.stopLon!), zoom: 18);
 
-    var updates = await mapScreenController.getUpdatesForStop(stop);
-    showArrivals(stop, updates);
+    showArrivals(stop);
   }
 
-  void showArrivals(
-    GTFSStopRouteInfo stop,
-    Map<StopInfoKey, List<DateTime>> updates,
-  ) {
-    print('Showing arrivals for stop ${stop.stopName}');
-    String _formatTime(DateTime dt) {
-      final hour = dt.hour.toString().padLeft(2, '0');
-      final minute = dt.minute.toString().padLeft(2, '0');
-      return "$hour:$minute";
-    }
+void showArrivals(GTFSStopRouteInfo stop) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (_) {
+      Map<StopInfoKey, List<DateTime>>? updates;
+      bool isLoading = true;
 
-    final now = DateTime.now();
+      final now = DateTime.now();
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) {
-        return DraggableScrollableSheet(
-          initialChildSize: updates.entries.length > 3
-              ? (updates.entries.length > 5 ? 0.75 : 0.5)
-              : 0.35,
-          minChildSize: 0.35,
-          maxChildSize: 0.75,
-          expand: false,
-          builder: (context, scrollController) {
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                // Wrap content in SingleChildScrollView
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
+      return StatefulBuilder(
+        builder: (context, setModalState) {
+          // Fetch data only once
+          if (isLoading) {
+            mapScreenController.getUpdatesForStop(stop).then((result) {
+              setModalState(() {
+                updates = result;
+                isLoading = false;
+              });
+            });
+          }
+
+          return DraggableScrollableSheet(
+            initialChildSize: 0.5,
+            minChildSize: 0.35,
+            maxChildSize: 0.75,
+            expand: false,
+            builder: (context, scrollController) {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(16),
                   ),
-                  child: SingleChildScrollView(
-                    controller: scrollController, // important!
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: isLoading
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: colorFromHex(stop.getDominantColor()!), // route-specific color
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          GTFSService.getStopIcon(stop.getDominantType()!),
-                          color: Colors.white, // icon stands out on colored background
-                          size: 20,
-                        ),
-                      ),
-                            const SizedBox(width: 8),
-                            Text(
-                              "${stop.stopName} (${stop.stopCode})",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    color: colorFromHex(
+                                        stop.getDominantColor()!),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    GTFSService.getStopIcon(
+                                        stop.getDominantType()!),
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    "${stop.stopName} (${stop.stopCode})",
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                            const Center(
+                              child: CircularProgressIndicator(),
                             ),
                           ],
+                        )
+                      : _buildArrivalsContent(
+                          stop,
+                          updates ?? {},
+                          now,
+                          scrollController,
                         ),
-                          const SizedBox(height: 12),
-                          if (updates.isEmpty)
-                            const Text(
-                              "Няма пристигащи скоро превозни средства.",
-                            )
-                          else
-                            ...(updates.entries.toList()..sort((a, b) { 
-                             final vehicleCompare = a.key.route.routeType!.compareTo(b.key.route.routeType!);
-                                  if (vehicleCompare != 0) return vehicleCompare;
+                ),
+              );
+            },
+          );
+        },
+      );
+    },
+  );
+}
+Widget _buildArrivalsContent(
+  GTFSStopRouteInfo stop,
+  Map<StopInfoKey, List<DateTime>> updates,
+  DateTime now,
+  ScrollController scrollController,
+) {
+  return SingleChildScrollView(
+    controller: scrollController,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: colorFromHex(stop.getDominantColor()!),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                GTFSService.getStopIcon(stop.getDominantType()!),
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              "${stop.stopName} (${stop.stopCode})",
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
 
-                                  // Then sort by LineName as integer, fallback to 1337
-                                  int parseLine(String line) {
-                                    final num = int.tryParse(line);
-                                    return num ?? 1337;
-                                  }
+        if (updates.isEmpty)
+          const Text("Няма пристигащи скоро превозни средства.")
+        else
+          ...(updates.entries.toList()
+                ..sort((a, b) {
+                  final vehicleCompare =
+                      a.key.route.routeType!.compareTo(b.key.route.routeType!);
+                  if (vehicleCompare != 0) return vehicleCompare;
 
-                                  return parseLine(a.key.route.routeShortName!).compareTo(parseLine(b.key.route.routeShortName!));
-                            })).map((entry) {
-                              if (entry.value.isEmpty)
-                                return const SizedBox.shrink();
+                  int parseLine(String line) =>
+                      int.tryParse(line) ?? 1337;
 
-                              final dt = entry.value.first;
-                              final minutes = entry.value
-                                  .map(
-                                    (date) {
-                                      var difference = date.difference(now).inMinutes;
-                                      if (difference < 0) difference = 0;
+                  return parseLine(a.key.route.routeShortName!)
+                      .compareTo(parseLine(b.key.route.routeShortName!));
+                }))
+              .map((entry) {
+                if (entry.value.isEmpty) {
+                  return const SizedBox.shrink();
+                }
 
-                                       return "$difference мин";
-                                    }
-                                  )
-                                  .take(3);
+                final minutes = entry.value
+                    .map((date) {
+                      var diff = date.difference(now).inMinutes;
+                      if (diff < 0) diff = 0;
+                      return "$diff мин";
+                    })
+                    .take(3)
+                    .toList();
 
-                              return Card(
+                return buildArrivalCard(entry, minutes);
+              }),
+      ],
+    ),
+  );
+}
+
+Card buildArrivalCard(MapEntry<StopInfoKey, List<DateTime>> entry, List<String> minutes) {
+     return Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -270,19 +335,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin  {
                                   ),
                                 ),
                               );
-                            }),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
+}
 
   void onMapTapped(TapPosition tapPosition, LatLng latlng) {
     const double maxDistanceMeters = 20;
@@ -326,6 +379,11 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin  {
 
   @override
   Widget build(BuildContext context) {
+     if (!positionLoaded) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
     stopLocations = {};
     return Scaffold(
       body: Stack(
@@ -493,11 +551,16 @@ Widget _TapScaleWrapper({
     prefs.setDouble('lastZoom', camera.zoom);
   }
 
+bool positionLoaded = false;
   Future<void> loadLastPosition() async {
     var prefs = await SharedPreferences.getInstance();
     lastLat = prefs.getDouble('lastLat');
     lastLng = prefs.getDouble('lastLng');
     lastZoom = prefs.getDouble('lastZoom');
+
+     setState(() {
+    positionLoaded = true;
+  });
   }
 
   double? lastLat;
