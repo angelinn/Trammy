@@ -45,6 +45,7 @@ dependencies:
   protobuf: ^6.0.0
   keep_screen_on: ^5.0.0
   geolocator: ^14.0.2
+  flutter_map_animations: ^0.9.0
 
 dev_dependencies:
   flutter_test:

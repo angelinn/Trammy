@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,17 +18,17 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => MapScreenState();
 }
 
-class MapScreenState extends State<MapScreen> {
+class MapScreenState extends State<MapScreen> with TickerProviderStateMixin  {
   late TextEditingController searchController;
   bool stopsLoaded = false;
   MapCamera? currentPosition;
   LatLng? userLocation;
-  final MapController mapController = MapController();
+  late AnimatedMapController animatedMapController;
   final MapScreenController mapScreenController = MapScreenController();
 
   Set<String> stopLocations = {};
   bool _isStopInView(GTFSStopRouteInfo stop) {
-    if (mapController.camera.zoom < 14) return false;
+    if (animatedMapController.mapController.camera.zoom < 14) return false;
 
     if (stopLocations.contains(stop.stopCode)) {
       return false;
@@ -35,13 +36,18 @@ class MapScreenState extends State<MapScreen> {
       stopLocations.add(stop.stopCode!);
     }
 
-    final bounds = mapController.camera.visibleBounds;
+    final bounds =  animatedMapController.mapController.camera.visibleBounds;
     return bounds.contains(LatLng(stop.stopLat!, stop.stopLon!));
   }
 
   @override
   void initState() {
     super.initState();
+   animatedMapController = AnimatedMapController(
+    vsync: this,
+    duration: const Duration(milliseconds: 500),
+    curve: Curves.easeInOut,
+  );
 
     loadLastPosition();
 
@@ -89,12 +95,12 @@ class MapScreenState extends State<MapScreen> {
         userLocation = location;
       });
 
-      mapController.move(location, 18); // Zoom to user
+      animatedMapController.animateTo(dest: location, zoom: 18); // Zoom to user
     }
   }
 
   Future<void> onStopTapped(GTFSStopRouteInfo stop) async {
-    mapController.move(LatLng(stop.stopLat!, stop.stopLon!), 18);
+    animatedMapController.animateTo(dest: LatLng(stop.stopLat!, stop.stopLon!), zoom: 18);
 
     var updates = await mapScreenController.getUpdatesForStop(stop);
     showArrivals(stop, updates);
@@ -325,7 +331,7 @@ class MapScreenState extends State<MapScreen> {
       body: Stack(
         children: [
           FlutterMap(
-            mapController: mapController,
+            mapController: animatedMapController.mapController,
             options: MapOptions(
               initialCenter: const LatLng(42.6977, 23.3219), // Sofia
               initialZoom: 16,
@@ -339,11 +345,11 @@ class MapScreenState extends State<MapScreen> {
               onMapEvent: (event) => {
                 if (event is MapEventMoveEnd)
                   {
-                    debugPrint('Map move ended ${mapController.camera.zoom}'),
+                    debugPrint('Map move ended ${animatedMapController.mapController.camera.zoom}'),
 
                     // This will trigger a rebuild and update the visible stops
                     setState(() {
-                      currentPosition = mapController.camera;
+                      currentPosition = animatedMapController.mapController.camera;
                     }),
                   },
               },
@@ -356,66 +362,7 @@ class MapScreenState extends State<MapScreen> {
                 userAgentPackageName: 'Trammy/5.0 (trammy@outlook.com)',
               ),
               if (GTFSService.stopsByCode.isNotEmpty)
-                MarkerLayer(
-                  markers: GTFSService.stopsByCode
-                      .where(
-                        (s) =>
-                            s.stopLat != null &&
-                            s.stopLon != null &&
-                            _isStopInView(s),
-                      )
-                      .map((stop) {
-                        final zoom = mapController.camera.zoom; // current zoom
-                        double radius;
-                        switch (zoom) {
-                          case < 16:
-                            radius = 4;
-                            break;
-                          case < 16.5:
-                            radius = 6;
-                            break;
-                          case < 17:
-                            radius = 7;
-                            break;
-                          default:
-                            radius = 9;
-                            break;
-                        }
-
-                        radius *= 2;
-                        return Marker(
-                          point: LatLng(stop.stopLat!, stop.stopLon!),
-                          width: radius,
-                          height: radius,
-
-                          child: Material(
-                            color: Colors.transparent,
-                            shape: const CircleBorder(),
-                            child: InkWell(
-                              customBorder: const CircleBorder(),
-                              onTap: () => onStopTapped(stop),
-                              child: Container(
-                                width: radius,
-                                height: radius,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: colorFromHex(
-                                    stop.getDominantColor()!,
-                                  ).withOpacity(0.8),
-                                  border: Border.all(
-                                    color: colorFromHex(
-                                      stop.getDominantType()!.toString(),
-                                    ),
-                                    width: 1,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      })
-                      .toList(),
-                ),
+                createStopsLayer(),
               if (userLocation != null)
                 MarkerLayer(
                   markers: [
@@ -448,6 +395,97 @@ class MapScreenState extends State<MapScreen> {
     );
   }
 
+  AnimatedMarkerLayer createStopsLayer() {
+    return AnimatedMarkerLayer(
+                  markers: GTFSService.stopsByCode
+                      .where(
+                        (s) =>
+                            s.stopLat != null &&
+                            s.stopLon != null &&
+                            _isStopInView(s),
+                      )
+                      .map((stop) {
+                        final zoom = animatedMapController.mapController.camera.zoom; // current zoom
+                        double radius;
+                        switch (zoom) {
+                          case < 16:
+                            radius = 4;
+                            break;
+                          case < 16.5:
+                            radius = 6;
+                            break;
+                          case < 17:
+                            radius = 7;
+                            break;
+                          default:
+                            radius = 9;
+                            break;
+                        }
+
+                        radius *= 2;
+                        return AnimatedMarker(
+                          point: LatLng(stop.stopLat!, stop.stopLon!),
+                          width: radius,
+                          height: radius,
+                          builder: (context, animation) { 
+                            return _TapScaleWrapper(
+                              radius: radius,
+                              fillColor: colorFromHex(stop.getDominantColor()!).withOpacity(0.8),
+                              borderColor: colorFromHex(stop.getDominantType()!.toString()),
+                              onTap: () => onStopTapped(stop),
+                            );
+                          });
+  }).toList()
+                );
+  }
+Widget _TapScaleWrapper({
+  required double radius,
+  required Color fillColor,
+  required Color borderColor,
+  required VoidCallback onTap,
+}) {
+  bool tapped = false;
+
+  return StatefulBuilder(
+    builder: (context, setState) {
+      return GestureDetector(
+        onTap: () async {
+          setState(() => tapped = true);
+          await Future.delayed(const Duration(milliseconds: 140));
+          setState(() => tapped = false);
+          onTap();
+        },
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 1.0, end: tapped ? 1.5 : 1.0),
+          duration: const Duration(milliseconds: 140),
+          curve: Curves.easeOut,
+          builder: (context, scale, child) {
+            return Transform.scale(
+              scale: scale,
+              child: child,
+            );
+          },
+          child: Material(
+            color: Colors.transparent,
+            shape: const CircleBorder(),
+            child: Container(
+              width: radius,
+              height: radius,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: fillColor,
+                border: Border.all(
+                  color: borderColor,
+                  width: 1,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
   Future<void> onPositionChanged(MapCamera camera, bool hasGesture) async {
     var prefs = await SharedPreferences.getInstance();
     prefs.setDouble('lastLat', camera.center.latitude);
@@ -468,7 +506,7 @@ class MapScreenState extends State<MapScreen> {
 
   void onMapReady() {
     if (lastLat != null && lastLng != null && lastZoom != null) {
-      mapController.move(LatLng(lastLat!, lastLng!), lastZoom!);
+      animatedMapController.mapController.move(LatLng(lastLat!, lastLng!), lastZoom!);
     }
   }
 
@@ -490,7 +528,7 @@ class MapScreenState extends State<MapScreen> {
       final stop = matches.first;
       onStopTapped(stop);
       setState(() {
-        currentPosition = mapController.camera;
+        currentPosition = animatedMapController.mapController.camera;
       });
     }
 
