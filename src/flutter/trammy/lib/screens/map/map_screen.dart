@@ -130,7 +130,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
               expand: false,
               builder: (context, scrollController) {
                 return Container(
-                  decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+                  decoration: BoxDecoration(color:  Theme.of(context).colorScheme.surfaceContainerHigh, borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: isLoading

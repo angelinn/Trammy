@@ -57,7 +57,6 @@ class StopSearchBarState extends State<StopSearchBar> {
             return Material(
               elevation: 4,
               borderRadius: BorderRadius.circular(16),
-              color: Colors.white, // make the box opaque
               child: TextField(
                 controller: searchController,
                 focusNode: focusNode,
