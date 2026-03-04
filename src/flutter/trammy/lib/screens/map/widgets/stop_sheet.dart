@@ -16,7 +16,7 @@ class StopSheet extends StatefulWidget {
 }
 
 class StopSheetState extends State<StopSheet> { 
-  var isLoading = false;
+  var isLoading = true;
   Map<StopInfoKey, List<DateTime>> updates = { };
 
   @override
