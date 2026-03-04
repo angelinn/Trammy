@@ -105,6 +105,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             onStopTapped: onStopTapped,
             onMoveEnd: onMoveEnd,
             stops: GTFSService.stopsByCode,
+            userLocation: userLocation
         ),
           // Bottom search bar
           Positioned(left: 32, right: 32, bottom: 32, child: StopSearchBar(stops: GTFSService.stopsByCode, onStopSearch: onStopSearch)),

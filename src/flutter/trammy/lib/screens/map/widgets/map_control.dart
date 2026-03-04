@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:trammy/models/gtfs/stop.dart';
+import 'package:trammy/screens/map/widgets/pulsing_user_marker.dart';
 import 'package:trammy/screens/map/widgets/stops_layer.dart';
 
 class MapControl extends StatelessWidget {
@@ -82,13 +83,9 @@ class MapControl extends StatelessWidget {
               markers: [
                 Marker(
                   point: userLocation!,
-                  width: 40,
-                  height: 40,
-                  child: const Icon(
-                    Icons.my_location,
-                    color: Colors.blue,
-                    size: 32,
-                  ),
+                  width: 80,
+                  height: 80,
+                  child: PulsingUserMarker()
                 ),
               ],
             ),
