@@ -113,46 +113,65 @@ class MapScreenState extends State<MapScreen> {
 
     showModalBottomSheet(
       context: context,
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${stop.stopName} (${stop.stopCode})",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+      isScrollControlled: true,
+    builder: (_) {
+    return DraggableScrollableSheet(
+      initialChildSize: updates.entries.length > 3 ? (updates.entries.length > 5 ? 0.75 : 0.5) : 0.35,
+      minChildSize: 0.35,
+      maxChildSize: 0.75,
+      expand: false,
+      builder: (context, scrollController) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            // Wrap content in SingleChildScrollView
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              ),
+              child: SingleChildScrollView(
+                controller: scrollController, // important!
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${stop.stopName} (${stop.stopCode})",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      if (updates.isEmpty)
+                        const Text("Няма пристигащи скоро превозни средства.")
+                      else
+                        ...updates.entries.map((entry) {
+                          if (entry.value.isEmpty) return const SizedBox.shrink();
+
+                          final dt = entry.value.first;
+                          final minutes = entry.value
+                              .map((date) => "${date.difference(now).inMinutes} минути")
+                              .take(3)
+                              .join(", ");
+
+                          return ListTile(
+                            leading: const Icon(Icons.tram),
+                            title: Text("${entry.key.routeShortName} ${_formatTime(dt)}"),
+                            subtitle: Text(minutes),
+                          );
+                        }),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 12),
-
-              if (updates.isEmpty)
-                const Text("Няма пристигащи скоро превозни средства.")
-              else
-                ...updates.entries.take(5).map((entry) {
-                  if (entry.value.isEmpty) return const SizedBox.shrink();
-
-                  final dt = entry.value.first;
-                  final minutes = entry.value
-                      .map((date) => "${date.difference(now).inMinutes} минути")
-                      .take(3)
-                      .join(", ");
-
-                  return ListTile(
-                    leading: const Icon(Icons.tram),
-                    title: Text(
-                      "${entry.key.routeShortName} ${_formatTime(dt)}",
-                    ),
-                    subtitle: Text(minutes),
-                  );
-                }),
-            ],
-          ),
+            );
+          },
         );
       },
+    );
+  },
     );
   }
 
@@ -162,7 +181,7 @@ class MapScreenState extends State<MapScreen> {
     GTFSStopRouteInfo? closest;
     double minDistance = double.infinity;
 
-    for (final stop in GTFSService.stops) {
+    for (final stop in GTFSService.stopsByCode) {
       if (stop.stopLat == null || stop.stopLon == null) continue;
       final distance = const Distance().as(
         LengthUnit.Meter,
@@ -233,9 +252,9 @@ class MapScreenState extends State<MapScreen> {
                 subdomains: ['a', 'b', 'c'],
                 userAgentPackageName: 'Trammy/5.0 (trammy@outlook.com)',
               ),
-              if (GTFSService.stops.isNotEmpty)
+              if (GTFSService.stopsByCode.isNotEmpty)
                 MarkerLayer(
-                  markers: GTFSService.stops
+                  markers: GTFSService.stopsByCode
                       .where(
                         (s) =>
                             s.stopLat != null &&
@@ -281,7 +300,9 @@ class MapScreenState extends State<MapScreen> {
                                     stop.getDominantColor()!,
                                   ).withOpacity(0.8),
                                   border: Border.all(
-                                    color: colorFromHex(stop.getDominantType()!.toString()),
+                                    color: colorFromHex(
+                                      stop.getDominantType()!.toString(),
+                                    ),
                                     width: 1,
                                   ),
                                 ),
@@ -350,7 +371,7 @@ class MapScreenState extends State<MapScreen> {
 
   void onStopSearch(String value) {
     final query = value.toLowerCase();
-    final matches = GTFSService.stops.where(
+    final matches = GTFSService.stopsByCode.where(
       (s) =>
           s.stopName != null &&
           s.stopCode != null &&
@@ -380,7 +401,7 @@ class MapScreenState extends State<MapScreen> {
         if (textEditingValue.text.isEmpty) {
           return const Iterable<String>.empty();
         }
-        return GTFSService.stops
+        return GTFSService.stopsByCode
             .where(
               (stop) =>
                   stop.stopName!.toLowerCase().contains(
@@ -399,7 +420,7 @@ class MapScreenState extends State<MapScreen> {
             searchFocusNode = focusNode;
             return Material(
               elevation: 4,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(16),
               color: Colors.white, // make the box opaque
               child: TextField(
                 controller: searchController,

@@ -26,7 +26,7 @@ class GTFSProgress {
 class GTFSService {
   static const _url = 'https://gtfs.sofiatraffic.bg/api/v1/trip-updates';
   static Map<String, GTFSStopRouteInfo> stopsById = {};
-  static Map<String, List<GTFSStopRouteInfo>> stopsByCode = {};
+  static Map<String, List<GTFSStopRouteInfo>> stopsByCodeMap = {};
 
   /// stop_id -> list of updates
   static final Map<String, List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)>> _updatesByStop = {};
@@ -58,7 +58,6 @@ class GTFSService {
       final tripUpdate = entity.tripUpdate;
       for (final stopTimeUpdate in tripUpdate.stopTimeUpdate) {
         final stopId = stopTimeUpdate.stopId;
-        if (stopId != "A1310") continue;
 
         _updatesByStop.putIfAbsent(stopId, () => []);
         _updatesByStop[stopId]!.add((tripUpdate, []));
@@ -79,7 +78,7 @@ class GTFSService {
   static List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)>? getUpdatesForStopCode(
     String stopCode
   ) {
-    final stops = stopsByCode[stopCode];
+    final stops = stopsByCodeMap[stopCode];
 
     if (stops == null || stops.isEmpty) {
       return null;
@@ -93,10 +92,11 @@ class GTFSService {
     return allUpdates;
   }
 
-  static Database? _db;
   static List<GTFSStopRouteInfo> stops = [];
+  static List<GTFSStopRouteInfo> stopsByCode = [];
   static List<GTFSRoute> routes = [];
   static final GTFSRepository repo = GTFSRepository();
+
 
   /// Initialize database
   static Future<void> init() async {
@@ -128,19 +128,19 @@ class GTFSService {
         .where((stop) => stop.stopCode != null && stop.stopCode != '')
         .toList();
 
-    print(stops);
-
     for (final stop in stops) {
       stopsById[stop.stopId] = stop;
-      stopsByCode.putIfAbsent(stop.stopCode!, () => []).add(stop);
+      stopsByCodeMap.putIfAbsent(stop.stopCode!, () => []).add(stop);
     }
+
+    stopsByCode = stopsByCodeMap.values.map((v) => v.first).toList();
 
     routes = (await repo?.getRoutes())!;
     print(
       'Loaded ${stops.length} stops and ${routes.length} routes from database',
     );
 
-    return stops;
+    return stopsByCode;
   }
 
   static GTFSRoute findByTripId(String tripId) {

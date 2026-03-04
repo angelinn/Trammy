@@ -36,7 +36,9 @@ class MapScreenController {
 
     updates.forEach((_, times) => times.sort());
 
-    print(updates);
+    for (var entry in updates.entries) {
+      print('Route ${entry.key.routeShortName} has ${entry.value.length} arrivals: ${entry.value}');
+    }
     return updates;
   }
 }
