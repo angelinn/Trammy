@@ -7,6 +7,7 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:gtfs_realtime_bindings/gtfs_realtime_bindings.dart';
 import 'package:http/http.dart' as http;
+import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -168,5 +169,42 @@ class GTFSService {
       (r) => r.routeId == tripId,
       orElse: () => GTFSRoute(routeId: tripId),
     );
+  } 
+
+  static GTFSStopRouteInfo? findNearestStop(LatLng coords) {
+    const double maxDistanceMeters = 20;
+
+    GTFSStopRouteInfo? closest;
+    double minDistance = double.infinity;
+
+    for (final stop in GTFSService.stopsByCode) {
+      if (stop.stopLat == null || stop.stopLon == null) continue;
+      final distance = const Distance().as(
+        LengthUnit.Meter,
+        coords,
+        LatLng(stop.stopLat!, stop.stopLon!),
+      );
+
+      if (distance < minDistance && distance < maxDistanceMeters) {
+        minDistance = distance;
+        closest = stop;
+      }
+    }
+     if (closest != null) {
+      print('Tapped near stop: ${closest.stopName} (${closest.stopId}), distance: ${minDistance.toStringAsFixed(1)}m');
+
+      return closest;
+    } 
+
+    print('Tapped at ${coords.latitude.toStringAsFixed(5)}, ${coords.longitude.toStringAsFixed(5)}, no nearby stop (closest is ${minDistance.toStringAsFixed(1)}m away)',);
+    return null;
+  }
+
+  static List<GTFSStopRouteInfo> searchStop(String query) {
+    return stopsByCode.where(
+      (s) =>
+          s.stopName != null && s.stopCode != null &&
+          "${s.stopName!.toLowerCase()} (${s.stopCode!.toLowerCase()})" == query,
+    ).toList();
   }
 }
