@@ -31,7 +31,7 @@ class StopsLayer extends StatelessWidget {
                 return AnimatedStopMarker(
                   radius: radius,
                   fillColor: colorFromHex(stop.getDominantColor()!).withOpacity(0.8),
-                  borderColor: colorFromHex(stop.getDominantType()!.toString()),
+                  borderColor: colorFromHex(stop.getDominantColor()!.toString()),
                   onTap: () => onStopTapped(stop),
                 );
               },

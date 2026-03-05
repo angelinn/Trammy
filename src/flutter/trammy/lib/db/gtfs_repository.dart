@@ -61,16 +61,19 @@ class GTFSRepository {
   Future<List<GTFSStopTimeData>> getStopTimesAfterNow(String stopCode, int limit) async {
 
 final today = DateTime.now();
+final upperLimit = today.add(const Duration(hours: 2));
 final yyyymmdd =
     "${today.year.toString().padLeft(4,'0')}"
     "${today.month.toString().padLeft(2,'0')}"
     "${today.day.toString().padLeft(2,'0')}";
-
 final hhmmss =
         "${today.hour.toString().padLeft(2, '0')}:"
          "${today.minute.toString().padLeft(2, '0')}:"
          "${today.second.toString().padLeft(2, '0')}";
-
+final hhmmssUpper =
+        "${upperLimit.hour.toString().padLeft(2, '0')}:"
+         "${upperLimit.minute.toString().padLeft(2, '0')}:"
+         "${upperLimit.second.toString().padLeft(2, '0')}";
 final rows = await dbBuilder.db.rawQuery(
   '''
   SELECT
@@ -93,10 +96,10 @@ final rows = await dbBuilder.db.rawQuery(
     AND cd.date = ?
     AND cd.exception_type = 1
     AND st.departure_time >= ?
+    AND st.departure_time <= ?
   ORDER BY st.arrival_time;
-  LIMIT $limit
   ''',
-  [stopCode, yyyymmdd, hhmmss],);
+  [stopCode, yyyymmdd, hhmmss, hhmmssUpper],);
 
     return rows.map((r) => GTFSStopTimeData.fromMap(r)).toList();
   }

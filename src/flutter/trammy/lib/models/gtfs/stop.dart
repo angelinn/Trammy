@@ -114,18 +114,37 @@ class GTFSStopRouteInfo {
     'route_colors': routeColors,
   };
 
-  int? getDominantType() {
+  TransportType? getDominantType() {
     if (routeTypes == null || routeTypes!.isEmpty) return null;
 
-    return routeTypes!
+    final transportTypes = routeTypes!
         .split(',')
         .map((e) => int.tryParse(e))
         .whereType<int>()
-        .first;
+        .map((e) => TransportType.fromValue(e));
+
+    if (transportTypes.contains(TransportType.tram)) return TransportType.tram;
+    if (transportTypes.contains(TransportType.trolley)) return TransportType.trolley;
+    if (transportTypes.contains(TransportType.bus)) return TransportType.bus;
+    if (transportTypes.contains(TransportType.subway)) return TransportType.subway;
+
+    return null;
   }
 
   String? getDominantColor() {
-    if (routeColors == null || routeColors!.isEmpty) return null;
-    return routeColors!.split(',').first;
-  }
+    final splitColors = routeColors!.split(',');
+    TransportType? routeType = getDominantType();
+    return splitColors[routeTypes!.split(',')!.indexOf(routeType!.value.toString())];
+    }
+}
+
+enum TransportType {
+  tram(0),
+  subway(1),
+  bus(3),
+  trolley(11);
+
+  const TransportType(this.value);
+  factory TransportType.fromValue(int value) => TransportType.values.firstWhere((e) => e.value == value);
+  final int value;
 }

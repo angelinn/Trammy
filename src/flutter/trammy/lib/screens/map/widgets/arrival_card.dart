@@ -93,13 +93,17 @@ class ArrivalTimes extends StatelessWidget {
       children: arrivals
           .take(3)
           .map(
-            (arrival) => Chip(
-              label: Text("${arrival.arrival.difference(DateTime.now()).inMinutes.toString()} мин"),
-              visualDensity: VisualDensity.compact,
-              avatar: arrival.online
-                ? const Icon(Icons.wifi, size: 16, color: Colors.green)
-                : null,
-            ),
+            (arrival)  { 
+                final minutes = arrival.arrival.difference(DateTime.now()).inMinutes;
+                final hhmm = "${arrival.arrival.hour.toString().padLeft(2, '0')}:${arrival.arrival.minute.toString().padLeft(2, '0')}";
+                return Chip(
+                  label: Text(minutes > 100 ? hhmm : "${minutes.toString()} мин"),
+                  visualDensity: VisualDensity.compact,
+                  avatar: arrival.online
+                    ? const Icon(Icons.wifi, size: 16, color: Colors.green)
+                    : null,
+                );
+            }
           )
           .toList(),
     );

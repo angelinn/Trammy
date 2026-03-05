@@ -124,14 +124,14 @@ class GTFSService {
     return stopsByCode;
   }
 
-  static IconData getStopIcon(int dominantType) {
+  static IconData getStopIcon(TransportType dominantType) {
     switch (dominantType) {
-      case 0:
+      case TransportType.tram:
         return Icons.tram;
-      case 3:
+      case TransportType.bus:
         return Icons.directions_bus;
-      case 11:
-        return Icons.electric_scooter;
+      case TransportType.trolley:
+        return Icons.trolley;
       default:
         return Icons.directions_bus;
     }

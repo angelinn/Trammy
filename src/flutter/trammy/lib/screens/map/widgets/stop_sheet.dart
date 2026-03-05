@@ -77,6 +77,21 @@ class StopSheetState extends State<StopSheet> {
     DateTime now,
     ScrollController scrollController,
   ) {
+    final sortedUpdates = updates.entries.toList()
+      ..sort((a, b) {
+        final vehicleCompare = a.key.route.routeType!.compareTo(
+          b.key.route.routeType!,
+        );
+
+        if (vehicleCompare != 0) return vehicleCompare;
+
+        int parseLine(String line) => int.tryParse(line) ?? 1337;
+
+        return parseLine(
+          a.key.route.routeShortName!,
+        ).compareTo(parseLine(b.key.route.routeShortName!));
+    });
+
     return SingleChildScrollView(
       controller: scrollController,
       child: Column(
@@ -96,35 +111,21 @@ class StopSheetState extends State<StopSheet> {
           ),
           const SizedBox(height: 12),
 
-          if (updates.isEmpty)
+          if (sortedUpdates.isEmpty)
             const Text("Няма пристигащи скоро превозни средства.")
           else
-            ...buildArrivalsList(updates, now),
+            ...buildArrivalsList(sortedUpdates, now),
         ],
       ),
     );
   }
 
   List<Widget> buildArrivalsList(
-    Map<StopInfoKey, List<ArrivalEntry>> updates,
+    List<MapEntry<StopInfoKey, List<ArrivalEntry>>> updates,
     DateTime now,
   ) {
-    final sortedUpdates = updates.entries.toList()
-      ..sort((a, b) {
-        final vehicleCompare = a.key.route.routeType!.compareTo(
-          b.key.route.routeType!,
-        );
 
-        if (vehicleCompare != 0) return vehicleCompare;
-
-        int parseLine(String line) => int.tryParse(line) ?? 1337;
-
-        return parseLine(
-          a.key.route.routeShortName!,
-        ).compareTo(parseLine(b.key.route.routeShortName!));
-      });
-
-    return sortedUpdates.map((entry) {
+    return updates.map((entry) {
       if (entry.value.isEmpty) {
         return const SizedBox.shrink();
       }
