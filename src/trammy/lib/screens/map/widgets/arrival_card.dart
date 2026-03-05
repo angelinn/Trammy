@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:trammy/controllers/map_screen_controller.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/services/common.dart';
+import 'package:trammy/services/gtfs_service.dart';
 
 class ArrivalCard extends StatelessWidget {
   final GTFSRoute route;
@@ -57,7 +58,7 @@ class CardHeader extends StatelessWidget {
             horizontal: 8,
           ),
           decoration: BoxDecoration(
-            color: colorFromHex(route.routeColor!),
+            color: colorFromHex(GTFSService.getExceptionColor(route)!),
             borderRadius: BorderRadius.circular(6),
           ),
           child: Text(

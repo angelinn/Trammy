@@ -63,6 +63,7 @@ class GTFSStopRouteInfo {
   final String? levelId;
   final String? routeTypes;
   final String? routeColors;
+  final String? routeShortNames;
 
   GTFSStopRouteInfo({
     required this.stopId,
@@ -77,6 +78,7 @@ class GTFSStopRouteInfo {
     this.levelId,
     this.routeTypes,
     this.routeColors,
+    this.routeShortNames,
   });
 
   factory GTFSStopRouteInfo.fromMap(Map<String, dynamic> map) =>
@@ -97,6 +99,7 @@ class GTFSStopRouteInfo {
         levelId: map['level_id'],
         routeTypes: map['route_types'],
         routeColors: map['route_colors'],
+        routeShortNames: map['route_short_names'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -112,36 +115,15 @@ class GTFSStopRouteInfo {
     'level_id': levelId,
     'route_types': routeTypes,
     'route_colors': routeColors,
+    'route_short_names': routeShortNames,
   };
-
-  TransportType? getDominantType() {
-    if (routeTypes == null || routeTypes!.isEmpty) return null;
-
-    final transportTypes = routeTypes!
-        .split(',')
-        .map((e) => int.tryParse(e))
-        .whereType<int>()
-        .map((e) => TransportType.fromValue(e));
-
-    if (transportTypes.contains(TransportType.tram)) return TransportType.tram;
-    if (transportTypes.contains(TransportType.trolley)) return TransportType.trolley;
-    if (transportTypes.contains(TransportType.bus)) return TransportType.bus;
-    if (transportTypes.contains(TransportType.subway)) return TransportType.subway;
-
-    return null;
-  }
-
-  String? getDominantColor() {
-    final splitColors = routeColors!.split(',');
-    TransportType? routeType = getDominantType();
-    return splitColors[routeTypes!.split(',')!.indexOf(routeType!.value.toString())];
-    }
 }
 
 enum TransportType {
   tram(0),
   subway(1),
   bus(3),
+  night(-1),
   trolley(11);
 
   const TransportType(this.value);

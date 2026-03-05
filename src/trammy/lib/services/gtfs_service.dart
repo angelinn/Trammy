@@ -16,6 +16,7 @@ import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/models/gtfs/stop_time.dart';
 import 'package:trammy/models/gtfs/trip.dart';
+import 'package:trammy/services/city_exceptions.dart';
 import 'package:trammy/services/common.dart';
 
 class GTFSProgress {
@@ -38,6 +39,14 @@ class GTFSService {
   static Map<String, GTFSTrip> trips = {};
   static final GTFSRepository repo = GTFSRepository();
   static final Map<String, DateTime> predictedArrivals = {};
+
+  static Map<TransportType, String> routeColors = {
+    TransportType.tram: 'F7941D',
+    TransportType.bus: 'BE1E2D',
+    TransportType.trolley: '27AAE1',
+    TransportType.subway: '39B54A',
+    TransportType.night: '000000'
+  };
 
   static DateTime? lastUpdated;
 
@@ -190,5 +199,35 @@ class GTFSService {
       }
 
       return departuresMap;
+  }
+
+  static TransportType? getDominantType(GTFSStopRouteInfo stop) {
+    if (stop.routeTypes == null || stop.routeTypes!.isEmpty) return null;
+
+    final routeShortNamesList = stop.routeShortNames!.split(','); 
+    List<TransportType> routeTypes = [];
+    for (final routeShortName in routeShortNamesList) {
+      final route = routes.firstWhere((r) => r.routeShortName == routeShortName);
+      final type = SofiaExceptions.getRealType(route);
+
+      routeTypes.add(type!);
+    }
+
+    if (routeTypes.contains(TransportType.tram)) return TransportType.tram;
+    if (routeTypes.contains(TransportType.trolley)) return TransportType.trolley;
+    if (routeTypes.contains(TransportType.bus)) return TransportType.bus;
+    if (routeTypes.contains(TransportType.subway)) return TransportType.subway;
+
+    return null;
+  }
+
+  static String? getDominantColor(GTFSStopRouteInfo stop) {
+    TransportType? routeType = getDominantType(stop);
+    return routeColors[TransportType.fromValue(routeType!.value)];
+  }
+
+  static String? getExceptionColor(GTFSRoute route) {      
+    final type = SofiaExceptions.getRealType(route);
+    return routeColors[TransportType.fromValue(type!.value)];
   }
 }

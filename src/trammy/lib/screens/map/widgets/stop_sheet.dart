@@ -50,8 +50,8 @@ class StopSheetState extends State<StopSheet> {
                           Container(
                             width: 36,
                             height: 36,
-                            decoration: BoxDecoration(color: colorFromHex(widget.stop.getDominantColor()!), shape: BoxShape.circle),
-                            child: Icon(GTFSService.getStopIcon(widget.stop.getDominantType()!),color: Colors.white, size: 20),
+                            decoration: BoxDecoration(color: colorFromHex(GTFSService.getDominantColor(widget.stop)!), shape: BoxShape.circle),
+                            child: Icon(GTFSService.getStopIcon(GTFSService.getDominantType(widget.stop)!),color: Colors.white, size: 20),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
@@ -102,8 +102,8 @@ class StopSheetState extends State<StopSheet> {
               Container(
                 width: 36,
                 height: 36,
-                decoration: BoxDecoration(color: colorFromHex(stop.getDominantColor()!), shape: BoxShape.circle),
-                child: Icon(GTFSService.getStopIcon(stop.getDominantType()!), color: Colors.white, size: 20)
+                decoration: BoxDecoration(color: colorFromHex(GTFSService.getDominantColor(stop)!), shape: BoxShape.circle),
+                child: Icon(GTFSService.getStopIcon(GTFSService.getDominantType(stop)!), color: Colors.white, size: 20)
               ),
               const SizedBox(width: 8),
               Text("${stop.stopName} (${stop.stopCode})", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),

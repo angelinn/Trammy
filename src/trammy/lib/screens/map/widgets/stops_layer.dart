@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/screens/map/widgets/animated_stop_marker.dart';
 import 'package:trammy/services/common.dart';
+import 'package:trammy/services/gtfs_service.dart';
 
 class StopsLayer extends StatelessWidget {
   final AnimatedMapController animatedMapController;
@@ -30,8 +31,8 @@ class StopsLayer extends StatelessWidget {
               builder: (context, animation) {
                 return AnimatedStopMarker(
                   radius: radius,
-                  fillColor: colorFromHex(stop.getDominantColor()!).withOpacity(0.8),
-                  borderColor: colorFromHex(stop.getDominantColor()!.toString()),
+                  fillColor: colorFromHex(GTFSService.getDominantColor(stop)!).withOpacity(0.8),
+                  borderColor: colorFromHex(GTFSService.getDominantColor(stop)!.toString()),
                   onTap: () => onStopTapped(stop),
                 );
               },

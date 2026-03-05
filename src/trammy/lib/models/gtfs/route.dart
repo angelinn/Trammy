@@ -1,3 +1,5 @@
+import 'package:trammy/models/gtfs/stop.dart';
+
 class GTFSRoute {
   final String routeId;
   final String? agencyId;
