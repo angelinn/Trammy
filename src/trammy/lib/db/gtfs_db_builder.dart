@@ -228,7 +228,6 @@ class GtfsDbBuilder {
         
       },
     );
-  
   }
 
   Future<void> createStopsWithRoutesTable() async {
@@ -253,7 +252,7 @@ JOIN stop_times ON stops.stop_id = stop_times.stop_id
 JOIN trips ON stop_times.trip_id = trips.trip_id
 JOIN routes ON trips.route_id = routes.route_id
 WHERE stops.stop_lat IS NOT NULL AND stops.stop_lon IS NOT NULL
-GROUP BY stops.stop_id;
+GROUP BY stops.stop_code;
         ''');
   }
 
