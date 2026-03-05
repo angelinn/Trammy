@@ -1,35 +1,33 @@
-name: Flutter Build
+name: Flutter
 
 on:
   push:
-    branches: [ master ]
-  workflow_dispatch:
-
-env:
-  PROJECT_ROOT: src/trammy
 
 jobs:
-  build-android:
+  build:
     runs-on: ubuntu-latest
-    name: Build Flutter Android
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+    env:
+      PROJECT_ROOT: src/trammy
+  
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter SDK
+        uses: flutter-actions/setup-flutter@v4
         with:
-          flutter-version: 'stable'
+          channel: stable
+          version: 3.0.2
 
       - name: Install dependencies
         run: flutter pub get
         working-directory: ${{ env.PROJECT_ROOT }}
 
-      - name: Run Flutter analyze
-        run: flutter analyze
+
+      - name: Analyze project source
+        run: dart analyze
         working-directory: ${{ env.PROJECT_ROOT }}
 
-      - name: Build APK
-        run: flutter build apk --debug
+      - name: Run tests
+        run: flutter test
         working-directory: ${{ env.PROJECT_ROOT }}
-
