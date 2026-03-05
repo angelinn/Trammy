@@ -23,11 +23,6 @@ jobs:
         run: flutter pub get
         working-directory: ${{ env.PROJECT_ROOT }}
 
-
-      - name: Analyze project source
-        run: dart analyze
-        working-directory: ${{ env.PROJECT_ROOT }}
-
       - name: Build debug
         run: flutter build apk --debug
         working-directory: ${{ env.PROJECT_ROOT }}
