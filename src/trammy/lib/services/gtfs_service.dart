@@ -204,10 +204,10 @@ class GTFSService {
   static TransportType? getDominantType(GTFSStopRouteInfo stop) {
     if (stop.routeTypes == null || stop.routeTypes!.isEmpty) return null;
 
-    final routeShortNamesList = stop.routeShortNames!.split(','); 
+    final routeIds = stop.routeIds!.split(','); 
     List<TransportType> routeTypes = [];
-    for (final routeShortName in routeShortNamesList) {
-      final route = routes.firstWhere((r) => r.routeShortName == routeShortName);
+    for (final routeId in routeIds) {
+      final route = routes.firstWhere((r) => r.routeId == routeId);
       final type = SofiaExceptions.getRealType(route);
 
       routeTypes.add(type!);

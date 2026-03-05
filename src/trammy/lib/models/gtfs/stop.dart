@@ -63,7 +63,7 @@ class GTFSStopRouteInfo {
   final String? levelId;
   final String? routeTypes;
   final String? routeColors;
-  final String? routeShortNames;
+  final String? routeIds;
 
   GTFSStopRouteInfo({
     required this.stopId,
@@ -78,8 +78,8 @@ class GTFSStopRouteInfo {
     this.levelId,
     this.routeTypes,
     this.routeColors,
-    this.routeShortNames,
-  });
+    this.routeIds,
+  }); 
 
   factory GTFSStopRouteInfo.fromMap(Map<String, dynamic> map) =>
       GTFSStopRouteInfo(
@@ -99,7 +99,7 @@ class GTFSStopRouteInfo {
         levelId: map['level_id'],
         routeTypes: map['route_types'],
         routeColors: map['route_colors'],
-        routeShortNames: map['route_short_names'],
+        routeIds: map['route_ids'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -115,7 +115,7 @@ class GTFSStopRouteInfo {
     'level_id': levelId,
     'route_types': routeTypes,
     'route_colors': routeColors,
-    'route_short_names': routeShortNames,
+    'route_ids': routeIds,
   };
 }
 

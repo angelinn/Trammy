@@ -248,7 +248,7 @@ class GtfsDbBuilder {
   stops.level_id,
   GROUP_CONCAT(DISTINCT routes.route_type) AS route_types,
   GROUP_CONCAT(DISTINCT routes.route_color) AS route_colors,
-  GROUP_CONCAT(DISTINCT routes.route_short_name) AS route_short_names
+  GROUP_CONCAT(DISTINCT routes.route_id) AS route_ids
 FROM stops
 JOIN stop_times ON stops.stop_id = stop_times.stop_id
 JOIN trips ON stop_times.trip_id = trips.trip_id
