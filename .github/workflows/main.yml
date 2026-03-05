@@ -1,49 +1,44 @@
-name: Build
+name: Flutter Build
 
 on:
   push:
     branches: [ master ]
-    paths-ignore:
-      - '**/*.md'
-      - '**/*.gitignore'
-      - '**/*.gitattributes'
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
-permissions:
-  contents: read
 
 env:
-  DOTNET_NOLOGO: true                     # Disable the .NET logo
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
-  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
+  PROJECT_ROOT: src/trammy
 
 jobs:
   build-android:
-    runs-on: windows-2022
-    name: Android Build
+    runs-on: ubuntu-latest
+    name: Build Flutter Android
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Setup .NET 9
-        uses: actions/setup-dotnet@v1
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          dotnet-version: 9.0.x
-          include-prerelease: true
+          flutter-version: 'stable'
 
-      - uses: actions/setup-java@v2
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: ${{ env.PROJECT_ROOT }}
+
+      - name: Run Flutter analyze
+        run: flutter analyze
+        working-directory: ${{ env.PROJECT_ROOT }}
+
+      - name: Run Flutter tests
+        run: flutter test
+        working-directory: ${{ env.PROJECT_ROOT }}
+
+      - name: Build APK
+        run: flutter build apk --debug
+        working-directory: ${{ env.PROJECT_ROOT }}
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v3
         with:
-          distribution: 'microsoft'
-          java-version: '11'
-
-      - name: Install MAUI Workloads
-        run: |
-          dotnet workload install android --ignore-failed-sources
-          dotnet workload install maui --ignore-failed-sources
-
-      - name: Restore Dependencies
-        run: dotnet restore src/TramlineFive/TramlineFive.Maui/TramlineFive.Maui.csproj
-
-      - name: Build MAUI Android
-        run: dotnet build src/TramlineFive/TramlineFive.Maui/TramlineFive.Maui.csproj -c Debug --no-restore
+          name: app-debug-apk
+          path: ${{ env.PROJECT_ROOT }}/build/app/outputs/flutter-apk/app-debug.apk
