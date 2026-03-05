@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/screens/map/widgets/pulsing_user_marker.dart';
 import 'package:trammy/screens/map/widgets/stops_layer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MapControl extends StatelessWidget {
   final AnimatedMapController animatedMapController;
@@ -89,6 +90,27 @@ class MapControl extends StatelessWidget {
                 ),
               ],
             ),
+              Positioned(
+      bottom: 0,
+      right: 0,
+      child: GestureDetector(
+        onTap: () async {
+          final uri = Uri.parse(
+            'https://www.openstreetmap.org/copyright',
+          );
+          await launchUrl(uri);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+          color: Colors.white70,
+          child: const Text(
+            '© OpenStreetMap',
+            style: TextStyle(fontSize: 12),
+          ),
+        ),
+      ),
+              )
+                
         ],
       );
   }

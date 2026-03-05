@@ -76,6 +76,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      barrierColor: Colors.black.withOpacity(0.1),
       builder: (_) => StopSheet(stop: stop, mapScreenController: mapScreenController)
     );
   }
@@ -107,7 +108,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             userLocation: userLocation
         ),
           // Bottom search bar
-          Positioned(left: 32, right: 32, bottom: 32, child: StopSearchBar(stops: GTFSService.stopsByCode, onStopSearch: onStopSearch)),
+          Positioned(left: 32, right: 32, bottom: 35, child: StopSearchBar(stops: GTFSService.stopsByCode, onStopSearch: onStopSearch)),
           Positioned(
             bottom: 106, // slightly above search bar
             right: 16,
