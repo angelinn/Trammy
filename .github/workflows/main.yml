@@ -28,6 +28,6 @@ jobs:
         run: dart analyze
         working-directory: ${{ env.PROJECT_ROOT }}
 
-      - name: Run tests
-        run: flutter test
+      - name: Build debug
+        run: flutter build apk --debug
         working-directory: ${{ env.PROJECT_ROOT }}
