@@ -14,7 +14,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trammy/db/gtfs_repository.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
+import 'package:trammy/models/gtfs/stop_time.dart';
 import 'package:trammy/models/gtfs/trip.dart';
+import 'package:trammy/services/common.dart';
 
 class GTFSProgress {
   final String table;
@@ -30,8 +32,12 @@ class GTFSService {
   static Map<String, GTFSStopRouteInfo> stopsById = {};
   static Map<String, List<GTFSStopRouteInfo>> stopsByCodeMap = {};
 
-  /// stop_id -> list of updates
-  static final Map<String, List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)>> _updatesByStop = {};
+  static List<GTFSStopRouteInfo> stops = [];
+  static List<GTFSStopRouteInfo> stopsByCode = [];
+  static List<GTFSRoute> routes = [];
+  static Map<String, GTFSTrip> trips = {};
+  static final GTFSRepository repo = GTFSRepository();
+  static final Map<String, DateTime> predictedArrivals = {};
 
   static DateTime? lastUpdated;
 
@@ -52,54 +58,21 @@ class GTFSService {
 
     final feed = FeedMessage.fromBuffer(bytes);
 
-    _updatesByStop.clear();
+    predictedArrivals.clear();
 
     for (final entity in feed.entity) {
       if (!entity.hasTripUpdate()) continue;
 
       final tripUpdate = entity.tripUpdate;
       for (final stopTimeUpdate in tripUpdate.stopTimeUpdate) {
-        final stopId = stopTimeUpdate.stopId;
-
-        _updatesByStop.putIfAbsent(stopId, () => []);
-        _updatesByStop[stopId]!.add((tripUpdate, []));
-        _updatesByStop[stopId]!.last.$2.addAll(tripUpdate.stopTimeUpdate.where((u) => u.stopId == stopId).toList());
+        final key = "${tripUpdate.trip.tripId}_${stopTimeUpdate.stopId}";
+        predictedArrivals.putIfAbsent(key, () => fromUnixTime(stopTimeUpdate.arrival.time.toInt()));
       }
     }
 
-    print('Fetched ${feed.entity.length} trip updates for ${_updatesByStop.length} stops');
+    print('Fetched ${feed.entity.length} trip updates for ${predictedArrivals.length} stops');
     lastUpdated = DateTime.now();
   }
-
-  /// Query by stop_id directly
-  static List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)>? getUpdatesForStopId(String stopId) {
-    return _updatesByStop[stopId];
-  }
-
-  /// Query by stopCode (requires stop lookup map)
-  static List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)>? getUpdatesForStopCode(
-    String stopCode
-  ) {
-    final stops = stopsByCodeMap[stopCode];
-
-    if (stops == null || stops.isEmpty) {
-      return null;
-    }
-
-    List<(TripUpdate, List<TripUpdate_StopTimeUpdate>)> allUpdates = [];
-    for (var stop in stops) {
-      allUpdates.addAll(getUpdatesForStopId(stop.stopId) ?? []);
-    }
-
-    return allUpdates;
-  }
-
-  static List<GTFSStopRouteInfo> stops = [];
-  static List<GTFSStopRouteInfo> stopsByCode = [];
-  static List<GTFSRoute> routes = [];
-  static Map<String, GTFSTrip> trips = {};
-  static final GTFSRepository repo = GTFSRepository();
-
 
   /// Initialize database
   static Future<void> init() async {
@@ -206,5 +179,16 @@ class GTFSService {
           s.stopName != null && s.stopCode != null &&
           "${s.stopName!.toLowerCase()} (${s.stopCode!.toLowerCase()})" == query,
     ).toList();
+  }
+
+  static Future<Map<String, List<GTFSStopTimeData>>> getStopTimesAfterNow(String stopId, int limit) async {
+    final departures = await repo.getStopTimesAfterNow(stopId, limit);
+
+    Map<String, List<GTFSStopTimeData>> departuresMap = {};
+    for (final dep in departures) {
+      departuresMap.putIfAbsent(dep.routeId!, () => []).add(dep);
+      }
+
+      return departuresMap;
   }
 }

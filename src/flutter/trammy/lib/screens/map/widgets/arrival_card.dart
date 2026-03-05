@@ -6,10 +6,11 @@ import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/services/common.dart';
 
 class ArrivalCard extends StatelessWidget {
-  final MapEntry<StopInfoKey, List<DateTime>> entry;
-  final List<String> minutes;
+  final GTFSRoute route;
+  final String direction;
+  final List<ArrivalEntry> arrivals;
 
-  ArrivalCard({super.key, required this.entry, required this.minutes});
+  ArrivalCard({super.key, required this.route, required this.direction, required this.arrivals});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +27,10 @@ class ArrivalCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CardHeader(route: entry.key.route, direction: entry.key.direction),
+                  CardHeader(route: route, direction: direction),
                   const SizedBox(height: 6),
                   // Upcoming times as chips
-                  ArrivalTimes(minutes: minutes)
+                  ArrivalTimes(arrivals: arrivals)
                 ],
               ),
             ),
@@ -81,19 +82,23 @@ class CardHeader extends StatelessWidget {
 }
 
 class ArrivalTimes extends StatelessWidget {
-  final List<String> minutes;
+  final List<ArrivalEntry> arrivals;
 
-  const ArrivalTimes({required this.minutes});
+  const ArrivalTimes({required this.arrivals});
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 6,
-      children: minutes
+      children: arrivals
+          .take(3)
           .map(
-            (time) => Chip(
-              label: Text(time),
+            (arrival) => Chip(
+              label: Text("${arrival.arrival.difference(DateTime.now()).inMinutes.toString()} мин"),
               visualDensity: VisualDensity.compact,
+              avatar: arrival.online
+                ? const Icon(Icons.wifi, size: 16, color: Colors.green)
+                : null,
             ),
           )
           .toList(),

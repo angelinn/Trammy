@@ -16,3 +16,7 @@ Color colorFromHex(String hexString) {
   buffer.write(hexString.replaceFirst('#', ''));
   return Color(int.parse(buffer.toString(), radix: 16));
 }
+
+DateTime fromUnixTime(int unixTime) { 
+  return DateTime.fromMillisecondsSinceEpoch(unixTime * 1000);
+}

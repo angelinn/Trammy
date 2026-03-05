@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:trammy/db/gtfs_db_builder.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
+import 'package:trammy/models/gtfs/stop_time.dart';
 import 'package:trammy/models/gtfs/trip.dart';
 import 'package:trammy/services/gtfs_service.dart';
 
@@ -55,6 +56,49 @@ class GTFSRepository {
     final rows = await dbBuilder.db.query('trips');
 
     return rows.map((r) => GTFSTrip.fromMap(r)).toList();
+  }
+
+  Future<List<GTFSStopTimeData>> getStopTimesAfterNow(String stopCode, int limit) async {
+
+final today = DateTime.now();
+final yyyymmdd =
+    "${today.year.toString().padLeft(4,'0')}"
+    "${today.month.toString().padLeft(2,'0')}"
+    "${today.day.toString().padLeft(2,'0')}";
+
+final hhmmss =
+        "${today.hour.toString().padLeft(2, '0')}:"
+         "${today.minute.toString().padLeft(2, '0')}:"
+         "${today.second.toString().padLeft(2, '0')}";
+
+final rows = await dbBuilder.db.rawQuery(
+  '''
+  SELECT
+      st.trip_id,
+      st.stop_id,
+      st.arrival_time,
+      st.departure_time,
+      st.stop_sequence,
+      t.route_id,
+      t.trip_headsign,
+      r.route_short_name,
+      r.route_type,
+      r.route_color
+  FROM stop_times st
+  JOIN stops s ON st.stop_id = s.stop_id
+  JOIN trips t ON st.trip_id = t.trip_id
+  JOIN routes r ON t.route_id = r.route_id
+  JOIN calendar_dates cd ON t.service_id = cd.service_id
+  WHERE s.stop_code = ?
+    AND cd.date = ?
+    AND cd.exception_type = 1
+    AND st.departure_time >= ?
+  ORDER BY st.arrival_time;
+  LIMIT $limit
+  ''',
+  [stopCode, yyyymmdd, hhmmss],);
+
+    return rows.map((r) => GTFSStopTimeData.fromMap(r)).toList();
   }
 
   /// Get a single stop by its ID

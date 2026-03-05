@@ -17,7 +17,7 @@ class StopSheet extends StatefulWidget {
 
 class StopSheetState extends State<StopSheet> { 
   var isLoading = true;
-  Map<StopInfoKey, List<DateTime>> updates = { };
+  Map<StopInfoKey, List<ArrivalEntry>> updates = { };
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class StopSheetState extends State<StopSheet> {
   
   Widget _buildArrivalsContent(
     GTFSStopRouteInfo stop,
-    Map<StopInfoKey, List<DateTime>> updates,
+    Map<StopInfoKey, List<ArrivalEntry>> updates,
     DateTime now,
     ScrollController scrollController,
   ) {
@@ -106,7 +106,7 @@ class StopSheetState extends State<StopSheet> {
   }
 
   List<Widget> buildArrivalsList(
-    Map<StopInfoKey, List<DateTime>> updates,
+    Map<StopInfoKey, List<ArrivalEntry>> updates,
     DateTime now,
   ) {
     final sortedUpdates = updates.entries.toList()
@@ -129,16 +129,7 @@ class StopSheetState extends State<StopSheet> {
         return const SizedBox.shrink();
       }
 
-      final minutes = entry.value
-          .map((date) {
-            var diff = date.difference(now).inMinutes;
-            if (diff < 0) diff = 0;
-            return "$diff мин";
-          })
-          .take(3)
-          .toList();
-
-      return ArrivalCard(entry: entry, minutes: minutes);
+      return ArrivalCard(route: entry.key.route, direction: entry.key.direction, arrivals: entry.value);
     }).toList();
   }
 

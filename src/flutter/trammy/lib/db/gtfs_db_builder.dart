@@ -213,8 +213,22 @@ class GtfsDbBuilder {
         await db.execute(
           'CREATE INDEX IF NOT EXISTS idx_routes_route_id ON routes(route_id);',
         );
+        await db.execute(
+          'CREATE INDEX IF NOT EXISTS idx_stops_stop_code ON stops(stop_code);',
+        );
+
+        await db.execute(
+          'CREATE INDEX IF NOT EXISTS idx_trips_service_id ON trips(service_id);',
+        );
+
+        await db.execute(
+          'CREATE INDEX IF NOT EXISTS idx_calendar_dates_service_date '
+          'ON calendar_dates(service_id, date, exception_type);',
+        );
+        
       },
     );
+  
   }
 
   Future<void> createStopsWithRoutesTable() async {
