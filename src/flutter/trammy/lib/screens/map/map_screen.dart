@@ -59,14 +59,13 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   void goToCurrentLocation() async {
-    var location = await LocationService.getUserLocation();
-    if (location != null) {
+    await LocationService.startTracking((position) {
       setState(() {
-        userLocation = location;
+        userLocation = position;
       });
 
-      animatedMapController.animateTo(dest: location, zoom: 18); // Zoom to user
-    }
+      animatedMapController.animateTo(dest: position, zoom: 18);
+    });
   }
 
   Future<void> onStopTapped(GTFSStopRouteInfo stop) async {

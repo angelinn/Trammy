@@ -24,4 +24,27 @@ class LocationService {
     );
     return LatLng(pos.latitude, pos.longitude);
   }
+
+  static Future<void> startTracking(void Function(LatLng) onPositionChanged) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
+
+    // Check permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
+    }
+    if (permission == LocationPermission.deniedForever) return;
+
+    Geolocator.getPositionStream(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high)
+      ).listen((pos) {
+      onPositionChanged(LatLng(pos.latitude, pos.longitude));
+    });
+  }
 }
