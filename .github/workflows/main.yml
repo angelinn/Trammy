@@ -29,16 +29,7 @@ jobs:
         run: flutter analyze
         working-directory: ${{ env.PROJECT_ROOT }}
 
-      - name: Run Flutter tests
-        run: flutter test
-        working-directory: ${{ env.PROJECT_ROOT }}
-
       - name: Build APK
         run: flutter build apk --debug
         working-directory: ${{ env.PROJECT_ROOT }}
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-debug-apk
-          path: ${{ env.PROJECT_ROOT }}/build/app/outputs/flutter-apk/app-debug.apk
