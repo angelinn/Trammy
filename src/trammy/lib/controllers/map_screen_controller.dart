@@ -37,19 +37,45 @@ class MapScreenController {
 
   Future<Map<StopInfoKey, List<ArrivalEntry>>> getUpdatesForStop(GTFSStopRouteInfo stop) async {
     Map<StopInfoKey, List<ArrivalEntry>> updates = {};
+    Set<String> addedKeys = {};
 
     await GTFSService.fetchTripUpdates();
+     // 1️⃣ First pass: use GTFS-RT as truth
+    GTFSService.predictedArrivals.forEach((key, predictedArrival) {
+      final parts = key.split("_");
+      final tripId = parts[0];
+      final stopId = parts[1];
+
+      final stopCode = GTFSService.stopIdToCode[stopId];
+      if (stopCode == null) {
+        print("Stop $stopId not found");
+        return;
+      }
+
+      if (stopCode != stop.stopCode) return;
+
+      final trip = GTFSService.trips[tripId];
+      if (trip == null) return;
+
+      final route = GTFSService.routes.firstWhere((r) => r.routeId == trip.routeId);
+
+      updates
+          .putIfAbsent(StopInfoKey(route, trip.headsign ?? ""), () => [])
+          .add(ArrivalEntry(predictedArrival, true));
+
+      addedKeys.add(key);
+    });
+
+
     Map<String, List<GTFSStopTimeData>> stopTimes = await GTFSService.getStopTimesAfterNow(stop.stopCode!, 3);
 
     for (GTFSStopTimeData stopTime in stopTimes.values.expand((v) => v)) {
-      final route = GTFSService.routes.firstWhere((r) => r.routeId == stopTime.routeId);
-      final predictedArrival = GTFSService.predictedArrivals["${stopTime.tripId}_${stopTime.stopId}"];
-      if (predictedArrival != null) {
-        updates.putIfAbsent(StopInfoKey(route, stopTime.tripHeadsign!), () => []).add(ArrivalEntry(predictedArrival, true));
-      }
-      else {
-        updates.putIfAbsent(StopInfoKey(route, stopTime.tripHeadsign!), () => []).add(ArrivalEntry(stopTime.toArrivalDateTime(), false));
-      }
+      final key = "${stopTime.tripId}_${stopTime.stopId}";
+    if (addedKeys.contains(key)) continue;
+
+      final route = GTFSService.routes.firstWhere((r) => r.routeId == stopTime.routeId);      
+    
+      updates.putIfAbsent(StopInfoKey(route, stopTime.tripHeadsign!), () => []).add(ArrivalEntry(stopTime.toArrivalDateTime(), false));
     }   
 
     updates.forEach((_, times) => times.sort((a, b) => a.arrival.compareTo(b.arrival)));
