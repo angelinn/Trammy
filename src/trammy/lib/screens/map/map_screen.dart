@@ -69,16 +69,22 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   Future<void> onStopTapped(GTFSStopRouteInfo stop) async {
-    animatedMapController.animateTo(
-      dest: LatLng(stop.stopLat!, stop.stopLon!),
-      zoom: 18,
-    );
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       barrierColor: Colors.black.withOpacity(0.1),
       builder: (_) => StopSheet(stop: stop, mapScreenController: mapScreenController)
     );
+
+    await animatedMapController.animateTo(
+      dest: LatLng(stop.stopLat!, stop.stopLon!),
+      zoom: 18,
+    );
+
+    setState(() {
+      currentPosition = animatedMapController.mapController.camera;
+    });
+    
   }
 
   void onMapTapped(TapPosition tapPosition, LatLng latlng) {
@@ -93,13 +99,15 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     if (!positionLoaded) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+
+    final initialCenter = lastLat != null && lastLng != null ? LatLng(lastLat!, lastLng!) : const LatLng(42.6977, 23.3219); // Sofia
     stopLocations = {};
     return Scaffold(
       body: Stack(
         children: [ 
           MapControl(
             animatedMapController: animatedMapController, 
-            initialCenter: const LatLng(42.6977, 23.3219), // Sofia
+            initialCenter:  initialCenter,
             initialZoom: 16,
             onMapTapped: onMapTapped,
             onStopTapped: onStopTapped,
@@ -122,17 +130,16 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     );
   }
 
-  void onMoveEnd() {
+  void onMoveEnd() async {
+    var prefs = await SharedPreferences.getInstance();
+    
+    prefs.setDouble('lastLat', animatedMapController.mapController.camera.center.latitude);
+    prefs.setDouble('lastLng', animatedMapController.mapController.camera.center.longitude);
+    prefs.setDouble('lastZoom', animatedMapController.mapController.camera.zoom);
+
     setState(() {
       currentPosition = animatedMapController.mapController.camera;
     });
-  }
-
-  Future<void> onPositionChanged(MapCamera camera, bool hasGesture) async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.setDouble('lastLat', camera.center.latitude);
-    prefs.setDouble('lastLng', camera.center.longitude);
-    prefs.setDouble('lastZoom', camera.zoom);
   }
 
   Future<void> loadLastPosition() async {
@@ -153,10 +160,6 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       ScaffoldMessenger.of(context,).showSnackBar(const SnackBar(content: Text('Няма намерени спирки')));
     } else {
       onStopTapped(matches.first);
-
-      setState(() {
-        currentPosition = animatedMapController.mapController.camera;
-      });
     }
   }
 }
