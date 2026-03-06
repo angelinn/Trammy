@@ -229,6 +229,7 @@ class GtfsDbBuilder {
       },
 
     );
+
   }
 
   Future<void> createStopsWithRoutesTable() async {
@@ -237,7 +238,7 @@ class GtfsDbBuilder {
           CREATE TABLE IF NOT EXISTS stop_route_info AS
           SELECT 
   stops.stop_id,
-  stops.stop_code,
+  CAST(stops.stop_code AS TEXT) AS stop_code,
   stops.stop_name,
   stops.stop_desc,
   stops.stop_lat,
@@ -279,7 +280,7 @@ GROUP BY stops.stop_code;
     int inserted = 0;
 
     List<Map<String, Object?>> batchRows = [];
-    final codec = CsvCodec(dynamicTyping: true);
+    final codec = CsvCodec();
 
     while (await iterator.moveNext()) {
       final values = codec.decode(iterator.current)[0];
