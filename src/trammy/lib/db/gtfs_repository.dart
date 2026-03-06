@@ -31,9 +31,10 @@ class GTFSRepository {
   }
 
   /// Get all stops, optionally filtered by a search string
-  Future<List<GTFSStop>> getStopsRaw() async {
+  Future<List<GTFSStop>> getStopsRaw(List<String> columns) async {
     final rows = await dbBuilder.db.query(
       'stops',
+      columns: columns,
       where: 'stop_lat is NOT NULL AND stop_lon is NOT NULL',
       orderBy: 'stop_name ASC',
     );

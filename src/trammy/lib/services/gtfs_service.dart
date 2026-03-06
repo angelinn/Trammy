@@ -30,7 +30,8 @@ class GTFSProgress {
 
 class GTFSService {
   static const _url = 'https://gtfs.sofiatraffic.bg/api/v1/trip-updates';
-  static Map<String, GTFSStopRouteInfo> stopsById = {};
+  static Map<String, String> stopIdToCode = {};
+  static Map<String, List<String>> stopCodeToId = {};
   static Map<String, List<GTFSStopRouteInfo>> stopsByCodeMap = {};
 
   static List<GTFSStopRouteInfo> stops = [];
@@ -113,8 +114,15 @@ class GTFSService {
         .where((stop) => stop.stopCode != null && stop.stopCode != '')
         .toList();
 
+    var idsToCode = await repo.getStopsRaw(['stop_id', 'stop_code']);
+    for (final idToCode in idsToCode) {
+      if (idToCode.stopCode == null || idToCode.stopCode == '') continue;
+      stopIdToCode[idToCode.stopId] = idToCode.stopCode!;
+      stopCodeToId.putIfAbsent(idToCode.stopCode!, () => []).add(idToCode.stopId);
+    }
+
+
     for (final stop in stops) {
-      stopsById[stop.stopId] = stop;
       stopsByCodeMap.putIfAbsent(stop.stopCode!, () => []).add(stop);
     }
 
