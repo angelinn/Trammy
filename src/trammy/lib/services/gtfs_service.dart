@@ -148,7 +148,7 @@ class GTFSService {
       case TransportType.bus:
         return Icons.directions_bus;
       case TransportType.trolley:
-        return Icons.trolley;
+        return Icons.directions_bus;
       default:
         return Icons.directions_bus;
     }
