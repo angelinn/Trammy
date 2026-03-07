@@ -81,32 +81,56 @@ class CardHeader extends StatelessWidget {
     );  
   }
 }
-
 class ArrivalTimes extends StatelessWidget {
   final List<ArrivalEntry> arrivals;
 
-  const ArrivalTimes({required this.arrivals});
+  const ArrivalTimes({super.key, required this.arrivals});
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 6,
-      children: arrivals
-          .take(3)
-          .map(
-            (arrival)  { 
-                final minutes = arrival.arrival.difference(DateTime.now()).inMinutes;
-                final hhmm = "${arrival.arrival.hour.toString().padLeft(2, '0')}:${arrival.arrival.minute.toString().padLeft(2, '0')}";
-                return Chip(
-                  label: Text(minutes > 100 ? hhmm : "${minutes.toString()} мин"),
-                  visualDensity: VisualDensity.compact,
-                  avatar: arrival.online
-                    ? const Icon(Icons.wifi, size: 16, color: Colors.green)
-                    : null,
-                );
-            }
-          )
-          .toList(),
+      spacing: 8,
+      runSpacing: 8,
+      children: arrivals.take(3).map((arrival) {
+        final diff = arrival.arrival.difference(DateTime.now());
+        final minutes = diff.inMinutes;
+        
+        String displayTime;
+        if (minutes <= 0) {
+          displayTime = "Сега";
+        } else if (minutes > 100) {
+          displayTime = "${arrival.arrival.hour.toString().padLeft(2, '0')}:${arrival.arrival.minute.toString().padLeft(2, '0')}";
+        } else {
+          displayTime = "$minutes мин";
+        }
+
+        return Chip(
+          visualDensity: VisualDensity.compact,
+          // Moving the icon to the right by putting it in the label Row
+          label: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                displayTime,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              if (arrival.online) ...[
+                const SizedBox(width: 4),
+                const Icon(
+                  Icons.rss_feed, 
+                  size: 14, 
+                  color: Colors.green,
+                ),
+              ],
+            ],
+          ),
+          // We leave 'avatar' empty so nothing shows on the left
+          avatar: null, 
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        );
+      }).toList(),
     );
   }
 }
