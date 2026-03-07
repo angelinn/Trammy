@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trammy/controllers/map_screen_controller.dart';
+import 'package:trammy/models/favourite.dart';
 import 'package:trammy/screens/favourites_screen.dart';
 import 'package:trammy/screens/map/map_screen.dart';
 
@@ -11,11 +13,28 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
+  final GlobalKey<MapScreenState> mapKey = GlobalKey<MapScreenState>(); 
+  late List<Widget> screens;
 
-  final List<Widget> screens = [
-    MapScreen(title: 'Map Screen'),
-    FavouritesScreen(title: 'Favourites Screen')
-  ];
+  @override
+  void initState() {
+    super.initState();
+    screens = [
+      MapScreen(title: 'Map Screen', key: mapKey),
+      FavouritesScreen(onFavouriteSelected: onFavouriteSelected)
+    ];
+  }
+  void onFavouriteSelected(FavoriteStop fav) async {
+    setState(() {
+      selectedIndex = 0;
+    });
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+       WidgetsBinding.instance.addPostFrameCallback((_) {
+        mapKey.currentState?.onFavouriteTapped(fav.stopCode);
+       });
+    });
+  }
 
   void onTabTapped(int index) {
     setState(() {

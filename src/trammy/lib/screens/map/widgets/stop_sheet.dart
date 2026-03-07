@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trammy/controllers/map_screen_controller.dart';
+import 'package:trammy/db/user_db_service.dart';
+import 'package:trammy/models/favourite.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/screens/map/widgets/arrival_card.dart';
 import 'package:trammy/services/common.dart';
@@ -16,13 +18,21 @@ class StopSheet extends StatefulWidget {
 
 class StopSheetState extends State<StopSheet> {
   bool isLoading = true;
-
+  bool isFavorite = false;
   Map<StopInfoKey, List<ArrivalEntry>> updates = {};
 
   @override
   void initState() {
     super.initState();
     _fetchUpdates();
+    _checkFavoriteStatus();
+  }
+
+  Future<void> _checkFavoriteStatus() async {
+    final status = await UserDbService.isFavorite(widget.stop.stopCode!);
+    if (mounted) {
+      setState(() => isFavorite = status);
+    }
   }
 
   Future<void> _fetchUpdates() async {
@@ -106,32 +116,75 @@ class StopSheetState extends State<StopSheet> {
   }
 
   Widget _buildHeader() {
-    return Row(
-      children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: colorFromHex(GTFSService.getDominantColor(widget.stop)!),
-            shape: BoxShape.circle,
+  return Row(
+    children: [
+      // Transport Icon Badge
+      Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: colorFromHex(GTFSService.getDominantColor(widget.stop)!),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          GTFSService.getStopIcon(
+            GTFSService.getDominantType(widget.stop)!,
           ),
-          child: Icon(
-            GTFSService.getStopIcon(
-              GTFSService.getDominantType(widget.stop)!,
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+      const SizedBox(width: 12),
+      
+      // Stop Name (Expanded to push the star to the right)
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.stop.stopName ?? "",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            color: Colors.white,
-            size: 20,
-          ),
+            Text(
+              "Код: ${widget.stop.stopCode}",
+              style: TextStyle(
+                fontSize: 13, 
+                color: Theme.of(context).colorScheme.onSurfaceVariant
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            "${widget.stop.stopName} (${widget.stop.stopCode})",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+      ),
+
+      // The Favorite Button
+      IconButton(
+        onPressed: () async {
+          // Create the lightweight model
+          final fav = FavoriteStop(
+            stopCode: widget.stop.stopCode!,
+            stopName: widget.stop.stopName!,
+            routeType: GTFSService.getDominantType(widget.stop)!.value,
+          );
+
+          // Toggle in DB
+          await UserDbService.toggleFavorite(fav);
+
+          // Update UI
+          setState(() => isFavorite = !isFavorite);
+
+          // Optional: Haptic feedback makes it feel high-quality
+          // HapticFeedback.lightImpact(); 
+        },
+        icon: Icon(
+          isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
+          color: isFavorite ? Colors.amber : Theme.of(context).colorScheme.outline,
+          size: 28,
         ),
-      ],
-    );
+      ),
+    ],
+  );
   }
 
   List<Widget> _buildArrivals() {

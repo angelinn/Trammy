@@ -69,6 +69,11 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     });
   }
 
+  Future<void> onFavouriteTapped(String stopCode) async  { 
+    GTFSStopRouteInfo stop = GTFSService.stopsByCodeMap[stopCode]!.first;
+    await onStopTapped(stop);
+  }
+
   Future<void> onStopTapped(GTFSStopRouteInfo stop) async {
     displayBottomSheet(stop);
 
