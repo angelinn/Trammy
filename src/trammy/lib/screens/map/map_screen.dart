@@ -35,6 +35,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   bool positionLoaded = false;
   Set<String> stopLocations = {};
+  GTFSStopRouteInfo? selectedStop;
 
   @override
   void initState() {
@@ -52,7 +53,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     loadLastPosition();
 
     print('[MapScreen] initState()');
-    await mapScreenController.initialize();
+    await MapScreenController.initialize();
     setState(() {
       stopsLoaded = true;
     });
@@ -69,12 +70,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   Future<void> onStopTapped(GTFSStopRouteInfo stop) async {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      barrierColor: Colors.black.withOpacity(0.1),
-      builder: (_) => StopSheet(stop: stop, mapScreenController: mapScreenController)
-    );
+    displayBottomSheet(stop);
 
     await animatedMapController.animateTo(
       dest: LatLng(stop.stopLat!, stop.stopLon!),
@@ -84,7 +80,23 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     setState(() {
       currentPosition = animatedMapController.mapController.camera;
     });
-    
+  }
+
+  Future<void> displayBottomSheet(GTFSStopRouteInfo stop) async {
+    setState(() {
+      selectedStop = stop;
+    });
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      barrierColor: Colors.black.withOpacity(0.1),
+      builder: (_) => StopSheet(stop: stop)
+    );
+
+    setState(() {
+      selectedStop = null;
+    });
   }
 
   void onMapTapped(TapPosition tapPosition, LatLng latlng) {
@@ -113,7 +125,8 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             onStopTapped: onStopTapped,
             onMoveEnd: onMoveEnd,
             stops: GTFSService.stopsByCode,
-            userLocation: userLocation
+            userLocation: userLocation,
+            selectedStop: selectedStop
         ),
           // Bottom search bar
           Positioned(left: 32, right: 32, bottom: 35, child: StopSearchBar(stops: GTFSService.stopsByCode, onStopSearch: onStopSearch)),

@@ -7,9 +7,8 @@ import 'package:trammy/services/gtfs_service.dart';
 
 class StopSheet extends StatefulWidget {
   final GTFSStopRouteInfo stop;
-  final MapScreenController mapScreenController;
 
-  StopSheet({super.key, required this.stop, required this.mapScreenController});
+  StopSheet({super.key, required this.stop});
 
   @override
   State<StatefulWidget> createState() => StopSheetState();
@@ -23,7 +22,7 @@ class StopSheetState extends State<StopSheet> {
   Widget build(BuildContext context) {
  // Fetch data only once
     if (isLoading) {
-      widget.mapScreenController.getUpdatesForStop(widget.stop).then((result) {
+      MapScreenController.getUpdatesForStop(widget.stop.stopCode!).then((result) {
         setState(() {
           updates = result;
           isLoading = false;

@@ -1,12 +1,11 @@
-import 'package:gtfs_realtime_bindings/gtfs_realtime_bindings.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/models/gtfs/stop_time.dart';
 import 'package:trammy/services/gtfs_service.dart';
 
-  class StopInfoKey { 
-    final GTFSRoute route;
-    final String direction;
+class StopInfoKey { 
+  final GTFSRoute route;
+  final String direction;
 
   StopInfoKey(this.route, this.direction);
 
@@ -30,12 +29,12 @@ class ArrivalEntry {
 }
 
 class MapScreenController {
-  Future<void> initialize() async {
+  static Future<void> initialize() async {
      await GTFSService.init();
      await GTFSService.getAllStops();
   }
 
-  Future<Map<StopInfoKey, List<ArrivalEntry>>> getUpdatesForStop(GTFSStopRouteInfo stop) async {
+  static Future<Map<StopInfoKey, List<ArrivalEntry>>> getUpdatesForStop(String searchStopCode) async {
     Map<StopInfoKey, List<ArrivalEntry>> updates = {};
     Set<String> addedKeys = {};
 
@@ -52,7 +51,7 @@ class MapScreenController {
         return;
       }
 
-      if (stopCode != stop.stopCode) return;
+      if (stopCode != searchStopCode) return;
 
       final trip = GTFSService.trips[tripId];
       if (trip == null) return;
@@ -67,7 +66,7 @@ class MapScreenController {
     });
 
 
-    Map<String, List<GTFSStopTimeData>> stopTimes = await GTFSService.getStopTimesAfterNow(stop.stopCode!, 3);
+    Map<String, List<GTFSStopTimeData>> stopTimes = await GTFSService.getStopTimesAfterNow(searchStopCode, 3);
 
     for (GTFSStopTimeData stopTime in stopTimes.values.expand((v) => v)) {
       final key = "${stopTime.tripId}_${stopTime.stopId}";

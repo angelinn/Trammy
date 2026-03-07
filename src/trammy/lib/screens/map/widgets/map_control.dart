@@ -13,6 +13,7 @@ class MapControl extends StatelessWidget {
   final double initialZoom;
   final List<GTFSStopRouteInfo> stops;
   final LatLng? userLocation;
+  final GTFSStopRouteInfo? selectedStop;
 
   final void Function(GTFSStopRouteInfo stop) onStopTapped;
   final void Function(MapCamera camera, bool hasGesture)? onPositionChanged;
@@ -30,6 +31,7 @@ class MapControl extends StatelessWidget {
     this.onPositionChanged,
     this.onMoveEnd,
     this.onMapTapped,
+    this.selectedStop,
   });
 
   Widget renderMapTheme(BuildContext context) {
@@ -78,7 +80,12 @@ class MapControl extends StatelessWidget {
       ),
       children: [
           renderMapTheme(context),
-          if (stops.isNotEmpty) StopsLayer(animatedMapController: animatedMapController, stops: stops, onStopTapped: onStopTapped),
+          if (stops.isNotEmpty) StopsLayer(
+            animatedMapController: animatedMapController,
+            stops: stops,
+            onStopTapped: onStopTapped,
+            selectedStop: selectedStop
+          ),
           if (userLocation != null)
             MarkerLayer(
               markers: [

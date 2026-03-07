@@ -10,8 +10,14 @@ class StopsLayer extends StatelessWidget {
   final AnimatedMapController animatedMapController;
   final List<GTFSStopRouteInfo> stops;
   final void Function(GTFSStopRouteInfo) onStopTapped;
+  final GTFSStopRouteInfo? selectedStop;
 
-  StopsLayer({super.key, required this.animatedMapController, required this.stops, required this.onStopTapped});
+  StopsLayer({super.key,
+    required this.animatedMapController,
+    required this.stops,
+    required this.onStopTapped,
+    required this.selectedStop
+  });
 
 
   @override
@@ -34,6 +40,8 @@ class StopsLayer extends StatelessWidget {
                   fillColor: colorFromHex(GTFSService.getDominantColor(stop)!).withOpacity(0.8),
                   borderColor: colorFromHex(GTFSService.getDominantColor(stop)!.toString()),
                   onTap: () => onStopTapped(stop),
+                  stop: stop,
+                  isSelected: selectedStop?.stopCode == stop.stopCode,
                 );
               },
             );
