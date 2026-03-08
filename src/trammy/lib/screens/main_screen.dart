@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trammy/controllers/map_screen_controller.dart';
+import 'package:trammy/db/favourites_repository.dart';
 import 'package:trammy/models/favourite.dart';
 import 'package:trammy/screens/favourites_screen.dart';
 import 'package:trammy/screens/map/map_screen.dart';
@@ -23,7 +24,10 @@ class MainScreenState extends State<MainScreen> {
       MapScreen(title: 'Map Screen', key: mapKey),
       FavouritesScreen(onFavouriteSelected: onFavouriteSelected)
     ];
+
+    FavouritesRepository.instance.load();
   }
+  
   void onFavouriteSelected(FavoriteStop fav) async {
     setState(() {
       selectedIndex = 0;

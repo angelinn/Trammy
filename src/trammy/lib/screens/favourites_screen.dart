@@ -1,90 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:trammy/db/user_db_service.dart';
+import 'package:trammy/db/favourites_repository.dart';
 import 'package:trammy/models/favourite.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/services/gtfs_service.dart';
 import 'package:trammy/services/common.dart';
 
-class FavouritesScreen extends StatefulWidget { 
+class FavouritesScreen extends StatelessWidget {
   final void Function(FavoriteStop) onFavouriteSelected;
+
   const FavouritesScreen({super.key, required this.onFavouriteSelected});
-
-  @override
-  State<FavouritesScreen> createState() => FavouritesScreenState();
-}
-
-class FavouritesScreenState extends State<FavouritesScreen> {
-  List<FavoriteStop> favorites = [];
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshFavorites();
-  }
-
-  Future<void> _refreshFavorites() async {
-    final data = await UserDbService.getFavorites();
-    setState(() {
-      favorites = data;
-      isLoading = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Любими спирки')),
-      body: CustomScrollView(
-        slivers: [
-          if (isLoading)
-            const SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator()),
-            )
-          else if (favorites.isEmpty)
-            _buildEmptyState()
-          else
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _buildFavoriteItem(favorites[index]),
-                  childCount: favorites.length,
+      appBar: AppBar(
+        title: const Text('Любими спирки'),
+        centerTitle: true,
+        surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
+      ),
+      body: ValueListenableBuilder<List<FavoriteStop>>(
+        valueListenable: FavouritesRepository.instance.favorites,
+        builder: (context, favorites, _) {
+          if (favorites.isEmpty) {
+            return CustomScrollView(
+              slivers: [_buildEmptyState(context)],
+            );
+          }
+
+          return CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _buildFavoriteItem(context, favorites[index]),
+                    childCount: favorites.length,
+                  ),
                 ),
               ),
-            ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
+    final theme = Theme.of(context);
     return SliverFillRemaining(
       hasScrollBody: false,
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.star_outline_rounded,
-              size: 80,
-              color: Theme.of(context).colorScheme.outlineVariant,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              "Нямате добавени любими",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.star_outline_rounded,
+                size: 96,
+                color: theme.colorScheme.outlineVariant,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                "Нямате добавени любими",
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Добавете спирки към любимите си, за да ги виждате бързо тук.",
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildFavoriteItem(FavoriteStop fav) {
-    // Get color and icon based on routeType (0=Tram, 3=Bus, etc.)
+  Widget _buildFavoriteItem(BuildContext context, FavoriteStop fav) {
+    final theme = Theme.of(context);
     final TransportType type = TransportType.fromValue(fav.routeType);
     final Color transportColor = colorFromHex(GTFSService.routeColors[type]!);
     final IconData transportIcon = GTFSService.getStopIcon(type);
@@ -95,48 +95,73 @@ class FavouritesScreenState extends State<FavouritesScreen> {
         key: Key(fav.stopCode),
         direction: DismissDirection.endToStart,
         onDismissed: (_) async {
-          await UserDbService.toggleFavorite(fav); // Removes it
-          _refreshFavorites();
+          await FavouritesRepository.instance.toggle(fav);
         },
         background: Container(
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.errorContainer,
+            color: theme.colorScheme.errorContainer,
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+          child: Icon(
+            Icons.delete_outline_rounded,
+            color: theme.colorScheme.error,
+          ),
         ),
         child: Card(
-          elevation: 0,
+          elevation: 2,
           margin: EdgeInsets.zero,
-          // M3 Surface color
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          color: theme.colorScheme.surfaceContainerLow,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+              color: theme.colorScheme.outlineVariant.withOpacity(0.5),
             ),
           ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            leading: CircleAvatar(
-              backgroundColor: transportColor,
-              child: Icon(transportIcon, color: Colors.white, size: 20),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () => onFavouriteSelected(fav),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: transportColor,
+                      child: Icon(transportIcon, color: Colors.white, size: 20),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            fav.stopName,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "Код на спирка: ${fav.stopCode}",
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 20,
+                      color: theme.colorScheme.outline,
+                    ),
+                  ],
+                ),
+              ),
             ),
-            title: Text(
-              fav.stopName,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text("Код на спирка: ${fav.stopCode}"),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: Theme.of(context).colorScheme.outline,
-            ),
-            onTap: () {
-              widget.onFavouriteSelected(fav);
-            },
           ),
         ),
       ),
