@@ -107,17 +107,14 @@ class MapControl extends StatelessWidget {
           );
           await launchUrl(uri);
         },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-          color: Colors.white70,
-          child: const Text(
+        child: Padding(padding: EdgeInsetsGeometry.all(3),
+        child: const Text(
             '© OpenStreetMap',
             style: TextStyle(fontSize: 12),
-          ),
-        ),
-      ),
-              )
-                
+          )
+      )
+      )
+              )   
         ],
       );
   }

@@ -51,7 +51,7 @@ class AnimatedStopMarkerState extends State<AnimatedStopMarker> {
                   elevation: 4,
                   borderRadius: BorderRadius.circular(16),
 
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                       child: Text(
