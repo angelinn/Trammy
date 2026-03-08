@@ -60,21 +60,22 @@ class GTFSRepository {
   }
 
   Future<List<GTFSStopTimeData>> getStopTimesAfterNow(String stopCode, int limit) async {
+    int normalizeHour(int hour, DateTime baseDay, DateTime dt) =>
+        dt.day > baseDay.day ? hour + 24 : hour;
 
-final today = DateTime.now();
-final upperLimit = today.add(const Duration(hours: 2));
-final yyyymmdd =
+    final today = DateTime.now();
+    final upperLimit = today.add(const Duration(hours: 2));
+
+    final yyyymmdd =
     "${today.year.toString().padLeft(4,'0')}"
     "${today.month.toString().padLeft(2,'0')}"
     "${today.day.toString().padLeft(2,'0')}";
-final hhmmss =
-        "${today.hour.toString().padLeft(2, '0')}:"
-         "${today.minute.toString().padLeft(2, '0')}:"
-         "${today.second.toString().padLeft(2, '0')}";
-final hhmmssUpper =
-        "${upperLimit.hour.toString().padLeft(2, '0')}:"
-         "${upperLimit.minute.toString().padLeft(2, '0')}:"
-         "${upperLimit.second.toString().padLeft(2, '0')}";
+    final hh = normalizeHour(today.hour, today, today);
+    final hhUpper = normalizeHour(upperLimit.hour, today, upperLimit);
+
+    final hhmmssFixed = "${hh.toString().padLeft(2,'0')}:${today.minute.toString().padLeft(2,'0')}:${today.second.toString().padLeft(2,'0')}";
+    final hhmmssUpperFixed = "${hhUpper.toString().padLeft(2,'0')}:${upperLimit.minute.toString().padLeft(2,'0')}:${upperLimit.second.toString().padLeft(2,'0')}";
+
 final rows = await dbBuilder.db.rawQuery(
   '''
   SELECT
@@ -100,7 +101,7 @@ final rows = await dbBuilder.db.rawQuery(
     AND st.departure_time <= ?
   ORDER BY st.arrival_time;
   ''',
-  [stopCode, yyyymmdd, hhmmss, hhmmssUpper],);
+  [stopCode, yyyymmdd, hhmmssFixed, hhmmssUpperFixed],);
 
     return rows.map((r) => GTFSStopTimeData.fromMap(r)).toList();
   }
