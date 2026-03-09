@@ -46,7 +46,7 @@ class AnimatedStopMarkerState extends State<AnimatedStopMarker> {
               bottom: widget.radius + 8,
               child: AnimatedOpacity(
                 duration: const Duration(milliseconds: 200),
-                opacity: 0.8,
+                opacity: 0.9,
                 child: Material(
                   elevation: 4,
                   borderRadius: BorderRadius.circular(16),

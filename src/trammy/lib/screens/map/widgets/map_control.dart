@@ -5,6 +5,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/screens/map/widgets/pulsing_user_marker.dart';
 import 'package:trammy/screens/map/widgets/stops_layer.dart';
+import 'package:trammy/screens/map/widgets/vehicle_market.dart';
+import 'package:trammy/services/common.dart';
+import 'package:trammy/services/gtfs_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapControl extends StatelessWidget {
@@ -14,11 +17,13 @@ class MapControl extends StatelessWidget {
   final List<GTFSStopRouteInfo> stops;
   final LatLng? userLocation;
   final GTFSStopRouteInfo? selectedStop;
+  final Set<String> vehiclePositions;
 
   final void Function(GTFSStopRouteInfo stop) onStopTapped;
   final void Function(MapCamera camera, bool hasGesture)? onPositionChanged;
   final VoidCallback? onMoveEnd;
   final void Function(TapPosition, LatLng)? onMapTapped;
+
 
     const MapControl({
     super.key,
@@ -32,6 +37,7 @@ class MapControl extends StatelessWidget {
     this.onMoveEnd,
     this.onMapTapped,
     this.selectedStop,
+    required this.vehiclePositions
   });
 
   Widget renderMapTheme(BuildContext context) {
@@ -114,7 +120,47 @@ class MapControl extends StatelessWidget {
           )
       )
       )
-              )   
+              )  , 
+          
+          if (vehiclePositions.isNotEmpty)
+          ValueListenableBuilder(
+            valueListenable: GTFSService.vehiclesNotifier, 
+            builder: (_, vehicles, _) {
+               final markers = <Marker>[];
+            
+              vehiclePositions.forEach((routeId) {
+                final vehiclesForRoute = vehicles[routeId];
+                if (vehiclesForRoute == null) return;
+
+                for (final v in vehiclesForRoute) {
+                  final route = GTFSService.routes.firstWhere((r) => r.routeId == routeId);
+
+                  print('Adding vehicle ${route.routeShortName} for trip ${v.trip.tripId} with id ${v.vehicle.id}');
+                  markers.add(
+                    Marker(
+                      width: 50,
+                      height: 30,
+                      point: LatLng(v.position.latitude, v.position.longitude),
+                      child: VehicleMarker(
+                        routeNumber: route.routeShortName!,
+                        color: colorFromHex(route.routeColor!),
+                        bearing: v.position.bearing,
+                        speed: v.position.speed,
+                        vehicleId: v.vehicle.id,
+                      ),
+                    ),
+                  );
+                }
+              }
+              );
+            
+
+            return MarkerLayer(
+              markers: markers,
+            );
+          })    
+
+        
         ],
       );
   }

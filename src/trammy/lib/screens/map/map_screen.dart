@@ -87,6 +87,21 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     });
   }
 
+  Set<String> vehiclePositions = {};
+  void showVehicles(Set<String> routeIds) async {
+    print('Showing vehicles for routes $routeIds');
+    GTFSService.startVehicleUpdates();
+
+    await animatedMapController.animateTo(
+      dest: animatedMapController.mapController.camera.center,
+      zoom: 15,
+    );
+
+    setState(() {
+      vehiclePositions = routeIds;
+    });
+  }
+
   Future<void> displayBottomSheet(GTFSStopRouteInfo stop) async {
     setState(() {
       selectedStop = stop;
@@ -96,7 +111,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       context: context,
       isScrollControlled: true,
       barrierColor: Colors.black.withOpacity(0.1),
-      builder: (_) => StopSheet(stop: stop)
+      builder: (_) => StopSheet(stop: stop, onShowVehicles: showVehicles)
     );
 
     setState(() {
@@ -131,7 +146,8 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             onMoveEnd: onMoveEnd,
             stops: GTFSService.stopsByCode,
             userLocation: userLocation,
-            selectedStop: selectedStop
+            selectedStop: selectedStop,
+            vehiclePositions: vehiclePositions,
         ),
           // Bottom search bar
           Positioned(left: 32, right: 32, bottom: 35, child: StopSearchBar(stops: GTFSService.stopsByCode, onStopSearch: onStopSearch)),

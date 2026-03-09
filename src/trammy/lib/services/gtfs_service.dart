@@ -29,7 +29,8 @@ class GTFSProgress {
 }
 
 class GTFSService {
-  static const _url = 'https://gtfs.sofiatraffic.bg/api/v1/trip-updates';
+  static const TRIP_UPDATES_URL = 'https://gtfs.sofiatraffic.bg/api/v1/trip-updates';
+  static const VEHICLE_POSITIONS_URL = 'https://gtfs.sofiatraffic.bg/api/v1/vehicle-positions';
   static Map<String, String> stopIdToCode = {};
   static Map<String, List<String>> stopCodeToId = {};
   static Map<String, List<GTFSStopRouteInfo>> stopsByCodeMap = {};
@@ -58,7 +59,7 @@ class GTFSService {
       return;
     }
 
-    final response = await http.get(Uri.parse(_url));
+    final response = await http.get(Uri.parse(TRIP_UPDATES_URL));
 
     if (response.statusCode != 200) {
       throw Exception('Failed to fetch GTFS-RT');
@@ -82,6 +83,56 @@ class GTFSService {
 
     print('Fetched ${feed.entity.length} trip updates for ${predictedArrivals.length} stops');
     lastUpdated = DateTime.now();
+  } 
+
+  static final ValueNotifier<Map<String, List<VehiclePosition>>> vehiclesNotifier= ValueNotifier({});
+  static Map<String, List<VehiclePosition>> vehiclesPositions = {};
+
+  static DateTime? lastUpdatedVehicles;
+  static Timer? _vehicleTimer;
+
+  static void startVehicleUpdates() {
+    if (_vehicleTimer != null) return;
+    // Run immediately, then every 30 sec
+    _vehicleTimer = Timer.periodic(const Duration(seconds: 10), (_) async {
+      await fetchVehiclePositions();
+    });      
+    
+    fetchVehiclePositions();
+  }
+
+  static void stopVehicleUpdates() {
+    _vehicleTimer?.cancel();
+    vehiclesNotifier.value = {};
+  }
+
+  static Future<void> fetchVehiclePositions() async {
+       if (lastUpdatedVehicles != null &&
+        DateTime.now().difference(lastUpdatedVehicles!) < const Duration(seconds: 30)) {
+      return;
+    }
+
+    vehiclesPositions.clear();
+    vehiclesPositions = {};
+
+    final response = await http.get(Uri.parse(VEHICLE_POSITIONS_URL));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch GTFS-RT');
+    }
+
+    final bytes = response.bodyBytes;
+
+    final feed = FeedMessage.fromBuffer(bytes); 
+    for (final entity in feed.entity) {
+      if (!entity.hasVehicle()) continue;
+      final vehicle = entity.vehicle;
+
+      print('Adding vehicle ${vehicle.trip.routeId} for trip ${vehicle.trip.tripId} with id ${vehicle.vehicle.id}');
+      vehiclesPositions.putIfAbsent(vehicle.trip.routeId, () => []).add(vehicle);
+    }
+
+    vehiclesNotifier.value = vehiclesPositions;
   }
 
   /// Initialize database

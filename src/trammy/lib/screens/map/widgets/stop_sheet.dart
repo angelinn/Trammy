@@ -11,8 +11,9 @@ import 'package:trammy/services/gtfs_service.dart';
 
 class StopSheet extends StatefulWidget {
   final GTFSStopRouteInfo stop;
+  final void Function(Set<String> routeIds)? onShowVehicles;
 
-  const StopSheet({super.key, required this.stop});
+  const StopSheet({super.key, required this.stop, this.onShowVehicles});
 
   @override
   State<StopSheet> createState() => StopSheetState();
@@ -116,92 +117,117 @@ class StopSheetState extends State<StopSheet> {
       },
     );
   }
+Widget _buildHeader() {
+  final transportType = GTFSService.getDominantType(widget.stop)!;
+  final transportColor = colorFromHex(GTFSService.getDominantColor(widget.stop)!);
 
-  Widget _buildHeader() {
-  return Row(
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      // Transport Icon Badge
-      Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          color: colorFromHex(GTFSService.getDominantColor(widget.stop)!),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          GTFSService.getStopIcon(
-            GTFSService.getDominantType(widget.stop)!,
-          ),
-          color: Colors.white,
-          size: 20,
-        ),
-      ),
-      const SizedBox(width: 12),
-      
-      // Stop Name (Expanded to push the star to the right)
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.stop.stopName ?? "",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+      // --- TOP ROW: Transport icon + stop name/code + favorite star ---
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Transport icon badge
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: transportColor,
+              shape: BoxShape.circle,
             ),
-            Text(
-              "Код: ${widget.stop.stopCode}",
-              style: TextStyle(
-                fontSize: 13, 
-                color: Theme.of(context).colorScheme.onSurfaceVariant
+            child: Icon(
+              GTFSService.getStopIcon(transportType),
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // Stop name and code
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.stop.stopName ?? "",
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  "Код: ${widget.stop.stopCode}",
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Favorite button (AnimatedScale + AnimatedSwitcher)
+          AnimatedScale(
+            scale: isFavorite ? 1.2 : 1.0,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutBack,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              transitionBuilder: (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
+              child: IconButton(
+                key: ValueKey<bool>(isFavorite),
+                onPressed: () async {
+                  final fav = FavoriteStop(
+                    stopCode: widget.stop.stopCode!,
+                    stopName: widget.stop.stopName!,
+                    routeType: transportType.value,
+                  );
+
+                  await FavouritesRepository.instance.toggle(fav);
+
+                  if (!mounted) return;
+                  setState(() => isFavorite = !isFavorite);
+
+                  HapticFeedback.lightImpact();
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(isFavorite
+                          ? '${widget.stop.stopName} е добавена в любими'
+                          : '${widget.stop.stopName} е премахната от любими'),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
+                  color: isFavorite
+                      ? Theme.of(context).colorScheme.tertiary
+                      : Theme.of(context).colorScheme.outline,
+                  size: 28,
+                ),
               ),
             ),
-          ],
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 12),
+
+      // --- VEHICLES BUTTON BELOW: Tonal IconButton ---
+      FilledButton.icon(
+          icon: const Icon(Icons.directions_transit),
+          label: const Text("На живо"),
+          onPressed: () {
+            final routes = widget.stop.routeIds!.split(',').toSet();
+            // TODO: Call callback to show vehicles on map
+            widget.onShowVehicles?.call(routes);
+            Navigator.pop(context);
+          },
         ),
-      ),
-
-      // The Favorite Button
-      AnimatedScale(
-  scale: isFavorite ? 1.2 : 1.0, // small pop when active
-  duration: const Duration(milliseconds: 200),
-  curve: Curves.easeOutBack,
-  child: AnimatedSwitcher(
-    duration: const Duration(milliseconds: 250),
-    transitionBuilder: (child, animation) =>
-        ScaleTransition(scale: animation, child: child),
-    child: IconButton(
-      key: ValueKey<bool>(isFavorite), // triggers AnimatedSwitcher
-      onPressed: () async {
-        final fav = FavoriteStop(
-          stopCode: widget.stop.stopCode!,
-          stopName: widget.stop.stopName!,
-          routeType: GTFSService.getDominantType(widget.stop)!.value,
-        );
-
-        await FavouritesRepository.instance.toggle(fav);
-
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(isFavorite ? 
-            '${widget.stop.stopName} е премахната от любими' : 
-            '${widget.stop.stopName} е добавена в любими'),
-        ));
-        setState(() => isFavorite = !isFavorite);
-
-        HapticFeedback.lightImpact();
-      },
-      icon: Icon(
-        isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
-        color: isFavorite
-            ? Theme.of(context).colorScheme.tertiary
-            : Theme.of(context).colorScheme.outline,
-        size: 28,
-      ),
-    ),
-  ),
-)
     ],
   );
-  }
+}
 
   List<Widget> _buildArrivals() {
     final sortedUpdates = updates.entries.toList()
