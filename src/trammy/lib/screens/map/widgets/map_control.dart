@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:trammy/models/gtfs/shape.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/screens/map/widgets/pulsing_user_marker.dart';
 import 'package:trammy/screens/map/widgets/stops_layer.dart';
@@ -18,6 +19,7 @@ class MapControl extends StatelessWidget {
   final LatLng? userLocation;
   final GTFSStopRouteInfo? selectedStop;
   final Set<String> vehiclePositions;
+  final List<(List<GTFSShape>, String)> activeShapes;
 
   final void Function(GTFSStopRouteInfo stop) onStopTapped;
   final void Function(MapCamera camera, bool hasGesture)? onPositionChanged;
@@ -37,7 +39,8 @@ class MapControl extends StatelessWidget {
     this.onMoveEnd,
     this.onMapTapped,
     this.selectedStop,
-    required this.vehiclePositions
+    required this.vehiclePositions,
+    required this.activeShapes
   });
 
   Widget renderMapTheme(BuildContext context) {
@@ -86,6 +89,19 @@ class MapControl extends StatelessWidget {
       ),
       children: [
           renderMapTheme(context),
+          // ADD THE POLYLINE LAYER HERE
+        if (activeShapes.isNotEmpty)
+        ...activeShapes.map((shapes) => PolylineLayer(
+            polylines: [
+              Polyline(
+                points: shapes.$1.map((s) => LatLng(s.shapePtLat, s.shapePtLon)).toList(),
+                strokeWidth: 4.0,
+                color: colorFromHex(shapes.$2),
+                borderStrokeWidth: 2.0,
+                borderColor: Colors.white
+              ),
+            ],
+          )),
           if (stops.isNotEmpty) StopsLayer(
             animatedMapController: animatedMapController,
             stops: stops,

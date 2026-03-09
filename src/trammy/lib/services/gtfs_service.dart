@@ -13,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:trammy/db/gtfs_repository.dart';
 import 'package:trammy/models/gtfs/route.dart';
+import 'package:trammy/models/gtfs/shape.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/models/gtfs/stop_time.dart';
 import 'package:trammy/models/gtfs/trip.dart';
@@ -288,5 +289,12 @@ class GTFSService {
   static String? getExceptionColor(GTFSRoute route) {      
     final type = SofiaExceptions.getRealType(route);
     return routeColors[TransportType.fromValue(type!.value)];
+  }
+
+  static Future<List<GTFSShape>> getShapes(String shapeId) async {
+    final shapes = await repo.getShapes(shapeId);
+    print('Loaded ${shapes.length} shapes for $shapeId');
+
+    return shapes;
   }
 }

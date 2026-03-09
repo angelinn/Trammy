@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:trammy/db/gtfs_db_builder.dart';
 import 'package:trammy/models/gtfs/route.dart';
+import 'package:trammy/models/gtfs/shape.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/models/gtfs/stop_time.dart';
 import 'package:trammy/models/gtfs/trip.dart';
@@ -117,5 +118,10 @@ final rows = await dbBuilder.db.rawQuery(
 
     if (rows.isEmpty) return null;
     return GTFSStop.fromMap(rows.first);
+  }
+
+  Future<List<GTFSShape>> getShapes(String shapeId) async {
+    final rows = await dbBuilder.db.query('shapes', where: 'shape_id = ?', whereArgs: [shapeId]);
+    return rows.map((r) => GTFSShape.fromMap(r)).toList();
   }
 }

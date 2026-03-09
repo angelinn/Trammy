@@ -18,7 +18,7 @@ class VehicleMarker extends StatelessWidget {
   });
 
   String get speedText => speed != null 
-      ? '${(speed! * 3.6).toStringAsFixed(1)} km/h' 
+      ? '${(speed!).toStringAsFixed(1)} km/h' 
       : 'Stationary';
 
   @override

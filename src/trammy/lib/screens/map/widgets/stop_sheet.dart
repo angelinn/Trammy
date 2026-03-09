@@ -11,7 +11,7 @@ import 'package:trammy/services/gtfs_service.dart';
 
 class StopSheet extends StatefulWidget {
   final GTFSStopRouteInfo stop;
-  final void Function(Set<String> routeIds)? onShowVehicles;
+  final void Function(Set<String> routeIds, List<String> trips)? onShowVehicles;
 
   const StopSheet({super.key, required this.stop, this.onShowVehicles});
 
@@ -221,7 +221,7 @@ Widget _buildHeader() {
           onPressed: () {
             final routes = widget.stop.routeIds!.split(',').toSet();
             // TODO: Call callback to show vehicles on map
-            widget.onShowVehicles?.call(routes);
+            widget.onShowVehicles?.call(routes, updates.entries.map((e) => e.key.trip.tripId).toList());
             Navigator.pop(context);
           },
         ),
@@ -257,7 +257,7 @@ Widget _buildHeader() {
 
       return ArrivalCard(
         route: entry.key.route,
-        direction: entry.key.direction,
+        direction: entry.key.trip.headsign ?? "",
         arrivals: entry.value,
       );
     }).toList();

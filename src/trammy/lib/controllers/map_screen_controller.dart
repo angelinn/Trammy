@@ -1,24 +1,27 @@
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/models/gtfs/stop_time.dart';
+import 'package:trammy/models/gtfs/trip.dart';
 import 'package:trammy/services/gtfs_service.dart';
 
 class StopInfoKey { 
   final GTFSRoute route;
+  final GTFSTrip trip;
   final String direction;
 
-  StopInfoKey(this.route, this.direction);
+  StopInfoKey(this.route, this.trip, this.direction);
 
     @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is StopInfoKey &&
-        other.route == route &&
+        other.route.routeId == route.routeId &&
+        other.trip.headsign == trip.headsign &&
         other.direction == direction;
   }
 
   @override
-  int get hashCode => Object.hash(route, direction);
+  int get hashCode => Object.hash(route, trip.headsign);
   }
 
 class ArrivalEntry {
@@ -59,7 +62,7 @@ class MapScreenController {
       final route = GTFSService.routes.firstWhere((r) => r.routeId == trip.routeId);
 
       updates
-          .putIfAbsent(StopInfoKey(route, trip.headsign ?? ""), () => [])
+          .putIfAbsent(StopInfoKey(route, trip, trip.headsign!), () => [])
           .add(ArrivalEntry(predictedArrival, true));
 
       addedKeys.add(key);
@@ -74,7 +77,7 @@ class MapScreenController {
 
       final route = GTFSService.routes.firstWhere((r) => r.routeId == stopTime.routeId);      
     
-      updates.putIfAbsent(StopInfoKey(route, stopTime.tripHeadsign!), () => []).add(ArrivalEntry(stopTime.toArrivalDateTime(), false));
+      updates.putIfAbsent(StopInfoKey(route, GTFSService.trips[stopTime.tripId!]!, stopTime.tripHeadsign!), () => []).add(ArrivalEntry(stopTime.toArrivalDateTime(), false));
     }   
 
     updates.forEach((_, times) => times.sort((a, b) => a.arrival.compareTo(b.arrival)));

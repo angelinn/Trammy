@@ -5,6 +5,8 @@ import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trammy/controllers/map_screen_controller.dart';
+import 'package:trammy/db/gtfs_repository.dart';
+import 'package:trammy/models/gtfs/shape.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/screens/map/widgets/map_control.dart';
 import 'package:trammy/screens/map/widgets/stop_search_bar.dart';
@@ -87,8 +89,9 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     });
   }
 
+  List<(List<GTFSShape>, String)> activeShapes = [];
   Set<String> vehiclePositions = {};
-  void showVehicles(Set<String> routeIds) async {
+  void showVehicles(Set<String> routeIds, List<String> tripIds) async {
     print('Showing vehicles for routes $routeIds');
     GTFSService.startVehicleUpdates();
 
@@ -97,8 +100,19 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       zoom: 15,
     );
 
+    List<(List<GTFSShape>, String)> shapes = [];
+    for (final tripId in tripIds) {
+      final trip = GTFSService.trips[tripId];
+      if (trip == null) continue;
+
+      final route = GTFSService.routes.firstWhere((r) => r.routeId == trip.routeId);
+
+      shapes.add((await GTFSService.getShapes(trip.shapeId!), route.routeColor!));
+    }
+
     setState(() {
       vehiclePositions = routeIds;
+        activeShapes = shapes;
     });
   }
 
@@ -134,7 +148,22 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     final initialCenter = lastLat != null && lastLng != null ? LatLng(lastLat!, lastLng!) : const LatLng(42.6977, 23.3219); // Sofia
     stopLocations = {};
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
+        if (didPop) return;
+
+        if (activeShapes.isNotEmpty) {
+          setState(() {
+            activeShapes = [];
+            vehiclePositions = {};
+          });
+        }
+        else {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
       body: Stack(
         children: [ 
           MapControl(
@@ -148,6 +177,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             userLocation: userLocation,
             selectedStop: selectedStop,
             vehiclePositions: vehiclePositions,
+            activeShapes: activeShapes,
         ),
           // Bottom search bar
           Positioned(left: 32, right: 32, bottom: 35, child: StopSearchBar(stops: GTFSService.stopsByCode, onStopSearch: onStopSearch)),
@@ -161,6 +191,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           ),
         ],
       ),
+    )
     );
   }
 
