@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:trammy/controllers/map_screen_controller.dart';
+import 'package:trammy/db/favourites_repository.dart';
 import 'package:trammy/db/user_db_service.dart';
 import 'package:trammy/models/favourite.dart';
 import 'package:trammy/models/gtfs/stop.dart';
@@ -159,30 +161,44 @@ class StopSheetState extends State<StopSheet> {
       ),
 
       // The Favorite Button
-      IconButton(
-        onPressed: () async {
-          // Create the lightweight model
-          final fav = FavoriteStop(
-            stopCode: widget.stop.stopCode!,
-            stopName: widget.stop.stopName!,
-            routeType: GTFSService.getDominantType(widget.stop)!.value,
-          );
+      AnimatedScale(
+  scale: isFavorite ? 1.2 : 1.0, // small pop when active
+  duration: const Duration(milliseconds: 200),
+  curve: Curves.easeOutBack,
+  child: AnimatedSwitcher(
+    duration: const Duration(milliseconds: 250),
+    transitionBuilder: (child, animation) =>
+        ScaleTransition(scale: animation, child: child),
+    child: IconButton(
+      key: ValueKey<bool>(isFavorite), // triggers AnimatedSwitcher
+      onPressed: () async {
+        final fav = FavoriteStop(
+          stopCode: widget.stop.stopCode!,
+          stopName: widget.stop.stopName!,
+          routeType: GTFSService.getDominantType(widget.stop)!.value,
+        );
 
-          // Toggle in DB
-          await UserDbService.toggleFavorite(fav);
+        await FavouritesRepository.instance.toggle(fav);
 
-          // Update UI
-          setState(() => isFavorite = !isFavorite);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(isFavorite ? 
+            '${widget.stop.stopName} е премахната от любими' : 
+            '${widget.stop.stopName} е добавена в любими'),
+        ));
+        setState(() => isFavorite = !isFavorite);
 
-          // Optional: Haptic feedback makes it feel high-quality
-          // HapticFeedback.lightImpact(); 
-        },
-        icon: Icon(
-          isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
-          color: isFavorite ? Colors.amber : Theme.of(context).colorScheme.outline,
-          size: 28,
-        ),
+        HapticFeedback.lightImpact();
+      },
+      icon: Icon(
+        isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
+        color: isFavorite
+            ? Theme.of(context).colorScheme.tertiary
+            : Theme.of(context).colorScheme.outline,
+        size: 28,
       ),
+    ),
+  ),
+)
     ],
   );
   }
