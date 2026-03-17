@@ -35,6 +35,8 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   double? lastLng;
   double? lastZoom;
 
+  bool following = false;
+
   bool positionLoaded = false;
   Set<String> stopLocations = {};
   GTFSStopRouteInfo? selectedStop;
@@ -62,12 +64,13 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   }
 
   void goToCurrentLocation() async {
+    following = true;
     await LocationService.startTracking((position) {
       setState(() {
         userLocation = position;
       });
 
-      animatedMapController.animateTo(dest: position, zoom: 18);
+      if (following) animatedMapController.animateTo(dest: position, zoom: 18);
     });
   }
 
@@ -204,6 +207,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     setState(() {
       currentPosition = animatedMapController.mapController.camera;
+      following = false;
     });
   }
 
