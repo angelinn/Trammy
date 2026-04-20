@@ -271,7 +271,7 @@ for i in indexes:
 # -----------------------------
 # Derived table (your optimization step)
 # -----------------------------
-cur.execute("""
+cur.executescript("""
 DROP TABLE IF EXISTS stop_route_info;
 
 CREATE TABLE stop_route_info AS
