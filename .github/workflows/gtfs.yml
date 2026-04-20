@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "0 3 * * *"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # -----------------------------
+      # Setup
+      # -----------------------------
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -20,25 +26,83 @@ jobs:
       - name: Install deps
         run: pip install pandas requests
 
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y zstd gh
+
+      # -----------------------------
+      # Download GTFS FIRST (important fix)
+      # -----------------------------
+      - name: Download GTFS
+        run: |
+          curl -L "https://gtfs.sofiatraffic.bg/api/v1/static" -o gtfs.zip
+
+      # -----------------------------
+      # Compute hash (AFTER download)
+      # -----------------------------
+      - name: Compute GTFS hash
+        id: hash
+        run: |
+          sha256sum gtfs.zip | awk '{print $1}' > gtfs.hash
+          echo "hash=$(cat gtfs.hash)" >> $GITHUB_OUTPUT
+
+      # -----------------------------
+      # Get previous hash from release
+      # -----------------------------
+      - name: Get previous hash
+        id: prev
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download latest -p gtfs.hash || echo "none" > gtfs.hash.old
+          echo "old_hash=$(cat gtfs.hash.old)" >> $GITHUB_OUTPUT
+
+      # -----------------------------
+      # Compare hashes
+      # -----------------------------
+      - name: Check if update needed
+        id: check
+        run: |
+          NEW=$(cat gtfs.hash)
+          OLD=$(cat gtfs.hash.old || echo "none")
+
+          echo "new=$NEW"
+          echo "old=$OLD"
+
+          if [ "$OLD" = "none" ] || [ "$NEW" != "$OLD" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      # -----------------------------
+      # Build DB ONLY if changed
+      # -----------------------------
       - name: Build DB
+        if: steps.check.outputs.changed == 'true'
         run: python parse_gtfs.py
 
-      - name: Install compression
-        run: sudo apt-get install -y zstd
-
       - name: Compress DB
+        if: steps.check.outputs.changed == 'true'
         run: zstd sofia.db -o sofia.db.zst
 
+      # -----------------------------
+      # Ensure release exists
+      # -----------------------------
       - name: Ensure latest release exists
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release view latest || gh release create latest \
             --title "Latest GTFS DB" \
             --notes "Auto-updated GTFS database"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish
-        run: |
-          gh release upload latest sofia.db.zst --clobber
+      # -----------------------------
+      # Upload DB + hash
+      # -----------------------------
+      - name: Publish release assets
+        if: steps.check.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload latest sofia.db.zst gtfs.hash --clobber
