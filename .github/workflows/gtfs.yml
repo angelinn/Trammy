@@ -1,0 +1,35 @@
+name: build-gtfs
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install pandas requests
+
+      - name: Build DB
+        run: python parse_gtfs.py
+
+      - name: Install compression
+        run: sudo apt-get install -y zstd
+
+      - name: Compress DB
+        run: zstd sofia.db -o sofia.db.zst
+
+      - name: Publish
+        run: |
+          gh release upload latest sofia.db.zst --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
