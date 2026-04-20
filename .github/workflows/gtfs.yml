@@ -29,6 +29,14 @@ jobs:
       - name: Compress DB
         run: zstd sofia.db -o sofia.db.zst
 
+      - name: Ensure latest release exists
+        run: |
+          gh release view latest || gh release create latest \
+            --title "Latest GTFS DB" \
+            --notes "Auto-updated GTFS database"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish
         run: |
           gh release upload latest sofia.db.zst --clobber
