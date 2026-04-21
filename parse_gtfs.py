@@ -78,14 +78,7 @@ def import_table(file_name, table_name):
     if not os.path.exists(path):
         return
 
-    df = pd.read_csv(path)
-    
-    # Force GTFS text fields
-    text_cols = ["stop_code"]
-    
-    for col in text_cols:
-        if col in df.columns:
-            df[col] = df[col].astype("string")
+    df = pd.read_csv(path,  dtype={"stop_code": str})
             
     df = df.replace({pd.NA: None, "": None})
     df = df.astype(object)
