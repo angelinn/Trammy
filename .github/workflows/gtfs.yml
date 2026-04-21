@@ -42,8 +42,8 @@ jobs:
       - name: Compute GTFS hash
         id: hash
         run: |
-          sha256sum gtfs.zip | awk '{print $1}' > gtfs.hash.new
-          echo "hash=$(cat gtfs.hash.new)" >> $GITHUB_OUTPUT
+          sha256sum gtfs.zip | awk '{print $1}' > gtfs.hash
+          echo "hash=$(cat gtfs.hash)" >> $GITHUB_OUTPUT
 
       # -----------------------------
       # Get previous hash from release
@@ -53,8 +53,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download latest -p gtfs.hash || echo "none" > gtfs.hash
-          echo "old_hash=$(cat gtfs.hash)" >> $GITHUB_OUTPUT
+          gh release download latest -p gtfs.hash -O gtfs.hash.old || echo "none" > gtfs.hash.old
+          echo "old_hash=$(cat gtfs.hash.old)" >> $GITHUB_OUTPUT
 
       # -----------------------------
       # Compare hashes
@@ -62,8 +62,8 @@ jobs:
       - name: Check if update needed
         id: check
         run: |
-          NEW=$(cat gtfs.hash.new)
-          OLD=$(cat gtfs.hash || echo "none")
+          NEW=$(cat gtfs.hash)
+          OLD=$(cat gtfs.hash.old || echo "none")
 
           echo "new=$NEW"
           echo "old=$OLD"
@@ -105,4 +105,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload latest sofia.db.zst gtfs.hash.new --clobber
+          gh release upload latest sofia.db.zst gtfs.hash --clobber
