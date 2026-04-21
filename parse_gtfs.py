@@ -87,7 +87,8 @@ def import_table(file_name, table_name):
         if col in df.columns:
             df[col] = df[col].astype("string")
             
-    df = df.where(pd.notnull(df), None)
+    df = df.replace({pd.NA: None, "": None})
+    df = df.astype(object)
 
     cols = list(df.columns)
     placeholders = ",".join(["?"] * len(cols))
