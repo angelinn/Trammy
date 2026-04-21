@@ -78,7 +78,8 @@ def import_table(file_name, table_name):
     if not os.path.exists(path):
         return
 
-    df = pd.read_csv(path, dtype=str).fillna("")
+    df = pd.read_csv(path)
+    df = df.where(pd.notnull(df), None)
 
     cols = list(df.columns)
     placeholders = ",".join(["?"] * len(cols))
