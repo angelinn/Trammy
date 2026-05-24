@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:trammy/db/gtfs_db_builder.dart';
+import 'package:trammy/db/gtfs_db_downloader.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/shape.dart';
 import 'package:trammy/models/gtfs/stop.dart';
@@ -9,7 +10,7 @@ import 'package:trammy/services/gtfs_service.dart';
 
 /// Repository for accessing GTFS data
 class GTFSRepository {
-  late GtfsDbBuilder dbBuilder;
+  late GtfsDbDownloader dbBuilder;
 
   bool initialized = false;
 
@@ -17,8 +18,9 @@ class GTFSRepository {
     if (initialized) return;
     initialized = true;
 
-    dbBuilder = GtfsDbBuilder();
-    await dbBuilder.initialize(path);
+    print('repository initialize');
+    dbBuilder = GtfsDbDownloader(path);
+    await dbBuilder.initialize();
   }
 
   Future<void> updateGTFS({

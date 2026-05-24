@@ -45,11 +45,10 @@ class MapControl extends StatelessWidget {
 
   Widget renderMapTheme(BuildContext context) {
     final tileLayer =  TileLayer(
-              urlTemplate:
-                  'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}@3x.png',
-              subdomains: ['a', 'b', 'c'],
-              userAgentPackageName: 'Trammy/5.0 (trammy@outlook.com)',
-            );
+      urlTemplate: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}@3x.png',
+      subdomains: ['a', 'b', 'c'],
+      userAgentPackageName: 'Trammy/5.0',
+    );
 
     if (Theme.of(context).brightness == Brightness.dark) { 
      return ColorFiltered(

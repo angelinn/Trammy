@@ -16,7 +16,10 @@ class _PulsingUserMarkerState extends State<PulsingUserMarker>
     with TickerProviderStateMixin {
   late final AnimationController _pulseController;
   late final AnimationController _popController;
+  late final AnimationController _moveController;
+  late final Animation<double> _moveAnimation;
 
+  
   @override
   void initState() {
     super.initState();
