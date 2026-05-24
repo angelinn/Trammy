@@ -1,16 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trammy/screens/database_loading_screen.dart';
 import 'package:trammy/screens/main_screen.dart';
+import 'package:trammy/services/gtfs_service.dart';
+import 'package:workmanager/workmanager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  Workmanager().initialize(callbackDispatcher);
+  
+  final now = DateTime.now();
+  var firstRun = DateTime(now.year, now.month, now.day, 5);
+  if (firstRun.isBefore(now) || firstRun.isAtSameMomentAs(now)) {
+    firstRun = firstRun.add(const Duration(days: 1));
+  }
+
+  final initialDelay = firstRun.difference(now);
+
+  await Workmanager().registerPeriodicTask(
+    "gtfsUpdateTaskId",
+    "gtfsUpdateTask",
+    frequency: const Duration(hours: 1),
+    //initialDelay: initialDelay,
+    constraints: Constraints(
+      networkType: NetworkType.connected,
+    ),
+    existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
+  );
+
+//   await Workmanager().registerOneOffTask(
+//   "gtfsUpdateTaskTest",
+//   "gtfsUpdateTask",
+//   initialDelay: Duration(seconds: 5), // fires after 5 seconds
+// );
 
   var prefs = await SharedPreferences.getInstance();
   bool dbLoaded = prefs.getBool('dbLoaded') ?? false;
 
   runApp(MyApp(dbLoaded: dbLoaded));
 
+}
+
+final FlutterLocalNotificationsPlugin localNotifications = FlutterLocalNotificationsPlugin();
+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {    
+    print('[Workmanager] ✅ Dart isolate started, task: $task'); // ← first line
+
+    if (task == "gtfsUpdateTask") {
+      try {
+        const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+        await localNotifications.initialize(
+          const InitializationSettings(android: androidInit),
+        );
+
+        final androidPlugin = localNotifications
+            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+
+        await androidPlugin?.createNotificationChannel(
+          const AndroidNotificationChannel(
+            'gtfs_channel',
+            'GTFS updates',
+            description: 'Database update notifications',
+            importance: Importance.defaultImportance,
+          ),
+        );
+
+        await GTFSService.init();
+        await GTFSService.updateGTFS(onProgress: (_) {});
+
+        await localNotifications.show(
+          0,
+          'Trammy',
+          'Беше извършено обновяване на разписанията.',
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'gtfs_channel',
+              'GTFS updates',
+              channelDescription: 'Database update notifications',
+              importance: Importance.defaultImportance,
+            )
+          ),
+        );
+
+        print('[Workmanager] GTFS update completed');
+        return Future.value(true);
+      } catch (e, stack) {
+        print('[Workmanager] GTFS update failed: $e');
+        print(stack);
+        return Future.value(false);
+      }
+    }
+    return Future.value(true);
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -39,7 +125,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: dbLoaded ? const MainScreen() : DatabaseLoadingScreen(),
       darkTheme: ThemeData.dark(),
