@@ -1,84 +1,103 @@
 import 'package:flutter/material.dart';
-import 'package:keep_screen_on/keep_screen_on.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trammy/db/gtfs_repository.dart';
-import 'package:trammy/screens/main_screen.dart';
 import 'package:trammy/services/gtfs_service.dart';
+import 'package:trammy/screens/main_screen.dart';
 
 class DatabaseLoadingScreen extends StatefulWidget {
   const DatabaseLoadingScreen({super.key});
 
   @override
-  State<DatabaseLoadingScreen> createState() => DatabaseLoadingScreenState();
+  State<DatabaseLoadingScreen> createState() => _DatabaseLoadingScreenState();
 }
 
-class DatabaseLoadingScreenState extends State<DatabaseLoadingScreen> {
-  GTFSProgress? progress;
+class _DatabaseLoadingScreenState extends State<DatabaseLoadingScreen> {
+  String _currentAction = "Зареждане...";
+  String _detailText = "";
 
   @override
   void initState() {
     super.initState();
-
-    KeepScreenOn.turnOn();
-    downloadGTFSData();
+    _startSetup();
   }
 
-  Future<void> downloadGTFSData() async {
+  Future<void> _startSetup() async {
     try {
-      print('[DatabaseLoadingScreen] Starting GTFS download and processing');
       await GTFSService.init();
       await GTFSService.updateGTFS(
-        onProgress: (p) {
+        onProgress: (progress) {
+          if (!mounted) return;
           setState(() {
-            progress = p;
+            _currentAction = progress.table;
+            if (progress.table == 'Изтегляне') {
+               final mb = progress.current / (1024 * 1024);
+               _detailText = "${mb.toStringAsFixed(1)} MB свалени";
+            } else if (progress.table == 'Разархивиране') {
+               _detailText = "Подвотвяне на разписанията...";
+            } else {
+               _detailText = "";
+            }
           });
         },
       );
 
-      setState(() {});
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('dbLoaded', true);
+
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const MainScreen()),
+        );
+      }
     } catch (e) {
-      debugPrint('Error loading GTFS: $e');
+      print(e);
+      if (mounted) {
+        setState(() {
+          _currentAction = "Неуспешно сваляне";
+          _detailText = "Опитайте отново.";
+        });
+      }
     }
-
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('dbLoaded', true); 
-
-    if (!mounted) return;
-    
-    KeepScreenOn.turnOff();
-
-    Navigator.of(context).pushReplacement(
-    MaterialPageRoute(
-        builder: (_) => const MainScreen(),
-    ),
-);
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
-      appBar: AppBar(title: const Text('Подготовка на данни')),
-
-      body: Center(
+      body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (progress != null) ...[
-                Text(
-                  'Обработка на: ${progress!.table}',
-                  style: const TextStyle(fontSize: 18),
-                ),
-                const SizedBox(height: 12),
-                const CircularProgressIndicator(),
-                const SizedBox(height: 12),
-                Text('Въвеждане на ${progress!.current} реда...'),
-              ] else ...[
-                const CircularProgressIndicator(),
-                const SizedBox(height: 16),
-                const Text('Сваляне на GTFS данни...'),
-              ],
+              const Spacer(),
+              Icon(
+                Icons.departure_board_rounded,
+                size: 80,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                "Изтегляне на разписания",
+                style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "Trammy сваля най-новите разписания.",
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 48),
+              const LinearProgressIndicator(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              const SizedBox(height: 16),
+              Text(_currentAction, style: const TextStyle(fontWeight: FontWeight.w600)),
+              if (_detailText.isNotEmpty)
+                Text(_detailText, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline)),
+              const Spacer(),
+              const Text("Trammy • GTFS обработка", style: TextStyle(fontSize: 10, letterSpacing: 1.2)),
+              const SizedBox(height: 20),
             ],
           ),
         ),

@@ -155,7 +155,7 @@ class GTFSService {
     print('[GTFSService] updateGTFS()');
     await repo.updateGTFS(
       onProgress: onProgress,
-      workingDirectory: (await getApplicationDocumentsDirectory()).path,
+      workingDirectory: (await getDatabasesPath())
     );
   }
 

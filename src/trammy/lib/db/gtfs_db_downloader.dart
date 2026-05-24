@@ -13,7 +13,7 @@ import 'package:zstd/zstd.dart';
 
 class GtfsDbDownloader {
 
-  late Database db;
+  Database? _db;
   final String path;
   GtfsDbDownloader(this.path);
 
@@ -24,27 +24,29 @@ class GtfsDbDownloader {
 
   static const String _hashKey = 'gtfs_db_hash';
 
+  Database get db => _db!;
+
   Future<void> initialize() async {
     final dbExists = await File(path).exists();
-    if (!dbExists) return;
+    if (!dbExists || _db != null) return;
 
-    db = await openDatabase(
+    _db = await openDatabase(
       path,
       version: 1
     );
 
     // SQLite performance settings
-    await db.rawQuery('PRAGMA synchronous = OFF');
-    await db.rawQuery('PRAGMA journal_mode = MEMORY');
-    await db.rawQuery('PRAGMA temp_store = MEMORY');
-    await db.rawQuery('PRAGMA cache_size = -64000');
+    await _db!.rawQuery('PRAGMA synchronous = OFF');
+    await _db!.rawQuery('PRAGMA journal_mode = MEMORY');
+    await _db!.rawQuery('PRAGMA temp_store = MEMORY');
+    await _db!.rawQuery('PRAGMA cache_size = -64000');
   }
 
   Future<void> updateGTFS({
     required void Function(GTFSProgress progress) onProgress,
     required String workingDirectory,
   }) async {
-    onProgress(GTFSProgress(table: 'Checking for updates', current: 0));
+    onProgress(GTFSProgress(table: 'Проверка за нови разписания', current: 0));
 
     final hashResponse = await http.get(Uri.parse(hashDownloadUrl));
     if (hashResponse.statusCode != 200) {
@@ -63,48 +65,46 @@ class GtfsDbDownloader {
 
     print('GTFS database outdated. Remote: $remoteHash, Local: $storedHash');
 
-    // Close existing database if open
-    if (File(path).existsSync()) {
-      //await db.close();
+    final compressedPath = join(workingDirectory, 'sofia.db.zst');
+    final tempDbPath = join(workingDirectory, 'sofia_new.db');
+
+    onProgress(GTFSProgress(table: 'Изтегляне', current: 0));
+
+    final client = http.Client();
+    try {
+      final response = await client.send(http.Request('GET', Uri.parse(dbDownloadUrl)));
+      final sink = File(compressedPath).openWrite();
+
+      int downloadedBytes = 0;
+      await for (final chunk in response.stream) {
+        sink.add(chunk);
+        downloadedBytes += chunk.length;
+        onProgress(GTFSProgress(table: 'Изтегляне', current: downloadedBytes));
+      }
+      await sink.close();
+    } finally {
+      client.close();
+    }
+
+    onProgress(GTFSProgress(table: 'Разархивиране', current: 0));
+
+    final bytes = await File(compressedPath).readAsBytes();
+    final decompressed = zstd.decode(bytes);
+    await File(tempDbPath).writeAsBytes(decompressed);
+    await File(compressedPath).delete();
+
+    if (_db != null) {
+      await _db!.close();
+      _db = null;
+    }
+
+    if (await File(path).exists()) {
       await deleteDatabase(path);
     }
-
-    final dbPath = join(workingDirectory, 'sofia.db.zst');
-
-    onProgress(GTFSProgress(table: 'Downloading database', current: 0));
-
-    // Download the compressed database
-    final request = await http.Client().send(http.Request('GET', Uri.parse(dbDownloadUrl)));
-    final response = request;
-
-    final zipFile = File(dbPath);
-    final sink = zipFile.openWrite();
-
-    int downloadedBytes = 0;
-    await for (final chunk in response.stream) {
-      sink.add(chunk);
-      downloadedBytes += chunk.length;
-      onProgress(GTFSProgress(table: 'Downloading', current: downloadedBytes));
-    }
-    await sink.close();
-
-    onProgress(GTFSProgress(table: 'Decompressing', current: 0));
-
-    // Decompress zstd
-    final zstFile = File(dbPath);
-    final bytes = zstFile.readAsBytesSync();
-    final decompressed = zstd.decode(bytes);
-
-    // Write decompressed database
-    final outputFile = File(path);
-    await outputFile.writeAsBytes(decompressed);
-
-    // Clean up compressed file
-    await zstFile.delete();
+    await File(tempDbPath).rename(path);
 
     await initialize();
 
-    // Save new hash
     await prefs.setString(_hashKey, remoteHash);
 
     onProgress(GTFSProgress(table: 'Done', current: 1));
