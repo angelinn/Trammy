@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
+import 'package:trammy/services/gtfs_task_manager.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,12 +15,6 @@ class SettingsScreenState extends State<SettingsScreen> {
   bool updateNotifications = true;
   String lastUpdated = 'Непознато';
   bool loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    loadSettings();
-  }
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -42,26 +36,6 @@ class SettingsScreenState extends State<SettingsScreen> {
   Future<void> saveBool(String key, bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(key, value);
-  }
-
-  Future<void> rescheduleTask() async {
-    await Workmanager().cancelByUniqueName('gtfsUpdateTaskId');
-    if (!autoUpdate) return;
-
-    final now = DateTime.now();
-    var firstRun = DateTime(now.year, now.month, now.day, 5);
-    if (!firstRun.isAfter(now)) firstRun = firstRun.add(const Duration(days: 1));
-
-    await Workmanager().registerPeriodicTask(
-      'gtfsUpdateTaskId',
-      'gtfsUpdateTask',
-      frequency: const Duration(hours: 1),
-      //initialDelay: firstRun.difference(now),
-      constraints: Constraints(
-        networkType: wifiOnly ? NetworkType.unmetered : NetworkType.connected,
-      ),
-      existingWorkPolicy: ExistingPeriodicWorkPolicy.update,
-    );
   }
 
   Future<void> _scheduleManualUpdate() async {
@@ -140,14 +114,11 @@ class SettingsScreenState extends State<SettingsScreen> {
     );
 
     if (confirmed == true && mounted) {
-      await Workmanager().registerOneOffTask(
-        'gtfsManualUpdate_${DateTime.now().millisecondsSinceEpoch}',
-        'gtfsUpdateTask',
-        initialDelay: Duration(minutes: selectedMinutes),
-        constraints: Constraints(
-          networkType: wifiOnly ? NetworkType.unmetered : NetworkType.connected,
-        ),
+      await GTFSTaskManager.scheduleOneOff(
+        minutes: selectedMinutes,
+        wifiOnly: wifiOnly,
       );
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -229,7 +200,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                             onChanged: (val) async {
                               setState(() => autoUpdate = val);
                               await saveBool('settings_auto_update', val);
-                              await rescheduleTask();
+                              await GTFSTaskManager.reschedule(autoUpdate: val, wifiOnly: wifiOnly);
                             },
                           ),
                           _Divider(),
@@ -244,7 +215,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 ? (val) async {
                                     setState(() => wifiOnly = val);
                                     await saveBool('settings_wifi_only', val);
-                                    await rescheduleTask();
+                                    await GTFSTaskManager.reschedule(autoUpdate: autoUpdate, wifiOnly: val);
                                   }
                                 : null,
                           ),
