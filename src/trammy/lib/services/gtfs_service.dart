@@ -151,11 +151,13 @@ class GTFSService {
 
   static Future<void> updateGTFS({
     required void Function(GTFSProgress progress) onProgress,
+    bool force = false
   }) async {
     print('[GTFSService] updateGTFS()');
     await repo.updateGTFS(
       onProgress: onProgress,
-      workingDirectory: (await getDatabasesPath())
+      workingDirectory: (await getDatabasesPath()),
+      force: force
     );
   }
 

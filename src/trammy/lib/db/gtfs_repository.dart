@@ -26,10 +26,12 @@ class GTFSRepository {
   Future<void> updateGTFS({
     required void Function(GTFSProgress progress) onProgress,
     required String workingDirectory,
+    bool force = false
   }) async {
     await dbBuilder.updateGTFS(
       onProgress: onProgress,
       workingDirectory: workingDirectory,
+      force: force
     );
   }
 

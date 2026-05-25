@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trammy/screens/database_loading_screen.dart';
 import 'package:trammy/services/gtfs_task_manager.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -157,15 +158,12 @@ class SettingsScreenState extends State<SettingsScreen> {
     );
 
     if (confirmed == true && mounted) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('dbLoaded', false);
-      await prefs.remove('settings_last_updated');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Данните бяха изчистени. Рестартирайте приложението.'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => DatabaseLoadingScreen(force: true)),
+          (route) => false,
+        );
+      }
     }
   }
 

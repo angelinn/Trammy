@@ -12,20 +12,13 @@ class StopSearchBar extends StatefulWidget {
 }
 
 class StopSearchBarState extends State<StopSearchBar> {
-  late TextEditingController searchController;
-  late FocusNode searchFocusNode;
+  TextEditingController? searchController;
+  FocusNode? searchFocusNode;
   UniqueKey autoCompleteKey = UniqueKey();
 
-  @override
-  void dispose() {
-    searchController.dispose();
-    searchFocusNode.dispose();
-    super.dispose();
-  }
-
   void onStopSearch(String value) {
-    searchController.clear();
-    searchFocusNode.unfocus();
+    searchController?.clear();
+    searchFocusNode?.unfocus();
 
     setState(() {
       autoCompleteKey = UniqueKey();

@@ -45,6 +45,7 @@ class GtfsDbDownloader {
   Future<void> updateGTFS({
     required void Function(GTFSProgress progress) onProgress,
     required String workingDirectory,
+    bool force = false
   }) async {
     onProgress(GTFSProgress(table: 'Проверка за нови разписания', current: 0));
 
@@ -57,7 +58,7 @@ class GtfsDbDownloader {
     final prefs = await SharedPreferences.getInstance();
     final storedHash = prefs.getString(_hashKey);
 
-    if (storedHash == remoteHash && File(path).existsSync()) {
+    if (!force && storedHash == remoteHash && File(path).existsSync()) {
       print('GTFS database is up to date (hash: $remoteHash)');
       onProgress(GTFSProgress(table: 'Up to date', current: 1));
       return;

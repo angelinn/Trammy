@@ -4,7 +4,8 @@ import 'package:trammy/services/gtfs_service.dart';
 import 'package:trammy/screens/main_screen.dart';
 
 class DatabaseLoadingScreen extends StatefulWidget {
-  const DatabaseLoadingScreen({super.key});
+  final bool force;
+  const DatabaseLoadingScreen({super.key, this.force = false});
 
   @override
   State<DatabaseLoadingScreen> createState() => _DatabaseLoadingScreenState();
@@ -13,6 +14,8 @@ class DatabaseLoadingScreen extends StatefulWidget {
 class _DatabaseLoadingScreenState extends State<DatabaseLoadingScreen> {
   String _currentAction = "Зареждане...";
   String _detailText = "";
+  double? downloadProgress; // null = indeterminate
+
 
   @override
   void initState() {
@@ -24,17 +27,21 @@ class _DatabaseLoadingScreenState extends State<DatabaseLoadingScreen> {
     try {
       await GTFSService.init();
       await GTFSService.updateGTFS(
+        force: widget.force,
         onProgress: (progress) {
           if (!mounted) return;
           setState(() {
             _currentAction = progress.table;
             if (progress.table == 'Изтегляне') {
-               final mb = progress.current / (1024 * 1024);
-               _detailText = "${mb.toStringAsFixed(1)} MB свалени";
+              final mb = progress.current / (1024 * 1024);
+              _detailText = "${mb.toStringAsFixed(1)} MB / 43 MB";
+              downloadProgress = progress.current / (43 * 1024 * 1024);
             } else if (progress.table == 'Разархивиране') {
-               _detailText = "Подвотвяне на разписанията...";
+              _detailText = "Подготвяне на разписанията...";
+              downloadProgress = null; // back to indeterminate
             } else {
-               _detailText = "";
+              _detailText = "";
+              downloadProgress = null;
             }
           });
         },
@@ -42,6 +49,7 @@ class _DatabaseLoadingScreenState extends State<DatabaseLoadingScreen> {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('dbLoaded', true);
+      await prefs.setInt('settings_last_updated', DateTime.now().millisecondsSinceEpoch);
 
       if (mounted) {
         Navigator.of(context).pushReplacement(
@@ -88,7 +96,8 @@ class _DatabaseLoadingScreenState extends State<DatabaseLoadingScreen> {
                 style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 48),
-              const LinearProgressIndicator(
+              LinearProgressIndicator(
+                value: downloadProgress,
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               const SizedBox(height: 16),
