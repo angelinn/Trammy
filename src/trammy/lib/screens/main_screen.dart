@@ -4,6 +4,7 @@ import 'package:trammy/db/favourites_repository.dart';
 import 'package:trammy/models/favourite.dart';
 import 'package:trammy/screens/favourites_screen.dart';
 import 'package:trammy/screens/map/map_screen.dart';
+import 'package:trammy/screens/settings_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -22,7 +23,8 @@ class MainScreenState extends State<MainScreen> {
     super.initState();
     screens = [
       MapScreen(title: 'Map Screen', key: mapKey),
-      FavouritesScreen(onFavouriteSelected: onFavouriteSelected)
+      FavouritesScreen(onFavouriteSelected: onFavouriteSelected),
+      SettingsScreen(),
     ];
 
     FavouritesRepository.instance.load();
@@ -64,7 +66,12 @@ class MainScreenState extends State<MainScreen> {
           NavigationDestination(
             icon: Icon(Icons.favorite),
             label: 'Любими',
-          )
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: 'Настройки',
+          ),
         ],
       )
     );
