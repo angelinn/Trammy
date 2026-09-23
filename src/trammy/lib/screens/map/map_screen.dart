@@ -152,7 +152,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     final initialCenter = lastLat != null && lastLng != null ? LatLng(lastLat!, lastLng!) : const LatLng(42.6977, 23.3219); // Sofia
     stopLocations = {};
     return PopScope(
-      canPop: false,
+      canPop: activeShapes.isEmpty,
       onPopInvokedWithResult: (bool didPop, dynamic result) {
         if (didPop) return;
 
@@ -161,9 +161,6 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             activeShapes = [];
             vehiclePositions = {};
           });
-        }
-        else {
-          Navigator.of(context).pop();
         }
       },
       child: Scaffold(

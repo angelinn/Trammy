@@ -153,7 +153,7 @@ class GTFSService {
     required void Function(GTFSProgress progress) onProgress,
     bool force = false
   }) async {
-    print('[GTFSService] updateGTFS()');
+    DebugLogger.append('[GTFSService] Update initiated');
     await repo.updateGTFS(
       onProgress: onProgress,
       workingDirectory: (await getDatabasesPath()),
