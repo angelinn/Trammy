@@ -4,6 +4,7 @@ import 'package:trammy/models/favourite.dart';
 import 'package:trammy/screens/favourites_screen.dart';
 import 'package:trammy/screens/map/map_screen.dart';
 import 'package:trammy/screens/settings_screen.dart';
+import 'package:trammy/services/app_update_service.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -29,6 +30,34 @@ class MainScreenState extends State<MainScreen> {
     ];
 
     FavouritesRepository.instance.load();
+    checkForUpdate();
+  }
+
+  Future<void> checkForUpdate() async {
+    final update = await AppUpdateService.checkForUpdate();
+    if (update == null || !mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Налична актуализация'),
+        content: Text('Версия ${update.version} е налична. Искате ли да я изтеглите?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('По-късно'),
+          ),
+          FilledButton.icon(
+            onPressed: () {
+              Navigator.pop(ctx);
+              AppUpdateService.downloadAndInstall(update.downloadUrl);
+            },
+            icon: const Icon(Icons.download_rounded),
+            label: const Text('Изтегли'),
+          ),
+        ],
+      ),
+    );
   }
   
   void onFavouriteSelected(FavoriteStop fav) async {
