@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trammy/services/common.dart';
 import 'package:trammy/services/gtfs_service.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -20,8 +21,8 @@ class GTFSTaskManager {
     await Workmanager().registerPeriodicTask(
       taskId,
       taskName,
-      frequency: const Duration(hours: 1),
-      //initialDelay: nextFiveAm(),
+      frequency: const Duration(hours: 12),
+      initialDelay: nextFiveAm(),
       constraints: Constraints(
         networkType: wifiOnly ? NetworkType.unmetered : NetworkType.connected,
       ),
@@ -36,11 +37,12 @@ class GTFSTaskManager {
     await Workmanager().cancelByUniqueName(taskId);
     if (!autoUpdate) return;
 
+    DebugLogger.append('Rescheduling GTFS update task: autoUpdate=$autoUpdate, wifiOnly=$wifiOnly');
     await Workmanager().registerPeriodicTask(
       taskId,
       taskName,
-      frequency: const Duration(hours: 1),
-      //initialDelay: nextFiveAm(),
+      frequency: const Duration(hours: 12),
+      initialDelay: nextFiveAm(),
       constraints: Constraints(
         networkType: wifiOnly ? NetworkType.unmetered : NetworkType.connected,
       ),
@@ -52,6 +54,7 @@ class GTFSTaskManager {
     required int minutes,
     required bool wifiOnly,
   }) async {
+    DebugLogger.append('Scheduling GTFS update task: minutes=$minutes, wifiOnly=$wifiOnly');
     await Workmanager().registerOneOffTask(
       'gtfsManualUpdate_${DateTime.now().millisecondsSinceEpoch}',
       taskName,
@@ -65,11 +68,13 @@ class GTFSTaskManager {
   static Future<bool> executeTask(String task) async {
     if (task != taskName) return true;
 
+    DebugLogger.append('[GtfsTaskManager] GTFS update task executed');
+
     final prefs = await SharedPreferences.getInstance();
 
     final dbLoaded = prefs.getBool('dbLoaded') ?? false;
     if (!dbLoaded) {
-      print('[GtfsTaskManager] DB not ready, skipping');
+      DebugLogger.append('[GtfsTaskManager] DB not ready, skipping');
       return true;
     }
 
@@ -89,7 +94,7 @@ class GTFSTaskManager {
       await showUpdateNotification();
     }
 
-    print('[GtfsTaskManager] GTFS update completed');
+    DebugLogger.append('[GtfsTaskManager] GTFS update completed');
     return true;
   }
 

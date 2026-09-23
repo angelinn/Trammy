@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:sqflite/sqflite.dart';
 import 'package:trammy/models/gtfs/route.dart';
 import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/models/gtfs/stop_time.dart';
 import 'package:trammy/models/gtfs/trip.dart';
+import 'package:trammy/services/common.dart';
 import 'package:trammy/services/gtfs_service.dart';
 
 class StopInfoKey { 
@@ -69,7 +73,8 @@ class MapScreenController {
     });
 
 
-    Map<String, List<GTFSStopTimeData>> stopTimes = await GTFSService.getStopTimesAfterNow(searchStopCode, 3);
+    Map<String, List<GTFSStopTimeData>> stopTimes = await retryOnDbErrors(() => GTFSService.getStopTimesAfterNow(searchStopCode, 3));
+    await DebugLogger.append("Successfully fetched stop times for $searchStopCode: ${stopTimes.length} routes found");
 
     for (GTFSStopTimeData stopTime in stopTimes.values.expand((v) => v)) {
       final key = "${stopTime.tripId}_${stopTime.stopId}";
@@ -86,5 +91,29 @@ class MapScreenController {
       print('Route ${entry.key.route.routeShortName} has ${entry.value.length} arrivals: ${entry.value}');
     }
     return updates;
+  }
+
+  static Future<T> retryOnDbErrors<T>(Future<T> Function() fn, {int maxAttempts = 5, Duration delay = const Duration(seconds: 1),}) async {
+    for (int attempt = 1; ; ++attempt) {
+      try {
+        return await fn();
+      } 
+      catch (e) {
+        final msg = e.toString().toLowerCase();
+        final isDbError = e is DatabaseException ||
+                          e is FileSystemException ||
+                          msg.contains('no such table') ||
+                          msg.contains('database is locked') ||
+                          msg.contains('unable to open database') ||
+                          msg.contains('disk i/o');
+
+        await DebugLogger.append( '[retryOnDbErrors] Attempt $attempt/$maxAttempts: $e');
+
+        if (!isDbError) rethrow;
+        if (attempt >= maxAttempts) rethrow;
+
+        await Future.delayed(delay);
+      }
+    }
   }
 }
