@@ -4,6 +4,7 @@ import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:trammy/models/gtfs/shape.dart';
 import 'package:trammy/models/gtfs/stop.dart';
+import 'package:trammy/screens/map/widgets/animated_vehicle_layer.dart';
 import 'package:trammy/screens/map/widgets/pulsing_user_marker.dart';
 import 'package:trammy/screens/map/widgets/stops_layer.dart';
 import 'package:trammy/screens/map/widgets/vehicle_market.dart';
@@ -138,43 +139,9 @@ class MapControl extends StatelessWidget {
               )  , 
           
           if (vehiclePositions.isNotEmpty)
-          ValueListenableBuilder(
-            valueListenable: GTFSService.vehiclesNotifier, 
-            builder: (_, vehicles, _) {
-               final markers = <Marker>[];
-            
-              vehiclePositions.forEach((routeId) {
-                final vehiclesForRoute = vehicles[routeId];
-                if (vehiclesForRoute == null) return;
-
-                for (final v in vehiclesForRoute) {
-                  final route = GTFSService.routes.firstWhere((r) => r.routeId == routeId);
-
-                  print('Adding vehicle ${route.routeShortName} for trip ${v.trip.tripId} with id ${v.vehicle.id}');
-                  markers.add(
-                    Marker(
-                      width: 70,
-                      height: 70,
-                      point: LatLng(v.position.latitude, v.position.longitude),
-                      child: VehicleMarker(
-                        routeNumber: route.routeShortName!,
-                        color: colorFromHex(route.routeColor!),
-                        bearing: v.position.bearing,
-                        speed: v.position.speed,
-                        vehicleId: v.vehicle.id,
-                      ),
-                    ),
-                  );
-                }
-              }
-              );
-            
-
-            return MarkerLayer(
-              markers: markers,
-            );
-          })    
-
+            AnimatedVehiclesLayer(
+              vehiclePositions: vehiclePositions,
+            ),
         
         ],
       );

@@ -1,13 +1,13 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-class VehicleMarker extends StatelessWidget {
+class VehicleMarker extends StatefulWidget {
   final String routeNumber;
   final Color color;
   final double? bearing;
   final double? speed;
   final String vehicleId;
-  final double size; 
+  final double size;
 
   const VehicleMarker({
     super.key,
@@ -16,48 +16,82 @@ class VehicleMarker extends StatelessWidget {
     this.bearing,
     required this.vehicleId,
     this.speed,
-    this.size = 55.0, 
+    this.size = 55.0,
   });
 
-  String get speedText => speed != null ? '${(speed!).toStringAsFixed(1)} km/h' : 'Stationary';
+  @override
+  State<VehicleMarker> createState() => _VehicleMarkerState();
+}
+
+class _VehicleMarkerState extends State<VehicleMarker> {
+  late double _targetContinuousBearing;
+
+  @override
+  void initState() {
+    super.initState();
+    _targetContinuousBearing = widget.bearing ?? 0;
+  }
+
+  @override
+  void didUpdateWidget(VehicleMarker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.bearing != null && widget.bearing != oldWidget.bearing) {
+      // Calculate shortest path around 360 degrees to prevent full spins across North (0°)
+      double delta = (widget.bearing! - _targetContinuousBearing) % 360;
+      if (delta > 180) delta -= 360;
+      if (delta < -180) delta += 360;
+      _targetContinuousBearing += delta;
+    }
+  }
+
+  String get speedText =>
+      widget.speed != null ? '${(widget.speed!).toStringAsFixed(1)} km/h' : 'Stationary';
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'ID: $vehicleId\nSpeed: $speedText',
+      message: 'ID: ${widget.vehicleId}\nSpeed: $speedText',
       triggerMode: TooltipTriggerMode.tap,
       child: SizedBox(
-        width: size,
-        height: size,
+        width: widget.size,
+        height: widget.size,
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // 1. BACKGROUND LAYER: Rotates based on bearing
-            Transform.rotate(
-              angle: (bearing ?? 0) * (math.pi / 180),
+            
+            // 1. BACKGROUND LAYER: Smoothly animates angle changes
+            TweenAnimationBuilder<double>(
+              tween: Tween<double>(end: _targetContinuousBearing),
+              duration: const Duration(milliseconds: 600), // Adjust animation speed here
+              curve: Curves.easeOutCubic, // Feels natural for vehicle motion
+              builder: (context, animatedBearing, child) {
+                return Transform.rotate(
+                  angle: animatedBearing * (math.pi / 180),
+                  child: child,
+                );
+              },
               child: CustomPaint(
-                size: Size(size, size),
-                painter: VehicleMarkerPainter(
-                  color: color,
-                  hasBearing: bearing != null,
+                size: Size(widget.size, widget.size),
+                painter: _VehicleMarkerPainter(
+                  color: widget.color,
+                  hasBearing: widget.bearing != null,
                 ),
               ),
             ),
 
-            // 2. TEXT LAYER: Stays perfectly upright
+            // 2. TEXT LAYER: Stays upright continuously
             SizedBox(
-              // Constrain text to the inner circle radius
-              width: size * 0.55,
-              height: size * 0.55,
+              width: widget.size * 0.55,
+              height: widget.size * 0.55,
               child: Center(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    routeNumber,
+                    widget.routeNumber,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.w900, // Heavy weight for transit readability
-                      fontSize: 12, // High base size, FittedBox will scale it down if needed
+                      fontWeight: FontWeight.w900,
+                      fontSize: 12,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -72,20 +106,17 @@ class VehicleMarker extends StatelessWidget {
   }
 }
 
-/// A Custom Painter that draws a seamless circle with a directional pointer
-class VehicleMarkerPainter extends CustomPainter {
+class _VehicleMarkerPainter extends CustomPainter {
   final Color color;
   final bool hasBearing;
 
-  VehicleMarkerPainter({required this.color, required this.hasBearing});
+  _VehicleMarkerPainter({required this.color, required this.hasBearing});
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    // Radius of the main circle leaves room for the arrow and drop shadow
-    final radius = size.width * 0.32; 
+    final radius = size.width * 0.32;
 
-    // Define the base circle
     final circlePath = Path()
       ..addOval(Rect.fromCircle(center: center, radius: radius));
 
@@ -93,11 +124,7 @@ class VehicleMarkerPainter extends CustomPainter {
 
     if (hasBearing) {
       final arrowPath = Path();
-      
-      // Tip of the arrow (pointing UP towards North/0 degrees)
       final arrowTip = Offset(center.dx, size.height * 0.05);
-      
-      // The base corners of the arrow triangle (overlapping the top of the circle)
       final arrowBaseLeft = Offset(center.dx - radius * 0.6, center.dy - radius * 0.4);
       final arrowBaseRight = Offset(center.dx + radius * 0.6, center.dy - radius * 0.4);
 
@@ -106,30 +133,26 @@ class VehicleMarkerPainter extends CustomPainter {
       arrowPath.lineTo(arrowBaseLeft.dx, arrowBaseLeft.dy);
       arrowPath.close();
 
-      // Merge the circle and arrow into one seamless, unified shape
       finalPath = Path.combine(PathOperation.union, circlePath, arrowPath);
     }
 
-    // 1. Draw a clean drop shadow
     canvas.drawShadow(finalPath, Colors.black, 4.0, false);
 
-    // 2. Fill the shape with the route color
     final fillPaint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
     canvas.drawPath(finalPath, fillPaint);
 
-    // 3. Draw the seamless white border around the merged shape
     final borderPaint = Paint()
       ..color = Colors.white
-      ..strokeWidth = size.width * 0.04 // Dynamic border thickness
-      ..strokeJoin = StrokeJoin.round // Smooth, rounded inner corners
+      ..strokeWidth = size.width * 0.04
+      ..strokeJoin = StrokeJoin.round
       ..style = PaintingStyle.stroke;
     canvas.drawPath(finalPath, borderPaint);
   }
 
   @override
-  bool shouldRepaint(covariant VehicleMarkerPainter oldDelegate) {
+  bool shouldRepaint(covariant _VehicleMarkerPainter oldDelegate) {
     return oldDelegate.color != color || oldDelegate.hasBearing != hasBearing;
   }
 }
