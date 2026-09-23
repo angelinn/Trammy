@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:path_provider/path_provider.dart';
+import 'dart:math';
 
 int? parseInt(dynamic value) {
   if (value == null) return null;
@@ -21,6 +21,22 @@ Color colorFromHex(String hexString) {
 
 DateTime fromUnixTime(int unixTime) { 
   return DateTime.fromMillisecondsSinceEpoch(unixTime * 1000);
+}
+
+double bearingBetween(double lat1, double lon1, double lat2, double lon2) {
+  double toRad(double d) => d * (pi / 180.0);
+  double toDeg(double r) => r * (180.0 / pi);
+
+  final dLon = toRad(lon2 - lon1);
+  final aLat = toRad(lat1);
+  final bLat = toRad(lat2);
+
+  final y = sin(dLon) * cos(bLat);
+  final x = cos(aLat) * sin(bLat) - sin(aLat) * cos(bLat) * cos(dLon);
+
+  final brg = (toDeg(atan2(y, x)) + 360) % 360;
+
+  return brg;
 }
 
 

@@ -88,6 +88,7 @@ class GTFSService {
 
   static final ValueNotifier<Map<String, List<VehiclePosition>>> vehiclesNotifier= ValueNotifier({});
   static Map<String, List<VehiclePosition>> vehiclesPositions = {};
+  static Map<String, LatLng> previousVehicleLocations = {};
 
   static DateTime? lastUpdatedVehicles;
   static Timer? _vehicleTimer;
@@ -109,7 +110,7 @@ class GTFSService {
 
   static Future<void> fetchVehiclePositions() async {
        if (lastUpdatedVehicles != null &&
-        DateTime.now().difference(lastUpdatedVehicles!) < const Duration(seconds: 30)) {
+        DateTime.now().difference(lastUpdatedVehicles!) < const Duration(seconds: 10)) {
       return;
     }
 
@@ -131,9 +132,18 @@ class GTFSService {
 
       print('Adding vehicle ${vehicle.trip.routeId} for trip ${vehicle.trip.tripId} with id ${vehicle.vehicle.id}');
       vehiclesPositions.putIfAbsent(vehicle.trip.routeId, () => []).add(vehicle);
+
+      if (previousVehicleLocations.containsKey(vehicle.vehicle.id)) {
+        final prev = previousVehicleLocations[vehicle.vehicle.id]!;
+        final bearing = bearingBetween(prev.latitude, prev.longitude, vehicle.position.latitude, vehicle.position.longitude);
+        vehicle.position.bearing = bearing;
+      }
+
+      previousVehicleLocations[vehicle.vehicle.id] = LatLng(vehicle.position.latitude, vehicle.position.longitude);
     }
 
     vehiclesNotifier.value = vehiclesPositions;
+    lastUpdatedVehicles = DateTime.now();
   }
 
   /// Initialize database

@@ -153,8 +153,8 @@ class MapControl extends StatelessWidget {
                   print('Adding vehicle ${route.routeShortName} for trip ${v.trip.tripId} with id ${v.vehicle.id}');
                   markers.add(
                     Marker(
-                      width: 50,
-                      height: 30,
+                      width: 70,
+                      height: 70,
                       point: LatLng(v.position.latitude, v.position.longitude),
                       child: VehicleMarker(
                         routeNumber: route.routeShortName!,
