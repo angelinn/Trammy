@@ -11,6 +11,8 @@ import 'package:trammy/services/common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapControl extends StatelessWidget {
+  static const String MAP_KEY = "cb1_3xnl_1_893878d9d959c5ea053c47b7";
+
   final AnimatedMapController animatedMapController;
   final LatLng initialCenter;
   final double initialZoom;
@@ -44,7 +46,7 @@ class MapControl extends StatelessWidget {
 
   Widget renderMapTheme(BuildContext context) {
     final tileLayer =  TileLayer(
-      urlTemplate: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}@3x.png',
+      urlTemplate: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}@3x.png?key=$MAP_KEY',
       subdomains: ['a', 'b', 'c'],
       userAgentPackageName: 'Trammy/5.0',
     );
