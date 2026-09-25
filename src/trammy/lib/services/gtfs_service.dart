@@ -98,9 +98,13 @@ class GTFSService {
     // Run immediately, then every 30 sec
     _vehicleTimer = Timer.periodic(const Duration(seconds: 10), (_) async {
       await fetchVehiclePositions();
-    });      
-    
-    fetchVehiclePositions();
+    });
+
+    fetchVehiclePositions().then((_) {
+      Future.delayed(const Duration(seconds: 1), () async {
+        await fetchVehiclePositions(force: true);
+      });
+    });
   }
 
   static void stopVehicleUpdates() {
@@ -108,8 +112,8 @@ class GTFSService {
     vehiclesNotifier.value = {};
   }
 
-  static Future<void> fetchVehiclePositions() async {
-       if (lastUpdatedVehicles != null &&
+  static Future<void> fetchVehiclePositions({ bool force = false }) async {
+       if (!force && lastUpdatedVehicles != null &&
         DateTime.now().difference(lastUpdatedVehicles!) < const Duration(seconds: 10)) {
       return;
     }

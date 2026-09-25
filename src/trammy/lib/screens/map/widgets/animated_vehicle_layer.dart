@@ -59,7 +59,7 @@ class _AnimatedVehiclesLayerState
   void _onVehiclesUpdated() {
     final now = DateTime.now();
 
-    vehiclePositions = GTFSService.vehiclesNotifier.value;
+    vehiclePositions = Map.from(GTFSService.vehiclesNotifier.value);
 
     final newPositions = <String, LatLng>{};
 
@@ -79,11 +79,27 @@ class _AnimatedVehiclesLayerState
 
     _lastUpdate = now;
 
+    // defend against phone sleep or screen off
+    if (elapsed > const Duration(seconds: 12)) {
+      for (final entry in newPositions.entries) {
+        _fromPositions[entry.key] = entry.value;
+        _toPositions[entry.key] = entry.value;
+      }
+
+      _controller.stop();
+
+      setState(() {
+        vehiclePositions = GTFSService.vehiclesNotifier.value;
+      });
+
+      return;
+    }
+
     // Don't let an unusually long network delay create a crazy-long animation.
     final animationDuration = Duration(
       milliseconds: elapsed.inMilliseconds.clamp(
         1000,
-        30000,
+        12000,
       ),
     );
 
