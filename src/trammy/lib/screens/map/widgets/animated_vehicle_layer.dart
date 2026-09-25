@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:gtfs_realtime_bindings/gtfs_realtime_bindings.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:trammy/screens/map/widgets/vehicle_market.dart';
 import 'package:trammy/services/common.dart';
@@ -25,6 +26,7 @@ class _AnimatedVehiclesLayerState
 
   final Map<String, LatLng> _fromPositions = {};
   final Map<String, LatLng> _toPositions = {};
+  Map<String, List<VehiclePosition>> vehiclePositions = {};
 
   DateTime? _lastUpdate;
 
@@ -56,21 +58,16 @@ class _AnimatedVehiclesLayerState
 
   void _onVehiclesUpdated() {
     final now = DateTime.now();
-    final vehicles = GTFSService.vehiclesNotifier.value;
+
+    vehiclePositions = GTFSService.vehiclesNotifier.value;
 
     final newPositions = <String, LatLng>{};
 
-    for (final routeId in widget.vehiclePositions) {
-      final vehiclesForRoute = vehicles[routeId];
-
-      if (vehiclesForRoute == null) continue;
-
-      for (final v in vehiclesForRoute) {
-        final id = v.vehicle.id;
-
-        newPositions[id] = LatLng(
-          v.position.latitude,
-          v.position.longitude,
+    for (final singleRouteVehiclePositions in vehiclePositions.values) {
+      for (final vehicle in singleRouteVehiclePositions) {
+        newPositions[vehicle.vehicle.id] = LatLng(
+          vehicle.position.latitude,
+          vehicle.position.longitude,
         );
       }
     }
@@ -161,17 +158,14 @@ class _AnimatedVehiclesLayerState
 
     final markers = <Marker>[];
 
-    for (final routeId in widget.vehiclePositions) {
-      final vehiclesForRoute = vehicles[routeId];
-
-      if (vehiclesForRoute == null) continue;
+    for (final singleRouteVehiclePositions in vehiclePositions.values) {
 
       final route = GTFSService.routes.firstWhere(
-        (r) => r.routeId == routeId,
+        (r) => r.routeId == singleRouteVehiclePositions.first.trip.routeId,
       );
 
-      for (final v in vehiclesForRoute) {
-        final vehicleId = v.vehicle.id;
+      for (final vehiclePosition in singleRouteVehiclePositions) {
+        final vehicleId = vehiclePosition.vehicle.id;
 
         final position = _interpolatedPosition(vehicleId);
 
@@ -184,8 +178,8 @@ class _AnimatedVehiclesLayerState
             child: VehicleMarker(
               routeNumber: route.routeShortName!,
               color: colorFromHex(route.routeColor!),
-              bearing: v.position.bearing > -1 ? v.position.bearing : null,
-              speed: v.position.speed,
+              bearing: vehiclePosition.position.bearing > -1 ? vehiclePosition.position.bearing : null,
+              speed: vehiclePosition.position.speed,
               vehicleId: vehicleId,
             ),
           ),

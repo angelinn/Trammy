@@ -138,7 +138,6 @@ class MapControl extends StatelessWidget {
       )
               )  , 
           
-          if (vehiclePositions.isNotEmpty)
             AnimatedVehiclesLayer(
               vehiclePositions: vehiclePositions,
             ),

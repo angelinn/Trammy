@@ -62,6 +62,8 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     setState(() {
       stopsLoaded = true;
     });
+
+    GTFSService.startVehicleUpdates();
   }
 
   void goToCurrentLocation() async {
@@ -96,8 +98,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   List<(List<GTFSShape>, String, double)> activeShapes = [];
   Set<String> vehiclePositions = {};
   void showVehicles(String routeId, GTFSTrip trip) async {
-    print('Showing vehicles for routes $routeId');
-    GTFSService.startVehicleUpdates();
+    print('Showing routes for $routeId');
 
     await animatedMapController.animateTo(
       dest: animatedMapController.mapController.camera.center,
@@ -136,7 +137,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         .reduce((a, b) => a.value > b.value ? a : b)
         .key;
 
-      shapes.add((await GTFSService.getShapes(mostFrequentOppositeShapeId), route.routeColor!, 0.3));
+      shapes.add((await GTFSService.getShapes(mostFrequentOppositeShapeId), route.routeColor!, 0.2));
     }
     
     setState(() {
