@@ -7,11 +7,11 @@ import 'package:trammy/services/common.dart';
 import 'package:trammy/services/gtfs_service.dart';
 
 class AnimatedVehiclesLayer extends StatefulWidget {
-  final Set<String> vehiclePositions;
+  final String? selectedRouteId;
 
   const AnimatedVehiclesLayer({
     super.key,
-    required this.vehiclePositions,
+    this.selectedRouteId
   });
 
   @override
@@ -154,11 +154,12 @@ class _AnimatedVehiclesLayerState
 
   @override
   Widget build(BuildContext context) {
-    final vehicles = GTFSService.vehiclesNotifier.value;
-
     final markers = <Marker>[];
 
     for (final singleRouteVehiclePositions in vehiclePositions.values) {
+      if (widget.selectedRouteId != null && !singleRouteVehiclePositions.any((v) => v.trip.routeId == widget.selectedRouteId)) {
+        continue;
+      }
 
       final route = GTFSService.routes.firstWhere(
         (r) => r.routeId == singleRouteVehiclePositions.first.trip.routeId,

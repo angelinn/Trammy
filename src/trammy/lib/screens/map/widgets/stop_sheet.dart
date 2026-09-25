@@ -12,9 +12,9 @@ import 'package:trammy/services/gtfs_service.dart';
 
 class StopSheet extends StatefulWidget {
   final GTFSStopRouteInfo stop;
-  final void Function(String routeId, GTFSTrip trip)? onShowVehicles;
+  final void Function(String routeId, GTFSTrip trip)? onLineSelected;
 
-  const StopSheet({super.key, required this.stop, this.onShowVehicles});
+  const StopSheet({super.key, required this.stop, this.onLineSelected});
 
   @override
   State<StopSheet> createState() => StopSheetState();
@@ -244,7 +244,7 @@ Widget _buildHeader() {
 
       return GestureDetector(
         onTap: () => {
-          widget.onShowVehicles?.call(entry.key.route.routeId, entry.key.trip),
+          widget.onLineSelected?.call(entry.key.route.routeId, entry.key.trip),
           Navigator.pop(context)
         },
         child: ArrivalCard(

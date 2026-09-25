@@ -7,9 +7,7 @@ import 'package:trammy/models/gtfs/stop.dart';
 import 'package:trammy/screens/map/widgets/animated_vehicle_layer.dart';
 import 'package:trammy/screens/map/widgets/pulsing_user_marker.dart';
 import 'package:trammy/screens/map/widgets/stops_layer.dart';
-import 'package:trammy/screens/map/widgets/vehicle_market.dart';
 import 'package:trammy/services/common.dart';
-import 'package:trammy/services/gtfs_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapControl extends StatelessWidget {
@@ -19,7 +17,7 @@ class MapControl extends StatelessWidget {
   final List<GTFSStopRouteInfo> stops;
   final LatLng? userLocation;
   final GTFSStopRouteInfo? selectedStop;
-  final Set<String> vehiclePositions;
+  final String? selectedRouteId;
   final List<(List<GTFSShape>, String, double)> activeShapes;
 
   final void Function(GTFSStopRouteInfo stop) onStopTapped;
@@ -40,7 +38,7 @@ class MapControl extends StatelessWidget {
     this.onMoveEnd,
     this.onMapTapped,
     this.selectedStop,
-    required this.vehiclePositions,
+    this.selectedRouteId,
     required this.activeShapes
   });
 
@@ -139,7 +137,7 @@ class MapControl extends StatelessWidget {
               )  , 
           
             AnimatedVehiclesLayer(
-              vehiclePositions: vehiclePositions,
+              selectedRouteId: selectedRouteId,
             ),
         
         ],
