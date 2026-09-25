@@ -89,7 +89,7 @@ class MapControl extends StatelessWidget {
       ),
       children: [
           renderMapTheme(context),
-          // ADD THE POLYLINE LAYER HERE
+          
         if (activeShapes.isNotEmpty)
         ...activeShapes.map((shapes) => PolylineLayer(
             polylines: [

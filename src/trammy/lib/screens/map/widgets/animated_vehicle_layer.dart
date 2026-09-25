@@ -184,7 +184,7 @@ class _AnimatedVehiclesLayerState
             child: VehicleMarker(
               routeNumber: route.routeShortName!,
               color: colorFromHex(route.routeColor!),
-              bearing: v.position.bearing,
+              bearing: v.position.bearing > -1 ? v.position.bearing : null,
               speed: v.position.speed,
               vehicleId: vehicleId,
             ),

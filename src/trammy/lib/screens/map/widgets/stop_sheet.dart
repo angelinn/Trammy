@@ -220,7 +220,7 @@ Widget _buildHeader() {
           label: const Text("На живо"),
           onPressed: () {
             final routes = widget.stop.routeIds!.split(',').toSet();
-            // TODO: Call callback to show vehicles on map
+
             widget.onShowVehicles?.call(routes, updates.entries.map((e) => e.key.trip.tripId).toList());
             Navigator.pop(context);
           },

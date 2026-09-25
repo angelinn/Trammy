@@ -138,6 +138,9 @@ class GTFSService {
         final bearing = bearingBetween(prev.latitude, prev.longitude, vehicle.position.latitude, vehicle.position.longitude);
         vehicle.position.bearing = bearing;
       }
+      else {
+        vehicle.position.bearing = -1;
+      }
 
       previousVehicleLocations[vehicle.vehicle.id] = LatLng(vehicle.position.latitude, vehicle.position.longitude);
     }
