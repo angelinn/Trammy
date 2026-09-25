@@ -235,22 +235,6 @@ class _AnimatedVehiclesLayerState extends State<AnimatedVehiclesLayer>
         final bounds = camera.visibleBounds;
         final markers = <Marker>[];
 
-      final allVehicles = vehiclePositions.values.expand((x) => x);
-
-      final matches = allVehicles
-          .where((v) => v.vehicle.id == 'A3663')
-          .toList();
-
-      debugPrint('A3663 count = ${matches.length}');
-
-      for (final v in matches) {
-        debugPrint(
-          'A3663 route=${v.trip.routeId} '
-          'trip=${v.trip.tripId} '
-          'lat=${v.position.latitude} '
-          'lng=${v.position.longitude}',
-        );
-      }
         for (final routeVehicles in vehiclePositions.values) {
           if (routeVehicles.isEmpty) {
             continue;
@@ -320,7 +304,7 @@ class _AnimatedVehiclesLayerState extends State<AnimatedVehiclesLayer>
                   routeNumber: route.routeShortName ?? '',
                   color: colorFromHex(route.routeColor ?? '000000'),
                   bearing: vehiclePosition.position.bearing.isFinite &&
-                          vehiclePosition.position.bearing >= 0
+                          vehiclePosition.position.bearing > 0
                       ? vehiclePosition.position.bearing
                       : null,
                   speed: vehiclePosition.position.speed.isFinite
@@ -332,22 +316,6 @@ class _AnimatedVehiclesLayerState extends State<AnimatedVehiclesLayer>
             );
           }
         }
-
-        final markerIds = <String>{};
-
-      for (final marker in markers) {
-        if (marker.key is ValueKey<String>) {
-          final id = (marker.key as ValueKey<String>).value;
-
-          if (!markerIds.add(id)) {
-            debugPrint('!!! DUPLICATE MARKER KEY: $id');
-          }
-        }
-      }
-
-        debugPrint(
-          'zoom=${camera.zoom.toStringAsFixed(2)} markers=${markers.length}, unique vehicles=${allVehicles.length}, from=${_fromPositions.length}, to=${_toPositions.length}',
-        );
 
         return MarkerLayer(markers: markers);
       },

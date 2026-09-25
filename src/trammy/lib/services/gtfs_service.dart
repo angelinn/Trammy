@@ -134,7 +134,6 @@ class GTFSService {
       if (!entity.hasVehicle()) continue;
       final vehicle = entity.vehicle;
 
-      print('Adding vehicle ${vehicle.trip.routeId} for trip ${vehicle.trip.tripId} with id ${vehicle.vehicle.id}');
       vehiclesPositions.putIfAbsent(vehicle.trip.routeId, () => []).add(vehicle);
 
       if (previousVehicleLocations.containsKey(vehicle.vehicle.id)) {
@@ -142,15 +141,14 @@ class GTFSService {
         final bearing = bearingBetween(prev.latitude, prev.longitude, vehicle.position.latitude, vehicle.position.longitude);
         vehicle.position.bearing = bearing;
       }
-      else {
-        vehicle.position.bearing = -1;
-      }
 
       previousVehicleLocations[vehicle.vehicle.id] = LatLng(vehicle.position.latitude, vehicle.position.longitude);
     }
 
     vehiclesNotifier.value = vehiclesPositions;
     lastUpdatedVehicles = DateTime.now();
+
+    debugPrint('Fetched ${feed.entity.length} vehicle positions for ${vehiclesPositions.length} routes at $lastUpdatedVehicles');
   }
 
   /// Initialize database
