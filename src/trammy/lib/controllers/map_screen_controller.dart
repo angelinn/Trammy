@@ -63,7 +63,8 @@ class MapScreenController {
       final trip = GTFSService.trips[tripId];
       if (trip == null) return;
 
-      final route = GTFSService.routes.firstWhere((r) => r.routeId == trip.routeId);
+      final route = GTFSService.routesById[trip.routeId];
+      if (route == null) return;
 
       updates
           .putIfAbsent(StopInfoKey(route, trip, trip.headsign!), () => [])
@@ -80,8 +81,9 @@ class MapScreenController {
       final key = "${stopTime.tripId}_${stopTime.stopId}";
     if (addedKeys.contains(key)) continue;
 
-      final route = GTFSService.routes.firstWhere((r) => r.routeId == stopTime.routeId);      
-    
+      final route = GTFSService.routesById[stopTime.routeId];
+      if (route == null) continue;
+
       updates.putIfAbsent(StopInfoKey(route, GTFSService.trips[stopTime.tripId!]!, stopTime.tripHeadsign!), () => []).add(ArrivalEntry(stopTime.toArrivalDateTime(), false));
     }   
 

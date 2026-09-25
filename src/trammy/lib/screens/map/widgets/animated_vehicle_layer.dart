@@ -11,7 +11,7 @@ class AnimatedVehiclesLayer extends StatefulWidget {
 
   const AnimatedVehiclesLayer({
     super.key,
-    this.selectedRouteId
+    this.selectedRouteId,
   });
 
   @override
@@ -19,13 +19,13 @@ class AnimatedVehiclesLayer extends StatefulWidget {
       _AnimatedVehiclesLayerState();
 }
 
-class _AnimatedVehiclesLayerState
-    extends State<AnimatedVehiclesLayer>
+class _AnimatedVehiclesLayerState extends State<AnimatedVehiclesLayer>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   final Map<String, LatLng> _fromPositions = {};
   final Map<String, LatLng> _toPositions = {};
+
   Map<String, List<VehiclePosition>> vehiclePositions = {};
 
   DateTime? _lastUpdate;
@@ -37,15 +37,11 @@ class _AnimatedVehiclesLayerState
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 10),
-    )..addListener(() {
-        if (mounted) {
-          setState(() {});
-        }
-      });
+    );
 
     GTFSService.vehiclesNotifier.addListener(_onVehiclesUpdated);
 
-    // Handle vehicles that already exist when this widget is created.
+    // Load vehicles that already exist.
     _onVehiclesUpdated();
   }
 
@@ -56,83 +52,133 @@ class _AnimatedVehiclesLayerState
     super.dispose();
   }
 
+  bool _isValidLatLng(LatLng position) {
+    return position.latitude.isFinite &&
+        position.longitude.isFinite &&
+        position.latitude >= -90 &&
+        position.latitude <= 90 &&
+        position.longitude >= -180 &&
+        position.longitude <= 180;
+  }
+
   void _onVehiclesUpdated() {
+    if (!mounted) return;
+
     final now = DateTime.now();
 
-    vehiclePositions = Map.from(GTFSService.vehiclesNotifier.value);
+    final newVehiclePositions =
+        Map<String, List<VehiclePosition>>.from(
+      GTFSService.vehiclesNotifier.value,
+    );
 
-    final newPositions = <String, LatLng>{};
+    // IDs that are actually present in the feed, regardless of whether
+    // their current coordinate is valid.
+    final feedVehicleIds = <String>{};
 
-    for (final singleRouteVehiclePositions in vehiclePositions.values) {
-      for (final vehicle in singleRouteVehiclePositions) {
-        newPositions[vehicle.vehicle.id] = LatLng(
+    // Only valid coordinates are allowed into the animation state.
+    final validNewPositions = <String, LatLng>{};
+
+    for (final routeVehicles in newVehiclePositions.values) {
+      for (final vehicle in routeVehicles) {
+        final id = vehicle.vehicle.id;
+
+        if (id.isEmpty) {
+          continue;
+        }
+
+        feedVehicleIds.add(id);
+
+        final position = LatLng(
           vehicle.position.latitude,
           vehicle.position.longitude,
         );
+
+        if (!_isValidLatLng(position)) {
+          debugPrint(
+            'Ignoring invalid position for vehicle $id: '
+            '${vehicle.position.latitude}, '
+            '${vehicle.position.longitude}',
+          );
+          continue;
+        }
+
+        validNewPositions[id] = position;
       }
     }
 
-    // How long since the previous GTFS update?
     final elapsed = _lastUpdate == null
         ? const Duration(seconds: 10)
         : now.difference(_lastUpdate!);
 
     _lastUpdate = now;
 
-    // defend against phone sleep or screen off
-    if (elapsed > const Duration(seconds: 12)) {
-      for (final entry in newPositions.entries) {
+    // If the app was asleep / backgrounded for a while, snap everything
+    // directly to the latest valid coordinates.
+    if (elapsed > const Duration(seconds: 30)) {
+      for (final entry in validNewPositions.entries) {
         _fromPositions[entry.key] = entry.value;
         _toPositions[entry.key] = entry.value;
       }
 
-      _controller.stop();
+      // Vehicles that vanished from the feed should be removed.
+      _fromPositions.removeWhere(
+        (id, _) => !feedVehicleIds.contains(id),
+      );
+      _toPositions.removeWhere(
+        (id, _) => !feedVehicleIds.contains(id),
+      );
+
+      _controller
+        ..stop()
+        ..value = 0.0;
 
       setState(() {
-        vehiclePositions = GTFSService.vehiclesNotifier.value;
+        vehiclePositions = newVehiclePositions;
       });
 
       return;
     }
 
-    // Don't let an unusually long network delay create a crazy-long animation.
     final animationDuration = Duration(
-      milliseconds: elapsed.inMilliseconds.clamp(
-        1000,
-        12000,
-      ),
+      milliseconds: elapsed.inMilliseconds.clamp(1000, 20000).toInt(),
     );
 
-    // Update each vehicle.
-    for (final entry in newPositions.entries) {
+    for (final entry in validNewPositions.entries) {
       final id = entry.key;
       final newPosition = entry.value;
 
-      if (_fromPositions.containsKey(id)) {
-        // IMPORTANT:
-        // Start from where the marker is RIGHT NOW,
-        // not from the previous GPS coordinate.
-        _fromPositions[id] = _interpolatedPosition(id);
-      } else {
-        // First time we've seen this vehicle.
+      final oldTo = _toPositions[id];
+
+      if (oldTo == null) {
+        // First valid observation.
         _fromPositions[id] = newPosition;
+      } else {
+        // Start from where the marker currently is.
+        final current = _interpolatedPosition(id);
+
+        if (_isValidLatLng(current)) {
+          _fromPositions[id] = current;
+        } else {
+          // Defensive fallback.
+          _fromPositions[id] = oldTo;
+        }
       }
 
       _toPositions[id] = newPosition;
     }
 
-    // Remove vehicles that disappeared from the feed.
-    final activeIds = newPositions.keys.toSet();
-
+    // Remove vehicles which no longer exist in the feed.
     _fromPositions.removeWhere(
-      (id, _) => !activeIds.contains(id),
+      (id, _) => !feedVehicleIds.contains(id),
     );
-
     _toPositions.removeWhere(
-      (id, _) => !activeIds.contains(id),
+      (id, _) => !feedVehicleIds.contains(id),
     );
 
-    // Animate using the ACTUAL time between GTFS updates.
+    setState(() {
+      vehiclePositions = newVehiclePositions;
+    });
+
     _controller
       ..stop()
       ..duration = animationDuration
@@ -140,72 +186,171 @@ class _AnimatedVehiclesLayerState
       ..forward();
   }
 
-  LatLng _interpolatedPosition(String id) {
+  LatLng? _interpolatedPositionOrNull(String id) {
     final from = _fromPositions[id];
     final to = _toPositions[id];
 
     if (from == null && to == null) {
-      return const LatLng(0, 0);
+      return null;
     }
 
     if (from == null) {
-      return to!;
+      return _isValidLatLng(to!) ? to : null;
     }
 
     if (to == null) {
-      return from;
+      return _isValidLatLng(from) ? from : null;
     }
 
-    final t = Curves.linear.transform(
-      _controller.value,
+    if (!_isValidLatLng(from) || !_isValidLatLng(to)) {
+      return null;
+    }
+
+    final t = Curves.linear.transform(_controller.value);
+
+    final position = LatLng(
+      from.latitude + (to.latitude - from.latitude) * t,
+      from.longitude + (to.longitude - from.longitude) * t,
     );
 
-    return LatLng(
-      from.latitude +
-          (to.latitude - from.latitude) * t,
-      from.longitude +
-          (to.longitude - from.longitude) * t,
-    );
+    return _isValidLatLng(position) ? position : null;
+  }
+
+  LatLng _interpolatedPosition(String id) {
+    return _interpolatedPositionOrNull(id) ??
+        const LatLng(0, 0);
   }
 
   @override
   Widget build(BuildContext context) {
-    final markers = <Marker>[];
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        final camera = MapCamera.of(context);
 
-    for (final singleRouteVehiclePositions in vehiclePositions.values) {
-      if (widget.selectedRouteId != null && !singleRouteVehiclePositions.any((v) => v.trip.routeId == widget.selectedRouteId)) {
-        continue;
-      }
+        if (camera.zoom < 14) {
+          return const MarkerLayer(markers: []);
+        }
 
-      final route = GTFSService.routes.firstWhere(
-        (r) => r.routeId == singleRouteVehiclePositions.first.trip.routeId,
-      );
+        final bounds = camera.visibleBounds;
+        final markers = <Marker>[];
 
-      for (final vehiclePosition in singleRouteVehiclePositions) {
-        final vehicleId = vehiclePosition.vehicle.id;
+      final allVehicles = vehiclePositions.values.expand((x) => x);
 
-        final position = _interpolatedPosition(vehicleId);
+      final matches = allVehicles
+          .where((v) => v.vehicle.id == 'A3663')
+          .toList();
 
-        markers.add(
-          Marker(
-            key: ValueKey(vehicleId),
-            width: 70,
-            height: 70,
-            point: position,
-            child: VehicleMarker(
-              routeNumber: route.routeShortName!,
-              color: colorFromHex(route.routeColor!),
-              bearing: vehiclePosition.position.bearing > -1 ? vehiclePosition.position.bearing : null,
-              speed: vehiclePosition.position.speed,
-              vehicleId: vehicleId,
-            ),
-          ),
+      debugPrint('A3663 count = ${matches.length}');
+
+      for (final v in matches) {
+        debugPrint(
+          'A3663 route=${v.trip.routeId} '
+          'trip=${v.trip.tripId} '
+          'lat=${v.position.latitude} '
+          'lng=${v.position.longitude}',
         );
       }
-    }
+        for (final routeVehicles in vehiclePositions.values) {
+          if (routeVehicles.isEmpty) {
+            continue;
+          }
 
-    return MarkerLayer(
-      markers: markers,
+          if (widget.selectedRouteId != null &&
+              !routeVehicles.any(
+                (v) => v.trip.routeId == widget.selectedRouteId,
+              )) {
+            continue;
+          }
+
+          final routeId = routeVehicles.first.trip.routeId;
+
+          final route = GTFSService.routesById[routeId];
+          if (route == null) {
+            continue;
+          }
+
+          for (final vehiclePosition in routeVehicles) {
+            final vehicleId = vehiclePosition.vehicle.id;
+
+            if (vehicleId.isEmpty) {
+              continue;
+            }
+
+            final from = _fromPositions[vehicleId];
+            final to = _toPositions[vehicleId];
+
+            // Don't render vehicles for which we have never had
+            // a valid position.
+            if (from == null && to == null) {
+              continue;
+            }
+
+            // Cheap culling before interpolation.
+            final isFromInView =
+                from != null && _isValidLatLng(from) && bounds.contains(from);
+
+            final isToInView =
+                to != null && _isValidLatLng(to) && bounds.contains(to);
+
+            if (!isFromInView && !isToInView) {
+              continue;
+            }
+
+            final position =
+                _interpolatedPositionOrNull(vehicleId);
+
+            // Never give flutter_map an invalid coordinate.
+            if (position == null) {
+              continue;
+            }
+
+            if (!bounds.contains(position)) {
+              continue;
+            }
+
+            markers.add(
+              Marker(
+                //key: ValueKey(vehicleId),
+                width: 70,
+                height: 70,
+                point: position,
+                child: VehicleMarker(
+                  key: ValueKey(vehicleId),
+                  routeNumber: route.routeShortName ?? '',
+                  color: colorFromHex(route.routeColor ?? '000000'),
+                  bearing: vehiclePosition.position.bearing.isFinite &&
+                          vehiclePosition.position.bearing >= 0
+                      ? vehiclePosition.position.bearing
+                      : null,
+                  speed: vehiclePosition.position.speed.isFinite
+                      ? vehiclePosition.position.speed
+                      : null,
+                  vehicleId: vehicleId,
+                ),
+              ),
+            );
+          }
+        }
+
+        final markerIds = <String>{};
+
+      for (final marker in markers) {
+        if (marker.key is ValueKey<String>) {
+          final id = (marker.key as ValueKey<String>).value;
+
+          if (!markerIds.add(id)) {
+            debugPrint('!!! DUPLICATE MARKER KEY: $id');
+          }
+        }
+      }
+
+        debugPrint(
+          'zoom=${camera.zoom.toStringAsFixed(2)} markers=${markers.length}, unique vehicles=${allVehicles.length}, from=${_fromPositions.length}, to=${_toPositions.length}',
+        );
+
+        return MarkerLayer(markers: markers);
+      },
     );
   }
 }

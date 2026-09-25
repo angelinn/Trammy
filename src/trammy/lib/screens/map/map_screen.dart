@@ -107,7 +107,8 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     );
 
     List<(List<GTFSShape>, String, double)> shapes = [];
-    final route = GTFSService.routes.firstWhere((r) => r.routeId == trip.routeId);
+    final route = GTFSService.routesById[trip.routeId];
+    if (route == null) return;
     shapes.add((await GTFSService.getShapes(trip.shapeId!), route.routeColor!, 1.0));
 
 // 2. Find all trips on this route that don't use the current shape_id

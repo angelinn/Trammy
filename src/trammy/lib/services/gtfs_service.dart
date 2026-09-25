@@ -38,7 +38,7 @@ class GTFSService {
 
   static List<GTFSStopRouteInfo> stops = [];
   static List<GTFSStopRouteInfo> stopsByCode = [];
-  static List<GTFSRoute> routes = [];
+  static Map<String, GTFSRoute> routesById = {};
   static Map<String, GTFSTrip> trips = {};
   static final GTFSRepository repo = GTFSRepository();
   static final Map<String, DateTime> predictedArrivals = {};
@@ -199,7 +199,11 @@ class GTFSService {
 
     stopsByCode = stopsByCodeMap.values.map((v) => v.first).toList();
 
-    routes = (await repo?.getRoutes())!;
+    final routes = (await repo?.getRoutes())!;
+    routesById = {
+      for (final r in routes) r.routeId: r,
+    };
+
     final dbTrips = await repo.getTrips();
     for (final trip in dbTrips) {
       trips[trip.tripId] = trip;
@@ -226,7 +230,7 @@ class GTFSService {
   }
 
   static GTFSRoute findByTripId(String tripId) {
-    return routes.firstWhere(
+    return routesById.values.firstWhere(
       (r) => r.routeId == tripId,
       orElse: () => GTFSRoute(routeId: tripId),
     );
@@ -286,7 +290,8 @@ class GTFSService {
     final routeIds = stop.routeIds!.split(','); 
     List<TransportType> routeTypes = [];
     for (final routeId in routeIds) {
-      final route = routes.firstWhere((r) => r.routeId == routeId);
+      final route = routesById[routeId];
+      if (route == null) continue;
       final type = SofiaExceptions.getRealType(route);
 
       routeTypes.add(type!);
