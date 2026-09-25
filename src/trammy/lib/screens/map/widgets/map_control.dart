@@ -20,7 +20,7 @@ class MapControl extends StatelessWidget {
   final LatLng? userLocation;
   final GTFSStopRouteInfo? selectedStop;
   final Set<String> vehiclePositions;
-  final List<(List<GTFSShape>, String)> activeShapes;
+  final List<(List<GTFSShape>, String, double)> activeShapes;
 
   final void Function(GTFSStopRouteInfo stop) onStopTapped;
   final void Function(MapCamera camera, bool hasGesture)? onPositionChanged;
@@ -96,7 +96,7 @@ class MapControl extends StatelessWidget {
               Polyline(
                 points: shapes.$1.map((s) => LatLng(s.shapePtLat, s.shapePtLon)).toList(),
                 strokeWidth: 4.0,
-                color: colorFromHex(shapes.$2),
+                color: colorFromHex(shapes.$2).withValues(alpha: shapes.$3),
                 borderStrokeWidth: 2.0,
                 borderColor: Colors.white
               ),

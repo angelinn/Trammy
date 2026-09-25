@@ -5,13 +5,14 @@ import 'package:trammy/db/favourites_repository.dart';
 import 'package:trammy/db/user_db_service.dart';
 import 'package:trammy/models/favourite.dart';
 import 'package:trammy/models/gtfs/stop.dart';
+import 'package:trammy/models/gtfs/trip.dart';
 import 'package:trammy/screens/map/widgets/arrival_card.dart';
 import 'package:trammy/services/common.dart';
 import 'package:trammy/services/gtfs_service.dart';
 
 class StopSheet extends StatefulWidget {
   final GTFSStopRouteInfo stop;
-  final void Function(Set<String> routeIds, List<String> trips)? onShowVehicles;
+  final void Function(String routeId, GTFSTrip trip)? onShowVehicles;
 
   const StopSheet({super.key, required this.stop, this.onShowVehicles});
 
@@ -210,21 +211,7 @@ Widget _buildHeader() {
             ),
           ),
         ],
-      ),
-
-      const SizedBox(height: 12),
-
-      // --- VEHICLES BUTTON BELOW: Tonal IconButton ---
-      FilledButton.icon(
-          icon: const Icon(Icons.directions_transit),
-          label: const Text("На живо"),
-          onPressed: () {
-            final routes = widget.stop.routeIds!.split(',').toSet();
-
-            widget.onShowVehicles?.call(routes, updates.entries.map((e) => e.key.trip.tripId).toList());
-            Navigator.pop(context);
-          },
-        ),
+      )
     ],
   );
 }
@@ -255,10 +242,16 @@ Widget _buildHeader() {
     return sortedUpdates.map((entry) {
       if (entry.value.isEmpty) return const SizedBox.shrink();
 
-      return ArrivalCard(
-        route: entry.key.route,
-        direction: entry.key.trip.headsign ?? "",
-        arrivals: entry.value,
+      return GestureDetector(
+        onTap: () => {
+          widget.onShowVehicles?.call(entry.key.route.routeId, entry.key.trip),
+          Navigator.pop(context)
+        },
+        child: ArrivalCard(
+          route: entry.key.route,
+          direction: entry.key.trip.headsign ?? "",
+          arrivals: entry.value,
+        ),
       );
     }).toList();
   }

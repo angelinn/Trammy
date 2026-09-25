@@ -8,6 +8,7 @@ import 'package:trammy/controllers/map_screen_controller.dart';
 import 'package:trammy/db/gtfs_repository.dart';
 import 'package:trammy/models/gtfs/shape.dart';
 import 'package:trammy/models/gtfs/stop.dart';
+import 'package:trammy/models/gtfs/trip.dart';
 import 'package:trammy/screens/map/widgets/map_control.dart';
 import 'package:trammy/screens/map/widgets/stop_search_bar.dart';
 import 'package:trammy/screens/map/widgets/stop_sheet.dart';
@@ -92,30 +93,55 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     });
   }
 
-  List<(List<GTFSShape>, String)> activeShapes = [];
+  List<(List<GTFSShape>, String, double)> activeShapes = [];
   Set<String> vehiclePositions = {};
-  void showVehicles(Set<String> routeIds, List<String> tripIds) async {
-    print('Showing vehicles for routes $routeIds');
+  void showVehicles(String routeId, GTFSTrip trip) async {
+    print('Showing vehicles for routes $routeId');
     GTFSService.startVehicleUpdates();
 
     await animatedMapController.animateTo(
       dest: animatedMapController.mapController.camera.center,
-      zoom: 15,
+      zoom: 17,
     );
 
-    List<(List<GTFSShape>, String)> shapes = [];
-    for (final tripId in tripIds) {
-      final trip = GTFSService.trips[tripId];
-      if (trip == null) continue;
+    List<(List<GTFSShape>, String, double)> shapes = [];
+    final route = GTFSService.routes.firstWhere((r) => r.routeId == trip.routeId);
+    shapes.add((await GTFSService.getShapes(trip.shapeId!), route.routeColor!, 1.0));
 
-      final route = GTFSService.routes.firstWhere((r) => r.routeId == trip.routeId);
+// 2. Find all trips on this route that don't use the current shape_id
+    final candidateTrips = GTFSService.trips.values.where((t) {
+      if (t.routeId != route.routeId || t.shapeId == null) return false;
+      
+      // Ignore trips using the current shape
+      if (t.shapeId == trip.shapeId) return false;
 
-      shapes.add((await GTFSService.getShapes(trip.shapeId!), route.routeColor!));
+      // If trip headsigns exist, prefer trips with a different destination
+      if (trip.headsign != null && t.headsign != null) {
+        return t.headsign != trip.headsign;
+      }
+
+      return true;
+    });
+
+    final Map<String, int> shapeFrequency = {};
+
+    for (final trip in candidateTrips) {
+    final shapeId = trip.shapeId!;
+    shapeFrequency[shapeId] = (shapeFrequency[shapeId] ?? 0) + 1;
     }
 
+    // 4. Select the shapeId with the highest frequency (Main Return Route)
+    if (shapeFrequency.isNotEmpty) {
+      final mostFrequentOppositeShapeId = shapeFrequency.entries
+        .reduce((a, b) => a.value > b.value ? a : b)
+        .key;
+
+      shapes.add((await GTFSService.getShapes(mostFrequentOppositeShapeId), route.routeColor!, 0.3));
+    }
+    
     setState(() {
-      vehiclePositions = routeIds;
-        activeShapes = shapes;
+      vehiclePositions = {routeId};
+      activeShapes = shapes;
     });
   }
 
