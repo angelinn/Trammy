@@ -48,6 +48,18 @@ jobs:
 
       - name: Build release APK
         run: flutter build apk --release
+        
+      - name: Rename APK
+        run: |
+          mkdir -p build/app/outputs/flutter-apk/renamed
+          cp build/app/outputs/flutter-apk/app-release.apk \
+             build/app/outputs/flutter-apk/renamed/trammy_${{ inputs.version }}.apk
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: src/trammy/build/app/outputs/flutter-apk/renamed/trammy_${{ inputs.version }}.apk
 
       - name: Create tag
         run: |
@@ -58,6 +70,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.version }}
-          files: src/trammy/build/app/outputs/flutter-apk/app-release.apk
+          files: src/trammy/build/app/outputs/flutter-apk/renamed/trammy_${{ inputs.version }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
