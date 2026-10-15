@@ -70,17 +70,11 @@ late final AnimationController pulseController =
 
     GTFSService.startVehicleUpdates();
 
-    setState(() => isLocating = true);
-
     final position = await LocationService.getUserLocation();
     if (position != null) {
         setState(() {
           userLocation = position;
-          isLocating = false;
         });
-    }
-    else {
-      setState(() => isLocating = true);
     }
   }
 
