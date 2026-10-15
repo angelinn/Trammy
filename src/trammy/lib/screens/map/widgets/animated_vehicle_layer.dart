@@ -8,10 +8,12 @@ import 'package:trammy/services/gtfs_service.dart';
 
 class AnimatedVehiclesLayer extends StatefulWidget {
   final String? selectedRouteId;
+  final Future<void> Function(String vehicleId)? onVehicleTapped;
 
   const AnimatedVehiclesLayer({
     super.key,
     this.selectedRouteId,
+    this.onVehicleTapped
   });
 
   @override
@@ -311,6 +313,7 @@ class _AnimatedVehiclesLayerState extends State<AnimatedVehiclesLayer>
                       ? vehiclePosition.position.speed
                       : null,
                   vehicleId: vehicleId,
+                  onTap: widget.onVehicleTapped
                 ),
               ),
             );

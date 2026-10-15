@@ -8,6 +8,7 @@ class VehicleMarker extends StatefulWidget {
   final double? speed;
   final String vehicleId;
   final double size;
+  final Future<void> Function(String vehicleId)? onTap;
 
   const VehicleMarker({
     super.key,
@@ -17,6 +18,7 @@ class VehicleMarker extends StatefulWidget {
     required this.vehicleId,
     this.speed,
     this.size = 55.0,
+    this.onTap
   });
 
   @override
@@ -44,14 +46,23 @@ class _VehicleMarkerState extends State<VehicleMarker> {
     }
   }
 
+  void onVehicleTapped() async {
+    await widget.onTap?.call(widget.vehicleId);
+    _tooltipKey.currentState?.ensureTooltipVisible(); // reopen at the new position
+  }
+
+  final GlobalKey<TooltipState> _tooltipKey = GlobalKey<TooltipState>();
+
   String get speedText =>
       widget.speed != null ? '${(widget.speed!).toStringAsFixed(1)} km/h' : 'Stationary';
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
+      key: _tooltipKey,
       message: 'ID: ${widget.vehicleId}\nSpeed: $speedText',
       triggerMode: TooltipTriggerMode.tap,
+      onTriggered: onVehicleTapped,
       child: SizedBox(
         width: widget.size,
         height: widget.size,

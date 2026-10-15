@@ -118,7 +118,7 @@ late final AnimationController pulseController =
   }
 
   List<(List<GTFSShape>, String, double)> activeShapes = [];
-  void onLineSelected(String routeId, GTFSTrip trip) async {
+  Future<void> onLineSelected(String routeId, GTFSTrip trip) async {
     print('Showing routes for $routeId');
     selectedRouteId = routeId;
 
@@ -197,6 +197,15 @@ late final AnimationController pulseController =
     } 
   }
 
+  Future<void> onVehicleTapped(String vehicleId) async {
+    final vehicle = GTFSService.vehiclesPositions.values.expand((v) => v)
+      .where((v) => v.vehicle.id == vehicleId).firstOrNull;
+
+    if (vehicle != null) {
+      await onLineSelected(vehicle.trip.routeId, GTFSService.trips[vehicle.trip.tripId]!);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!positionLoaded) {
@@ -227,6 +236,7 @@ late final AnimationController pulseController =
             onMapTapped: onMapTapped,
             onStopTapped: onStopTapped,
             onMoveEnd: onMoveEnd,
+            onVehicleTapped: onVehicleTapped,
             stops: GTFSService.stopsByCode,
             userLocation: userLocation,
             selectedStop: selectedStop,

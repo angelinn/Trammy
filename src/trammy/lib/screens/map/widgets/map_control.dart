@@ -25,8 +25,8 @@ class MapControl extends StatelessWidget {
   final void Function(GTFSStopRouteInfo stop) onStopTapped;
   final void Function(MapCamera camera, bool hasGesture)? onPositionChanged;
   final VoidCallback? onMoveEnd;
-  final void Function(TapPosition, LatLng)? onMapTapped;
-
+  final void Function(TapPosition, LatLng)? onMapTapped; 
+  final Future<void> Function(String vehicleId)? onVehicleTapped;
 
     const MapControl({
     super.key,
@@ -35,6 +35,7 @@ class MapControl extends StatelessWidget {
     required this.initialZoom,
     required this.stops,
     required this.onStopTapped,
+    this.onVehicleTapped,
     this.userLocation,
     this.onPositionChanged,
     this.onMoveEnd,
@@ -140,6 +141,7 @@ class MapControl extends StatelessWidget {
           
             AnimatedVehiclesLayer(
               selectedRouteId: selectedRouteId,
+              onVehicleTapped: onVehicleTapped
             ),
         
         ],
