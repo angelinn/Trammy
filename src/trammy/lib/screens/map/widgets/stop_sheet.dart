@@ -251,6 +251,10 @@ Widget _buildHeader() {
           route: entry.key.route,
           direction: entry.key.trip.headsign ?? "",
           arrivals: entry.value,
+          onTap:() => {
+            widget.onLineSelected?.call(entry.key.route.routeId, entry.key.trip),
+            Navigator.pop(context)
+          }
         ),
       );
     }).toList();

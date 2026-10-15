@@ -10,8 +10,15 @@ class ArrivalCard extends StatelessWidget {
   final GTFSRoute route;
   final String direction;
   final List<ArrivalEntry> arrivals;
+  final VoidCallback? onTap;
 
-  ArrivalCard({super.key, required this.route, required this.direction, required this.arrivals});
+  const ArrivalCard({
+    super.key,
+    required this.route,
+    required this.direction,
+    required this.arrivals,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +26,19 @@ class ArrivalCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 6),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CardHeader(route: route, direction: direction),
-                  const SizedBox(height: 6),
-                  // Upcoming times as chips
-                  ArrivalTimes(arrivals: arrivals)
-                ],
-              ),
-            ),
-          ],
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CardHeader(route: route, direction: direction, onShowRoute: onTap),
+              const SizedBox(height: 6),
+              ArrivalTimes(arrivals: arrivals),
+            ],
+          ),
         ),
       ),
     );
@@ -45,42 +48,53 @@ class ArrivalCard extends StatelessWidget {
 class CardHeader extends StatelessWidget {
   final GTFSRoute route;
   final String direction;
+  final VoidCallback? onShowRoute;
 
-  CardHeader({super.key, required this.route, required this.direction});
+  const CardHeader({
+    super.key,
+    required this.route,
+    required this.direction,
+    this.onShowRoute,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: 4,
-            horizontal: 8,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecoration(
             color: colorFromHex(GTFSService.getExceptionColor(route)!),
             borderRadius: BorderRadius.circular(6),
           ),
           child: Text(
             route.routeShortName!,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text(
+              direction,
+              style: const TextStyle(fontSize: 14),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Text(
-            direction,
-            style: const TextStyle(fontSize: 14),
-          ),
+        IconButton.filledTonal(
+          onPressed: onShowRoute,
+          icon: const Icon(Icons.route),
+          tooltip: 'Маршрут',
+          visualDensity: VisualDensity.comfortable,
+          iconSize: 16        
         ),
       ],
-    );  
+    );
   }
 }
+
 class ArrivalTimes extends StatelessWidget {
   final List<ArrivalEntry> arrivals;
 

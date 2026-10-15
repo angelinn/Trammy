@@ -247,7 +247,7 @@ late final AnimationController pulseController =
                         key: ValueKey('loading'),
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, yea),
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.my_location, key: ValueKey('icon')),
               ),
