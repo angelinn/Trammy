@@ -101,7 +101,7 @@ class GTFSService {
     });
 
     fetchVehiclePositions().then((_) {
-      Future.delayed(const Duration(seconds: 1), () async {
+      Future.delayed(const Duration(seconds: 2), () async {
         await fetchVehiclePositions(force: true);
       });
     });
