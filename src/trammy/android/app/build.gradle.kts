@@ -38,7 +38,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders["appName"] = "Trammy"
     }
 
     signingConfigs {
@@ -63,6 +62,11 @@ android {
             dimension = "environment"
             applicationIdSuffix = ".beta"
             manifestPlaceholders["appName"] = "Trammy BETA"
+        }
+         create("prod") {
+            dimension = "environment"
+            applicationIdSuffix = ".prod"
+            manifestPlaceholders["appName"] = "Trammy"
         }
     }
 }

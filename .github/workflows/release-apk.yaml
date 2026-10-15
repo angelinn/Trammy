@@ -47,12 +47,12 @@ jobs:
         run: flutter pub get
 
       - name: Build release APK
-        run: flutter build apk --release
+        run: flutter build apk --release --flavor prod
         
       - name: Rename APK
         run: |
           mkdir -p build/app/outputs/flutter-apk/renamed
-          cp build/app/outputs/flutter-apk/app-release.apk \
+          cp build/app/outputs/flutter-apk/app-prod-release.apk \
              build/app/outputs/flutter-apk/renamed/trammy_${{ inputs.version }}.apk
 
       - name: Upload artifact

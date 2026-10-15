@@ -33,18 +33,6 @@ jobs:
         working-directory: ${{ env.PROJECT_ROOT }}
 
       - name: Build debug
-        run: flutter build apk --debug -v
+        run: flutter build apk --debug --flavor prod
         working-directory: ${{ env.PROJECT_ROOT }}
               
-      - name: Inspect APK and Gradle outputs
-        if: always()
-        working-directory: ${{ env.PROJECT_ROOT }}
-        run: |
-          echo "=== Flutter APKs ==="
-          find build -type f -name "*.apk" -print 2>/dev/null || true
-      
-          echo "=== Android APKs ==="
-          find android -type f -name "*.apk" -print 2>/dev/null || true
-      
-          echo "=== Gradle output directories ==="
-          find android/app/build/outputs -maxdepth 5 -type f -print 2>/dev/null || true
