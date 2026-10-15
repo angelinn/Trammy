@@ -1,11 +1,11 @@
-name: Flutter
+name: Build  
 
 on:
   push:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     env:
       PROJECT_ROOT: src/trammy
@@ -17,12 +17,34 @@ jobs:
         uses: flutter-actions/setup-flutter@v4
         with:
           channel: stable
-          version: 3.41.2
+          version: 3.41.2 
+          
+      - name: Diagnose Android environment
+        working-directory: ${{ env.PROJECT_ROOT }}
+        run: |
+          cat /etc/os-release
+          java -version
+          flutter --version
+          flutter doctor -v
+          cat android/gradle/wrapper/gradle-wrapper.properties
 
       - name: Install dependencies
         run: flutter pub get
         working-directory: ${{ env.PROJECT_ROOT }}
 
       - name: Build debug
-        run: flutter build apk --debug
+        run: flutter build apk --debug -v
         working-directory: ${{ env.PROJECT_ROOT }}
+              
+      - name: Inspect APK and Gradle outputs
+        if: always()
+        working-directory: ${{ env.PROJECT_ROOT }}
+        run: |
+          echo "=== Flutter APKs ==="
+          find build -type f -name "*.apk" -print 2>/dev/null || true
+      
+          echo "=== Android APKs ==="
+          find android -type f -name "*.apk" -print 2>/dev/null || true
+      
+          echo "=== Gradle output directories ==="
+          find android/app/build/outputs -maxdepth 5 -type f -print 2>/dev/null || true
