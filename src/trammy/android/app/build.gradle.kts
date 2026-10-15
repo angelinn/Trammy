@@ -65,7 +65,7 @@ android {
         }
          create("prod") {
             dimension = "environment"
-            applicationIdSuffix = ".prod"
+            applicationIdSuffix = ""
             manifestPlaceholders["appName"] = "Trammy"
         }
     }
