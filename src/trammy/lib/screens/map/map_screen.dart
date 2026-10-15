@@ -71,22 +71,25 @@ late final AnimationController pulseController =
     GTFSService.startVehicleUpdates();
 
     setState(() => isLocating = true);
+
     final position = await LocationService.getUserLocation();
     if (position != null) {
         setState(() {
           userLocation = position;
           isLocating = false;
         });
-       animatedMapController.animateTo(dest: position, zoom: 18);
     }
     else {
       setState(() => isLocating = true);
     }
-
   }
 
   void goToCurrentLocation() async {
     following = true;
+    if (userLocation != null) {
+      await animatedMapController.animateTo(dest: userLocation!, zoom: 18);
+    }
+
     setState(() => isLocating = true);
 
     await LocationService.startTracking((position) {

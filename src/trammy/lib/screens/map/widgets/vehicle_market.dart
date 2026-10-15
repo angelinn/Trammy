@@ -54,13 +54,13 @@ class _VehicleMarkerState extends State<VehicleMarker> {
   final GlobalKey<TooltipState> _tooltipKey = GlobalKey<TooltipState>();
 
   String get speedText =>
-      widget.speed != null ? '${(widget.speed!).toStringAsFixed(1)} km/h' : 'Stationary';
+      widget.speed != null ? '${(widget.speed!).toStringAsFixed(1)} км/ч' : 'Stationary';
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
       key: _tooltipKey,
-      message: 'ID: ${widget.vehicleId}\nSpeed: $speedText',
+      message: 'Номер: ${widget.vehicleId}\nСкорост: $speedText',
       triggerMode: TooltipTriggerMode.tap,
       onTriggered: onVehicleTapped,
       child: SizedBox(
