@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:gtfs_realtime_bindings/gtfs_realtime_bindings.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trammy/controllers/map_screen_controller.dart';
@@ -28,6 +29,7 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   bool stopsLoaded = false;
   MapCamera? currentPosition;
   LatLng? userLocation;
+  bool isLocating = false;
 
   late AnimatedMapController animatedMapController;
   final MapScreenController mapScreenController = MapScreenController();
@@ -42,6 +44,8 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   Set<String> stopLocations = {};
   GTFSStopRouteInfo? selectedStop;
   String? selectedRouteId;
+late final AnimationController pulseController =
+    AnimationController(vsync: this, duration: const Duration(seconds: 1));
 
   @override
   void initState() {
@@ -65,13 +69,30 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     });
 
     GTFSService.startVehicleUpdates();
+
+    setState(() => isLocating = true);
+    final position = await LocationService.getUserLocation();
+    if (position != null) {
+        setState(() {
+          userLocation = position;
+          isLocating = false;
+        });
+       animatedMapController.animateTo(dest: position, zoom: 18);
+    }
+    else {
+      setState(() => isLocating = true);
+    }
+
   }
 
   void goToCurrentLocation() async {
     following = true;
+    setState(() => isLocating = true);
+
     await LocationService.startTracking((position) {
       setState(() {
         userLocation = position;
+        isLocating = false;
       });
 
       if (following) animatedMapController.animateTo(dest: position, zoom: 18);
@@ -100,11 +121,6 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   void onLineSelected(String routeId, GTFSTrip trip) async {
     print('Showing routes for $routeId');
     selectedRouteId = routeId;
-
-    await animatedMapController.animateTo(
-      dest: animatedMapController.mapController.camera.center,
-      zoom: 17,
-    );
 
     List<(List<GTFSShape>, String, double)> shapes = [];
     final route = GTFSService.routesById[trip.routeId];
@@ -145,6 +161,16 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     setState(() {
       activeShapes = shapes;
     });
+
+    final vehicle = GTFSService.vehiclesPositions.values.expand((v) => v)
+      .where((v) => v.trip.tripId == trip.tripId).firstOrNull;
+    final moveTo = vehicle == null ? animatedMapController.mapController.camera.center 
+      : LatLng(vehicle.position.latitude, vehicle.position.longitude);
+    
+    await animatedMapController.animateTo(
+      dest: moveTo,
+      zoom: 17,
+    );
   }
 
   Future<void> displayBottomSheet(GTFSStopRouteInfo stop) async {
@@ -214,7 +240,17 @@ class MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
             right: 16,
             child: FloatingActionButton(
               onPressed: goToCurrentLocation,
-              child: const Icon(Icons.my_location),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: isLocating
+                    ? const SizedBox(
+                        key: ValueKey('loading'),
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, yea),
+                      )
+                    : const Icon(Icons.my_location, key: ValueKey('icon')),
+              ),
             ),
           ),
         ],
