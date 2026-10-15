@@ -62,14 +62,19 @@ class CardHeader extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          width: 46, // fixed width, adjust to taste
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: colorFromHex(GTFSService.getExceptionColor(route)!),
             borderRadius: BorderRadius.circular(6),
           ),
-          child: Text(
-            route.routeShortName!,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              route.routeShortName!,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
         Expanded(
